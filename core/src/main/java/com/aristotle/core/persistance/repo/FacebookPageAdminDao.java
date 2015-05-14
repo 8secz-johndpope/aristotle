@@ -2,7 +2,7 @@ package com.aristotle.core.persistance.repo;
 
 import java.util.List;
 
-import com.next.aap.core.persistance.FacebookPageAdmins;
+import com.aristotle.core.persistance.FacebookPageAdmins;
 
 public interface FacebookPageAdminDao {
 

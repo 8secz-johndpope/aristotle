@@ -1,6 +1,6 @@
 package com.aristotle.core.persistance.repo;
 
-import com.next.aap.core.persistance.FacebookApp;
+import com.aristotle.core.persistance.FacebookApp;
 
 
 public interface FacebookAppDao {

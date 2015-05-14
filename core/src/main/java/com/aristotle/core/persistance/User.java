@@ -20,7 +20,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import com.next.aap.web.dto.CreationType;
+import com.aristotle.core.enums.CreationType;
 
 @Entity
 @Table(name="users")

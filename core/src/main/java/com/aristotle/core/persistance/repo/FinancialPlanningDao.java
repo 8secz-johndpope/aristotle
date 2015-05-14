@@ -1,6 +1,6 @@
 package com.aristotle.core.persistance.repo;
 
-import com.next.aap.core.persistance.FinancialPlanning;
+import com.aristotle.core.persistance.FinancialPlanning;
 
 public interface FinancialPlanningDao {
 

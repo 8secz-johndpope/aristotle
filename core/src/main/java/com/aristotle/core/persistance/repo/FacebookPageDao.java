@@ -2,7 +2,7 @@ package com.aristotle.core.persistance.repo;
 
 import java.util.List;
 
-import com.next.aap.core.persistance.FacebookPage;
+import com.aristotle.core.persistance.FacebookPage;
 
 public interface FacebookPageDao {
 

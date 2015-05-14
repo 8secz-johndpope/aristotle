@@ -2,8 +2,8 @@ package com.aristotle.core.persistance.repo;
 
 import java.util.List;
 
-import com.next.aap.core.persistance.Permission;
-import com.next.aap.web.dto.AppPermission;
+import com.aristotle.core.enums.AppPermission;
+import com.aristotle.core.persistance.Permission;
 
 public interface PermissionDao {
 

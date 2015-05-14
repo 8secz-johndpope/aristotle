@@ -1,6 +1,6 @@
 package com.aristotle.core.persistance.repo;
 
-import com.next.aap.core.persistance.Volunteer;
+import com.aristotle.core.persistance.Volunteer;
 
 public interface VolunteerDao {
 

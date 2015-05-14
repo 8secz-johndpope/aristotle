@@ -2,9 +2,11 @@ package com.aristotle.core.persistance.repo;
 
 import java.util.List;
 
-import com.next.aap.core.persistance.CountryRegionRole;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CountryRegionRoleDao {
+import com.aristotle.core.persistance.CountryRegionRole;
+
+public interface CountryRegionRoleDao extends JpaRepository<CountryRegionRole, Long> {
 
 	public abstract CountryRegionRole saveCountryRegionRole(CountryRegionRole countryRegionRole);
 	

@@ -1,6 +1,6 @@
 package com.aristotle.core.persistance.repo;
 
-import com.next.aap.core.persistance.UserPollVote;
+import com.aristotle.core.persistance.UserPollVote;
 
 public interface UserPollVoteDao {
 

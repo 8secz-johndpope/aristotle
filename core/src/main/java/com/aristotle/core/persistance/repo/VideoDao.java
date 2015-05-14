@@ -3,7 +3,7 @@ package com.aristotle.core.persistance.repo;
 import java.util.List;
 import java.util.Map;
 
-import com.next.aap.core.persistance.Video;
+import com.aristotle.core.persistance.Video;
 
 public interface VideoDao {
 

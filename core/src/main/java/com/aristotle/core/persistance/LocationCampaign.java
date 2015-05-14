@@ -12,7 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import com.next.aap.web.dto.LocationCampaignDto.LocationCampaignType;
+import com.aristotle.core.enums.LocationCampaignType;
+
 
 @Entity
 @Table(name="location_campaign")

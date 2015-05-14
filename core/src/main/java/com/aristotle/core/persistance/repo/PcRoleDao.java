@@ -2,7 +2,7 @@ package com.aristotle.core.persistance.repo;
 
 import java.util.List;
 
-import com.next.aap.core.persistance.PcRole;
+import com.aristotle.core.persistance.PcRole;
 
 public interface PcRoleDao {
 

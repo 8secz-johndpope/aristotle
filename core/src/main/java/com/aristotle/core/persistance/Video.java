@@ -17,7 +17,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import com.next.aap.web.dto.ContentStatus;
+import com.aristotle.core.enums.ContentStatus;
 
 @Entity
 @Table(name="videos")

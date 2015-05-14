@@ -12,8 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import com.next.aap.web.dto.PlannedPostStatus;
-import com.next.aap.web.dto.PostLocationType;
+import com.aristotle.core.enums.PlannedPostStatus;
+import com.aristotle.core.enums.PostLocationType;
+
 
 @Entity
 @Table(name="planned_facebook_post")

@@ -2,16 +2,12 @@ package com.aristotle.core.persistance.repo;
 
 import java.util.List;
 
-import com.next.aap.core.persistance.Candidate;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CandidateDao {
+import com.aristotle.core.persistance.Candidate;
 
-	public abstract Candidate saveCandidate(Candidate Candidate);
-	
-	public abstract void deleteCandidate(Candidate candidate);
-	
-	public abstract Candidate getCandidateById(Long id);
-	
+public interface CandidateRepository extends JpaRepository<Candidate, Long> {
+
     public abstract Candidate getCandidateByPcIdAndElectionId(Long pcId, Long electionId);
 	
     public abstract Candidate getCandidateByAcIdAndElectionId(Long acId, Long electionId);

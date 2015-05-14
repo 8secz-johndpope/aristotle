@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import com.next.aap.web.dto.AppPermission;
+import com.aristotle.core.enums.AppPermission;
 
 @Entity
 @Table(name="permission")

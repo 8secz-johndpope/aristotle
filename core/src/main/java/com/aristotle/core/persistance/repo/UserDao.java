@@ -2,8 +2,8 @@ package com.aristotle.core.persistance.repo;
 
 import java.util.List;
 
-import com.next.aap.core.persistance.LegacyMembership;
-import com.next.aap.core.persistance.User;
+import com.aristotle.core.persistance.LegacyMembership;
+import com.aristotle.core.persistance.User;
 
 
 public interface UserDao {

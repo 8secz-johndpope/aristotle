@@ -2,8 +2,8 @@ package com.aristotle.core.persistance.repo;
 
 import java.util.List;
 
-import com.next.aap.core.persistance.PlannedTweet;
-import com.next.aap.web.dto.PostLocationType;
+import com.aristotle.core.enums.PostLocationType;
+import com.aristotle.core.persistance.PlannedTweet;
 
 
 public interface PlannedTweetDao {

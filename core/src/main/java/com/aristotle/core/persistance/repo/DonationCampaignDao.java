@@ -2,8 +2,8 @@ package com.aristotle.core.persistance.repo;
 
 import java.util.List;
 
-import com.next.aap.core.persistance.DonationCampaign;
-import com.next.aap.web.dto.DonationCampaignDto.CampaignType;
+import com.aristotle.core.enums.CampaignType;
+import com.aristotle.core.persistance.DonationCampaign;
 
 public interface DonationCampaignDao {
 

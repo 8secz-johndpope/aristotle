@@ -15,7 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import com.next.aap.web.dto.DonationCampaignDto.CampaignType;
+import com.aristotle.core.enums.CampaignType;
+
 
 @Entity
 @Table(name="donation_campaign")
