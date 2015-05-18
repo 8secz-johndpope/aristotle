@@ -6,6 +6,6 @@ import com.aristotle.core.persistance.AcRole;
 
 public interface AcRoleRepository extends JpaRepository<AcRole, Long> {
 
-    public abstract AcRole getAcRoleByAcIdAndRoleId(Long acId, Long roleId);
+    public AcRole getAcRoleByAssemblyConstituencyIdAndRoleId(Long acId, Long roleId);
 
 }

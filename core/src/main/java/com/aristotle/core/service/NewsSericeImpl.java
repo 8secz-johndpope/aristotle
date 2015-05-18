@@ -41,8 +41,35 @@ public class NewsSericeImpl implements NewsService {
 
     @Override
     public List<News> getNews(PostLocationType locationType, Long locationId) {
-        // TODO Auto-generated method stub
-        return null;
+        List<News> news = null;
+        switch (locationType) {
+        case Global:
+        case NA:
+            news = newsRepository.getGlobalNews();
+            break;
+        case STATE:
+            news = newsRepository.getStateNews(locationId);
+            break;
+        case DISTRICT:
+            news = newsRepository.getDistrictNews(locationId);
+            break;
+        case AC:
+            news = newsRepository.getAssemblyConstituencyNews(locationId);
+            break;
+        case PC:
+            news = newsRepository.getParliamentConstituencyNews(locationId);
+            break;
+        case COUNTRY:
+            news = newsRepository.getCountryNews(locationId);
+            break;
+        case REGION:
+            news = newsRepository.getCountryRegionNews(locationId);
+            break;
+        case AREA:
+            news = newsRepository.getCountryRegionAreaNews(locationId);
+            break;
+        }
+        return news;
     }
 
     @Override
