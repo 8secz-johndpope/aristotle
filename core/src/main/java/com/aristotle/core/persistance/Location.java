@@ -24,13 +24,13 @@ public class Location {
     @JoinColumn(name="location_type_id")
     private LocationType locationType;
     @Column(name="location_type_id")
-    private String location_type_id;
+    private Long location_type_id;
     
     @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="parent_id")
     private Location parentLocation;
     @Column(name="parent_id", nullable = true)
-    private String parentId;
+    private Long parentId;
     public long getId() {
         return id;
     }
@@ -49,10 +49,10 @@ public class Location {
     public void setLocationType(LocationType locationType) {
         this.locationType = locationType;
     }
-    public String getLocation_type_id() {
+    public Long getLocation_type_id() {
         return location_type_id;
     }
-    public void setLocation_type_id(String location_type_id) {
+    public void setLocation_type_id(Long location_type_id) {
         this.location_type_id = location_type_id;
     }
     public Location getParentLocation() {
@@ -61,10 +61,10 @@ public class Location {
     public void setParentLocation(Location parentLocation) {
         this.parentLocation = parentLocation;
     }
-    public String getParentId() {
+    public Long getParentId() {
         return parentId;
     }
-    public void setParentId(String parentId) {
+    public void setParentId(Long parentId) {
         this.parentId = parentId;
     }
     @Override

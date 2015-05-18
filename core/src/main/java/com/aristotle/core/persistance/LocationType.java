@@ -24,7 +24,7 @@ public class LocationType {
     @JoinColumn(name="parent_type_id")
     private LocationType parentLocationType;
     @Column(name="parent_type_id", nullable = true)
-    private String parentTypeId;
+    private Long parentTypeId;
     public long getId() {
         return id;
     }
@@ -43,10 +43,10 @@ public class LocationType {
     public void setParentLocationType(LocationType parentLocationType) {
         this.parentLocationType = parentLocationType;
     }
-    public String getParentTypeId() {
+    public Long getParentTypeId() {
         return parentTypeId;
     }
-    public void setParentTypeId(String parentTypeId) {
+    public void setParentTypeId(Long parentTypeId) {
         this.parentTypeId = parentTypeId;
     }
     @Override
