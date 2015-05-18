@@ -16,7 +16,7 @@ public class LocationType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     @Column(name="name", nullable = false)
     private String name;
     
