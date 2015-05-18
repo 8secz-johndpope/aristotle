@@ -1,36 +1,15 @@
 package com.aristotle.core.persistance;
 
-import java.util.Date;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Version;
 
 @Entity
 @Table(name = "domain_page_template")
-public class DomainPageTemplate {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	@Version
-	@Column(name = "ver")
-	private int ver;
-	@Column(name = "date_created")
-	private Date dateCreated;
-	@Column(name = "date_modified")
-	private Date dateModified;
-	@Column(name = "creator_id")
-	private Long creatorId;
-	@Column(name = "modifier_id")
-	private Long modifierId;
+public class DomainPageTemplate extends BaseEntity {
 
     @Column(name = "html_content", columnDefinition = "LONGTEXT")
     private String htmlContent;
@@ -42,7 +21,7 @@ public class DomainPageTemplate {
     private Long domainTemplateId;
 
     @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    @JoinColumn(name = "url_mapping_id")
+    @JoinColumn(name = "url_mapping_id", nullable = true)
     private UrlMapping urlMapping;
     @Column(name = "url_mapping_id", insertable = false, updatable = false)
     private Long urlMappingId;
@@ -50,54 +29,6 @@ public class DomainPageTemplate {
     // No need to keep Many to One Mapping
     @Column(name = "page_template_id")
     private Long pageTemplateId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public int getVer() {
-        return ver;
-    }
-
-    public void setVer(int ver) {
-        this.ver = ver;
-    }
-
-    public Date getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public Date getDateModified() {
-        return dateModified;
-    }
-
-    public void setDateModified(Date dateModified) {
-        this.dateModified = dateModified;
-    }
-
-    public Long getCreatorId() {
-        return creatorId;
-    }
-
-    public void setCreatorId(Long creatorId) {
-        this.creatorId = creatorId;
-    }
-
-    public Long getModifierId() {
-        return modifierId;
-    }
-
-    public void setModifierId(Long modifierId) {
-        this.modifierId = modifierId;
-    }
 
     public String getHtmlContent() {
         return htmlContent;
@@ -123,14 +54,6 @@ public class DomainPageTemplate {
         this.domainTemplateId = domainTemplateId;
     }
 
-    public Long getPageTemplateId() {
-        return pageTemplateId;
-    }
-
-    public void setPageTemplateId(Long pageTemplateId) {
-        this.pageTemplateId = pageTemplateId;
-    }
-
     public UrlMapping getUrlMapping() {
         return urlMapping;
     }
@@ -147,5 +70,18 @@ public class DomainPageTemplate {
         this.urlMappingId = urlMappingId;
     }
 
-	
+    public Long getPageTemplateId() {
+        return pageTemplateId;
+    }
+
+    public void setPageTemplateId(Long pageTemplateId) {
+        this.pageTemplateId = pageTemplateId;
+    }
+
+    @Override
+    public String toString() {
+        return "DomainPageTemplate [htmlContent=" + htmlContent + ", domainTemplateId=" + domainTemplateId + ", urlMappingId=" + urlMappingId + ", pageTemplateId=" + pageTemplateId + ", id=" + id
+                + ", ver=" + ver + ", dateCreated=" + dateCreated + ", dateModified=" + dateModified + ", creatorId=" + creatorId + ", modifierId=" + modifierId + "]";
+    }
+
 }

@@ -23,7 +23,7 @@ public class LocationType {
     @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="parent_type_id")
     private LocationType parentLocationType;
-    @Column(name="parent_type_id", nullable = true)
+    @Column(name = "parent_type_id", insertable = false, updatable = false)
     private Long parentTypeId;
     public long getId() {
         return id;
