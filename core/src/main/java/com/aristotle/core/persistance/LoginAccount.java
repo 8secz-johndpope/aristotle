@@ -16,7 +16,7 @@ import javax.persistence.Version;
 @Entity
 @Table(name="aap_account")
 //@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region="Account", include="all")
-public class AapAccount {
+public class LoginAccount {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
