@@ -24,6 +24,9 @@ public class DomainTemplate extends BaseEntity {
     @Column(name = "template_id")
     private Long templateId;
 
+    @Column(name = "active")
+    private boolean active;
+
     public String getName() {
         return name;
     }
@@ -54,6 +57,14 @@ public class DomainTemplate extends BaseEntity {
 
     public void setTemplateId(Long templateId) {
         this.templateId = templateId;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
 }

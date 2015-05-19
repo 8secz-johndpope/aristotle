@@ -35,8 +35,7 @@ public class NewsSericeImpl implements NewsService {
 
     @Override
     public News getNewsById(Long newsId) {
-        // TODO Auto-generated method stub
-        return null;
+        return newsRepository.findOne(newsId);
     }
 
     @Override
@@ -74,8 +73,7 @@ public class NewsSericeImpl implements NewsService {
 
     @Override
     public List<News> getAllPublishedNews() {
-        // TODO Auto-generated method stub
-        return null;
+        return newsRepository.getGlobalNews();
     }
 
 }

@@ -5,7 +5,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
-@DiscriminatorValue(value = "CustomeData")
+@DiscriminatorValue(value = "CustomData")
 public class CustomDataPlugin extends DataPlugin {
 
     @Column(name = "full_class_name")

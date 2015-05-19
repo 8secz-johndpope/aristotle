@@ -15,15 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 
-import com.aristotle.core.persistance.Customer;
 import com.aristotle.core.persistance.repo.CustomerRepository;
 
-@RestController
 public class HelloController {
 
     @Autowired
@@ -105,13 +102,6 @@ public class HelloController {
             System.out.println("NO MATCH");
         }
 
-    }
-
-    @RequestMapping("/")
-    @ResponseBody
-    public Iterable<Customer> index() {
-        Iterable<Customer> customers = customerRepository.findAll();
-        return customers;
     }
 
     public String defaultMethod(ModelAndView mv, HttpServletRequest request) {

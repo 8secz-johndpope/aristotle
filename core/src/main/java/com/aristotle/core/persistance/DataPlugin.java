@@ -37,6 +37,8 @@ public class DataPlugin {
 
     @Column(name = "disabled")
     private boolean disabled;
+    @Column(name = "plugin_name")
+    private String pluginName;
 
     public Long getId() {
         return id;
@@ -92,6 +94,14 @@ public class DataPlugin {
 
     public void setDisabled(boolean disabled) {
         this.disabled = disabled;
+    }
+
+    public String getPluginName() {
+        return pluginName;
+    }
+
+    public void setPluginName(String pluginName) {
+        this.pluginName = pluginName;
     }
 	
 
