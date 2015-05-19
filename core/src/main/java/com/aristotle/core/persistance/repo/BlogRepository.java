@@ -1,7 +1,6 @@
 package com.aristotle.core.persistance.repo;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,10 +10,10 @@ import com.aristotle.core.persistance.Blog;
 public interface BlogRepository extends JpaRepository<Blog, Long> {
 
     @Query("select b from Blog b where b.contentStatus = 'Published'")
-	public abstract List<Blog> getAllPublishedBlogs();
+    public List<Blog> getAllPublishedBlogs();
 	
-	public abstract List<Blog> getBlogItemsAfterId(long blogId);
-
+    // public List<Blog> getBlogItemsAfterId(long blogId);
+    /*
     @Query("select bloglist.blogId from ((select blog_id as blogId from blog_ac where ac_id = :acId) union (select blog_id as blogId from blog_district where district_id= :districtId) "
             + "union (select blog_id as blogId from blog_state where state_id= :stateId) union (select id as blogId from blogs where global_allowed= true)) bloglist order by bloglist.blogId desc")
 	public abstract List<Long> getBlogByLocation(long acId, long districtId, long stateId);
@@ -64,4 +63,5 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
 	public abstract Map<Long, List<Long>> getBlogItemsOfAllCountry();
 	
 	public abstract Map<Long, List<Long>> getBlogItemsOfAllCountryRegion();
+	*/
 }

@@ -13,6 +13,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+
 @Entity
 @Table(name = "ac_role")
 public class AcRole {
@@ -24,12 +28,15 @@ public class AcRole {
 	@Column(name = "ver")
 	private int ver;
 	@Column(name = "date_created")
+    @CreatedDate
 	private Date dateCreated;
 	@Column(name = "date_modified")
+    @LastModifiedDate
 	private Date dateModified;
 	@Column(name = "creator_id")
 	private Long creatorId;
 	@Column(name = "modifier_id")
+    @LastModifiedBy
 	private Long modifierId;
 
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )

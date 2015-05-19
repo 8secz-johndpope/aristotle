@@ -43,9 +43,6 @@ public class User {
 	private Long modifierId;
 
 	
-	@Column(name = "external_id", nullable = false, length=256)
-	private String externalId;
-
 	@Column(name = "membership_no")
 	private String membershipNumber;
 
@@ -335,14 +332,6 @@ public class User {
 
 	public void setModifierId(Long modifierId) {
 		this.modifierId = modifierId;
-	}
-
-	public String getExternalId() {
-		return externalId;
-	}
-
-	public void setExternalId(String externalId) {
-		this.externalId = externalId;
 	}
 
 	public String getMembershipNumber() {
@@ -844,7 +833,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", ver=" + ver + ", externalId=" + externalId
+        return "User [id=" + id + ", ver=" + ver
 				+ ", name=" + name + ", dateOfBith=" + dateOfBirth + "]";
 	}
 

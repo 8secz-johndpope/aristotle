@@ -16,14 +16,14 @@ public class LocationType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     @Column(name="name", nullable = false)
     private String name;
     
     @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="parent_type_id")
     private LocationType parentLocationType;
-    @Column(name="parent_type_id", nullable = true)
+    @Column(name = "parent_type_id", insertable = false, updatable = false)
     private Long parentTypeId;
     public long getId() {
         return id;

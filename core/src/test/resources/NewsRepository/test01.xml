@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+  <NEWS id="1" ver="0" title="News Item 1" content="Some Long COntent for News Item 1" image_url="http://my.com/image.png" content_status="Pending" web_url="http://my.com/text.html" original_url="http://my.com/another.html" source="source" global_allowed="true"/>
+</dataset>
+
