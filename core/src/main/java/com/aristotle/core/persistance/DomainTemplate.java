@@ -1,10 +1,14 @@
 package com.aristotle.core.persistance;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -26,6 +30,12 @@ public class DomainTemplate extends BaseEntity {
 
     @Column(name = "active")
     private boolean active;
+
+    @OneToMany(mappedBy = "domainTemplate", fetch = FetchType.EAGER)
+    private List<DomainPageTemplate> domainPageTemplates;
+
+    @OneToMany(mappedBy = "domainTemplate", fetch = FetchType.EAGER)
+    private List<DomainTemplateFile> domainTemplateFiles;
 
     public String getName() {
         return name;
@@ -65,6 +75,22 @@ public class DomainTemplate extends BaseEntity {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public List<DomainPageTemplate> getDomainPageTemplates() {
+        return domainPageTemplates;
+    }
+
+    public void setDomainPageTemplates(List<DomainPageTemplate> domainPageTemplates) {
+        this.domainPageTemplates = domainPageTemplates;
+    }
+
+    public List<DomainTemplateFile> getDomainTemplateFiles() {
+        return domainTemplateFiles;
+    }
+
+    public void setDomainTemplateFiles(List<DomainTemplateFile> domainTemplateFiles) {
+        this.domainTemplateFiles = domainTemplateFiles;
     }
 
 }

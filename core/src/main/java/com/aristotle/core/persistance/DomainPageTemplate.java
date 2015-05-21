@@ -3,6 +3,7 @@ package com.aristotle.core.persistance;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -14,13 +15,13 @@ public class DomainPageTemplate extends BaseEntity {
     @Column(name = "html_content", columnDefinition = "LONGTEXT")
     private String htmlContent;
 
-    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
     @JoinColumn(name = "domain_template_id")
     private DomainTemplate domainTemplate;
     @Column(name = "domain_template_id", insertable = false, updatable = false)
     private Long domainTemplateId;
 
-    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
     @JoinColumn(name = "url_mapping_id", nullable = true)
     private UrlMapping urlMapping;
     @Column(name = "url_mapping_id", insertable = false, updatable = false)

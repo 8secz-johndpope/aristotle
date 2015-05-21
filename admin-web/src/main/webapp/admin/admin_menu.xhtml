@@ -127,13 +127,14 @@ body {
 	<p:dialog header="Choose Location" draggable="true" widgetVar="chooseLocation" showEffect="fade" hideEffect="fade" modal="true">
 		<h:form id="adminForm" rendered="#{menuBean.admin}">
 			<p:messages id="messages" autoUpdate="true" closable="true" />
-			<!-- 
+			
 			<p:outputPanel rendered="#{menuBean.user.superAdmin}">
 				<p:panelGrid columns="2" cellpadding="5" style="width:395px;">
 					<f:facet name="header"> Select the Location</f:facet>
 					<p:outputLabel />
 					<p:commandButton value="Global" actionListener="#{menuBean.selectGlobal}" styleClass="ui-priority-primary">
 						</p:commandButton>
+						<!-- 
 					<h:outputLabel for="state" value="State" />
 					<p:selectOneMenu id="state" value="#{menuBean.selectedStateId}" effect="fold" editable="false">
 						<f:selectItem itemLabel="Select State" itemValue="0" />
@@ -165,14 +166,14 @@ body {
 							itemValue="#{oneAssemblyConstituency.id}" />
 
 					</p:selectOneMenu>
-
-				</p:panelGrid>
+                -->
+			 	</p:panelGrid>
 				<p:commandButton value="Cancel" oncomplete="chooseLocation.hide()" styleClass="ui-priority-primary">
 				</p:commandButton>
 				<p:commandButton value="Select" actionListener="#{menuBean.selectCurrent}" styleClass="ui-priority-primary">
 				</p:commandButton>
 			</p:outputPanel>
-			-->
+			
 			<p:outputPanel rendered="#{!menuBean.user.superAdmin and menuBean.admin}">
 
 				<h:panelGrid columns="3" styleClass="topAlignPanelColumns">

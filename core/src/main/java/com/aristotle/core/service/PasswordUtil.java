@@ -10,10 +10,6 @@ import com.aristotle.core.exception.AppException;
 @Component
 public class PasswordUtil {
 
-    public static void main(String args[]) throws AppException {
-        PasswordUtil passwordUtil = new PasswordUtil();
-        System.out.println(passwordUtil.encryptPassword("password"));
-    }
     public String encryptPassword(String password) throws AppException {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");

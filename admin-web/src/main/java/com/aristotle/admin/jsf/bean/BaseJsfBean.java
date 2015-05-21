@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import com.aristotle.admin.util.UserSessionBean;
+import com.aristotle.core.persistance.User;
 
 public class BaseJsfBean extends BaseController implements Serializable {
 
@@ -102,10 +103,45 @@ public class BaseJsfBean extends BaseController implements Serializable {
         return (UserSessionBean) httpServletRequest.getSession(true).getAttribute(SESSION_USER_PERMISSIONS_PARAM);
     }
 
+    public static String buildLoginUrl(String redirectUrl) {
+        HttpServletRequest httpServletRequest = getHttpServletRequest();
+        return buildLoginUrl(httpServletRequest, redirectUrl);
+    }
+
+    public static String buildLoginUrl(HttpServletRequest httpServletRequest, String redirectUrl) {
+        return httpServletRequest.getContextPath() + "/login?" + REDIRECT_URL_PARAM_ID + "=" + httpServletRequest.getContextPath() + redirectUrl;
+    }
+
+    protected boolean isLocationNotSelected(MenuBean menuBean) {
+        System.out.println("menuBean.getSelectedLocation()= " + menuBean.getSelectedLocation());
+        System.out.println("menuBean.isGlobalSelected()= " + menuBean.isGlobalSelected());
+        return (menuBean.getSelectedLocation() == null && !menuBean.isGlobalSelected());
+    }
+
+    protected User getLoggedInUser() {
+        return getLoggedInUser(false, "");
+    }
+
+    protected User getLoggedInUser(boolean redirect, String url) {
+        HttpServletRequest httpServletRequest = getHttpServletRequest();
+        User user = getLoggedInUserFromSesion(httpServletRequest);
+        if (user == null) {
+            if (redirect) {
+                redirect(url);
+            }
+        }
+        return user;
+    }
+
+    protected boolean isValidInput() {
+        if (FacesContext.getCurrentInstance().getMessageList().size() > 0) {
+            return false;
+        }
+        return true;
+    }
     /*
      * 
-     * protected boolean isLocationNotSelected(MenuBean menuBean){ return (menuBean.getLocationType() == null || menuBean.getLocationType() == PostLocationType.NA || (menuBean.getLocationType() !=
-     * PostLocationType.Global && (menuBean.getAdminSelectedLocationId() == null || menuBean.getAdminSelectedLocationId() <= 0))); }
+     * 
      * 
      * 
      * 
@@ -114,22 +150,18 @@ public class BaseJsfBean extends BaseController implements Serializable {
      * protected void ssaveLoggedInUserInSession(UserDto user) { HttpServletRequest httpServletRequest = getHttpServletRequest(); super.setLoggedInUserInSesion(httpServletRequest, user); }
      * 
      * public LoginAccountDto getLoggedInAccountsFromSesion(){ HttpServletRequest httpServletRequest = getHttpServletRequest(); return getLoggedInAccountsFromSesion(httpServletRequest); } protected
-     * UserDto getLoggedInUser() { return getLoggedInUser(false, ""); }
-     * 
-     * protected UserDto getLoggedInUser(boolean redirect, String url) { HttpServletRequest httpServletRequest = getHttpServletRequest(); UserDto user = getLoggedInUserFromSesion(httpServletRequest);
-     * if (user == null) { if (redirect) { redirect(url); } } return user; }
-     * 
-     * public static String buildLoginUrl(String redirectUrl) { HttpServletRequest httpServletRequest = getHttpServletRequest(); return buildLoginUrl(httpServletRequest, redirectUrl); }
-     * 
-     * public static String buildLoginUrl(HttpServletRequest httpServletRequest, String redirectUrl) { return httpServletRequest.getContextPath() + "/login?" + REDIRECT_URL_PARAM_ID + "=" +
-     * httpServletRequest.getContextPath() + redirectUrl; }
      * 
      * 
      * 
      * 
      * 
-     * protected boolean isValidInput() { if (FacesContext.getCurrentInstance().getMessageList().size() > 0) { return false; } return true;
      * 
-     * }
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
      */
 }

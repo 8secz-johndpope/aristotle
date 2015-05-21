@@ -41,12 +41,13 @@
     $("#final").html(html);
     //$("#final").html(html);
 
-
-    $.get( "http://localhost:8080/api/content/home", function(data ) {
+alert("Getting Content");
+    $.get( "http://localhost:8090/api/content/home", function(data ) {
     	 var source   = $("#entry-template").html();
     	    var template = Handlebars.compile(source);
     	    var p = JSON.parse(data);;
     	  var html    = template(p);
+    	  alert(data);
     	    $("#final").html(html);
     	});
 	
@@ -58,5 +59,4 @@
 
 </body>
 </html>
-
 

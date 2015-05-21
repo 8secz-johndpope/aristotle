@@ -28,6 +28,13 @@ public class ContentController {
         ex.printStackTrace();
         return ex.getMessage();
     }
+
+    @RequestMapping("/ui/refresh")
+    @ResponseBody
+    public String refreshTemplates(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) {
+        uiTemplateManager.refresh();
+        return "Success";
+    }
     @RequestMapping("/content/**")
     public ModelAndView defaultMethod(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) {
 

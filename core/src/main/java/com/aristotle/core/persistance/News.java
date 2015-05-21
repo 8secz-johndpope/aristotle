@@ -2,6 +2,7 @@ package com.aristotle.core.persistance;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -52,6 +53,16 @@ public class News extends BaseEntity {
 	@JoinColumn(name="content_tweet_id")
 	})
 	private List<ContentTweet> tweets;//all one liners attached to this news which can be tweeted
+	
+	@ManyToMany(cascade=CascadeType.ALL)
+    @JoinTable(name = "news_location",
+    joinColumns = {
+    @JoinColumn(name="news_id") 
+    },
+    inverseJoinColumns = {
+ @JoinColumn(name = "location_id")
+    })
+    private Set<Location> locations;
 	
 	@ManyToMany(cascade=CascadeType.ALL)
 	@JoinTable(name = "news_ac",
@@ -240,4 +251,12 @@ public class News extends BaseEntity {
 	public void setRejectionReason(String rejectionReason) {
 		this.rejectionReason = rejectionReason;
 	}
+
+    public Set<Location> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(Set<Location> locations) {
+        this.locations = locations;
+    }
 }

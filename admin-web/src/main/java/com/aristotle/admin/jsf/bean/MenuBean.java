@@ -103,6 +103,14 @@ public class MenuBean extends BaseJsfBean {
     public boolean isManageNewsAllowed() {
         return isAllowed(AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS, AppPermission.DELETE_NEWS, AppPermission.APPROVE_NEWS);
     }
+
+    public boolean isEditNewsAllowed() {
+        return isAllowed(AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS, AppPermission.DELETE_NEWS, AppPermission.APPROVE_NEWS);
+    }
+
+    public boolean isPublishNewsAllowed() {
+        return isAllowed(AppPermission.APPROVE_NEWS);
+    }
     public boolean isManageBlogAllowed() {
         return isAllowed(AppPermission.CREATE_BLOG, AppPermission.UPDATE_BLOG, AppPermission.DELETE_BLOG, AppPermission.APPROVE_BLOG);
     }
@@ -209,11 +217,21 @@ public class MenuBean extends BaseJsfBean {
         selectedLocation = ((Location) event.getComponent().getAttributes().get("stateLocation"));
         buildAndRedirect("/admin/location");
         globalSelected = false;
+        System.out.println("globalSelected=" + globalSelected);
     }
 
     public void selectGlobal(ActionEvent event) {
         globalSelected = true;
+        System.out.println("globalSelected=" + globalSelected);
         buildAndRedirect("/admin/location");
+    }
+
+    public void goToHtmlTemplatePage() {
+        if (isWebDeveloperRoleAllowed()) {
+            buildAndRedirect("/admin/templates");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
     }
     
     /*
@@ -323,7 +341,7 @@ public class MenuBean extends BaseJsfBean {
      * 
      * public void goToManageUserRolePage() { if (isManageUserRoleAllowed()) { buildAndRedirect("/admin/roles"); } else { buildAndRedirect("/admin/notallowed"); } }
      * 
-     * public void goToHtmlTemplatePage() { if (isWebDeveloperRoleAllowed()) { buildAndRedirect("/admin/templates"); } else { buildAndRedirect("/admin/notallowed"); } }
+     * 
      * 
      * public boolean isCampaignAllowed() { return isVoiceOfAapFbAllowed() || isVoiceOfAapTwitterAllowed() || isEmailAllowed() || isSmsAllowed() || isGlobalDonationCampaignAllowed() ||
      * isCandidateAllowed(); }
@@ -507,5 +525,13 @@ public class MenuBean extends BaseJsfBean {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public boolean isGlobalSelected() {
+        return globalSelected;
+    }
+
+    public void setGlobalSelected(boolean globalSelected) {
+        this.globalSelected = globalSelected;
     }
 }

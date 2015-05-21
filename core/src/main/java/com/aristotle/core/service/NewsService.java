@@ -2,13 +2,15 @@ package com.aristotle.core.service;
 
 import java.util.List;
 
-import com.aristotle.core.enums.PostLocationType;
 import com.aristotle.core.exception.AppException;
+import com.aristotle.core.persistance.ContentTweet;
 import com.aristotle.core.persistance.News;
 
 public interface NewsService {
 
-    // News saveNews(News News, List<ContentTweetDto> contentTweetDtos, PostLocationType locationType, Long locationId);
+    //
+
+    News saveNews(News news, List<ContentTweet> contentTweetDtos, Long locationId);
 
     News publishNews(Long newsId) throws AppException;
 
@@ -18,7 +20,12 @@ public interface NewsService {
 
     News getNewsById(Long newsId) throws AppException;
 
-    List<News> getNews(PostLocationType locationType, Long locationId) throws AppException;
+    List<News> getAllPublishedNews(int totalNews) throws AppException;
 
-    List<News> getAllPublishedNews() throws AppException;
+    List<News> getAllGlobalNews() throws AppException;
+
+    List<News> getAllLocationNews(Long locationId) throws AppException;
+
+    List<ContentTweet> getNewsContentTweets(Long newsId) throws AppException;
+
 }

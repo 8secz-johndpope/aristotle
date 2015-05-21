@@ -27,7 +27,7 @@ import com.aristotle.admin.scope.ViewScope;
 import com.ocpsoft.pretty.PrettyFilter;
 
 /**
- * Created by lvasek on 17/04/15.
+ * Created by Ravi Sharma on 17/05/15.
  */
 @SpringBootApplication
 @EnableAutoConfiguration
@@ -51,11 +51,13 @@ public class Application extends SpringBootServletInitializer {
     }
 
 
-    @Bean
+    // @Bean
     public FilterRegistrationBean facesUploadFilterRegistration() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean(new FileUploadFilter(), facesServletRegistraiton());
         registrationBean.setName("PrimeFaces FileUpload Filter");
-        registrationBean.addUrlPatterns("/*");
+        List<String> serveltNames = new ArrayList<String>();
+        serveltNames.add("Faces Servlet");
+        registrationBean.setServletNames(serveltNames);
         registrationBean.setDispatcherTypes(DispatcherType.FORWARD, DispatcherType.REQUEST);
         return registrationBean;
     }
@@ -89,7 +91,7 @@ public class Application extends SpringBootServletInitializer {
         List<String> urlPatterns = new ArrayList<String>();
         urlPatterns.add("/*");
         registrationBean.setUrlPatterns(urlPatterns);
-        registrationBean.setDispatcherTypes(DispatcherType.FORWARD, DispatcherType.REQUEST, DispatcherType.ERROR);
+        // registrationBean.setDispatcherTypes(DispatcherType.FORWARD, DispatcherType.REQUEST, DispatcherType.ERROR);
         registrationBean.setFilter(securityFilter);
 
         return registrationBean;
@@ -104,7 +106,7 @@ public class Application extends SpringBootServletInitializer {
             servletContext.setInitParameter("primefaces.CLIENT_SIDE_VALIDATION", Boolean.TRUE.toString());
             servletContext.setInitParameter("javax.faces.FACELETS_SKIP_COMMENTS", Boolean.TRUE.toString());
             servletContext.setInitParameter("primefaces.FONT_AWESOME", Boolean.TRUE.toString());
-            servletContext.setInitParameter("primefaces.UPLOADER", "commons");
+            // servletContext.setInitParameter("primefaces.UPLOADER", "commons");
         };
     }
 }

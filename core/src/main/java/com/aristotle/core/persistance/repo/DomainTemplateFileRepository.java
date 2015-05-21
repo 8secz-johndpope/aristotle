@@ -6,4 +6,5 @@ import com.aristotle.core.persistance.DomainTemplateFile;
 
 public interface DomainTemplateFileRepository extends JpaRepository<DomainTemplateFile, Long> {
 
+    DomainTemplateFile getDomainTemplateFileByFileName(String fileName);
 }

@@ -1,25 +1,24 @@
 package com.aristotle.admin.jsf.bean;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.aristotle.admin.service.AwsFileManager;
+import com.aristotle.core.enums.AppPermission;
+import com.aristotle.core.persistance.User;
+import com.aristotle.core.service.DataPluginService;
+
 
 public class BaseMultiPermissionAdminJsfBean extends BaseJsfBean{
-/*
-	@ManagedProperty("#{aapService}")
-	protected AapService aapService;
+
 	
-	@ManagedProperty("#{aapDataCacheDbImpl}")
-	protected AapDataCache aapDataCache;
-
-	@ManagedProperty("#{newsItemCacheImpl}")
-	protected NewsItemCacheImpl newsItemCacheImpl;
-
-	@ManagedProperty("#{blogItemCacheImpl}")
-	protected BlogItemCacheImpl blogItemCacheImpl;
-
-	@ManagedProperty("#{menuBean}")
+    @Autowired
 	protected MenuBean menuBean;
+    
+    @Autowired
+    protected DataPluginService dataPluginService;
 
-    @ManagedProperty("#{templateCaheInMemoryImpl}")
-    protected TemplateCache templateCache;
+    @Autowired
+    protected AwsFileManager awsFileManager;
 
 	AppPermission[] appPermissions;
 	String url;
@@ -28,8 +27,10 @@ public class BaseMultiPermissionAdminJsfBean extends BaseJsfBean{
 		this.url = url;
 	}
 	protected boolean checkUserAccess(){
-		UserDto loggedInUser = getLoggedInUser(true,buildLoginUrl(url));
+        User loggedInUser = getLoggedInUser(true, buildLoginUrl(url));
+        System.out.println("loggedInUser = " + loggedInUser);
 		if(loggedInUser == null){
+            System.out.println("No Logged in User Found");
 			return false;
 		}
 		System.out.println("menuBean="+menuBean);
@@ -38,57 +39,20 @@ public class BaseMultiPermissionAdminJsfBean extends BaseJsfBean{
 			buildAndRedirect("/admin/home");
 			return false;
 		}
-		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
 		if(appPermissions == null || appPermissions.length == 0){
 			return true;
 		}
-		for(AppPermission oneAppPermission:appPermissions){
-			//if atleast one permission is true, allow user to go to screen
-			if(ClientPermissionUtil.isAllowed(oneAppPermission, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType())){
-				return true;
-			}
-			
+        if (menuBean.isAllowed(appPermissions)) {
+            return true;
 		}
 		buildAndRedirect("/admin/notallowed");
 		return false;
 	}
-	public AapService getAapService() {
-		return aapService;
-	}
-	public void setAapService(AapService aapService) {
-		this.aapService = aapService;
-	}
+
 	public MenuBean getMenuBean() {
 		return menuBean;
 	}
 	public void setMenuBean(MenuBean menuBean) {
 		this.menuBean = menuBean;
 	}
-	public AapDataCache getAapDataCache() {
-		return aapDataCache;
-	}
-	public void setAapDataCache(AapDataCache aapDataCache) {
-		this.aapDataCache = aapDataCache;
-	}
-	public NewsItemCacheImpl getNewsItemCacheImpl() {
-		return newsItemCacheImpl;
-	}
-	public void setNewsItemCacheImpl(NewsItemCacheImpl newsItemCacheImpl) {
-		this.newsItemCacheImpl = newsItemCacheImpl;
-	}
-	public BlogItemCacheImpl getBlogItemCacheImpl() {
-		return blogItemCacheImpl;
-	}
-	public void setBlogItemCacheImpl(BlogItemCacheImpl blogItemCacheImpl) {
-		this.blogItemCacheImpl = blogItemCacheImpl;
-	}
-
-    public TemplateCache getTemplateCache() {
-        return templateCache;
-    }
-
-    public void setTemplateCache(TemplateCache templateCache) {
-        this.templateCache = templateCache;
-    }
-    */
 }

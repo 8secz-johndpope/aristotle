@@ -24,6 +24,13 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
     private UiTemplateService uiTemplateService;
 
     private volatile boolean isInitialised = false;
+
+    @Override
+    public void refresh() {
+        isInitialised = false;
+        init();
+    }
+
     private void init() {
         if (isInitialised) {
             return;
@@ -57,7 +64,9 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
         init();
         String domainName = httpServletRequest.getServerName();
         UrlMapping urlMapping = (UrlMapping) httpServletRequest.getAttribute(HttpParameters.URL_MAPPING);
-
+        if (urlMapping == null) {
+            return "No Template Defined";
+        }
         DomainPageTemplate domainPageTemplate = getDomainPageTemplate(domainName, urlMapping.getId());
         if(domainPageTemplate == null){
             return "No Template Defined";
