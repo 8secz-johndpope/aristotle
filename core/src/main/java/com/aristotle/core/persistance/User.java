@@ -178,6 +178,16 @@ public class User {
 	Set<StateRole> stateRoles;
 	
 	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
+    @JoinTable(name = "user_location_roles",
+    joinColumns = {
+    @JoinColumn(name="user_id") 
+    },
+    inverseJoinColumns = {
+    @JoinColumn(name="location_role_id")
+    })
+    Set<LocationRole> locationRoles;
+	
+	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
 	@JoinTable(name = "user_district_roles",
 	joinColumns = {
 	@JoinColumn(name="user_id") 
@@ -804,6 +814,14 @@ public class User {
 
     public void setIdentityType(String identityType) {
         this.identityType = identityType;
+    }
+
+    public Set<LocationRole> getLocationRoles() {
+        return locationRoles;
+    }
+
+    public void setLocationRoles(Set<LocationRole> locationRoles) {
+        this.locationRoles = locationRoles;
     }
 
     @Override

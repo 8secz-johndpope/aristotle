@@ -3,45 +3,48 @@ package com.aristotle.core.persistance;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "location")
-public class Location {
+public class Location extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
     @Column(name="name", nullable = false)
     private String name;
     
-    @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @Column(name = "name_up", nullable = false)
+    private String nameUp;
+
+    @Column(name = "isd_code")
+    private String isdCode;
+
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
     @JoinColumn(name="location_type_id")
     private LocationType locationType;
     @Column(name = "location_type_id", insertable = false, updatable = false)
-    private Long location_type_id;
+    private Long locationTypeId;
     
     @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="parent_id")
     private Location parentLocation;
     @Column(name = "parent_id", insertable = false, updatable = false)
     private Long parentId;
-    public long getId() {
-        return id;
-    }
-    public void setId(long id) {
-        this.id = id;
-    }
     public String getName() {
         return name;
     }
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getNameUp() {
+        return nameUp;
+    }
+
+    public void setNameUp(String nameUp) {
+        this.nameUp = nameUp;
     }
     public LocationType getLocationType() {
         return locationType;
@@ -49,11 +52,13 @@ public class Location {
     public void setLocationType(LocationType locationType) {
         this.locationType = locationType;
     }
-    public Long getLocation_type_id() {
-        return location_type_id;
+
+    public Long getLocationTypeId() {
+        return locationTypeId;
     }
-    public void setLocation_type_id(Long location_type_id) {
-        this.location_type_id = location_type_id;
+
+    public void setLocationTypeId(Long locationTypeId) {
+        this.locationTypeId = locationTypeId;
     }
     public Location getParentLocation() {
         return parentLocation;
@@ -67,12 +72,18 @@ public class Location {
     public void setParentId(Long parentId) {
         this.parentId = parentId;
     }
+
+    public String getIsdCode() {
+        return isdCode;
+    }
+
+    public void setIsdCode(String isdCode) {
+        this.isdCode = isdCode;
+    }
     @Override
     public String toString() {
-        return "Location [id=" + id + ", name=" + name + ", locationType="
-                + locationType + ", location_type_id=" + location_type_id
-                + ", parentLocation=" + parentLocation + ", parentId="
-                + parentId + "]";
+        return "Location [name=" + name + ", nameUp=" + nameUp + ", isdCode=" + isdCode + ", locationTypeId=" + locationTypeId + ", parentLocation=" + parentLocation + ", parentId=" + parentId
+                + ", id=" + id + ", ver=" + ver + ", dateCreated=" + dateCreated + ", dateModified=" + dateModified + ", creatorId=" + creatorId + ", modifierId=" + modifierId + "]";
     }
     
     

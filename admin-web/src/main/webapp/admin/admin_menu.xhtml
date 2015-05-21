@@ -1,0 +1,235 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<link rel="shortcut icon" href="https://s3.amazonaws.com/myaap/favicon.ico" />
+	<style type="text/css">
+body {
+	background:
+		url(http://www.primefaces.org/showcase/images/macosx/macback.png);
+	margin: 0;
+	padding: 0;
+	font-family: geneva, arial, helvetica, sans-serif;
+}
+
+.topAlignPanelColumns td {
+	vertical-align: top;
+}
+
+.ui-menuitem-icon.ui-icon.appleIcon {
+	background:
+		url(https://s3-us-west-2.amazonaws.com/swaraj/prod/images/missing.png)
+		no-repeat;
+	width: 16px;
+	height: 16px;
+	border-radius: 0px;
+}
+
+.ui-dialog .ui-terminal {
+	border: 0;
+}
+
+.ui-dialog.terminalDialog .ui-dialog-content {
+	padding: 0;
+}
+
+.ui-widget,.ui-widget .ui-widget {
+	font-size: 90% !important;
+}
+
+.topAlignPanelColumns td {
+	vertical-align: top;
+}
+
+.pf-dock-container-top {
+	background-image: none;
+	background-color: white;
+}
+
+.ui-dock-item-top {
+	color: black;
+}
+
+.ui-dock-container-top {
+	color: black;
+}
+
+.ui-selectonemenu {
+	width: 100px;
+}
+</style>
+
+	<h:form>
+		<p:menubar>
+			<p:submenu icon="appleIcon" label=" ">
+				<p:menuitem value="About" onclick="PF('info').show();"></p:menuitem>
+			</p:submenu>
+
+			<p:submenu label="Campaign" rendered="#{menuBean.campaignAllowed}">
+				<p:menuitem value="Facebook" actionListener="#{menuBean.goToVoiceOfAapAdminPageFb}" rendered="#{menuBean.voiceOfAapFbAllowed}"></p:menuitem>
+				<p:menuitem value="Twitter" actionListener="#{menuBean.goToVoiceOfAapAdminPageTwitter}" rendered="#{menuBean.voiceOfAapTwitterAllowed}"></p:menuitem>
+				<p:menuitem value="Email" actionListener="#{menuBean.goToEmailAdminPageTwitter}" rendered="#{menuBean.emailAllowed}"></p:menuitem>
+				<p:menuitem value="Sms" actionListener="#{menuBean.goToSmsAdminPageTwitter}" rendered="#{menuBean.smsAllowed}"></p:menuitem>
+				<p:menuitem value="Global Donation Campaign" actionListener="#{menuBean.goToGlobalDonationcampaignAdminPage}" rendered="#{menuBean.globalDonationCampaignAllowed}"></p:menuitem>
+				<p:menuitem value="Candidates" actionListener="#{menuBean.goToCandidateAdminPage}" rendered="#{menuBean.candidateAllowed}"></p:menuitem>
+			</p:submenu>
+
+			<p:submenu label="Content" rendered="#{menuBean.contentAllowed}">
+				<p:menuitem value="News" actionListener="#{menuBean.goToManageNewsPage}" rendered="#{menuBean.manageNewsAllowed}"></p:menuitem>
+				<p:menuitem value="Blogs" actionListener="#{menuBean.goToManageBlogPage}" rendered="#{menuBean.manageBlogAllowed}"></p:menuitem>
+				<p:menuitem value="Poll" actionListener="#{menuBean.goToManagePollPage}" rendered="#{menuBean.managePollAllowed}"></p:menuitem>
+				<p:menuitem value="Events" actionListener="#{menuBean.goToManageEventPage}" rendered="#{menuBean.manageEventAllowed}"></p:menuitem>
+			</p:submenu>
+			<p:submenu label="Developer" rendered="#{menuBean.developerAllowed}">
+                <p:menuitem value="Html templates" actionListener="#{menuBean.goToHtmlTemplatePage}" rendered="#{menuBean.webDeveloperRoleAllowed}"></p:menuitem>
+            </p:submenu>
+<!-- 
+			<p:submenu label="Members" rendered="#{menuBean.memberAllowed}">
+				<p:menuitem value="Add Members/Volunteers" actionListener="#{menuBean.goToManageMemberPage}" rendered="#{menuBean.manageMemberAllowed}"></p:menuitem>
+				<p:menuitem value="Search Members/Volunteers" actionListener="#{menuBean.goToSearchMemberPage}" rendered="#{menuBean.manageMemberAllowed}"></p:menuitem>
+			</p:submenu>
+
+			<p:submenu label="Admin" rendered="#{menuBean.adminAllowed}">
+				<p:menuitem value="Manage User Roles" actionListener="#{menuBean.goToManageUserRolePage}" rendered="#{menuBean.manageUserRoleAllowed}"></p:menuitem>
+				<p:menuitem value="Edit Office Detail" actionListener="#{menuBean.goToEditOfficeDetailPage}" rendered="#{menuBean.editOfficeDetailAllowed}"></p:menuitem>
+			</p:submenu>
+			
+			
+
+			<p:submenu label="Treasury" rendered="#{menuBean.treasuryAllowed}">
+				<p:menuitem value="Income" actionListener="#{menuBean.goToTreasuryPage}" rendered="#{menuBean.treasuryAllowed}"></p:menuitem>
+				<p:menuitem value="Transactions" actionListener="#{menuBean.goToTreasuryAccountDetailPage}" rendered="#{menuBean.treasuryAllowed}"></p:menuitem>
+			</p:submenu>
+			-->
+            <p:submenu label="Location">
+                <p:menuitem value="Pick Location" oncomplete="PF('chooseLocation').show()"></p:menuitem>
+            </p:submenu>
+		</p:menubar>
+		
+		<p:outputLabel value="Current Location : #{menuBean.selectedLocation.name}"></p:outputLabel>
+	</h:form>
+
+	<p:dialog header="About This Application" draggable="true" widgetVar="info" showEffect="fade" hideEffect="fade" modal="true">
+		<h:form>
+			<h:panelGrid columns="1" style="width:100%;text-align:center;">
+				<p:graphicImage value="https://s3-us-west-2.amazonaws.com/swaraj/prod/images/missing.png" />
+				<h:outputText value="Swaraj Abhiyan" style="font-size:16px" />
+				<h:outputText value="Admin Panel" />
+			</h:panelGrid>
+
+			<h:panelGrid columns="2">
+				<h:outputText value="Help" style="font-weight:bold" />
+				<h:outputText value="ping2ravi@gmail.com" />
+
+			</h:panelGrid>
+
+		</h:form>
+	</p:dialog>
+
+	<p:dialog header="Choose Location" draggable="true" widgetVar="chooseLocation" showEffect="fade" hideEffect="fade" modal="true">
+		<h:form id="adminForm" rendered="#{menuBean.admin}">
+			<p:messages id="messages" autoUpdate="true" closable="true" />
+			<!-- 
+			<p:outputPanel rendered="#{menuBean.user.superAdmin}">
+				<p:panelGrid columns="2" cellpadding="5" style="width:395px;">
+					<f:facet name="header"> Select the Location</f:facet>
+					<p:outputLabel />
+					<p:commandButton value="Global" actionListener="#{menuBean.selectGlobal}" styleClass="ui-priority-primary">
+						</p:commandButton>
+					<h:outputLabel for="state" value="State" />
+					<p:selectOneMenu id="state" value="#{menuBean.selectedStateId}" effect="fold" editable="false">
+						<f:selectItem itemLabel="Select State" itemValue="0" />
+						<f:selectItems value="#{menuBean.states}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
+
+						<p:ajax event="change" update=":adminForm:district,:adminForm:parliamentConstituency" listener="#{menuBean.handleStateChange}" />
+					</p:selectOneMenu>
+					<h:outputLabel for="district" value="District*" />
+					<p:selectOneMenu id="district" value="#{menuBean.selectedDistrictId}" effect="fold" editable="false">
+						<f:selectItem itemLabel="Select District" itemValue="0" />
+						<f:selectItems value="#{menuBean.districtOfState}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict.id}" />
+
+						<p:ajax event="change" update=":adminForm:assemblyConstituency" listener="#{menuBean.handleDistrictChange}" />
+					</p:selectOneMenu>
+
+					<h:outputLabel for="parliamentConstituency" value="Parliament Constituency*" />
+
+					<p:selectOneMenu id="parliamentConstituency" value="#{menuBean.selectedPcId}" effect="fold" editable="false">
+						<f:selectItem itemLabel="Select Parliament Constituency" itemValue="0" />
+						<f:selectItems value="#{menuBean.parliamentConstituencyOfState}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}"
+							itemValue="#{oneParliamentConstituency.id}" />
+
+					</p:selectOneMenu>
+
+					<h:outputLabel for="assemblyConstituency" value="Assembly Constituency*" />
+					<p:selectOneMenu id="assemblyConstituency" value="#{menuBean.selectedAcId}" effect="fold" editable="false">
+						<f:selectItem itemLabel="Select Assembly Constituency" itemValue="0" />
+						<f:selectItems value="#{menuBean.assemblyConstituencyOfDistrict}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
+							itemValue="#{oneAssemblyConstituency.id}" />
+
+					</p:selectOneMenu>
+
+				</p:panelGrid>
+				<p:commandButton value="Cancel" oncomplete="chooseLocation.hide()" styleClass="ui-priority-primary">
+				</p:commandButton>
+				<p:commandButton value="Select" actionListener="#{menuBean.selectCurrent}" styleClass="ui-priority-primary">
+				</p:commandButton>
+			</p:outputPanel>
+			-->
+			<p:outputPanel rendered="#{!menuBean.user.superAdmin and menuBean.admin}">
+
+				<h:panelGrid columns="3" styleClass="topAlignPanelColumns">
+					<p:panelGrid var="oneState" columns="1" rendered="#{menuBean.globalAdmin}">
+						<f:facet name="header"> Global</f:facet>
+						<p:commandButton value="Select" actionListener="#{menuBean.selectGlobal}" styleClass="ui-priority-primary">
+						</p:commandButton>
+					</p:panelGrid>
+					<p:dataTable var="oneLocation" value="#{menuBean.adminLocations}" rendered="#{menuBean.admin}">
+						<f:facet name="header"> Select Location</f:facet>
+						<p:column>
+							<h:outputText value="#{oneLocation.locationType.name} - #{oneLocation.name}" />
+						</p:column>
+						<p:column>
+							<p:commandButton value="Select" actionListener="#{menuBean.selectLocation}" styleClass="ui-priority-primary">
+								<f:attribute name="selectedLocation" value="#{oneLocation}" />
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+
+				</h:panelGrid>
+
+
+			</p:outputPanel>
+		</h:form>
+	</p:dialog>
+	<!--
+	<p:dock>
+			<p:menuitem value="Home" icon="https://cdn2.iconfinder.com/data/icons/snipicons/5000/home-128.png" url="/home" />
+		<p:menuitem value="Edit Profile" icon="https://cdn1.iconfinder.com/data/icons/macosxstyle/macosxstyle_png/128/System%20Preferences.png" url="/profile" />
+		<p:menuitem value="Login Accounts" icon="https://cdn1.iconfinder.com/data/icons/VistaICO_Toolbar-Icons/128/Login.png" url="/socialaccounts" />
+		<p:menuitem value="Voice Of AAP" icon="https://cdn1.iconfinder.com/data/icons/REALVISTA/communications/png/128/voice_chat.png" url="/voiceofaap" />
+		<p:menuitem value="Voice Of AAP Activities" icon="https://cdn1.iconfinder.com/data/icons/macosxstyle/macosxstyle_png/128/Activity%20Monitor.png" url="/voafactivity" />
+		<p:menuitem value="Admin Panel" icon="https://cdn1.iconfinder.com/data/icons/free-large-boss-icon-set/128/Admin.png" url="/admin/home" rendered="#{menuBean.admin}" />
+		<p:menuitem value="Logout" icon="https://cdn1.iconfinder.com/data/icons/customicondesign-office6-shadow/128/logout.png" url="/logout" rendered="#{menuBean.loggedIn}" />
+	
+	</p:dock>
+  -->
+	<p:stack icon="http://www.primefaces.org/showcase/images/stack/stack.png">
+		<p:menuitem style="font-size:10px;" value="Home" icon="https://cdn2.iconfinder.com/data/icons/snipicons/5000/home-128.png" url="/index.html" />
+		<!-- 
+		<p:menuitem style="font-size:10px;" value="Edit Profile" icon="https://cdn1.iconfinder.com/data/icons/macosxstyle/macosxstyle_png/128/System%20Preferences.png" url="/profile" />
+		<p:menuitem style="font-size:10px;" value="Login Accounts" icon="https://cdn1.iconfinder.com/data/icons/VistaICO_Toolbar-Icons/128/Login.png" url="/socialaccounts" />
+		<p:menuitem style="font-size:10px;" value="Voice Of AAP" icon="https://cdn1.iconfinder.com/data/icons/REALVISTA/communications/png/128/voice_chat.png" url="/voiceofaap" />
+		<p:menuitem style="font-size:10px;" value="Voice Of AAP Activities" icon="https://cdn1.iconfinder.com/data/icons/macosxstyle/macosxstyle_png/128/Activity%20Monitor.png"
+			url="/voafactivity" />
+		<p:menuitem style="font-size:10px;" value="Admin Panel" icon="https://cdn1.iconfinder.com/data/icons/free-large-boss-icon-set/128/Admin.png" url="/admin/home"
+			rendered="#{menuBean.admin}" />
+			 -->
+		<p:menuitem style="font-size:10px;" value="Logout" icon="https://cdn1.iconfinder.com/data/icons/customicondesign-office6-shadow/128/logout.png" url="/logout"/>
+		<!-- 
+		<p:menuitem value="Aperture" icon="http://www.primefaces.org/showcase/images/stack/aperture.png" url="#" />
+		<p:menuitem value="Photoshop" icon="http://www.primefaces.org/showcase/images/stack/photoshop.png" url="#" />
+		<p:menuitem value="Coda" icon="http://www.primefaces.org/showcase/images/stack/coda.png" url="#" />
+		<p:menuitem value="Safari" icon="http://www.primefaces.org/showcase/images/stack/safari.png" url="#" />
+		<p:menuitem value="Finder" icon="http://www.primefaces.org/showcase/images/stack/finder.png" url="#" />
+		 -->
+	</p:stack>
+
+</ui:composition>

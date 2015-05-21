@@ -42,8 +42,8 @@ public class BaseRepositoryTest {
     public void init() {
         User user = userRepository.findOne(1L);
         System.out.println("Setting user in Application Context " + user);
-        Authentication authentication = new PreAuthenticatedAuthenticationToken(user, null, null);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        //Authentication authentication = new PreAuthenticatedAuthenticationToken(user, null, null);
+        //SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     protected void checkAuditFields(BaseEntity baseEntity) {

@@ -76,6 +76,12 @@ public class Office {
 	private String otherInformation;//content of news which can be html or plain text
 
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @JoinColumn(name = "location_id")
+    private Location location;
+    @Column(name = "location_id", insertable = false, updatable = false)
+    private Long locationId;
+
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinColumn(name="state_id")
     private State state;
 	@Column(name="state_id", insertable=false,updatable=false)
@@ -322,6 +328,22 @@ public class Office {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public Long getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(Long locationId) {
+        this.locationId = locationId;
+    }
 	
 	
 

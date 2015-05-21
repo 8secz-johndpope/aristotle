@@ -46,6 +46,11 @@ public class CountryRegion {
 	@Column(name="country_id", insertable=false,updatable=false)
 	private Long countryId;
 	
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinColumn(name = "location_id")
+    private Location location;
+    @Column(name = "location_id", insertable = false, updatable = false)
+    private Long locationId;
 	
 	public Long getId() {
 		return id;
@@ -127,7 +132,23 @@ public class CountryRegion {
 		this.countryId = countryId;
 	}
 
-	@Override
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public Long getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(Long locationId) {
+        this.locationId = locationId;
+    }
+
+    @Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
