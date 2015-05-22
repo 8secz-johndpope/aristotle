@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
 public class Main extends SpringBootServletInitializer {
 
 
-    public static void main(String[] args) {
+    public static void mainsds(String[] args) {
         SpringApplication.run(Main.class, args);
     }
 

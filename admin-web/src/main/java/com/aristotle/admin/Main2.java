@@ -28,7 +28,7 @@ import com.aristotle.admin.scope.ViewScope;
 @EnableAutoConfiguration(exclude = { WebMvcAutoConfiguration.class, DispatcherServletAutoConfiguration.class })
 public class Main2 extends SpringBootServletInitializer {
 
-    public static void main(String[] args) {
+    public static void mainsa(String[] args) {
         SpringApplication.run(Main2.class, args);
     }
     
