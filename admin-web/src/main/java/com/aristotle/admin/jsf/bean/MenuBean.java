@@ -66,7 +66,7 @@ public class MenuBean extends BaseJsfBean {
     }
 
     public boolean isAdmin() {
-        return (!allPermissions.isEmpty() || !locationPermissions.isEmpty());
+        return (user.isSuperAdmin() || !allPermissions.isEmpty() || !locationPermissions.isEmpty());
     }
     public boolean isVoiceOfAapFbAllowed() {
         return isAllowed(AppPermission.ADMIN_VOICE_OF_AAP_FB);
