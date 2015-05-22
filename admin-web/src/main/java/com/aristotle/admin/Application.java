@@ -8,9 +8,7 @@ import java.util.Map;
 import javax.faces.webapp.FacesServlet;
 import javax.servlet.DispatcherType;
 
-import org.apache.naming.factory.BeanFactory;
 import org.primefaces.webapp.filter.FileUploadFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.CustomScopeConfigurer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -31,14 +29,13 @@ import com.ocpsoft.pretty.PrettyFilter;
  */
 @SpringBootApplication
 @EnableAutoConfiguration
-@ComponentScan(basePackages = { "com.aristotle.admin.jsf.bean", "com.aristotle.admin.service", "com.aristotle.admin.util", "com.aristotle.admin.filter" })
+@ComponentScan(basePackages = { "com.aristotle.admin.jsf.bean", "com.aristotle.admin.service", "com.aristotle.admin.util", "com.aristotle.admin.filter", "com.aristotle.core.service",
+        "com.aristotle.core.service.temp" })
 public class Application extends SpringBootServletInitializer {
 
-    @Autowired
-    private BeanFactory springLoginFilter;
 
     public static void main(String[] args) {
-        SpringApplication app = new SpringApplication(Application.class, DatabaseConfig.class, ServiceConfig.class, Initializer.class);
+        SpringApplication app = new SpringApplication(Application.class, DatabaseConfig.class, Initializer.class);
         app.run(args);
     }
 
@@ -78,7 +75,6 @@ public class Application extends SpringBootServletInitializer {
         List<String> urlPatterns = new ArrayList<String>();
         urlPatterns.add("*.xhtml");
         registrationBean.setUrlPatterns(urlPatterns);
-        System.out.println("groovy.swing.factory.BeanFactory  = " + springLoginFilter);
         registrationBean.setFilter(securityFilter);
 
         return registrationBean;
