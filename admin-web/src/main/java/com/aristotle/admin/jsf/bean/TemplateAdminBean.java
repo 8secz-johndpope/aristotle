@@ -8,6 +8,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 import org.primefaces.event.FileUploadEvent;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
@@ -38,6 +39,11 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
     private Map<String, String> urls;
     private Map<String, UrlMapping> urlToUrlMapping;
     private String draftUrl;
+    
+    @Value("${aws_access_key}")
+    private String awsKey;
+    @Value("${aws_access_secret}")
+    private String awsSecret;
 
 	
 	public TemplateAdminBean(){
@@ -125,7 +131,7 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
         String bucketName = "static.swarajabhiyan.org";
         System.out.println("remoteFileName = " + remoteFileName);
         try {
-            awsFileManager.uploadFileToS3("AKIAID2HAQXLSCPRPJGA", "7JYA0SjpCLU0aR1y+1HtVpefbFfaBe7KBmVqg6gq", bucketName, remoteFileName, event.getFile().getInputstream());
+            awsFileManager.uploadFileToS3(awsKey, awsSecret, bucketName, remoteFileName, event.getFile().getInputstream());
             System.out.println("File uploaded = " + remoteFileName);
             dataPluginService.saveDomainTemplateFile(selectedTemplate.getId(), remoteFileName, event.getFile().getSize());
             FacesMessage message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
