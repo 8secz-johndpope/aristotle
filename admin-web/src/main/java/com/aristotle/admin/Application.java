@@ -38,7 +38,7 @@ public class Application extends SpringBootServletInitializer {
     private BeanFactory springLoginFilter;
 
     public static void main(String[] args) {
-        SpringApplication app = new SpringApplication(Application.class, DatabaseConfig.class, ServiceConfig.class);
+        SpringApplication app = new SpringApplication(Application.class, DatabaseConfig.class, ServiceConfig.class, Initializer.class);
         app.run(args);
     }
 
@@ -98,7 +98,7 @@ public class Application extends SpringBootServletInitializer {
     }
 
 
-    @Bean
+    // @Bean
     public ServletContextInitializer servletContextInitializer() {
         return servletContext -> {
             servletContext.setInitParameter("com.sun.faces.forceLoadConfiguration", Boolean.TRUE.toString());

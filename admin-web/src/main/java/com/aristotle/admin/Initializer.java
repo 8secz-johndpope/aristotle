@@ -15,7 +15,11 @@ public class Initializer implements ServletContextInitializer {
         servletContext.setInitParameter("primefaces.CLIENT_SIDE_VALIDATION", "true");
         servletContext.setInitParameter("primefaces.THEME", "start");
         servletContext.setInitParameter("facelets.SKIP_COMMENTS", "true");
-
+        servletContext.setInitParameter("com.sun.faces.forceLoadConfiguration", Boolean.TRUE.toString());
+        // servletContext.setInitParameter("primefaces.THEME", "bootstrap");
+        // servletContext.setInitParameter("primefaces.CLIENT_SIDE_VALIDATION", Boolean.TRUE.toString());
+        servletContext.setInitParameter("javax.faces.FACELETS_SKIP_COMMENTS", Boolean.TRUE.toString());
+        servletContext.setInitParameter("primefaces.FONT_AWESOME", Boolean.TRUE.toString());
     }
 
 }
