@@ -1,5 +1,6 @@
 package com.aristotle.core.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,8 @@ import com.aristotle.core.persistance.DomainPageTemplate;
 import com.aristotle.core.persistance.DomainTemplate;
 import com.aristotle.core.persistance.DomainTemplateFile;
 import com.aristotle.core.persistance.UrlMapping;
+import com.aristotle.core.persistance.UrlMappingPlugin;
+import com.aristotle.core.persistance.repo.DataPluginRepository;
 import com.aristotle.core.persistance.repo.DomainPageTemplateRepository;
 import com.aristotle.core.persistance.repo.DomainRepository;
 import com.aristotle.core.persistance.repo.DomainTemplateFileRepository;
@@ -41,6 +44,8 @@ public class DataPluginServiceImpl implements DataPluginService {
     private DomainTemplateFileRepository domainTemplateFileRepository;
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private DataPluginRepository dataPluginRepository;
 
     @Override
     public List<UrlMapping> getAllUrlMappings() throws AppException {
@@ -94,6 +99,61 @@ public class DataPluginServiceImpl implements DataPluginService {
         domainTemplateFile.setDomainTemplate(domainTemplate);
         domainTemplateFile = domainTemplateFileRepository.save(domainTemplateFile);
         return domainTemplateFile;
+    }
+
+    @Override
+    public UrlMapping saveUrlMapping(UrlMapping urlMapping) throws AppException {
+        return urlMappingRepository.save(urlMapping);
+    }
+
+    @Override
+    public List<DataPlugin> getDataPluginsByUrlMappingId(Long urlMappingId) throws AppException {
+        return dataPluginRepository.getDataPluginOfUrlMapping(urlMappingId);
+    }
+
+    @Override
+    public List<DataPlugin> getAllDataPlugins() throws AppException {
+        return dataPluginRepository.findAll();
+    }
+
+    @Override
+    public void addDataPluginForUrlMapping(Long urlMappingId, List<DataPlugin> dataPlugins) throws AppException {
+        UrlMapping urlMapping = urlMappingRepository.findOne(urlMappingId);
+        if (urlMapping.getUrlMappingPlugins() == null) {
+            urlMapping.setUrlMappingPlugins(new ArrayList<UrlMappingPlugin>());
+        }
+
+        boolean existing;
+        for (DataPlugin oneDataPlugin : dataPlugins) {
+            existing = false;
+            for (UrlMappingPlugin oneUrlMappingPlugin : urlMapping.getUrlMappingPlugins()) {
+                if (oneUrlMappingPlugin.getDataPlugin().getId().equals(oneDataPlugin.getId())) {
+                    existing = true;
+                }
+            }
+            if (existing) {
+                continue;
+            }
+            oneDataPlugin = entityManager.merge(oneDataPlugin);
+            UrlMappingPlugin oneUrlMappingPlugin = new UrlMappingPlugin();
+            oneUrlMappingPlugin.setUrlMapping(urlMapping);
+            oneUrlMappingPlugin.setDataPlugin(oneDataPlugin);
+            oneUrlMappingPlugin = urlMappingPluginRepository.save(oneUrlMappingPlugin);
+        }
+
+        for (UrlMappingPlugin oneUrlMappingPlugin : urlMapping.getUrlMappingPlugins()) {
+            existing = false;
+            for (DataPlugin oneDataPlugin : dataPlugins) {
+                if (oneUrlMappingPlugin.getDataPlugin().getId().equals(oneDataPlugin.getId())) {
+                    existing = true;
+                }
+            }
+            if (existing) {
+                continue;
+            }
+            urlMappingPluginRepository.delete(oneUrlMappingPlugin);
+        }
+
     }
 
 }

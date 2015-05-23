@@ -19,9 +19,11 @@ import com.aristotle.core.persistance.LocationRole;
 import com.aristotle.core.persistance.LoginAccount;
 import com.aristotle.core.persistance.Permission;
 import com.aristotle.core.persistance.Role;
+import com.aristotle.core.persistance.StaticDataPlugin;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.repo.LocationRepository;
 import com.aristotle.core.persistance.repo.LoginAccountRepository;
+import com.aristotle.core.persistance.repo.StaticDataPluginRepository;
 import com.aristotle.core.persistance.repo.UserRepository;
 import com.aristotle.core.service.PasswordUtil;
 
@@ -37,6 +39,8 @@ public class AdminServiceImpl implements AdminService {
     private LocationRepository locationRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private StaticDataPluginRepository staticDataPluginRepository;
 
     @Override
     public User login(String userName, String password) throws AppException {
@@ -105,6 +109,16 @@ public class AdminServiceImpl implements AdminService {
         }
 
         return returnPermissions;
+    }
+
+    @Override
+    public List<StaticDataPlugin> getAllStaticDataPlugin() throws AppException {
+        return staticDataPluginRepository.findAll();
+    }
+
+    @Override
+    public StaticDataPlugin saveStaticDataPlugin(StaticDataPlugin staticDataPlugin) throws AppException {
+        return staticDataPluginRepository.save(staticDataPlugin);
     }
 
 }

@@ -30,7 +30,7 @@ import com.ocpsoft.pretty.PrettyFilter;
 @SpringBootApplication
 @EnableAutoConfiguration
 @ComponentScan(basePackages = { "com.aristotle.admin.jsf.bean", "com.aristotle.admin.service", "com.aristotle.admin.util", "com.aristotle.admin.filter", "com.aristotle.core.service",
-        "com.aristotle.core.service.temp" })
+        "com.aristotle.core.service.temp", "com.aristotle.admin.jsf.convertors" })
 public class Application extends SpringBootServletInitializer {
 
 

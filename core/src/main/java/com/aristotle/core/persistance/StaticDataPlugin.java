@@ -19,4 +19,9 @@ public class StaticDataPlugin extends DataPlugin {
         this.content = content;
     }
 
+    @Override
+    public String toString() {
+        return "StaticDataPlugin [content=" + content + ", toString()=" + super.toString() + "]";
+    }
+
 }

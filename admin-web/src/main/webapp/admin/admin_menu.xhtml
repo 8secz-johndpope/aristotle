@@ -79,7 +79,9 @@ body {
 				<p:menuitem value="Events" actionListener="#{menuBean.goToManageEventPage}" rendered="#{menuBean.manageEventAllowed}"></p:menuitem>
 			</p:submenu>
 			<p:submenu label="Developer" rendered="#{menuBean.developerAllowed}">
+			<p:menuitem value="Url Mappings" actionListener="#{menuBean.goToUrlMappingPage}" rendered="#{menuBean.webDeveloperRoleAllowed}"></p:menuitem>
                 <p:menuitem value="Html templates" actionListener="#{menuBean.goToHtmlTemplatePage}" rendered="#{menuBean.webDeveloperRoleAllowed}"></p:menuitem>
+                <p:menuitem value="Static Data Plugins" actionListener="#{menuBean.goToStaticDataPluginPage}" rendered="#{menuBean.webDeveloperRoleAllowed}"></p:menuitem>
             </p:submenu>
 <!-- 
 			<p:submenu label="Members" rendered="#{menuBean.memberAllowed}">
@@ -104,7 +106,8 @@ body {
             </p:submenu>
 		</p:menubar>
 		
-		<p:outputLabel value="Current Location : #{menuBean.selectedLocation.name}"></p:outputLabel>
+		<p:outputLabel value="Current Location : #{menuBean.selectedLocation.name}" rendered="#{!menuBean.globalSelected}"></p:outputLabel>
+		<p:outputLabel value="Current Location : Global" rendered="#{menuBean.globalSelected}"></p:outputLabel>
 	</h:form>
 
 	<p:dialog header="About This Application" draggable="true" widgetVar="info" showEffect="fade" hideEffect="fade" modal="true">

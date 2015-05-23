@@ -19,4 +19,9 @@ public class CustomDataPlugin extends DataPlugin {
         this.fullClassName = fullClassName;
     }
 
+    @Override
+    public String toString() {
+        return "CustomDataPlugin [fullClassName=" + fullClassName + ", toString()=" + super.toString() + "]";
+    }
+
 }

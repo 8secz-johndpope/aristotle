@@ -6,6 +6,10 @@
 <h:head>
 	<title>Template - Admin Panel</title>
 	<style>
+	body {
+    font-size: 110% !important;
+
+}
 .topAlignPanelColumns td {
 	vertical-align: top;
 }
@@ -26,18 +30,19 @@
 .ui-selectonemenu {
 	width: 100px;
 }
-
-.ui-widget, .ui-widget .ui-widget {
-	font-size: 90% !important;
+.ui-widget,.ui-widget-header,.ui-widget-content,.ui-widget-header .ui-widget-header,.ui-widget-content .ui-widget-content,.ui-widget input,.ui-widget select,.ui-widget textarea,.ui-widget button
+    {
+    font-size: 100% !important;
 }
+
 </style>
 
 </h:head>
 <h:body>
 	<ui:include src="admin_menu.xhtml" />
 	<!-- menu ends -->
-	<div style="width: 1000px; margin: 0 auto;">
-		<div style="width: 1000px; margin: 0;">
+	<div style="width: 1200px; margin: 0 auto;">
+		<div style="width: 12 00px; margin: 0;">
 			<p:blockUI block="adminTemplateForm" trigger=":adminTemplateForm:tabview:saveTemplate">
 			Saving Profile<br />
 				<p:graphicImage value="/images/ajax-loader.gif" />
@@ -100,7 +105,7 @@
                                     <p:ajax event="change" update=":adminTemplateForm:formView" listener="#{templateAdminBean.handleUrlSelection}" />
                                 </p:selectOneMenu>
                                 <p:outputLabel value="Template"></p:outputLabel>
-                                <p:inputTextarea rows="6" cols="150" value="#{templateAdminBean.selectedTemplateUrl.htmlContent}" />
+                                <p:inputTextarea rows="6" cols="175" value="#{templateAdminBean.selectedTemplateUrl.htmlContent}" />
                             </p:panelGrid>
                             <br></br>
                             <p:outputPanel id="buttonPanel">

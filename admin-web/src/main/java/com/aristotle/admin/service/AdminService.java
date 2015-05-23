@@ -7,6 +7,7 @@ import java.util.Set;
 import com.aristotle.core.enums.AppPermission;
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Location;
+import com.aristotle.core.persistance.StaticDataPlugin;
 import com.aristotle.core.persistance.User;
 
 public interface AdminService {
@@ -18,4 +19,8 @@ public interface AdminService {
     Set<AppPermission> getGlobalPermissionsOfUser(Long userId) throws AppException;
 
     Map<Long, Set<AppPermission>> getLocationPermissionsOfUser(Long userId) throws AppException;
+
+    List<StaticDataPlugin> getAllStaticDataPlugin() throws AppException;
+
+    StaticDataPlugin saveStaticDataPlugin(StaticDataPlugin staticDataPlugin) throws AppException;
 }

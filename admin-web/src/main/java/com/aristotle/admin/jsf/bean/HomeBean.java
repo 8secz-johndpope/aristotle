@@ -6,9 +6,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
+import com.ocpsoft.pretty.faces.annotation.URLBeanName;
+import com.ocpsoft.pretty.faces.annotation.URLMapping;
+
 @Component
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "view")
-public class TestBean {
+@URLMapping(id = "homeBean", beanName = "homeBean", pattern = "/admin/home", viewId = "/admin/admin_home.xhtml")
+@URLBeanName("homeBean")
+public class HomeBean {
 
     private String name;
 

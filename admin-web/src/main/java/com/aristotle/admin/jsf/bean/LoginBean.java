@@ -24,8 +24,8 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
 @Component
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "session")
-@URLMapping(id = "adminEditUserRoleBean", beanName = "adminEditUserRoleBean", pattern = "/admin/login", viewId = "/admin/login.xhtml")
-@URLBeanName("adminEditUserRoleBean")
+@URLMapping(id = "adminLoginBean", beanName = "adminLoginBean", pattern = "/admin/login", viewId = "/admin/login.xhtml")
+@URLBeanName("adminLoginBean")
 public class LoginBean extends BaseJsfBean {
 
     private static final long serialVersionUID = 1L;
@@ -80,7 +80,7 @@ public class LoginBean extends BaseJsfBean {
             // Move to Redirect page
             String redirectUrl = httpServletRequest.getParameter("redirect_url");
             if (StringUtils.isEmpty(redirectUrl)) {
-                redirectUrl = "/admin/home.xhtml";
+                redirectUrl = "/admin/home";
             }
             redirect(redirectUrl);
         } catch (Exception e) {

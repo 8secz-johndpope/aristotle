@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Url Mappings - Admin Panel</title>
+	<style>
+.topAlignPanelColumns td {
+	vertical-align: top;
+}
+
+.pf-dock-container-top {
+	background-image: none;
+	background-color: white;
+}
+
+.ui-dock-item-top {
+	color: black;
+}
+
+.ui-dock-container-top {
+	color: black;
+}
+
+.ui-selectonemenu {
+	width: 100px;
+}
+
+.ui-widget, .ui-widget .ui-widget {
+	font-size: 90% !important;
+}
+</style>
+
+</h:head>
+<h:body>
+	<ui:include src="admin_menu.xhtml" />
+	<!-- menu ends -->
+	<div style="width: 1200px; margin: 0 auto;">
+		<div style="width: 1200px; margin: 0;">
+			<p:blockUI block="urlMappingForm" trigger=":urlMappingForm:saveUrlMapping">
+			Saving Profile<br />
+				<p:graphicImage value="/images/ajax-loader.gif" />
+			</p:blockUI>
+			<h:form id="urlMappingForm">
+				<p:messages id="messages" autoUpdate="true" closable="true" />
+				<p:outputPanel id="mainPanel">
+					<p:outputPanel id="listView" rendered="#{urlMappingAdminBean.showList}">
+
+						<p:commandButton value="Create Url Mapping" actionListener="#{urlMappingAdminBean.createUrlMapping}"
+							update=":urlMappingForm:mainPanel">
+						</p:commandButton>
+						<p:dataTable id="listOfStaticDataPlugins" var="oneUrlMapping" value="#{urlMappingAdminBean.urlMappings}"
+							paginator="true" rows="25" paginatorPosition="bottom" paginatorAlwaysVisible="false"
+							emptyMessage="No Static Data Plugin"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15">
+							<f:facet name="header">Url Mapping</f:facet>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Id" />
+								</f:facet>
+								<h:outputText value="#{oneUrlMapping.id}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Url patter" />
+								</f:facet>
+								<h:outputText value="#{oneUrlMapping.urlPattern}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Active" />
+								</f:facet>
+								<h:outputText value="#{oneUrlMapping.active}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Secured" />
+								</f:facet>
+								<h:outputText value="#{oneUrlMapping.secured}" />
+							</p:column>
+							<p:column style="width:100px;">
+								<f:facet name="header">
+									<h:outputText value="Update" />
+								</f:facet>
+								<p:commandLink update=":urlMappingForm:mainPanel" title="Update">
+									<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/tango-icon-library/48/edit-redo-48.png"
+										height="20" />
+									<f:setPropertyActionListener value="#{oneUrlMapping}" target="#{urlMappingAdminBean.selectedUrlMapping}" />
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+					</p:outputPanel>
+					<p:outputPanel id="formView" rendered="#{!urlMappingAdminBean.showList}">
+						<p:panelGrid columns="2">
+							<p:outputLabel value="Url Pattern"></p:outputLabel>
+							<p:inputText value="#{urlMappingAdminBean.selectedUrlMapping.urlPattern}" style="width:600px">
+							</p:inputText>
+							<p:outputLabel value="Active"></p:outputLabel>
+							<p:selectBooleanCheckbox value="#{urlMappingAdminBean.selectedUrlMapping.active}" />
+							<p:outputLabel value="Secure"></p:outputLabel>
+							<p:selectBooleanCheckbox value="#{urlMappingAdminBean.selectedUrlMapping.secured}" />
+						</p:panelGrid>
+						<br></br>
+						<h3>Select Data Plugins For this Url/Page</h3>
+						<p:selectManyCheckbox id="dataPlugins" value="#{urlMappingAdminBean.selectedDataPluginNames}" layout="grid" columns="3" >
+							<f:selectItems value="#{urlMappingAdminBean.dataPlugins}" var="oneDataPlugin" itemLabel="#{oneDataPlugin.pluginName}" itemValue="#{oneDataPlugin.pluginName}" />
+						</p:selectManyCheckbox>
+
+						<p:outputPanel id="buttonPanel">
+							<p:commandButton value="Cancel" update=":urlMappingForm:mainPanel" actionListener="#{urlMappingAdminBean.cancel}"
+								styleClass="ui-priority-primary">
+							</p:commandButton>
+							<p:commandButton id="saveUrlMapping" value="Save" update=":urlMappingForm:mainPanel"
+								actionListener="#{urlMappingAdminBean.saveUrlMapping}" styleClass="ui-priority-primary">
+							</p:commandButton>
+						</p:outputPanel>
+
+					</p:outputPanel>
+				</p:outputPanel>
+				<br></br>
+				<br></br>
+				<br></br>
+				<br></br>
+			</h:form>
+
+
+			<!-- footer starts -->
+			<div class="footerWrapper">
+				<div class="container_24">
+					<div class="grid_24 panel footer">
+						Copyright &copy; 2015 <a href="#">www.swarajabhiyan.org</a>. All Rights Reserved.
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<!-- footer ends -->
+		</div>
+	</div>
+
+</h:body>
+</html>

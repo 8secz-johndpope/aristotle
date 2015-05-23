@@ -103,6 +103,12 @@ public class DataPlugin {
     public void setPluginName(String pluginName) {
         this.pluginName = pluginName;
     }
+
+    @Override
+    public String toString() {
+        return "DataPlugin [id=" + id + ", ver=" + ver + ", dateCreated=" + dateCreated + ", dateModified=" + dateModified + ", creatorId=" + creatorId + ", modifierId=" + modifierId + ", disabled="
+                + disabled + ", pluginName=" + pluginName + "]";
+    }
 	
 
 

@@ -210,7 +210,11 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 
 			if(isValidInput()){
                 selectedNews.setGlobal(menuBean.isGlobalSelected());
-                selectedNews = newsService.saveNews(selectedNews, tweetList, menuBean.getSelectedLocation().getId());
+                Long locationId = null;
+                if (menuBean.getSelectedLocation() != null) {
+                    locationId = menuBean.getSelectedLocation().getId();
+                }
+                selectedNews = newsService.saveNews(selectedNews, tweetList, locationId);
 				sendInfoMessageToJsfScreen("News saved succesfully");
 				refreshNewsList();
 				showList = true;

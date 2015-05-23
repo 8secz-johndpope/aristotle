@@ -2,6 +2,7 @@ package com.aristotle.admin.jsf.bean;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.aristotle.admin.service.AdminService;
 import com.aristotle.admin.service.AwsFileManager;
 import com.aristotle.core.enums.AppPermission;
 import com.aristotle.core.persistance.User;
@@ -19,6 +20,9 @@ public class BaseMultiPermissionAdminJsfBean extends BaseJsfBean{
 
     @Autowired
     protected AwsFileManager awsFileManager;
+
+    @Autowired
+    protected AdminService adminService;
 
 	AppPermission[] appPermissions;
 	String url;

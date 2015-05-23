@@ -113,8 +113,6 @@ public class BaseJsfBean extends BaseController implements Serializable {
     }
 
     protected boolean isLocationNotSelected(MenuBean menuBean) {
-        System.out.println("menuBean.getSelectedLocation()= " + menuBean.getSelectedLocation());
-        System.out.println("menuBean.isGlobalSelected()= " + menuBean.isGlobalSelected());
         return (menuBean.getSelectedLocation() == null && !menuBean.isGlobalSelected());
     }
 

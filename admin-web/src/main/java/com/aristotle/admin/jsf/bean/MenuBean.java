@@ -44,6 +44,10 @@ public class MenuBean extends BaseJsfBean {
         }
     }
     public boolean isAllowed(AppPermission... appPermissions) {
+        // If no location Selected then return false as we dont want to display any menu item
+        if (isLocationNotSelected(this)) {
+            return false;
+        }
         if (user.isSuperAdmin()) {
             return true;
         }
@@ -215,15 +219,16 @@ public class MenuBean extends BaseJsfBean {
 
     public void selectLocation(ActionEvent event) {
         selectedLocation = ((Location) event.getComponent().getAttributes().get("stateLocation"));
-        buildAndRedirect("/admin/location");
+        buildAndRedirect("/admin/home");
         globalSelected = false;
         System.out.println("globalSelected=" + globalSelected);
     }
 
     public void selectGlobal(ActionEvent event) {
         globalSelected = true;
+        selectedLocation = null;
         System.out.println("globalSelected=" + globalSelected);
-        buildAndRedirect("/admin/location");
+        buildAndRedirect("/admin/home");
     }
 
     public void goToHtmlTemplatePage() {
@@ -234,6 +239,22 @@ public class MenuBean extends BaseJsfBean {
         }
     }
     
+    public void goToStaticDataPluginPage() {
+        if (isWebDeveloperRoleAllowed()) {
+            buildAndRedirect("/admin/sdplugin");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
+
+    public void goToUrlMappingPage() {
+        if (isWebDeveloperRoleAllowed()) {
+            buildAndRedirect("/admin/urls");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
+
     /*
      * private static final long serialVersionUID = 1L;
      * 

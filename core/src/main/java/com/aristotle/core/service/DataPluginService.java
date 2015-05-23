@@ -14,7 +14,15 @@ public interface DataPluginService {
 
     List<UrlMapping> getAllUrlMappings() throws AppException;
 
+    UrlMapping saveUrlMapping(UrlMapping urlMapping) throws AppException;
+
+    void addDataPluginForUrlMapping(Long urlMappingId, List<DataPlugin> dataPlugins) throws AppException;
+
     Map<DataPlugin, String> getDataPluginsForUrlMapping(Long urlMappingId) throws AppException;
+
+    List<DataPlugin> getDataPluginsByUrlMappingId(Long urlMappingId) throws AppException;
+
+    List<DataPlugin> getAllDataPlugins() throws AppException;
 
     List<DomainTemplate> getAllDomainTemplates(Long locationId) throws AppException;
 

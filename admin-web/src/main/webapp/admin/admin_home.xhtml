@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Admin Panel</title>
+	<style>
+.wrapper {
+	text-align: center;
+}
+
+.button {
+	position: absolute: 
+    top:  50%;
+}
+</style>
+
+</h:head>
+<h:body>
+	<ui:include src="admin_menu.xhtml" />
+	<div class="wrapper">
+		<h:form>
+		<p:commandButton value="Choose Location" onclick="PF('chooseLocation').show();" />
+		</h:form>
+	</div>
+
+
+
+</h:body>
+</html>
