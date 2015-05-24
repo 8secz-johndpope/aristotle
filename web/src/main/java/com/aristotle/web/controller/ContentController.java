@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.aristotle.core.exception.AppException;
 import com.aristotle.web.plugin.PluginManager;
 import com.aristotle.web.ui.template.UiTemplateManager;
 import com.google.gson.JsonObject;
@@ -33,6 +34,14 @@ public class ContentController {
     @ResponseBody
     public String refreshTemplates(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) {
         uiTemplateManager.refresh();
+        pluginManager.refresh();
+        return "Success";
+    }
+
+    @RequestMapping("/plugin/update")
+    @ResponseBody
+    public String updatePlugins(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws AppException {
+        pluginManager.updateDbWithAllPlugins();
         return "Success";
     }
     @RequestMapping("/content/**")
@@ -51,6 +60,16 @@ public class ContentController {
 
     @ResponseBody
     @RequestMapping("/api/content/**")
+    public String defaultContentApiMethod(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) {
+        System.out.println("content defaultMethod called");
+        JsonObject context = new JsonObject();
+        modelAndView.getModel().put("context", context);
+        pluginManager.applyAllPluginsForUrl(httpServletRequest, httpServletResponse, modelAndView, true);
+        return context.toString();
+    }
+
+    @ResponseBody
+    @RequestMapping("/api/**")
     public String defaultApiMethod(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) {
         System.out.println("defaultMethod called");
         JsonObject context = new JsonObject();

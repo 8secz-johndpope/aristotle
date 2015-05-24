@@ -11,10 +11,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
 import com.aristotle.web.config.DatabaseConfig;
-import com.aristotle.web.config.SecurityConfig;
 
 @SpringBootApplication
-@ComponentScan(basePackages = { "com.aristotle.core.service", "com.aristotle.web.controller", "com.aristotle.web.plugin.impl", "com.aristotle.web.plugin.impl", "com.aristotle.web.ui.template.impl" })
+@ComponentScan(basePackages = { "com.aristotle.core.service", "com.aristotle.web.controller", "com.aristotle.web.plugin.impl", "com.aristotle.web.plugin.impl", "com.aristotle.web.ui.template.impl",
+        "com.aristotle.web.service" })
 @EnableAutoConfiguration
 public class App extends SpringBootServletInitializer {
 
@@ -23,7 +23,7 @@ public class App extends SpringBootServletInitializer {
         return application.sources(App.class);
     }
     public static void main(String[] args) {
-        ApplicationContext ctx = SpringApplication.run(new Object[] { App.class, SecurityConfig.class, DatabaseConfig.class }, args);
+        ApplicationContext ctx = SpringApplication.run(new Object[] { App.class, DatabaseConfig.class }, args);
 
         System.out.println("Let's inspect the beans provided by Spring Boot:");
         String[] beanNames = ctx.getBeanDefinitionNames();

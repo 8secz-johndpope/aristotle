@@ -27,7 +27,6 @@ public class NewsListPlugin extends AbstractDataPlugin {
     int totalNews = 2;
 
     public NewsListPlugin() {
-        super("Invalid");
     }
 
     public NewsListPlugin(String pluginName) {

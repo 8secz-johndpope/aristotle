@@ -2,6 +2,7 @@ package com.aristotle.web.plugin.impl;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import com.aristotle.core.persistance.Blog;
+import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.News;
 import com.aristotle.web.parameters.HttpParameters;
 import com.aristotle.web.plugin.WebDataPlugin;
@@ -25,6 +28,10 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
 
     protected JsonObject settingJsonObject;
     protected final String name;
+
+    public AbstractDataPlugin() {
+        this("NoName");
+    }
 
     public AbstractDataPlugin(String pluginName) {
         this.name = pluginName;
@@ -105,5 +112,75 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
             jsonArray.add(newsJsonObject);
         }
         return jsonArray;
+    }
+
+    protected JsonObject convertBlog(Blog blog) {
+        JsonObject blogJsonObject = new JsonObject();
+        blogJsonObject.addProperty("id", blog.getId());
+        blogJsonObject.addProperty("author", blog.getAuthor());
+        blogJsonObject.addProperty("content", blog.getContent());
+        blogJsonObject.addProperty("imageUrl", blog.getImageUrl());
+        blogJsonObject.addProperty("source", blog.getSource());
+        blogJsonObject.addProperty("title", blog.getTitle());
+
+        String contentWithOutHtml = blog.getContent().replaceAll("\\<[^>]*>", "");
+        blogJsonObject.addProperty("contentSummary", contentWithOutHtml);
+
+        addDateField(blogJsonObject, "publishDate", blog.getPublishDate());
+        return blogJsonObject;
+    }
+
+    protected JsonArray convertBlogList(Collection<Blog> blogList) {
+        JsonArray jsonArray = new JsonArray();
+        if (blogList == null) {
+            return jsonArray;
+        }
+        for (Blog oneNews : blogList) {
+            JsonObject newsJsonObject = convertBlog(oneNews);
+            jsonArray.add(newsJsonObject);
+        }
+        return jsonArray;
+    }
+
+    protected JsonObject convertLocation(Location location) {
+        JsonObject locationJsonObject = new JsonObject();
+        locationJsonObject.addProperty("id", location.getId());
+        if (location.getIsdCode() != null) {
+            locationJsonObject.addProperty("isdCode", location.getIsdCode());
+        }
+        locationJsonObject.addProperty("name", location.getName());
+        return locationJsonObject;
+
+    }
+
+    protected JsonArray convertLocationList(Collection<Location> locationList) {
+        JsonArray jsonArray = new JsonArray();
+        if (locationList == null) {
+            return jsonArray;
+        }
+        for (Location oneNews : locationList) {
+            JsonObject newsJsonObject = convertLocation(oneNews);
+            jsonArray.add(newsJsonObject);
+        }
+        return jsonArray;
+    }
+
+    protected Long getLongParameterFromPathOrParams(HttpServletRequest httpServletRequest, String paramName) {
+        String paramIdStr = getStringParameterFromPathOrParams(httpServletRequest, paramName);
+        try {
+            return Long.parseLong(paramIdStr);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    protected String getStringParameterFromPathOrParams(HttpServletRequest httpServletRequest, String paramName) {
+        Map<String, String> pathParams = (Map<String, String>) httpServletRequest.getAttribute(HttpParameters.PATH_PARAMETER_PARAM);
+        
+        String paramStr = pathParams.get(paramName);
+        if (paramStr == null) {
+            paramStr = httpServletRequest.getParameter(paramName);
+        }
+        return paramStr;
     }
 }

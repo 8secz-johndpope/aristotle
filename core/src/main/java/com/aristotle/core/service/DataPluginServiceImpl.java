@@ -1,8 +1,10 @@
 package com.aristotle.core.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aristotle.core.exception.AppException;
+import com.aristotle.core.persistance.CustomDataPlugin;
 import com.aristotle.core.persistance.DataPlugin;
 import com.aristotle.core.persistance.Domain;
 import com.aristotle.core.persistance.DomainPageTemplate;
@@ -18,6 +21,7 @@ import com.aristotle.core.persistance.DomainTemplate;
 import com.aristotle.core.persistance.DomainTemplateFile;
 import com.aristotle.core.persistance.UrlMapping;
 import com.aristotle.core.persistance.UrlMappingPlugin;
+import com.aristotle.core.persistance.repo.CustomDataPluginRepository;
 import com.aristotle.core.persistance.repo.DataPluginRepository;
 import com.aristotle.core.persistance.repo.DomainPageTemplateRepository;
 import com.aristotle.core.persistance.repo.DomainRepository;
@@ -46,6 +50,8 @@ public class DataPluginServiceImpl implements DataPluginService {
     private EntityManager entityManager;
     @Autowired
     private DataPluginRepository dataPluginRepository;
+    @Autowired
+    private CustomDataPluginRepository customDataPluginRepository;
 
     @Override
     public List<UrlMapping> getAllUrlMappings() throws AppException {
@@ -154,6 +160,29 @@ public class DataPluginServiceImpl implements DataPluginService {
             urlMappingPluginRepository.delete(oneUrlMappingPlugin);
         }
 
+    }
+
+    @Override
+    public void createAllCustomDataPlugins(List<String> classNames) throws AppException {
+        List<CustomDataPlugin> allCustomDataPlugins = customDataPluginRepository.findAll();
+        Set<String> allExistingPluginClassNames = new HashSet<String>();
+        for (CustomDataPlugin oneCustomDataPlugin : allCustomDataPlugins) {
+            allExistingPluginClassNames.add(oneCustomDataPlugin.getFullClassName());
+        }
+        for(String oneClass : classNames){
+            if (allExistingPluginClassNames.contains(oneClass)) {
+                continue;
+            }
+            CustomDataPlugin customDataPlugin = new CustomDataPlugin();
+            customDataPlugin.setFullClassName(oneClass);
+            customDataPlugin.setDisabled(false);
+            customDataPlugin.setPluginName(getClassName(oneClass));
+        }
+        
+    }
+
+    private String getClassName(String fullClassName) {
+        return fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
     }
 
 }

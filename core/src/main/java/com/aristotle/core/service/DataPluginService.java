@@ -31,4 +31,6 @@ public interface DataPluginService {
     DomainPageTemplate saveDomainPageTemplate(DomainPageTemplate domainPageTemplate) throws AppException;
 
     DomainTemplateFile saveDomainTemplateFile(Long domainTemplateId, String filePathAndName, long fileSize) throws AppException;
+
+    void createAllCustomDataPlugins(List<String> classNames) throws AppException;
 }

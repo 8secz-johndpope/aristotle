@@ -11,6 +11,9 @@ public class BlogListPlugin extends AbstractDataPlugin {
         super(pluginName);
     }
 
+    public BlogListPlugin() {
+    }
+
     @Override
     public void applyPlugin(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView mv) {
 
