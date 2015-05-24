@@ -2,6 +2,7 @@ package com.aristotle.core.persistance.repo;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.aristotle.core.persistance.BaseEntity;
@@ -23,6 +24,10 @@ public class BaseRepositoryTest {
         // System.out.println("Setting user in Application Context " + user);
         //Authentication authentication = new PreAuthenticatedAuthenticationToken(user, null, null);
         //SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    @Test
+    public void noTestInthisClass() {
     }
 
     protected void checkAuditFields(BaseEntity baseEntity) {

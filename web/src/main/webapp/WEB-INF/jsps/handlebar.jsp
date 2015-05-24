@@ -44,7 +44,7 @@
     $.get( "/api/content/home", function(data ) {
     	 var source   = $("#entry-template").html();
     	    var template = Handlebars.compile(source);
-    	    var p = JSON.parse(data);;
+    	    var p = JSON.parse(data);
     	  var html    = template(p);
     	    $("#final").html(html);
     	});
