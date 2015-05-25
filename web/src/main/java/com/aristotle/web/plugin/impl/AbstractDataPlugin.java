@@ -1,7 +1,9 @@
 package com.aristotle.web.plugin.impl;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.aristotle.core.persistance.Blog;
+import com.aristotle.core.persistance.Event;
 import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.News;
 import com.aristotle.web.parameters.HttpParameters;
@@ -182,5 +185,40 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
             paramStr = httpServletRequest.getParameter(paramName);
         }
         return paramStr;
+    }
+
+    protected JsonObject convertEvent(Event event) {
+        JsonObject eventJsonObject = new JsonObject();
+        eventJsonObject.addProperty("id", event.getId());
+        eventJsonObject.addProperty("title", event.getTitle());
+        eventJsonObject.addProperty("description", event.getDescription());
+        eventJsonObject.addProperty("address", event.getAddress());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(event.getStartDate());
+
+        eventJsonObject.addProperty("month", calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.UK));
+        eventJsonObject.addProperty("date", calendar.get(Calendar.DATE));
+        StringBuilder sb = new StringBuilder();
+        sb.append(calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE) + " " + calendar.getDisplayName(Calendar.AM_PM, Calendar.SHORT, Locale.UK).toLowerCase());
+        sb.append(" - ");
+        calendar.setTime(event.getEndDate());
+        sb.append(calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE) + " " + calendar.getDisplayName(Calendar.AM_PM, Calendar.SHORT, Locale.UK).toLowerCase());
+        addDateField(eventJsonObject, "startDate", event.getStartDate());
+        addDateField(eventJsonObject, "endDate", event.getEndDate());
+        eventJsonObject.addProperty("time", sb.toString());
+        return eventJsonObject;
+
+    }
+
+    protected JsonArray convertEventList(Collection<Event> eventList) {
+        JsonArray jsonArray = new JsonArray();
+        if (eventList == null) {
+            return jsonArray;
+        }
+        for (Event oneNews : eventList) {
+            JsonObject newsJsonObject = convertEvent(oneNews);
+            jsonArray.add(newsJsonObject);
+        }
+        return jsonArray;
     }
 }

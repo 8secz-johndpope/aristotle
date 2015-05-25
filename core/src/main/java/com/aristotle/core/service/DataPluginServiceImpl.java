@@ -177,6 +177,7 @@ public class DataPluginServiceImpl implements DataPluginService {
             customDataPlugin.setFullClassName(oneClass);
             customDataPlugin.setDisabled(false);
             customDataPlugin.setPluginName(getClassName(oneClass));
+            customDataPlugin = customDataPluginRepository.save(customDataPlugin);
         }
         
     }
