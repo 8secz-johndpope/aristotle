@@ -18,5 +18,12 @@ public interface LocationUpgradeService {
 
     void copyUserRoles();
 
-    void copyUserLocations();;
+    void copyUserLocations() throws Exception;
+
+    void copyLocationTypeRoles() throws Exception;
+
+    void copyNewsLocations() throws Exception;
+
+    void copyEventLocations() throws Exception;
+
 }

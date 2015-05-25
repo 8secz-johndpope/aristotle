@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.aristotle.core.exception.AppException;
 import com.aristotle.web.plugin.PluginManager;
 import com.aristotle.web.ui.template.UiTemplateManager;
 import com.google.gson.JsonObject;
@@ -30,20 +29,6 @@ public class ContentController {
         return ex.getMessage();
     }
 
-    @RequestMapping("/ui/refresh")
-    @ResponseBody
-    public String refreshTemplates(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) {
-        uiTemplateManager.refresh();
-        pluginManager.refresh();
-        return "Success";
-    }
-
-    @RequestMapping("/plugin/update")
-    @ResponseBody
-    public String updatePlugins(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws AppException {
-        pluginManager.updateDbWithAllPlugins();
-        return "Success";
-    }
     @RequestMapping("/content/**")
     public ModelAndView defaultMethod(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) {
 

@@ -60,7 +60,7 @@ public class News extends BaseEntity {
     @JoinColumn(name="news_id") 
     },
     inverseJoinColumns = {
- @JoinColumn(name = "location_id")
+    @JoinColumn(name = "location_id")
     })
     private Set<Location> locations;
 	
@@ -70,7 +70,7 @@ public class News extends BaseEntity {
 	@JoinColumn(name="news_id") 
 	},
 	inverseJoinColumns = {
-	@JoinColumn(name="ac_id")
+	@JoinColumn(name="location_id")
 	})
 	private List<AssemblyConstituency> assemblyConstituencies;
 	

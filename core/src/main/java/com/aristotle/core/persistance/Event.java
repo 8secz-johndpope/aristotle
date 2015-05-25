@@ -136,7 +136,7 @@ public class Event extends BaseEntity {
     @JoinColumn(name="event_id") 
     },
     inverseJoinColumns = {
- @JoinColumn(name = "location_id")
+    @JoinColumn(name = "location_id")
     })
     private Set<Location> locations;
 
