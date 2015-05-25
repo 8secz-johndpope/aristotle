@@ -88,10 +88,10 @@ public class AdminServiceImpl implements AdminService {
             for (LocationRole oneLocationRole : locationRoles) {
                 if (!oneLocationRole.getRole().getPermissions().isEmpty()) {
                     Set<AppPermission> permissions = convertPermissionToAppPermission(oneLocationRole.getRole().getPermissions());
-                    if (map.get(oneLocationRole.getId()) == null) {
-                        map.put(oneLocationRole.getId(), permissions);
+                    if (map.get(oneLocationRole.getLocation().getId()) == null) {
+                        map.put(oneLocationRole.getLocation().getId(), permissions);
                     } else {
-                        map.get(oneLocationRole.getId()).addAll(permissions);
+                        map.get(oneLocationRole.getLocation().getId()).addAll(permissions);
                     }
                 }
             }

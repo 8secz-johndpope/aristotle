@@ -21,7 +21,6 @@ import com.aristotle.core.persistance.User;
 // @URLBeanName("menuBean")
 public class MenuBean extends BaseJsfBean {
 
-    private Long adminSelectedLocationId = -1L;
     private Location selectedLocation;
     private List<Location> adminLocations;
     private Set<AppPermission> allPermissions;
@@ -52,10 +51,10 @@ public class MenuBean extends BaseJsfBean {
             return true;
         }
         Set<AppPermission> permissions = null;
-        if (adminSelectedLocationId == null || adminSelectedLocationId <= 0) {
+        if (selectedLocation == null) {
             permissions = allPermissions;
         } else {
-            permissions = locationPermissions.get(adminSelectedLocationId);
+            permissions = locationPermissions.get(selectedLocation.getId());
         }
 
         if (permissions == null) {
@@ -218,16 +217,18 @@ public class MenuBean extends BaseJsfBean {
     }
 
     public void selectLocation(ActionEvent event) {
-        selectedLocation = ((Location) event.getComponent().getAttributes().get("stateLocation"));
-        buildAndRedirect("/admin/home");
+        selectedLocation = ((Location) event.getComponent().getAttributes().get("selectedLocation"));
         globalSelected = false;
         System.out.println("globalSelected=" + globalSelected);
+        System.out.println("selectedLocation=" + selectedLocation);
+        buildAndRedirect("/admin/home");
     }
 
     public void selectGlobal(ActionEvent event) {
         globalSelected = true;
         selectedLocation = null;
         System.out.println("globalSelected=" + globalSelected);
+        System.out.println("selectedLocation=" + selectedLocation);
         buildAndRedirect("/admin/home");
     }
 
@@ -496,14 +497,6 @@ public class MenuBean extends BaseJsfBean {
      * setAapService(AapService aapService) { this.aapService = aapService; }
      */
 
-    public Long getAdminSelectedLocationId() {
-        return adminSelectedLocationId;
-    }
-
-    public void setAdminSelectedLocationId(Long adminSelectedLocationId) {
-        this.adminSelectedLocationId = adminSelectedLocationId;
-    }
-
     public Location getSelectedLocation() {
         return selectedLocation;
     }
@@ -520,7 +513,6 @@ public class MenuBean extends BaseJsfBean {
         this.adminLocations = adminLocations;
         if (adminLocations.size() == 1) {
             selectedLocation = adminLocations.get(0);
-            adminSelectedLocationId = selectedLocation.getId();
         }
     }
 
