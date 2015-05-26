@@ -1,5 +1,7 @@
 package com.aristotle.admin.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,14 +18,18 @@ import com.aristotle.core.enums.AppPermission;
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.LocationRole;
+import com.aristotle.core.persistance.LocationType;
 import com.aristotle.core.persistance.LoginAccount;
 import com.aristotle.core.persistance.Permission;
 import com.aristotle.core.persistance.Role;
 import com.aristotle.core.persistance.StaticDataPlugin;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.repo.LocationRepository;
+import com.aristotle.core.persistance.repo.LocationRoleRepository;
 import com.aristotle.core.persistance.repo.LoginAccountRepository;
+import com.aristotle.core.persistance.repo.RoleRepository;
 import com.aristotle.core.persistance.repo.StaticDataPluginRepository;
+import com.aristotle.core.persistance.repo.UserLocationRepository;
 import com.aristotle.core.persistance.repo.UserRepository;
 import com.aristotle.core.service.PasswordUtil;
 
@@ -41,6 +47,12 @@ public class AdminServiceImpl implements AdminService {
     private UserRepository userRepository;
     @Autowired
     private StaticDataPluginRepository staticDataPluginRepository;
+    @Autowired
+    private UserLocationRepository userLocationRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private LocationRoleRepository locationRoleRepository;
 
     @Override
     public User login(String userName, String password) throws AppException {
@@ -119,6 +131,61 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public StaticDataPlugin saveStaticDataPlugin(StaticDataPlugin staticDataPlugin) throws AppException {
         return staticDataPluginRepository.save(staticDataPlugin);
+    }
+
+    @Override
+    public void addRolesToUserAtLocation(Collection<Role> roles, Long userId, Location location) throws AppException {
+        User user = userRepository.findOne(userId);
+        if (location == null || location.getId() <= 0) {
+            if (user.getAllRoles() == null) {
+                user.setAllRoles(new HashSet<Role>());
+            }
+            // clear all roles
+            user.getAllRoles().clear();
+            for (Role oneRole : roles) {
+                oneRole = roleRepository.findOne(oneRole.getId());
+                user.getAllRoles().add(oneRole);
+            }
+        } else {
+            location = locationRepository.findOne(location.getId());
+            System.out.println("Adding Roles for Location " + location);
+            if (user.getLocationRoles() == null) {
+                user.setLocationRoles(new HashSet<LocationRole>());
+            }
+            // clear existing Location Roles
+            user.getLocationRoles().clear();
+            for (Role oneRole : roles) {
+                LocationRole oneLocationRole = locationRoleRepository.getLocationRoleByLocationIdAndRoleId(location.getId(), oneRole.getId());
+                if (oneLocationRole == null) {
+                    oneRole = roleRepository.findOne(oneRole.getId());
+                    oneLocationRole = new LocationRole();
+                    oneLocationRole.setRole(oneRole);
+                    oneLocationRole.setLocation(location);
+                    oneLocationRole = locationRoleRepository.save(oneLocationRole);
+                }
+                user.getLocationRoles().add(oneLocationRole);
+            }
+        }
+
+    }
+
+    @Override
+    public List<Role> getLocationRoles(Location location) throws AppException {
+        if (location == null) {
+            return roleRepository.findAll();
+        }
+        location = locationRepository.findOne(location.getId());
+        LocationType locationType = location.getLocationType();
+        return new ArrayList<Role>(locationType.getRoles());
+    }
+
+    @Override
+    public List<Role> getUserRoles(Long userId, Location location) throws AppException {
+        if (location == null) {
+            User user = userRepository.findOne(userId);
+            return new ArrayList<Role>(user.getAllRoles());
+        }
+        return roleRepository.getAdminRolesOfUserAndLocation(userId, location.getId());
     }
 
 }

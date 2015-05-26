@@ -28,7 +28,8 @@ import com.ocpsoft.pretty.PrettyFilter;
  * Created by Ravi Sharma on 17/05/15.
  */
 @SpringBootApplication
-@EnableAutoConfiguration
+@EnableAutoConfiguration(exclude = { org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration.class,
+        org.springframework.boot.actuate.autoconfigure.ManagementSecurityAutoConfiguration.class })
 @ComponentScan(basePackages = { "com.aristotle.admin.jsf.bean", "com.aristotle.admin.service", "com.aristotle.admin.util", "com.aristotle.admin.filter", "com.aristotle.core.service",
         "com.aristotle.core.service.temp", "com.aristotle.admin.jsf.convertors" })
 public class Application extends SpringBootServletInitializer {

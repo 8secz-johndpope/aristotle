@@ -45,7 +45,7 @@ public class Phone {
 	@Enumerated(EnumType.STRING)
 	private PhoneType phoneType;
 	
-    @Column(name = "confirmed", columnDefinition = "BIT(1) DEFAULT '0'")
+    @Column(name = "confirmed", columnDefinition = "BIT(1) DEFAULT 0")
     private boolean confirmed;
 
 	

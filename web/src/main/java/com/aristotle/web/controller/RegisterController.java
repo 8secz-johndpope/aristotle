@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.exception.FieldsAppException;
-import com.aristotle.web.controller.beans.UserContactBean;
-import com.aristotle.web.controller.beans.UserRegisterBean;
-import com.aristotle.web.service.UserService;
+import com.aristotle.core.service.UserService;
+import com.aristotle.core.service.dto.UserContactBean;
+import com.aristotle.core.service.dto.UserRegisterBean;
 import com.google.gson.JsonObject;
 
 @Controller

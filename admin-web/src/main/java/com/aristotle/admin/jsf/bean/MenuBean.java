@@ -137,6 +137,19 @@ public class MenuBean extends BaseJsfBean {
     public boolean isWebDeveloperRoleAllowed() {
         return isAllowed(AppPermission.WEB_ADMIN, AppPermission.WEB_ADMIN_DRAFT);
     }
+
+    public boolean isAdminAllowed() {
+        return isManageUserRoleAllowed() || isEditOfficeDetailAllowed();
+    }
+
+    public boolean isManageUserRoleAllowed() {
+        return isAllowed(AppPermission.EDIT_USER_ROLES);
+    }
+
+    public boolean isEditOfficeDetailAllowed() {
+        return isAllowed(AppPermission.EDIT_OFFICE_ADDRESS);
+    }
+
     public void goToVoiceOfAapAdminPageFb() {
         if (isVoiceOfAapFbAllowed()) {
             buildAndRedirect("/admin/voiceofaapfb");
@@ -256,6 +269,24 @@ public class MenuBean extends BaseJsfBean {
         }
     }
 
+
+    public void goToEditOfficeDetailPage() {
+        if (isEditOfficeDetailAllowed()) {
+            buildAndRedirect("/admin/office");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
+
+
+    public void goToManageUserRolePage() {
+        if (isManageUserRoleAllowed()) {
+            buildAndRedirect("/admin/roles");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
+
     /*
      * private static final long serialVersionUID = 1L;
      * 
@@ -351,7 +382,6 @@ public class MenuBean extends BaseJsfBean {
      * 
      * 
      * 
-     * public void goToEditOfficeDetailPage() { if (isEditOfficeDetailAllowed()) { buildAndRedirect("/admin/office"); } else { buildAndRedirect("/admin/notallowed"); } }
      * 
      * public void goToManageMemberPage() { if (isManageMemberAllowed()) { buildAndRedirect("/admin/register"); } else { buildAndRedirect("/admin/notallowed"); } }
      * 
@@ -361,7 +391,7 @@ public class MenuBean extends BaseJsfBean {
      * 
      * public void goToTreasuryAccountDetailPage() { if (isTreasuryAllowed()) { buildAndRedirect("/admin/treasurydetail"); } else { buildAndRedirect("/admin/notallowed"); } }
      * 
-     * public void goToManageUserRolePage() { if (isManageUserRoleAllowed()) { buildAndRedirect("/admin/roles"); } else { buildAndRedirect("/admin/notallowed"); } }
+     * 
      * 
      * 
      * 
@@ -377,8 +407,7 @@ public class MenuBean extends BaseJsfBean {
      * 
      * 
      * 
-     * public boolean isEditOfficeDetailAllowed() { UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion(); return
-     * ClientPermissionUtil.isEditOfficeDetailAllowed(userRolePermissionDto, adminSelectedLocationId, locationType); }
+     * 
      * 
      * public boolean isMemberAllowed() { return isManageMemberAllowed(); }
      * 
@@ -388,12 +417,7 @@ public class MenuBean extends BaseJsfBean {
      * public boolean isTreasuryAllowed() { UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion(); return ClientPermissionUtil.isTreasuryAllowed(userRolePermissionDto,
      * adminSelectedLocationId, locationType); }
      * 
-     * public boolean isAdminAllowed() { return isManageUserRoleAllowed() || isEditOfficeDetailAllowed(); }
      * 
-     * 
-     * 
-     * public boolean isManageUserRoleAllowed() { UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion(); return
-     * ClientPermissionUtil.isManageUserRoleAllowed(userRolePermissionDto, adminSelectedLocationId, locationType); }
      * 
      * 
      * 

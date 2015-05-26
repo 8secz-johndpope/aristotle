@@ -18,4 +18,6 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
 
     List<Location> getLocationsByLocationTypeIdAndParentLocationId(Long locationTypeId, long parentLocationId);
 
+    List<Location> getLocationsByParentLocationId(long parentLocationId);
+
 }

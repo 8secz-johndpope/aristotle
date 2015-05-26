@@ -1,14 +1,19 @@
-package com.aristotle.web.service;
+package com.aristotle.core.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.aristotle.core.enums.CreationType;
@@ -30,18 +35,15 @@ import com.aristotle.core.persistance.repo.PhoneRepository;
 import com.aristotle.core.persistance.repo.UserLocationRepository;
 import com.aristotle.core.persistance.repo.UserRepository;
 import com.aristotle.core.persistance.repo.VolunteerRepository;
-import com.aristotle.web.controller.beans.UserContactBean;
-import com.aristotle.web.controller.beans.UserRegisterBean;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.aristotle.core.service.dto.SearchUser;
+import com.aristotle.core.service.dto.UserContactBean;
+import com.aristotle.core.service.dto.UserRegisterBean;
+import com.aristotle.core.service.dto.UserSearchResult;
 
-@Component
+@Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private EmailRepository emailRepository;
-    @Autowired
-    private PhoneRepository phoneRepository;
     @Autowired
     private UserLocationRepository userLocationRepository;
     @Autowired
@@ -55,6 +57,73 @@ public class UserServiceImpl implements UserService {
 
     private final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+
+    @Autowired
+    private EmailRepository emailRepository;
+
+    @Autowired
+    private PhoneRepository phoneRepository;
+
+    @Override
+    public List<UserSearchResult> searchUsers(SearchUser searchUser) throws AppException {
+
+        List<UserSearchResult> userSearchResults = new ArrayList<UserSearchResult>();
+
+        searchUserForEmail(userSearchResults, searchUser.getEmail());
+        searchUserForMobile(userSearchResults, searchUser.getMobileNumber(), searchUser.getCountryCode());
+        return userSearchResults;
+    }
+
+    private List<UserSearchResult> convertUsers(List<User> users) {
+        List<UserSearchResult> userSearchResults = new ArrayList<UserSearchResult>(users.size() + 1);
+        for (User oneUser : users) {
+            userSearchResults.add(convertUser(oneUser));
+        }
+        return userSearchResults;
+    }
+
+    private UserSearchResult convertUser(User user) {
+        UserSearchResult userSearchResult = new UserSearchResult();
+        BeanUtils.copyProperties(user, userSearchResult);
+        return userSearchResult;
+
+    }
+
+    private Email searchUserForEmail(List<UserSearchResult> userSearchResults, String emailId) throws AppException {
+        if (StringUtils.isEmpty(emailId)) {
+            return null;
+        }
+        Email email = emailRepository.getEmailByEmailUp(emailId.toUpperCase());
+        if (email != null && email.getUser() != null) {
+            UserSearchResult userSearchResult = convertUser(email.getUser());
+            userSearchResult.setEmail(emailId);
+            userSearchResults.add(userSearchResult);
+
+            Set<Phone> phones = email.getUser().getPhones();
+            if (phones != null) {
+                StringBuilder sb = new StringBuilder();
+                for (Phone onePhone : phones) {
+                    sb.append(onePhone.getCountryCode() + "-" + onePhone.getPhoneNumber() + ",");
+                }
+                userSearchResult.setMobileNumber(sb.toString());
+            }
+
+        }
+        return email;
+    }
+
+    private Phone searchUserForMobile(List<UserSearchResult> userSearchResults, String mobileNumber, String countryCode) throws AppException {
+        if (StringUtils.isEmpty(mobileNumber)) {
+            return null;
+        }
+        Phone mobile = phoneRepository.getPhoneByPhoneNumberAndCountryCode(mobileNumber, countryCode);
+        if (mobile != null && mobile.getUser() != null) {
+            UserSearchResult userSearchResult = convertUser(mobile.getUser());
+            userSearchResult.setMobileNumber(countryCode + "-" + mobileNumber);
+            userSearchResults.add(userSearchResult);
+        }
+        return mobile;
+    }
 
     @Override
     public void registerUserQuick(UserContactBean userContactBean) throws AppException {
@@ -89,7 +158,7 @@ public class UserServiceImpl implements UserService {
             nriMobile.setUser(dbUser);
         }
 
-        //Update Locations
+        // Update Locations
         // Map<Long, String> locationMap = getLocationMap(userRegisterBean);
         // Currently its only create and no updates as user is only submititng details and no way to update details until login is provided
         addLocationsTouser(dbUser, userRegisterBean.getAssemblyConstituencyLivingId(), "Living");
@@ -118,7 +187,6 @@ public class UserServiceImpl implements UserService {
             }
         }
     }
-
 
     private Map<Long, String> getLocationMap(UserRegisterBean userRegisterBean) {
         Map<Long, String> returnMap = new HashMap<Long, String>();
@@ -172,6 +240,7 @@ public class UserServiceImpl implements UserService {
         }
         return mobile;
     }
+
     private Email getOrCreateEmail(String emailId) throws AppException {
         if (StringUtils.isEmpty(emailId)) {
             return null;
@@ -201,14 +270,6 @@ public class UserServiceImpl implements UserService {
         FieldsAppException fieldsAppException = new FieldsAppException(error);
         fieldsAppException.addFieldError(fieldName, error);
         throw fieldsAppException;
-    }
-
-    public static void masin(String[] args) {
-        UserRegisterBean userRegisterBean = new UserRegisterBean();
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.serializeNulls();
-        Gson gson = gsonBuilder.create();
-        System.out.println(gson.toJson(userRegisterBean));
     }
 
 }

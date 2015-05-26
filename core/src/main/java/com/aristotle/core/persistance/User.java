@@ -9,39 +9,18 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Version;
 
 import com.aristotle.core.enums.CreationType;
 
 @Entity
 @Table(name="users")
-public class User {
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
-	@Version
-	@Column(name="ver")
-	private int ver;
-	
-	@Column(name="date_created")
-	private Date dateCreated;
-	@Column(name="date_modified")
-	private Date dateModified;
-	@Column(name="creator_id")
-	private Long creatorId;
-	@Column(name="modifier_id")
-	private Long modifierId;
-
+public class User extends BaseEntity {
 	
 	@Column(name = "membership_no")
 	private String membershipNumber;
@@ -296,54 +275,6 @@ public class User {
 	@Column(name="membership_confirmed_by", insertable=false,updatable=false)
 	private Long membershipConfirmedById;
 	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public int getVer() {
-		return ver;
-	}
-
-	public void setVer(int ver) {
-		this.ver = ver;
-	}
-
-	public Date getDateCreated() {
-		return dateCreated;
-	}
-
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-
-	public Date getDateModified() {
-		return dateModified;
-	}
-
-	public void setDateModified(Date dateModified) {
-		this.dateModified = dateModified;
-	}
-
-	public Long getCreatorId() {
-		return creatorId;
-	}
-
-	public void setCreatorId(Long creatorId) {
-		this.creatorId = creatorId;
-	}
-
-	public Long getModifierId() {
-		return modifierId;
-	}
-
-	public void setModifierId(Long modifierId) {
-		this.modifierId = modifierId;
-	}
-
 	public String getMembershipNumber() {
 		return membershipNumber;
 	}

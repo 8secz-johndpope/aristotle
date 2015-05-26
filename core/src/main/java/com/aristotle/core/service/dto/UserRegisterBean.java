@@ -1,4 +1,4 @@
-package com.aristotle.web.controller.beans;
+package com.aristotle.core.service.dto;
 
 import java.util.Date;
 

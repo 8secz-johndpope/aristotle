@@ -36,4 +36,39 @@ public class LocationServiceImpl implements LocationService {
         return locationTypeRepository.findAll();
     }
 
+    @Override
+    public List<Location> getAllCountries() throws AppException {
+        LocationType locationType = locationTypeRepository.getLocationTypeByName("Country");
+        return locationRepository.getLocationsByLocationTypeId(locationType.getId());
+    }
+
+    @Override
+    public List<Location> getAllStates() throws AppException {
+        LocationType locationType = locationTypeRepository.getLocationTypeByName("State");
+        return locationRepository.getLocationsByLocationTypeId(locationType.getId());
+    }
+
+    @Override
+    public List<Location> getAllParliamentConstituenciesOfState(Long stateId) throws AppException {
+        LocationType locationType = locationTypeRepository.getLocationTypeByName("ParliamentConstituency");
+        return locationRepository.getLocationsByLocationTypeIdAndParentLocationId(locationType.getId(), stateId);
+    }
+
+    @Override
+    public List<Location> getAllDistrictOfState(Long stateId) throws AppException {
+        LocationType locationType = locationTypeRepository.getLocationTypeByName("District");
+        return locationRepository.getLocationsByLocationTypeIdAndParentLocationId(locationType.getId(), stateId);
+    }
+
+    @Override
+    public List<Location> getAllAssemblyConstituenciesOfDistrict(Long districtId) throws AppException {
+        LocationType locationType = locationTypeRepository.getLocationTypeByName("AssemblyConstituency");
+        return locationRepository.getLocationsByLocationTypeIdAndParentLocationId(locationType.getId(), districtId);
+    }
+
+    @Override
+    public List<Location> getAllChildLocations(Long locationId) throws AppException {
+        return locationRepository.getLocationsByParentLocationId(locationId);
+    }
+
 }
