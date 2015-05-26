@@ -93,11 +93,13 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
             draftUrl = null;
         }
         selectedTemplateUrl = null;
-        for (DomainPageTemplate oneTemplateUrlDto : selectedTemplate.getDomainPageTemplates()) {
-            logger.info("selectedUrl={}", selectedUrl);
-            if (oneTemplateUrlDto.getUrlMapping().getUrlPattern().equals(selectedUrl)) {
-                selectedTemplateUrl = oneTemplateUrlDto;
-                break;
+        if (selectedTemplate.getDomainPageTemplates() != null) {
+            for (DomainPageTemplate oneTemplateUrlDto : selectedTemplate.getDomainPageTemplates()) {
+                logger.info("selectedUrl={}", selectedUrl);
+                if (oneTemplateUrlDto.getUrlMapping().getUrlPattern().equals(selectedUrl)) {
+                    selectedTemplateUrl = oneTemplateUrlDto;
+                    break;
+                }
             }
         }
         if (selectedTemplateUrl == null) {
