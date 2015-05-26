@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.faces.webapp.FacesServlet;
 import javax.servlet.DispatcherType;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 
 import org.primefaces.webapp.filter.FileUploadFilter;
 import org.springframework.beans.factory.config.CustomScopeConfigurer;
@@ -90,7 +92,6 @@ public class Application extends SpringBootServletInitializer {
         registrationBean.setUrlPatterns(urlPatterns);
         // registrationBean.setDispatcherTypes(DispatcherType.FORWARD, DispatcherType.REQUEST, DispatcherType.ERROR);
         registrationBean.setFilter(securityFilter);
-
         return registrationBean;
     }
 
@@ -105,5 +106,11 @@ public class Application extends SpringBootServletInitializer {
             servletContext.setInitParameter("primefaces.FONT_AWESOME", Boolean.TRUE.toString());
             // servletContext.setInitParameter("primefaces.UPLOADER", "commons");
         };
+    }
+
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        super.onStartup(servletContext);
+        servletContext.addListener(new SessionListener());
     }
 }
