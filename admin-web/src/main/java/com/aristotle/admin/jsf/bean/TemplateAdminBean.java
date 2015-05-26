@@ -45,6 +45,8 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
     @Value("${aws_access_secret}")
     private String awsSecret;
 
+    @Value("${static_data_env:dev}")
+    private String staticDataEnv;
 	
 	public TemplateAdminBean(){
         super("/admin/templates", AppPermission.WEB_ADMIN, AppPermission.WEB_ADMIN_DRAFT);
@@ -127,7 +129,7 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
         System.out.println("Uploading File");
         String subdDirectory = getSubDirectory(event.getFile().getFileName());
         System.out.println("subdDirectory = " + subdDirectory);
-        String remoteFileName = "templates/dev/" + selectedTemplate.getId() + "/" + subdDirectory + "/" + event.getFile().getFileName();
+        String remoteFileName = "templates/" + staticDataEnv + "/" + selectedTemplate.getId() + "/" + subdDirectory + "/" + event.getFile().getFileName();
         String bucketName = "static.swarajabhiyan.org";
         System.out.println("remoteFileName = " + remoteFileName);
         try {
@@ -230,6 +232,14 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
 
     public void setSelectedTemplateUrl(DomainPageTemplate selectedTemplateUrl) {
         this.selectedTemplateUrl = selectedTemplateUrl;
+    }
+
+    public String getStaticDataEnv() {
+        return staticDataEnv;
+    }
+
+    public void setStaticDataEnv(String staticDataEnv) {
+        this.staticDataEnv = staticDataEnv;
     }
 
 }
