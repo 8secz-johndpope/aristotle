@@ -61,15 +61,6 @@ public class LoginBean extends BaseJsfBean {
         System.out.println("Login with " + userName);
         logger.info("Login with " + userName);
         try {
-            /*
-            locationUpgradeService.copyCountries();
-            locationUpgradeService.copyCountryRegions();
-            locationUpgradeService.copyCountryRegionAreas();
-            locationUpgradeService.copyStates();
-            locationUpgradeService.copyPcs();
-            locationUpgradeService.copyDistricts();
-            locationUpgradeService.copyAcs();
-            */
             HttpServletRequest httpServletRequest = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
             User user = adminService.login(userName, password);
             if (user != null) {

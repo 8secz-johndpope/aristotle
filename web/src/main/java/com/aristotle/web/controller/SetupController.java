@@ -48,6 +48,19 @@ public class SetupController {
         return "Success";
     }
 
+    @RequestMapping("/location/update")
+    @ResponseBody
+    public String updateLocations(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws AppException {
+        locationUpgradeService.copyCountries();
+        locationUpgradeService.copyCountryRegions();
+        locationUpgradeService.copyCountryRegionAreas();
+        locationUpgradeService.copyStates();
+        locationUpgradeService.copyPcs();
+        locationUpgradeService.copyDistricts();
+        locationUpgradeService.copyAcs();
+        return "Success";
+    }
+
     @RequestMapping("/permissions/update")
     @ResponseBody
     public String updatePermissions(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
