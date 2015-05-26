@@ -88,10 +88,27 @@ public class AwsFileManagerImpl implements AwsFileManager {
         logger.info("File Uploaded");
     }
 
+    private String getContentType(String fileName) {
+        if (fileName.endsWith(".css") || fileName.endsWith(".js")) {
+            return "text/css";
+        }
+        if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
+            return "image/jpeg";
+        }
+        if (fileName.endsWith(".png")) {
+            return "image/png";
+        }
+        if (fileName.endsWith(".gif")) {
+            return "image/gif";
+        }
+
+        return null;
+    }
+
     @Override
     public void uploadFileToS3(String awsKey, String awsSecret, String bucketName, String remoteFileNameAndPath, InputStream fileToUpload) throws FileNotFoundException {
-
-        uploadFileToS3(awsKey, awsSecret, bucketName, remoteFileNameAndPath, fileToUpload, null);
+        String contentType = getContentType(remoteFileNameAndPath);
+        uploadFileToS3(awsKey, awsSecret, bucketName, remoteFileNameAndPath, fileToUpload, contentType);
     }
 
     public static BufferedImage resize(InputStream is, int newW, int newH) throws IOException {
