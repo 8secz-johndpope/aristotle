@@ -147,7 +147,7 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
     public void createTemplate() {
         selectedTemplate = new DomainTemplate();
         showTemplateList = false;
-        selectedTemplateUrl = null;
+        selectedTemplateUrl = new DomainPageTemplate();
         selectedUrl = null;
     }
 
