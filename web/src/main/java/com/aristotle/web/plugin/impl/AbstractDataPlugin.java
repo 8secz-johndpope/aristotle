@@ -3,13 +3,12 @@ package com.aristotle.web.plugin.impl;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -17,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.aristotle.core.persistance.Blog;
 import com.aristotle.core.persistance.Event;
@@ -34,7 +32,7 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    Map<String, String> settingMap = new HashMap<String, String>();
+    Map<String, String> settingMap = new LinkedHashMap<String, String>();
     protected final String name;
 
     public AbstractDataPlugin() {
@@ -65,26 +63,6 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
 
     }
 
-    public static void main(String[] args) {
-        JsonObject jsonObject = new JsonObject();
-        JsonObject newJsonObject = new JsonObject();
-        jsonObject.add("news", newJsonObject);
-        jsonObject.addProperty("countr", 1);
-        newJsonObject.addProperty("size", 10);
-
-        AbstractDataPlugin abstractDataPlugin = new AbstractDataPlugin() {
-
-            @Override
-            public void applyPlugin(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView mv) {
-
-            }
-        };
-
-        abstractDataPlugin.addSettingToMap(jsonObject, null, abstractDataPlugin.settingMap);
-        for (Entry<String, String> oneEntry : abstractDataPlugin.settingMap.entrySet()) {
-            System.out.println(oneEntry.getKey() + "=" + oneEntry.getValue());
-        }
-    }
     private void addSettingToMap(JsonObject jsonObject, String prefix, Map<String, String> settingMap) {
         for(Entry<String, JsonElement> oneEntry : jsonObject.entrySet()){
             if (oneEntry.getValue().isJsonPrimitive()) {
