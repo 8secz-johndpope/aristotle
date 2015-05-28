@@ -128,8 +128,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public void registerUserQuick(UserContactBean userContactBean) throws AppException {
         // Just save email and phone
+        try{
         getOrCreateEmail(userContactBean.getEmail());
-        getOrCreateMobile(userContactBean.getMobile(), userContactBean.getCountryCode(), "mobile");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        try {
+            getOrCreateMobile(userContactBean.getMobile(), userContactBean.getCountryCode(), "mobile");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
 
     }
 
@@ -232,7 +241,12 @@ public class UserServiceImpl implements UserService {
             mobile = new Phone();
             mobile.setCountryCode(countryCode);
             mobile.setPhoneNumber(mobileNumber);
-            mobile.setPhoneType(PhoneType.MOBILE);
+            if (countryCode.equals("91")) {
+                mobile.setPhoneType(PhoneType.MOBILE);
+            } else {
+                mobile.setPhoneType(PhoneType.NRI_MOBILE);
+            }
+
             mobile = phoneRepository.save(mobile);
         }
         if (mobile.isConfirmed()) {
