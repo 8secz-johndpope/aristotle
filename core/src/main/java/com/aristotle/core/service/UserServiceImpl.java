@@ -249,7 +249,7 @@ public class UserServiceImpl implements UserService {
 
             mobile = phoneRepository.save(mobile);
         }
-        if (mobile.isConfirmed()) {
+        if (mobile.getUser() != null || mobile.isConfirmed()) {
             throwFieldAppException(fieldName, "Mobile already registered");
         }
         return mobile;
