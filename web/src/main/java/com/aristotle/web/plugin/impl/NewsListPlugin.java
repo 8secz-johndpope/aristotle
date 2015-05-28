@@ -24,7 +24,7 @@ public class NewsListPlugin extends AbstractDataPlugin {
     @Autowired
     private NewsService newsService;
 
-    int totalNews = 2;
+
 
     public NewsListPlugin() {
     }
@@ -39,6 +39,7 @@ public class NewsListPlugin extends AbstractDataPlugin {
         try {
             JsonObject context = (JsonObject) mv.getModel().get("context");
             Pageable pageRequest = getPageRequest(httpServletRequest);
+            int totalNews = getIntSettingPramater("news.size", 2);
             List<News> newsList = newsService.getAllPublishedNews(totalNews);
             JsonArray jsonArray = convertNewsList(newsList);
             context.add(name, jsonArray);

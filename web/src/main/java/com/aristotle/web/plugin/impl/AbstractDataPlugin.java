@@ -3,10 +3,13 @@ package com.aristotle.web.plugin.impl;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -14,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.aristotle.core.persistance.Blog;
 import com.aristotle.core.persistance.Event;
@@ -22,6 +26,7 @@ import com.aristotle.core.persistance.News;
 import com.aristotle.web.parameters.HttpParameters;
 import com.aristotle.web.plugin.WebDataPlugin;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -29,7 +34,7 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    protected JsonObject settingJsonObject;
+    Map<String, String> settingMap = new HashMap<String, String>();
     protected final String name;
 
     public AbstractDataPlugin() {
@@ -42,7 +47,7 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
 
     protected Pageable getPageRequest(HttpServletRequest httpServletRequest) {
         int page = getIntPramater(httpServletRequest, HttpParameters.PAGE_NUMBER_PARAM, HttpParameters.PAGE_NUMBER_DEFAULT_VALUE);
-        int size = getIntPramater(httpServletRequest, HttpParameters.PAGE_SIZE_PARAM, HttpParameters.PAGE_SIZE_DEFAULT_VALUE);
+        int size = getIntSettingPramater("news.size", 2);// getIntPramater(httpServletRequest, HttpParameters.PAGE_SIZE_PARAM, HttpParameters.PAGE_SIZE_DEFAULT_VALUE);
         Pageable pageable = new PageRequest(page, size);
         return pageable;
     }
@@ -51,14 +56,79 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
     public void setSettings(String settings) {
         JsonParser jsonParser = new JsonParser();
         try {
-            settingJsonObject = (JsonObject) jsonParser.parse(settings);
+            JsonObject settingJsonObject = (JsonObject) jsonParser.parse(settings);
+            addSettingToMap(settingJsonObject, null, settingMap);
+
         } catch (Exception ex) {
             logger.error("Invalid Setting for Plugin {}", name);
-            settingJsonObject = new JsonObject();
         }
 
     }
 
+    public static void main(String[] args) {
+        JsonObject jsonObject = new JsonObject();
+        JsonObject newJsonObject = new JsonObject();
+        jsonObject.add("news", newJsonObject);
+        jsonObject.addProperty("countr", 1);
+        newJsonObject.addProperty("size", 10);
+
+        AbstractDataPlugin abstractDataPlugin = new AbstractDataPlugin() {
+
+            @Override
+            public void applyPlugin(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView mv) {
+
+            }
+        };
+
+        abstractDataPlugin.addSettingToMap(jsonObject, null, abstractDataPlugin.settingMap);
+        for (Entry<String, String> oneEntry : abstractDataPlugin.settingMap.entrySet()) {
+            System.out.println(oneEntry.getKey() + "=" + oneEntry.getValue());
+        }
+    }
+    private void addSettingToMap(JsonObject jsonObject, String prefix, Map<String, String> settingMap) {
+        for(Entry<String, JsonElement> oneEntry : jsonObject.entrySet()){
+            if (oneEntry.getValue().isJsonPrimitive()) {
+                String propertyName;
+                if (prefix == null) {
+                    propertyName = oneEntry.getKey();
+                } else {
+                    propertyName = prefix + "." + oneEntry.getKey();
+                }
+                settingMap.put(propertyName, oneEntry.getValue().getAsString());
+            } else {
+                if (prefix == null) {
+                    addSettingToMap(oneEntry.getValue().getAsJsonObject(), oneEntry.getKey(), settingMap);
+                } else {
+                    addSettingToMap(oneEntry.getValue().getAsJsonObject(), prefix + "." + oneEntry.getKey(), settingMap);
+                }
+
+            }
+        }
+    }
+
+    protected int getIntSettingPramater(String paramName, int defaultValue) {
+        try {
+            return Integer.parseInt(settingMap.get(paramName));
+        } catch (Exception ex) {
+            return defaultValue;
+        }
+    }
+
+    protected Long getLongSettingPramater(String paramName, Long defaultValue) {
+        try {
+            return Long.parseLong(settingMap.get(paramName));
+        } catch (Exception ex) {
+            return defaultValue;
+        }
+    }
+
+    protected String getStringSettingPramater(String paramName, String defaultValue) {
+        String paramValue = settingMap.get(paramName);
+        if (paramValue == null) {
+            paramValue = defaultValue;
+        }
+        return paramValue;
+    }
     protected int getIntPramater(HttpServletRequest httpServletRequest, String paramName, int defaultValue) {
         try {
             return Integer.parseInt(httpServletRequest.getParameter(paramName));
@@ -196,7 +266,7 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(event.getStartDate());
 
-        eventJsonObject.addProperty("month", calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.UK));
+        eventJsonObject.addProperty("month", calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.UK).toUpperCase());
         eventJsonObject.addProperty("date", calendar.get(Calendar.DATE));
         StringBuilder sb = new StringBuilder();
         sb.append(calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE) + " " + calendar.getDisplayName(Calendar.AM_PM, Calendar.SHORT, Locale.UK).toLowerCase());

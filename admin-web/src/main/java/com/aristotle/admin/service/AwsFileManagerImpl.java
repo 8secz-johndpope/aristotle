@@ -89,8 +89,11 @@ public class AwsFileManagerImpl implements AwsFileManager {
     }
 
     private String getContentType(String fileName) {
-        if (fileName.endsWith(".css") || fileName.endsWith(".js")) {
+        if (fileName.endsWith(".css")) {
             return "text/css";
+        }
+        if (fileName.endsWith(".js")) {
+            return "application/javascript";
         }
         if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
             return "image/jpeg";

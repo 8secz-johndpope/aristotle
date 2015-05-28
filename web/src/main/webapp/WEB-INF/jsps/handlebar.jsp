@@ -10,7 +10,7 @@
 <title>Swaraj Abhiyan, India</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.2/handlebars.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js"></script>
 <meta charset="utf-8" />
 <meta name="google-site-verification" content="szZXs81i9wwYfIVcZy4hDzCKHtxsnuOMoLwfGDhlzdss" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
