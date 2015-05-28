@@ -172,7 +172,7 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
                 }
                 // templateCache.refreshCache();
                 refreshTemplateList();
-                cancel();
+                // cancel();
             } catch (Exception e) {
                 sendErrorMessageToJsfScreen(e);
             }
