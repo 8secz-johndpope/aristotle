@@ -1,5 +1,6 @@
 package com.aristotle.web.plugin.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -31,6 +32,8 @@ import com.google.gson.JsonParser;
 public abstract class AbstractDataPlugin implements WebDataPlugin {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
+    private DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
+    private SimpleDateFormat ddMMMyyyyFormat = new SimpleDateFormat("dd-MMM-yyyy");
 
     Map<String, String> settingMap = new LinkedHashMap<String, String>();
     protected final String name;
@@ -132,7 +135,6 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
             jsonObject.addProperty(fieldName, "");
             return;
         }
-        DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
         jsonObject.addProperty(fieldName, fmt.print(fieldValue.getTime()));
     }
 
@@ -150,6 +152,8 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
         newsJsonObject.addProperty("contentSummary", contentWithOutHtml);
 
         addDateField(newsJsonObject, "publishDate", news.getPublishDate());
+        newsJsonObject.addProperty("publishDate_ddMMMyyyy", ddMMMyyyyFormat.format(news.getPublishDate()));
+
         return newsJsonObject;
     }
 
