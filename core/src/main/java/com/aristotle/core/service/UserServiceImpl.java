@@ -214,7 +214,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void addLocationsTouser(User dbUser, Long locationId, String type) throws AppException {
-        if (locationId == null) {
+        if (locationId == null || locationId <= 0) {
             return;
         }
         UserLocation userLocation = new UserLocation();
