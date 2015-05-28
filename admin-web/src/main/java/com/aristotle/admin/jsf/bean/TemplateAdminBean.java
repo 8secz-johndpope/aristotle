@@ -103,6 +103,7 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
             }
         }
         if (selectedTemplateUrl == null) {
+            logger.info("No Existing Page Template Found ={}", selectedUrl);
             selectedTemplateUrl = new DomainPageTemplate();
             selectedTemplateUrl.setUrlMapping(urlToUrlMapping.get(selectedUrl));
         }

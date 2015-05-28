@@ -14,6 +14,8 @@ import com.aristotle.core.exception.AppException;
 import com.aristotle.core.service.temp.LocationUpgradeService;
 import com.aristotle.web.plugin.PluginManager;
 import com.aristotle.web.ui.template.UiTemplateManager;
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
 
 @Controller
 public class SetupController {
@@ -80,6 +82,19 @@ public class SetupController {
     public String updateuserLocations(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
         locationUpgradeService.copyUserLocations();
         return "Success";
+    }
+
+    @RequestMapping("/handlebar/test")
+    @ResponseBody
+    public String upsddateuserLocations(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
+        Handlebars handlebars = new Handlebars();
+
+        Template template = handlebars.compileInline("Hello {{this}}!");
+
+        String result = template.apply("Handlebars.java");
+        System.out.println(result);
+        return result;
+
     }
 
 }

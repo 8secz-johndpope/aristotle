@@ -77,6 +77,16 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mobile</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.github.jknack</groupId>
+			<artifactId>handlebars</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.jknack</groupId>
+			<artifactId>handlebars-jackson2</artifactId>
+			<version>2.1.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>ROOT</finalName>

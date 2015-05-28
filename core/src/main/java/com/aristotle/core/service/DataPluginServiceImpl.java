@@ -82,7 +82,7 @@ public class DataPluginServiceImpl implements DataPluginService {
 
     @Override
     public DomainPageTemplate saveDomainPageTemplate(DomainPageTemplate domainPageTemplate) throws AppException {
-        entityManager.merge(domainPageTemplate);
+        domainPageTemplate = entityManager.merge(domainPageTemplate);
         UrlMapping urlMapping = entityManager.merge(domainPageTemplate.getUrlMapping());
         domainPageTemplate.setUrlMapping(urlMapping);
         DomainTemplate domainTemplate = domainTemplateRepository.findOne(domainPageTemplate.getDomainTemplateId());
