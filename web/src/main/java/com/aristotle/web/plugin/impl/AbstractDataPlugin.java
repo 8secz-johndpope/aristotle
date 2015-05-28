@@ -152,7 +152,11 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
         newsJsonObject.addProperty("contentSummary", contentWithOutHtml);
 
         addDateField(newsJsonObject, "publishDate", news.getPublishDate());
-        newsJsonObject.addProperty("publishDate_ddMMMyyyy", ddMMMyyyyFormat.format(news.getPublishDate()));
+        if (news.getPublishDate() == null) {
+            newsJsonObject.addProperty("publishDate_ddMMMyyyy", "");
+        } else {
+            newsJsonObject.addProperty("publishDate_ddMMMyyyy", ddMMMyyyyFormat.format(news.getPublishDate()));
+        }
 
         return newsJsonObject;
     }
