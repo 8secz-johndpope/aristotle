@@ -52,6 +52,7 @@ public class VolunteerOptionPlugin extends AbstractDataPlugin {
                     oneInterestJsonObject.addProperty("description", oneInterest.getDescription());
                     interestJsonArray.add(oneInterestJsonObject);
                 }
+                oneInterestGroupJsonObject.add("interests", interestJsonArray);
                 interestGroupJsonArray.add(oneInterestGroupJsonObject);
             }
             context.add(name, interestGroupJsonArray);
