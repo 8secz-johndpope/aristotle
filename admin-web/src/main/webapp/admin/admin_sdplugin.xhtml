@@ -93,6 +93,8 @@
 							<p:outputLabel value="Name"></p:outputLabel>
 							<p:inputText value="#{staticDataPluginAdminBean.selectedStaticDataPlugin.pluginName}" style="width:600px">
 							</p:inputText>
+                            <p:outputLabel value="Active"></p:outputLabel>
+                            <p:selectBooleanCheckbox value="#{staticDataPluginAdminBean.selectedStaticDataPlugin.global}" />
 							<p:outputLabel value="Data" escape="false" />
 							<p:inputTextarea rows="6" cols="175" value="#{staticDataPluginAdminBean.selectedStaticDataPlugin.content}" />
 						</p:panelGrid>
