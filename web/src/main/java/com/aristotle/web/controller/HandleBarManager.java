@@ -26,6 +26,7 @@ public class HandleBarManager {
     @PostConstruct
     public void init() {
         registerTrimStringFunction();
+        registerIfIndexDividedByFunction();
     }
 
     private void registerTrimStringFunction() {
@@ -37,6 +38,21 @@ public class HandleBarManager {
                     return context.subSequence(0, 300);
                 }
                 return context;
+            }
+
+        });
+    }
+
+    private void registerIfIndexDividedByFunction() {
+        handlebars.registerHelper("ifIndexDividedBy", new Helper<String>() {
+            @Override
+            public CharSequence apply(String context, Options options) throws IOException {
+                int currentIndex = (Integer) options.params[0];
+                int divisor = (Integer) options.params[1];
+                if (currentIndex % divisor == 0) {
+                    return "true".subSequence(0, 3);
+                }
+                return "false".subSequence(0, 3);
             }
 
         });
