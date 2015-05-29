@@ -63,7 +63,7 @@ public class RegisterController {
         errors.put(fieldname, error);
     }
 
-    boolean ignore = true;
+    boolean ignore = false;
     @RequestMapping(value = "/registeruser", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<String> saveUserProfile(HttpServletRequest httpServletRequest, @RequestBody UserRegisterBean user) {

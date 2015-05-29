@@ -8,9 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.aristotle.core.persistance.Domain;
 import com.aristotle.core.persistance.DomainPageTemplate;
+import com.aristotle.core.persistance.DomainTemplatePart;
 import com.aristotle.core.persistance.UrlMapping;
 import com.aristotle.core.service.UiTemplateService;
 import com.aristotle.web.parameters.HttpParameters;
@@ -39,13 +41,21 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
             if (isInitialised) {
                 return;
             }
+
             try {
+
                 domainUiTemplateMap = new HashMap<String, Map<Long, DomainPageTemplate>>();
                 List<Domain> domains = uiTemplateService.getAllDomains();
                 for (Domain oneDomain : domains) {
                     List<DomainPageTemplate> domainPageTemplates = uiTemplateService.getCurrentDomainPageTemplate(oneDomain.getId());
+                    if (domainPageTemplates == null || domainPageTemplates.isEmpty()) {
+                        continue;
+                    }
+                    Long domainTemplateId = domainPageTemplates.get(0).getDomainTemplateId();
+                    List<DomainTemplatePart> subTemplates = uiTemplateService.getDomainTemplatePartsByDomainTemplateId(domainTemplateId);
                     Map<Long, DomainPageTemplate> pageTemplates = new HashMap<Long, DomainPageTemplate>();
                     for (DomainPageTemplate oneDomainPageTemplate : domainPageTemplates) {
+                        applySubTemplates(oneDomainPageTemplate, subTemplates);
                         pageTemplates.put(oneDomainPageTemplate.getUrlMappingId(), oneDomainPageTemplate);
                     }
                     domainUiTemplateMap.put(oneDomain.getName().toLowerCase(), pageTemplates);
@@ -59,6 +69,15 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
 
 
     }
+
+    private void applySubTemplates(DomainPageTemplate oneDomainPageTemplate, List<DomainTemplatePart> subTemplates) {
+        for (DomainTemplatePart oneDomainTemplatePart : subTemplates) {
+            String templateKey = "[[" + oneDomainTemplatePart.getName() + "]]";
+            String htmlContent = StringUtils.replace(oneDomainPageTemplate.getHtmlContent(), templateKey, oneDomainTemplatePart.getHtmlContent());
+            oneDomainPageTemplate.setHtmlContent(htmlContent);
+        }
+    }
+
     @Override
     public String getTemplate(HttpServletRequest httpServletRequest) {
         init();
