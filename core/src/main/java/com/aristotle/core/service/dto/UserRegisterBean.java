@@ -1,5 +1,6 @@
 package com.aristotle.core.service.dto;
 
+import java.util.Arrays;
 import java.util.Date;
 
 public class UserRegisterBean {
@@ -401,6 +402,21 @@ public class UserRegisterBean {
 
     public void setNriCountryCode(String nriCountryCode) {
         this.nriCountryCode = nriCountryCode;
+    }
+
+    @Override
+    public String toString() {
+        return "UserRegisterBean [name=" + name + ", fatherName=" + fatherName + ", motherName=" + motherName + ", address=" + address + ", gender=" + gender + ", dateOfBirth=" + dateOfBirth
+                + ", nri=" + nri + ", nriCountryId=" + nriCountryId + ", nriCountryRegionId=" + nriCountryRegionId + ", nriCountryRegionAreaId=" + nriCountryRegionAreaId + ", stateLivingId="
+                + stateLivingId + ", districtLivingId=" + districtLivingId + ", assemblyConstituencyLivingId=" + assemblyConstituencyLivingId + ", parliamentConstituencyLivingId="
+                + parliamentConstituencyLivingId + ", stateVotingId=" + stateVotingId + ", districtVotingId=" + districtVotingId + ", assemblyConstituencyVotingId=" + assemblyConstituencyVotingId
+                + ", parliamentConstituencyVotingId=" + parliamentConstituencyVotingId + ", email=" + email + ", interests=" + Arrays.toString(interests) + ", member=" + member + ", volunteer="
+                + volunteer + ", passportNumber=" + passportNumber + ", identityNumber=" + identityNumber + ", identityType=" + identityType + ", education=" + education + ", professionalBackground="
+                + professionalBackground + ", domainExpertise=" + domainExpertise + ", offences=" + offences + ", emergencyContactName=" + emergencyContactName + ", emergencyContactRelation="
+                + emergencyContactRelation + ", emergencyContactNo=" + emergencyContactNo + ", pastVolunteer=" + pastVolunteer + ", pastOrganisation=" + pastOrganisation + ", knowExistingMember="
+                + knowExistingMember + ", existingMemberName=" + existingMemberName + ", existingMemberEmail=" + existingMemberEmail + ", existingMemberMobile=" + existingMemberMobile
+                + ", existingMemberCountryCode=" + existingMemberCountryCode + ", mobileNumber=" + mobileNumber + ", countryCode=" + countryCode + ", nriMobileNumber=" + nriMobileNumber
+                + ", nriCountryCode=" + nriCountryCode + "]";
     }
 
 }

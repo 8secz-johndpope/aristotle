@@ -36,7 +36,7 @@ public class VolunteerOptionPlugin extends AbstractDataPlugin {
     public void applyPlugin(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView mv) {
 
         logger.info("Applying {} plugin", name);
-        int rowSize = getIntSettingPramater("interest.rowsize", 4);
+        int rowSize = getIntSettingPramater("interest.rowsize", 3);
         try {
             JsonObject context = (JsonObject) mv.getModel().get("context");
             List<InterestGroup> interestGroups = appService.getAllInterests();
