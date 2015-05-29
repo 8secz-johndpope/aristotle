@@ -48,9 +48,10 @@ public class HandleBarManager {
             @Override
             public CharSequence apply(String context, Options options) throws IOException {
                 try {
-                    System.out.println("ifIndexDividedBy Started");
-                    int currentIndex = (Integer) options.params[0];
-                    int divisor = (Integer) options.params[1];
+                    System.out.println("context = " + context);
+                    System.out.println("ifIndexDividedBy Started " + options.params.length);
+                    int currentIndex = options.param(0);
+                    int divisor = options.param(1);
                     if (currentIndex % divisor == 0) {
                         return "true".subSequence(0, 3);
                     }
