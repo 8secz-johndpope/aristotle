@@ -70,6 +70,9 @@ public class PluginManagerImpl implements PluginManager {
                 for (UrlMapping oneUrlMapping : urlMappings) {
                     dataPlugins = new ArrayList<WebDataPlugin>();
                     for (UrlMappingPlugin oneUrlMappingPlugin : oneUrlMapping.getUrlMappingPlugins()) {
+                        if (oneUrlMappingPlugin.getDataPlugin().isDisabled()) {
+                            continue;
+                        }
                         oneWebDataPlugin = createDataPlugin(oneUrlMappingPlugin.getDataPlugin(), jsonParser);
                         if (oneWebDataPlugin != null) {
                             dataPlugins.add(oneWebDataPlugin);
