@@ -1,8 +1,11 @@
 package com.aristotle.web.plugin;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import org.springframework.util.StringUtils;
 
 import com.aristotle.core.persistance.UrlMapping;
 
@@ -10,6 +13,7 @@ public class PatternUrlMapping {
     private final UrlMapping urlMapping;
     private Pattern pattern;
     private final List<String> parameters;
+    private final List<String> aliases;
     private final List<WebDataPlugin> dataPlugins;
 
 
@@ -17,6 +21,12 @@ public class PatternUrlMapping {
         this.dataPlugins = dataPlugins;
         this.urlMapping = urlMapping;
         parameters = new ArrayList<String>();
+        aliases = new ArrayList<String>();
+        if (urlMapping.getAliases() != null && urlMapping.getAliases().length() > 0) {
+            String[] aliasesArray = StringUtils.commaDelimitedListToStringArray(urlMapping.getAliases());
+            aliases.addAll(Arrays.asList(aliasesArray));
+        }
+
         pattern = null;
         // Build parameters and pattern
         char[] charArray = urlMapping.getUrlPattern().toCharArray();
@@ -91,6 +101,10 @@ public class PatternUrlMapping {
 
     public List<WebDataPlugin> getDataPlugins() {
         return dataPlugins;
+    }
+
+    public List<String> getAliases() {
+        return aliases;
     }
 
 }

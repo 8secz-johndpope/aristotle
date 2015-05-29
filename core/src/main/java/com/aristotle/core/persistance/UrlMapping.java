@@ -15,6 +15,9 @@ public class UrlMapping extends BaseEntity {
     @Column(name = "url_pattern")
     private String urlPattern;
 
+    @Column(name = "aliases")
+    private String aliases;
+
     @Column(name = "active")
     private boolean active;
 
@@ -54,6 +57,14 @@ public class UrlMapping extends BaseEntity {
 
     public void setSecured(boolean secured) {
         this.secured = secured;
+    }
+
+    public String getAliases() {
+        return aliases;
+    }
+
+    public void setAliases(String aliases) {
+        this.aliases = aliases;
     }
 
     @Override

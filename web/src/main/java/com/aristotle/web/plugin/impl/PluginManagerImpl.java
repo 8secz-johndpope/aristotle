@@ -150,6 +150,13 @@ public class PluginManagerImpl implements PluginManager {
                     httpServletRequest.setAttribute(HttpParameters.URL_MAPPING, onePatternUrlMapping.getUrlMapping());
                     return onePatternUrlMapping.getDataPlugins();
                 }
+                for (String oneUrl : onePatternUrlMapping.getAliases()) {
+                    if (url.equalsIgnoreCase(oneUrl)) {
+                        httpServletRequest.setAttribute(HttpParameters.PATH_PARAMETER_PARAM, Collections.emptyMap());
+                        httpServletRequest.setAttribute(HttpParameters.URL_MAPPING, onePatternUrlMapping.getUrlMapping());
+                        return onePatternUrlMapping.getDataPlugins();
+                    }
+                }
             } else {
                 Matcher m = r.matcher(url);
                 if (m.find()) {
