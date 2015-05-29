@@ -47,10 +47,15 @@ public class HandleBarManager {
         handlebars.registerHelper("ifIndexDividedBy", new Helper<String>() {
             @Override
             public CharSequence apply(String context, Options options) throws IOException {
-                int currentIndex = (Integer) options.params[0];
-                int divisor = (Integer) options.params[1];
-                if (currentIndex % divisor == 0) {
-                    return "true".subSequence(0, 3);
+                try {
+                    System.out.println("ifIndexDividedBy Started");
+                    int currentIndex = (Integer) options.params[0];
+                    int divisor = (Integer) options.params[1];
+                    if (currentIndex % divisor == 0) {
+                        return "true".subSequence(0, 3);
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
                 return "false".subSequence(0, 3);
             }
