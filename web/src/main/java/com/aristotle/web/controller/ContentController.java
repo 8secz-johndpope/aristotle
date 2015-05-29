@@ -56,7 +56,7 @@ public class ContentController {
         return modelAndView;
     }
 
-    @RequestMapping("/content/**")
+    @RequestMapping(value = { "/content/**", "/", "/index.html", "/**" })
     @ResponseBody
     public String serverSideHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws IOException {
 
