@@ -32,9 +32,13 @@ public class HandleBarManager {
         handlebars.registerHelper("trimString", new Helper<String>() {
             @Override
             public CharSequence apply(String context, Options options) throws IOException {
-                System.out.println("Apply trimString : " + context.length());
-                if (context.length() > 300) {
-                    return context.subSequence(0, 300);
+                int trimLength = 150;
+                if (options.params.length >= 1) {
+                    trimLength = options.param(0);
+                }
+                System.out.println("Apply trimString : " + context.length() + ", trimLength=" + trimLength);
+                if (context.length() > trimLength) {
+                    return context.subSequence(0, trimLength);
                 }
                 return context;
             }
