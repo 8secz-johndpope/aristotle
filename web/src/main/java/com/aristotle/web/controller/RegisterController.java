@@ -120,6 +120,7 @@ public class RegisterController {
                 httpStatus = HttpStatus.OK;
                 jsonObject.addProperty("message", "User Registered Succesfully");
             } catch (FieldsAppException ex) {
+                ex.printStackTrace();
                 httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
                 jsonObject.addProperty("message", "Unable to Register User");
                 JsonObject fieldErrors = new JsonObject();
@@ -127,11 +128,12 @@ public class RegisterController {
                     fieldErrors.addProperty(oneEntry.getKey(), oneEntry.getValue());
                 }
                 jsonObject.add("fieldErrors", fieldErrors);
-                ex.printStackTrace();
+
             } catch (Exception ex) {
+                ex.printStackTrace();
                 httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
                 jsonObject.addProperty("message", "Unable to Register User : " + ex.getMessage());
-                ex.printStackTrace();
+
             }
         } else {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
