@@ -253,6 +253,8 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
         eventJsonObject.addProperty("id", event.getId());
         eventJsonObject.addProperty("title", event.getTitle());
         eventJsonObject.addProperty("description", event.getDescription());
+        eventJsonObject.addProperty("lattitude", event.getLattitude());
+        eventJsonObject.addProperty("longitude", event.getLongitude());
         eventJsonObject.addProperty("address", event.getAddress());
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(event.getStartDate());
