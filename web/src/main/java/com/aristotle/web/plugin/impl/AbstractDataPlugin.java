@@ -186,6 +186,11 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
         blogJsonObject.addProperty("contentSummary", contentWithOutHtml);
 
         addDateField(blogJsonObject, "publishDate", blog.getPublishDate());
+        if (blog.getPublishDate() == null) {
+            blogJsonObject.addProperty("publishDate_ddMMMyyyy", "");
+        } else {
+            blogJsonObject.addProperty("publishDate_ddMMMyyyy", ddMMMyyyyFormat.format(blog.getPublishDate()));
+        }
         return blogJsonObject;
     }
 
@@ -254,6 +259,7 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
 
         eventJsonObject.addProperty("month", calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.UK).toUpperCase());
         eventJsonObject.addProperty("date", calendar.get(Calendar.DATE));
+        eventJsonObject.addProperty("year", calendar.get(Calendar.YEAR));
         StringBuilder sb = new StringBuilder();
         sb.append(calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE) + " " + calendar.getDisplayName(Calendar.AM_PM, Calendar.SHORT, Locale.UK).toLowerCase());
         sb.append(" - ");
