@@ -72,6 +72,9 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
 
     private void applySubTemplates(DomainPageTemplate oneDomainPageTemplate, List<DomainTemplatePart> subTemplates) {
         for (DomainTemplatePart oneDomainTemplatePart : subTemplates) {
+            if (oneDomainTemplatePart.getName().equals("FOOTER")) {
+                System.out.println(oneDomainTemplatePart.getHtmlContent());
+            }
             String templateKey = "[[" + oneDomainTemplatePart.getName() + "]]";
             String htmlContent = StringUtils.replace(oneDomainPageTemplate.getHtmlContent(), templateKey, oneDomainTemplatePart.getHtmlContent());
             oneDomainPageTemplate.setHtmlContent(htmlContent);
