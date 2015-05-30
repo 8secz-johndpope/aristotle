@@ -27,7 +27,7 @@ public class UserRegisterBean {
 	private Long districtVotingId;
 	private Long assemblyConstituencyVotingId;
 	private Long parliamentConstituencyVotingId;
-    private String email;
+    private String emailId;
 
     private Long[] interests;
 
@@ -207,12 +207,12 @@ public class UserRegisterBean {
         this.parliamentConstituencyVotingId = parliamentConstituencyVotingId;
     }
 
-    public String getEmail() {
-        return email;
+    public String getEmailId() {
+        return emailId;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmailId(String emailId) {
+        this.emailId = emailId;
     }
 
     public Long[] getInterests() {
@@ -413,7 +413,7 @@ public class UserRegisterBean {
                 + ", nri=" + nri + ", nriCountryId=" + nriCountryId + ", nriCountryRegionId=" + nriCountryRegionId + ", nriCountryRegionAreaId=" + nriCountryRegionAreaId + ", stateLivingId="
                 + stateLivingId + ", districtLivingId=" + districtLivingId + ", assemblyConstituencyLivingId=" + assemblyConstituencyLivingId + ", parliamentConstituencyLivingId="
                 + parliamentConstituencyLivingId + ", stateVotingId=" + stateVotingId + ", districtVotingId=" + districtVotingId + ", assemblyConstituencyVotingId=" + assemblyConstituencyVotingId
-                + ", parliamentConstituencyVotingId=" + parliamentConstituencyVotingId + ", email=" + email + ", interests=" + Arrays.toString(interests) + ", member=" + member + ", volunteer="
+                + ", parliamentConstituencyVotingId=" + parliamentConstituencyVotingId + ", emailId=" + emailId + ", interests=" + Arrays.toString(interests) + ", member=" + member + ", volunteer="
                 + volunteer + ", passportNumber=" + passportNumber + ", identityNumber=" + identityNumber + ", identityType=" + identityType + ", education=" + education + ", professionalBackground="
                 + professionalBackground + ", domainExpertise=" + domainExpertise + ", offences=" + offences + ", emergencyContactName=" + emergencyContactName + ", emergencyContactRelation="
                 + emergencyContactRelation + ", emergencyContactNo=" + emergencyContactNo + ", pastVolunteer=" + pastVolunteer + ", pastOrganisation=" + pastOrganisation + ", knowExistingMember="

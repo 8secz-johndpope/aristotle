@@ -145,7 +145,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void registerUser(UserRegisterBean userRegisterBean) throws AppException {
 
-        Email email = getOrCreateEmail(userRegisterBean.getEmail());
+        Email email = getOrCreateEmail(userRegisterBean.getEmailId());
         Phone indiaMobile = getOrCreateMobile(userRegisterBean.getMobileNumber(), userRegisterBean.getCountryCode(), "mobileNumber");
         Phone nriMobile = getOrCreateMobile(userRegisterBean.getNriMobileNumber(), userRegisterBean.getNriCountryCode(), "nriMobileNumber");
         if (email == null && indiaMobile == null && nriMobile == null) {
