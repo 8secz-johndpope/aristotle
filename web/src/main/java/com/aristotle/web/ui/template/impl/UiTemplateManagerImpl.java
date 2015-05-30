@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -46,6 +47,7 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
 
                 domainUiTemplateMap = new HashMap<String, Map<Long, DomainPageTemplate>>();
                 List<Domain> domains = uiTemplateService.getAllDomains();
+                DomainPageTemplate detachedDomainPageTemplate;
                 for (Domain oneDomain : domains) {
                     List<DomainPageTemplate> domainPageTemplates = uiTemplateService.getCurrentDomainPageTemplate(oneDomain.getId());
                     if (domainPageTemplates == null || domainPageTemplates.isEmpty()) {
@@ -55,8 +57,10 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
                     List<DomainTemplatePart> subTemplates = uiTemplateService.getDomainTemplatePartsByDomainTemplateId(domainTemplateId);
                     Map<Long, DomainPageTemplate> pageTemplates = new HashMap<Long, DomainPageTemplate>();
                     for (DomainPageTemplate oneDomainPageTemplate : domainPageTemplates) {
-                        applySubTemplates(oneDomainPageTemplate, subTemplates);
-                        pageTemplates.put(oneDomainPageTemplate.getUrlMappingId(), oneDomainPageTemplate);
+                        detachedDomainPageTemplate = new DomainPageTemplate();
+                        BeanUtils.copyProperties(oneDomainPageTemplate, detachedDomainPageTemplate);
+                        applySubTemplates(detachedDomainPageTemplate, subTemplates);
+                        pageTemplates.put(detachedDomainPageTemplate.getUrlMappingId(), detachedDomainPageTemplate);
                     }
                     domainUiTemplateMap.put(oneDomain.getName().toLowerCase(), pageTemplates);
                 }
