@@ -3,6 +3,8 @@ package com.aristotle.core.service.dto;
 import java.util.Arrays;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class UserRegisterBean {
 	
 	private String name;
@@ -10,6 +12,7 @@ public class UserRegisterBean {
 	private String motherName;
 	private String address;
 	private String gender;
+    @JsonFormat(pattern = "dd-MM-yyyy")
 	private Date dateOfBirth;
 	private boolean nri;
 	private Long nriCountryId;
