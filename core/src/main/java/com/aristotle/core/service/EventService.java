@@ -11,4 +11,6 @@ public interface EventService {
 
     List<Event> getLocationEvents(Location location);
 
+    Event getEventById(Long eventId);
+
 }

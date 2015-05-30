@@ -46,4 +46,9 @@ public class EventServiceImpl implements EventService {
         return eventRepository.getLocationEvents(location.getId());
     }
 
+    @Override
+    public Event getEventById(Long eventId) {
+        return eventRepository.findOne(eventId);
+    }
+
 }
