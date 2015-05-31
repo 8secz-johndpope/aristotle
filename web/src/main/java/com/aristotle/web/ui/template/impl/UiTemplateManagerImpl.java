@@ -3,6 +3,7 @@ package com.aristotle.web.ui.template.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -104,6 +105,9 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
 
     private DomainPageTemplate getDomainPageTemplate(String domain, Long urlMappingId) {
         System.out.println("Getting domain = " + domain + " , urlMappingId=" + urlMappingId);
+        for (Entry<String, Map<Long, DomainPageTemplate>> oneNtry : domainUiTemplateMap.entrySet()) {
+
+        }
         Map<Long, DomainPageTemplate> domainPageTemplateMap = domainUiTemplateMap.get(domain.toLowerCase());
         if (domainPageTemplateMap == null) {
             System.out.println("Not found");

@@ -36,7 +36,6 @@ public class HandleBarManager {
                 if (options.params.length >= 1) {
                     trimLength = options.param(0);
                 }
-                System.out.println("Apply trimString : " + context.length() + ", trimLength=" + trimLength);
                 if (context.length() > trimLength) {
                     return context.subSequence(0, trimLength);
                 }
