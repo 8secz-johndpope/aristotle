@@ -24,8 +24,9 @@ public class NewsListPlugin extends AbstractDataPlugin {
     @Autowired
     private NewsService newsService;
 
+
+
     public NewsListPlugin() {
-        super("Invalid");
     }
 
     public NewsListPlugin(String pluginName) {
@@ -38,7 +39,8 @@ public class NewsListPlugin extends AbstractDataPlugin {
         try {
             JsonObject context = (JsonObject) mv.getModel().get("context");
             Pageable pageRequest = getPageRequest(httpServletRequest);
-            List<News> newsList = newsService.getAllPublishedNews();
+            int totalNews = getIntSettingPramater("news.size", 2);
+            List<News> newsList = newsService.getAllPublishedNews(totalNews);
             JsonArray jsonArray = convertNewsList(newsList);
             context.add(name, jsonArray);
         } catch (Exception ex) {

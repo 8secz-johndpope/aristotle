@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Version;
@@ -63,6 +64,12 @@ public class State {
 	@JoinColumn(name="location_campaign_id")
 	})
 	private Set<LocationCampaign> campaigns;
+
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinColumn(name = "location_id")
+    private Location location;
+    @Column(name = "location_id", insertable = false, updatable = false)
+    private Long locationId;
 
 	public Long getId() {
 		return id;
@@ -152,7 +159,23 @@ public class State {
 		this.campaigns = campaigns;
 	}
 
-	@Override
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public Long getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(Long locationId) {
+        this.locationId = locationId;
+    }
+
+    @Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

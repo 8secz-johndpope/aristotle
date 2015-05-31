@@ -10,7 +10,7 @@
 <title>Swaraj Abhiyan, India</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.2/handlebars.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js"></script>
 <meta charset="utf-8" />
 <meta name="google-site-verification" content="szZXs81i9wwYfIVcZy4hDzCKHtxsnuOMoLwfGDhlzdss" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -41,11 +41,10 @@
     $("#final").html(html);
     //$("#final").html(html);
 
-
-    $.get( "http://localhost:8080/api/content/home", function(data ) {
+    $.get( "/api/content/home", function(data ) {
     	 var source   = $("#entry-template").html();
     	    var template = Handlebars.compile(source);
-    	    var p = JSON.parse(data);;
+    	    var p = JSON.parse(data);
     	  var html    = template(p);
     	    $("#final").html(html);
     	});
@@ -58,5 +57,4 @@
 
 </body>
 </html>
-
 

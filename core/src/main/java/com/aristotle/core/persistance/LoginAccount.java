@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 @Entity
-@Table(name="aap_account")
+@Table(name = "login_account")
 //@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region="Account", include="all")
 public class LoginAccount {
 

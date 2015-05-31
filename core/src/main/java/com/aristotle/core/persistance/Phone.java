@@ -45,6 +45,10 @@ public class Phone {
 	@Enumerated(EnumType.STRING)
 	private PhoneType phoneType;
 	
+    @Column(name = "confirmed", columnDefinition = "BIT(1) DEFAULT 0")
+    private boolean confirmed;
+
+	
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="user_id")
     private User user;
@@ -123,6 +127,14 @@ public class Phone {
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
+
+    public boolean isConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(boolean confirmed) {
+        this.confirmed = confirmed;
+    }
 
 
 

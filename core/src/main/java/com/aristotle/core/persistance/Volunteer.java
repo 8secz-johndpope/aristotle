@@ -7,36 +7,16 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Version;
 
 @Entity
 @Table(name="volunteer")
-public class Volunteer {
+public class Volunteer extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
-	@Version
-	@Column(name="ver")
-	private int ver;
-	
-	@Column(name="date_created")
-	private Date dateCreated;
-	@Column(name="date_modified")
-	private Date dateModified;
-	@Column(name="creator_id")
-	private Long creatorId;
-	@Column(name="modifier_id")
-	private Long modifierId;
-	
 	@Column(name = "education")
 	private String education;
 	@Column(name = "professional_background", length=512)
@@ -63,7 +43,15 @@ public class Volunteer {
     private boolean knowExistingMember;
     @Column(name = "existingMember", length = 256)
     private String existingMember;
-	
+    @Column(name = "existing_member_name", length = 64)
+    private String existingMemberName;
+    @Column(name = "existing_member_email", length = 64)
+    private String existingMemberEmail;
+    @Column(name = "existing_member_mobile", length = 16)
+    private String existingMemberMobile;
+    @Column(name = "existing_member_country_code", length = 8)
+    private String existingMemberCountryCode;
+
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="user_id")
     private User user;
@@ -81,37 +69,45 @@ public class Volunteer {
 	Set<Interest> interests;
 	
 	
-	public Long getId() {
+	@Override
+    public Long getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	@Override
+    public void setId(Long id) {
 		this.id = id;
 	}
-	public int getVer() {
+	@Override
+    public int getVer() {
 		return ver;
 	}
-	public void setVer(int ver) {
+	@Override
+    public void setVer(int ver) {
 		this.ver = ver;
 	}
-	public Date getDateCreated() {
+	@Override
+    public Date getDateCreated() {
 		return dateCreated;
 	}
 	public void setDateCreated(Date dateCreated) {
 		this.dateCreated = dateCreated;
 	}
-	public Date getDateModified() {
+	@Override
+    public Date getDateModified() {
 		return dateModified;
 	}
 	public void setDateModified(Date dateModified) {
 		this.dateModified = dateModified;
 	}
-	public Long getCreatorId() {
+	@Override
+    public Long getCreatorId() {
 		return creatorId;
 	}
 	public void setCreatorId(Long creatorId) {
 		this.creatorId = creatorId;
 	}
-	public Long getModifierId() {
+	@Override
+    public Long getModifierId() {
 		return modifierId;
 	}
 	public void setModifierId(Long modifierId) {
@@ -220,6 +216,38 @@ public class Volunteer {
 
     public void setExistingMember(String existingMember) {
         this.existingMember = existingMember;
+    }
+
+    public String getExistingMemberName() {
+        return existingMemberName;
+    }
+
+    public void setExistingMemberName(String existingMemberName) {
+        this.existingMemberName = existingMemberName;
+    }
+
+    public String getExistingMemberEmail() {
+        return existingMemberEmail;
+    }
+
+    public void setExistingMemberEmail(String existingMemberEmail) {
+        this.existingMemberEmail = existingMemberEmail;
+    }
+
+    public String getExistingMemberMobile() {
+        return existingMemberMobile;
+    }
+
+    public void setExistingMemberMobile(String existingMemberMobile) {
+        this.existingMemberMobile = existingMemberMobile;
+    }
+
+    public String getExistingMemberCountryCode() {
+        return existingMemberCountryCode;
+    }
+
+    public void setExistingMemberCountryCode(String existingMemberCountryCode) {
+        this.existingMemberCountryCode = existingMemberCountryCode;
     }
     @Override
     public String toString() {

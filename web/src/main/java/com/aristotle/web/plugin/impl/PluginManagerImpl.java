@@ -1,9 +1,11 @@
 package com.aristotle.web.plugin.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
@@ -27,6 +30,7 @@ import com.aristotle.web.parameters.HttpParameters;
 import com.aristotle.web.plugin.PatternUrlMapping;
 import com.aristotle.web.plugin.PluginManager;
 import com.aristotle.web.plugin.WebDataPlugin;
+import com.google.gson.JsonParser;
 
 @Service
 @Transactional
@@ -37,8 +41,18 @@ public class PluginManagerImpl implements PluginManager {
     @Autowired
     private BeanFactory springBeanFactory;
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
     private List<PatternUrlMapping> urlPatterns;
+    private List<WebDataPlugin> globalWebDataPlugins;
     private volatile boolean isInitialized = false;
+
+    @Override
+    public void refresh() {
+        isInitialized = false;
+        init();
+    }
 
     public void init() {
         if (isInitialized) {
@@ -49,6 +63,9 @@ public class PluginManagerImpl implements PluginManager {
                 return;
             }
             try {
+
+                JsonParser jsonParser = new JsonParser();
+
                 List<UrlMapping> urlMappings = dataPluginService.getAllUrlMappings();
                 urlPatterns = new ArrayList<PatternUrlMapping>();
                 List<WebDataPlugin> dataPlugins;
@@ -56,7 +73,13 @@ public class PluginManagerImpl implements PluginManager {
                 for (UrlMapping oneUrlMapping : urlMappings) {
                     dataPlugins = new ArrayList<WebDataPlugin>();
                     for (UrlMappingPlugin oneUrlMappingPlugin : oneUrlMapping.getUrlMappingPlugins()) {
-                        oneWebDataPlugin = createDataPlugin(oneUrlMappingPlugin.getDataPlugin());
+                        if (oneUrlMappingPlugin.getDataPlugin().isDisabled()) {
+                            continue;
+                        }
+                        if (oneUrlMappingPlugin.getDataPlugin().isGlobal()) {
+                            continue;
+                        }
+                        oneWebDataPlugin = createDataPlugin(oneUrlMappingPlugin.getDataPlugin(), jsonParser);
                         if (oneWebDataPlugin != null) {
                             dataPlugins.add(oneWebDataPlugin);
                         }
@@ -65,8 +88,9 @@ public class PluginManagerImpl implements PluginManager {
                     }
                     PatternUrlMapping onePatternUrlMapping = new PatternUrlMapping(oneUrlMapping, dataPlugins);
                     urlPatterns.add(onePatternUrlMapping);
-                    isInitialized = true;
                 }
+                loadGlobalDataPlugins(jsonParser);
+                isInitialized = true;
             } catch (AppException e) {
                 e.printStackTrace();
             }
@@ -75,7 +99,21 @@ public class PluginManagerImpl implements PluginManager {
 
     }
 
-    private WebDataPlugin createDataPlugin(CustomDataPlugin customDataPlugin) {
+    private void loadGlobalDataPlugins(JsonParser jsonParser) throws AppException {
+        System.out.println("Loading Global Data Plugins");
+        List<DataPlugin> globalDataPlugins = dataPluginService.getAllGlobalDataPlugins();
+        globalWebDataPlugins = new ArrayList<WebDataPlugin>(globalDataPlugins.size());
+        for(DataPlugin oneDataPlugin : globalDataPlugins){
+            System.out.println(oneDataPlugin.getPluginName());
+            WebDataPlugin oneWebDataPlugin = createDataPlugin(oneDataPlugin, jsonParser);
+            oneWebDataPlugin.setSettings("{}");// just empty valid Json
+            globalWebDataPlugins.add(oneWebDataPlugin);
+
+        }
+        System.out.println("Loading Global Data Plugins Done");
+    }
+
+    private WebDataPlugin createDataPlugin(CustomDataPlugin customDataPlugin, JsonParser jsonParser) {
         Class<?> clz;
         try {
             clz = Class.forName(customDataPlugin.getFullClassName());
@@ -87,18 +125,18 @@ public class PluginManagerImpl implements PluginManager {
         return null;
     }
 
-    private WebDataPlugin createDataPlugin(StaticDataPlugin staticDataPlugin) {
-        WebStaticDataPlugin webStaticDataPlugin = new WebStaticDataPlugin(staticDataPlugin.getContent(), staticDataPlugin.getPluginName());
+    private WebDataPlugin createDataPlugin(StaticDataPlugin staticDataPlugin, JsonParser jsonParser) {
+        WebStaticDataPlugin webStaticDataPlugin = new WebStaticDataPlugin(jsonParser.parse(staticDataPlugin.getContent()).getAsJsonObject(), staticDataPlugin.getPluginName());
         return webStaticDataPlugin;
 
     }
 
-    private WebDataPlugin createDataPlugin(DataPlugin dataPlugin) {
+    private WebDataPlugin createDataPlugin(DataPlugin dataPlugin, JsonParser jsonParser) {
         if (dataPlugin instanceof CustomDataPlugin) {
-            return createDataPlugin((CustomDataPlugin) dataPlugin);
+            return createDataPlugin((CustomDataPlugin) dataPlugin, jsonParser);
         }
         if (dataPlugin instanceof StaticDataPlugin) {
-            return createDataPlugin((StaticDataPlugin) dataPlugin);
+            return createDataPlugin((StaticDataPlugin) dataPlugin, jsonParser);
         }
         throw new RuntimeException("Should never come here");
     }
@@ -113,9 +151,14 @@ public class PluginManagerImpl implements PluginManager {
             return;
         }
         if(addData){
+            // First apply all Global Data Plugins
+            for (WebDataPlugin oneWebDataPlugin : globalWebDataPlugins) {
+                oneWebDataPlugin.applyPlugin(httpServletRequest, httpServletResponse, modelAndView);
+            }
             for (WebDataPlugin oneWebDataPlugin : plugins) {
                 oneWebDataPlugin.applyPlugin(httpServletRequest, httpServletResponse, modelAndView);
-            }    
+            }
+
         }
         
     }
@@ -129,8 +172,16 @@ public class PluginManagerImpl implements PluginManager {
             Pattern r = onePatternUrlMapping.getPattern();
             if (r == null) {
                 if (url.equalsIgnoreCase(onePatternUrlMapping.getUrlMapping().getUrlPattern()) || apiUrl.equalsIgnoreCase(onePatternUrlMapping.getUrlMapping().getUrlPattern())) {
+                    httpServletRequest.setAttribute(HttpParameters.PATH_PARAMETER_PARAM, Collections.emptyMap());
                     httpServletRequest.setAttribute(HttpParameters.URL_MAPPING, onePatternUrlMapping.getUrlMapping());
                     return onePatternUrlMapping.getDataPlugins();
+                }
+                for (String oneUrl : onePatternUrlMapping.getAliases()) {
+                    if (url.equalsIgnoreCase(oneUrl)) {
+                        httpServletRequest.setAttribute(HttpParameters.PATH_PARAMETER_PARAM, Collections.emptyMap());
+                        httpServletRequest.setAttribute(HttpParameters.URL_MAPPING, onePatternUrlMapping.getUrlMapping());
+                        return onePatternUrlMapping.getDataPlugins();
+                    }
                 }
             } else {
                 Matcher m = r.matcher(url);
@@ -152,5 +203,20 @@ public class PluginManagerImpl implements PluginManager {
         }
         return null;
     }
+
+    @Override
+    public void updateDbWithAllPlugins() throws AppException {
+        Map<String, WebDataPlugin> allWebDataPlugins = applicationContext.getBeansOfType(WebDataPlugin.class);
+        List<String> allPluginImplementations = new ArrayList<String>();
+        for (Entry<String, WebDataPlugin> oneEntry : allWebDataPlugins.entrySet()) {
+            if (oneEntry.getValue() instanceof WebStaticDataPlugin) {
+                continue;
+            }
+            allPluginImplementations.add(oneEntry.getValue().getClass().getName());
+            System.out.println(oneEntry.getValue().getClass().getName());
+        }
+        dataPluginService.createAllCustomDataPlugins(allPluginImplementations);
+    }
+
 
 }

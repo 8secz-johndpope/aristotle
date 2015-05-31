@@ -2,6 +2,7 @@ package com.aristotle.core.persistance;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -69,6 +70,16 @@ public class Blog {
 	@JoinColumn(name="content_tweet_id")
 	})
 	private List<ContentTweet> tweets;//all one liners attached to this news which can be tweeted
+	
+	@ManyToMany(cascade=CascadeType.ALL)
+    @JoinTable(name = "news_location",
+    joinColumns = {
+    @JoinColumn(name="news_id") 
+    },
+    inverseJoinColumns = {
+    @JoinColumn(name = "location_id")
+    })
+    private Set<Location> locations;
 	
 	@ManyToMany(cascade=CascadeType.ALL)
 	@JoinTable(name = "blog_ac",

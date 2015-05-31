@@ -1,22 +1,21 @@
 package com.aristotle.core.persistance;
 
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "location_type")
-public class LocationType {
+public class LocationType extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+
     @Column(name="name", nullable = false)
     private String name;
     
@@ -25,12 +24,17 @@ public class LocationType {
     private LocationType parentLocationType;
     @Column(name = "parent_type_id", insertable = false, updatable = false)
     private Long parentTypeId;
-    public long getId() {
-        return id;
-    }
-    public void setId(long id) {
-        this.id = id;
-    }
+    
+    @ManyToMany(cascade=CascadeType.ALL)
+    @JoinTable(name = "location_type_role",
+    joinColumns = {
+    @JoinColumn(name="location_type_id") 
+    },
+    inverseJoinColumns = {
+    @JoinColumn(name="role_id")
+    })
+    private Set<Role> roles;
+
     public String getName() {
         return name;
     }
@@ -48,6 +52,14 @@ public class LocationType {
     }
     public void setParentTypeId(Long parentTypeId) {
         this.parentTypeId = parentTypeId;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
     @Override
     public String toString() {

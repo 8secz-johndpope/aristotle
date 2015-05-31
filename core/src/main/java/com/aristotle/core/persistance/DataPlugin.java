@@ -39,6 +39,8 @@ public class DataPlugin {
     private boolean disabled;
     @Column(name = "plugin_name")
     private String pluginName;
+    @Column(name = "global", columnDefinition = "BIT(1) DEFAULT 0")
+    private boolean global;
 
     public Long getId() {
         return id;
@@ -102,6 +104,20 @@ public class DataPlugin {
 
     public void setPluginName(String pluginName) {
         this.pluginName = pluginName;
+    }
+
+    public boolean isGlobal() {
+        return global;
+    }
+
+    public void setGlobal(boolean global) {
+        this.global = global;
+    }
+
+    @Override
+    public String toString() {
+        return "DataPlugin [id=" + id + ", ver=" + ver + ", dateCreated=" + dateCreated + ", dateModified=" + dateModified + ", creatorId=" + creatorId + ", modifierId=" + modifierId + ", disabled="
+                + disabled + ", pluginName=" + pluginName + "]";
     }
 	
 

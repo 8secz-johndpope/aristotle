@@ -17,158 +17,173 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 @Entity
-@Table(name="parliament_constituency")
+@Table(name = "parliament_constituency")
 public class ParliamentConstituency {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
-	@Version
-	@Column(name="ver")
-	private int ver;
-	
-	@Column(name="date_created")
-	private Date dateCreated;
-	@Column(name="date_modified")
-	private Date dateModified;
-	@Column(name="creator_id")
-	private Long creatorId;
-	@Column(name="modifier_id")
-	private Long modifierId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Version
+    @Column(name = "ver")
+    private int ver;
 
-	
-	@Column(name = "name", nullable = false, length=256)
-	private String name;
-	@Column(name = "name_up", nullable = false, length=256)
-	private String nameUp;
-	
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
-    @JoinColumn(name="state_id")
+    @Column(name = "date_created")
+    private Date dateCreated;
+    @Column(name = "date_modified")
+    private Date dateModified;
+    @Column(name = "creator_id")
+    private Long creatorId;
+    @Column(name = "modifier_id")
+    private Long modifierId;
+
+    @Column(name = "name", nullable = false, length = 256)
+    private String name;
+    @Column(name = "name_up", nullable = false, length = 256)
+    private String nameUp;
+
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinColumn(name = "location_id")
+    private Location location;
+    @Column(name = "location_id", insertable = false, updatable = false)
+    private Long locationId;
+
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinColumn(name = "state_id")
     private State state;
-	@Column(name="state_id", insertable=false,updatable=false)
-	private Long stateId;
-	
-	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "pc_campaigns",
-	joinColumns = {
-	@JoinColumn(name="pc_id") 
-	},
-	inverseJoinColumns = {
-	@JoinColumn(name="location_campaign_id")
-	})
-	private Set<LocationCampaign> campaigns;
-	
-	public Long getId() {
-		return id;
-	}
+    @Column(name = "state_id", insertable = false, updatable = false)
+    private Long stateId;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "pc_campaigns", joinColumns = { @JoinColumn(name = "pc_id") }, inverseJoinColumns = { @JoinColumn(name = "location_campaign_id") })
+    private Set<LocationCampaign> campaigns;
 
-	public int getVer() {
-		return ver;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setVer(int ver) {
-		this.ver = ver;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Date getDateCreated() {
-		return dateCreated;
-	}
+    public int getVer() {
+        return ver;
+    }
 
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
+    public void setVer(int ver) {
+        this.ver = ver;
+    }
 
-	public Date getDateModified() {
-		return dateModified;
-	}
+    public Date getDateCreated() {
+        return dateCreated;
+    }
 
-	public void setDateModified(Date dateModified) {
-		this.dateModified = dateModified;
-	}
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
 
-	public Long getCreatorId() {
-		return creatorId;
-	}
+    public Date getDateModified() {
+        return dateModified;
+    }
 
-	public void setCreatorId(Long creatorId) {
-		this.creatorId = creatorId;
-	}
+    public void setDateModified(Date dateModified) {
+        this.dateModified = dateModified;
+    }
 
-	public Long getModifierId() {
-		return modifierId;
-	}
+    public Long getCreatorId() {
+        return creatorId;
+    }
 
-	public void setModifierId(Long modifierId) {
-		this.modifierId = modifierId;
-	}
+    public void setCreatorId(Long creatorId) {
+        this.creatorId = creatorId;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public Long getModifierId() {
+        return modifierId;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public String getNameUp() {
-		return nameUp;
-	}
+    public void setModifierId(Long modifierId) {
+        this.modifierId = modifierId;
+    }
 
-	public void setNameUp(String nameUp) {
-		this.nameUp = nameUp;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public State getState() {
-		return state;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setState(State state) {
-		this.state = state;
-	}
+    public String getNameUp() {
+        return nameUp;
+    }
 
-	public Long getStateId() {
-		return stateId;
-	}
+    public void setNameUp(String nameUp) {
+        this.nameUp = nameUp;
+    }
 
-	public void setStateId(Long stateId) {
-		this.stateId = stateId;
-	}
+    public State getState() {
+        return state;
+    }
 
-	public Set<LocationCampaign> getCampaigns() {
-		return campaigns;
-	}
+    public void setState(State state) {
+        this.state = state;
+    }
 
-	public void setCampaigns(Set<LocationCampaign> campaigns) {
-		this.campaigns = campaigns;
-	}
+    public Long getStateId() {
+        return stateId;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
+    public void setStateId(Long stateId) {
+        this.stateId = stateId;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ParliamentConstituency other = (ParliamentConstituency) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
+    public Set<LocationCampaign> getCampaigns() {
+        return campaigns;
+    }
+
+    public void setCampaigns(Set<LocationCampaign> campaigns) {
+        this.campaigns = campaigns;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public Long getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(Long locationId) {
+        this.locationId = locationId;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ParliamentConstituency other = (ParliamentConstituency) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
 
 }

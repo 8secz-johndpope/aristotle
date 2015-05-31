@@ -81,7 +81,7 @@ public class HelloController {
 
     }
 
-    public static void main(String[] args){
+    public static void maisn(String[] args) {
         CustomUrlMapping customUrlMapping = new CustomUrlMapping("/test2/{Param1}/{Param2}/do");
         System.out.println(customUrlMapping);
         String url = "/test2/first/second/do";

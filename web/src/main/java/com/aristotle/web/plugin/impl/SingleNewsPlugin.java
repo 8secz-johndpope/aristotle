@@ -27,6 +27,9 @@ public class SingleNewsPlugin extends AbstractDataPlugin {
         super(pluginName);
     }
 
+    public SingleNewsPlugin() {
+    }
+
     @Override
     public void applyPlugin(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView mv) {
         logger.info("Applying {} plugin", name);

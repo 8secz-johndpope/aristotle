@@ -44,7 +44,10 @@ public class Email {
 	@Column(name = "confirmed")
 	private boolean confirmed;
 
-	@Column(name = "confirmation_type", nullable = false)
+    @Column(name = "news_letter", columnDefinition = "BIT(1) DEFAULT 1")
+    private boolean newsLetter;
+
+    @Column(name = "confirmation_type", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private ConfirmationType confirmationType;
 
@@ -58,6 +61,7 @@ public class Email {
 		CONFIRMED_FACEBOOK_ACCOUNT,
 		CONFIRMED_GOOGLE_ACCOUNT,
 		RECEIVED_EMAIL_FROM_ACCOUNT,
+		UN_CONFIRNED,
 		ADMIN_ENTERED,
 		DONOR_ENTERED
 	}
@@ -158,6 +162,13 @@ public class Email {
 		this.userId = userId;
 	}
 
+    public boolean isNewsLetter() {
+        return newsLetter;
+    }
+
+    public void setNewsLetter(boolean newsLetter) {
+        this.newsLetter = newsLetter;
+    }
 
 
 }

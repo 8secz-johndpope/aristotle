@@ -2,6 +2,7 @@ package com.aristotle.core.persistance.repo;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -10,7 +11,7 @@ import com.aristotle.core.persistance.News;
 public interface NewsRepository extends JpaRepository<News, Long> {
 
     @Query("select news from News news where news.global=true order by dateCreated desc")
-    public List<News> getGlobalNews();
+    public List<News> getGlobalNews(Pageable pageable);
 
     @Query("select news from News news join news.states states where states.id = ?1")
     public List<News> getStateNews(Long stateId);

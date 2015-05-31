@@ -1,0 +1,39 @@
+<f:view xmlns="http://www.w3c.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:ng="http://xmlns.jcp.org/jsf/passthrough" xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+        <style>
+body {
+    font-size: 12px;
+}
+
+.topAlignPanelColumns td {
+    vertical-align: top;
+}
+</style>
+    </h:head>
+    <h:body>
+        <h:form id="login_form">
+            <p:layout style="min-width:800px;min-height:600px;">
+                <p:layoutUnit position="center">
+                    <h:panelGrid columns="2" styleClass="topAlignPanelColumns">
+                        <p:outputLabel value="User Name"></p:outputLabel>
+                        <p:inputText value="#{loginBean.userName}" />
+                        <p:outputLabel value="Password"></p:outputLabel>
+                        <p:password id="password" value="#{loginBean.password}"/>
+                        <p:commandButton id="login" value="Login" update="@form"
+                        actionListener="#{loginBean.login}" styleClass="ui-priority-primary" />
+    
+                    </h:panelGrid>
+                    <p:blockUI block="@form" trigger="login">Signing in...<br />
+                                        <p:graphicImage width="80" value="http://static.eswaraj.com/admin/images/ajax-loader.gif" />
+                                    </p:blockUI>
+
+                </p:layoutUnit>
+            </p:layout>
+        </h:form>
+    </h:body>
+</f:view>
