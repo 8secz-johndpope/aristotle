@@ -6,6 +6,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.aristotle.core.persistance.Event;
@@ -39,7 +40,9 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Cacheable(value = "events")
     public List<Event> getLocationEvents(Location location, int size) {
+        System.out.println("Getting Data From Database");
         if(location == null){
             return eventRepository.getAllNationalEvents();
         }
