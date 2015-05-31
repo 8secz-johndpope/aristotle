@@ -43,7 +43,7 @@ public class App extends SpringBootServletInitializer {
 
     @Bean
     public CacheManager cacheManager() {
-        CacheBuilder cacheBuilder = CacheBuilder.newBuilder().refreshAfterWrite(5, TimeUnit.MINUTES);
+        CacheBuilder cacheBuilder = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES);
         GuavaCacheManager guavaCacheManager = new GuavaCacheManager("events");
         guavaCacheManager.setCacheBuilder(cacheBuilder);
         return guavaCacheManager;
