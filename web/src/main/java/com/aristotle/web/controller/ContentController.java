@@ -70,13 +70,12 @@ public class ContentController {
 
         Handlebars handlebars = handleBarManager.getHandlebars();
 
-        System.out.println("jsonContext.toString() = " + jsonContext.toString());
         Template template = handlebars.compileInline(stringTemplate);
 
         JsonNode rootNode = convertDataToJackSon(jsonContext);
         Context context = Context.newBuilder(rootNode).resolver(JsonNodeValueResolver.INSTANCE).build();
         for (Entry<String, Object> oneEntry : context.propertySet()) {
-            System.out.println("oneEntry = " + oneEntry.getKey());
+            // System.out.println("oneEntry = " + oneEntry.getKey());
         }
 
         String result = template.apply(context);
@@ -93,7 +92,6 @@ public class ContentController {
     @ResponseBody
     @RequestMapping("/api/content/**")
     public String defaultContentApiMethod(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) {
-        System.out.println("content defaultMethod called");
         JsonObject context = new JsonObject();
         modelAndView.getModel().put("context", context);
         pluginManager.applyAllPluginsForUrl(httpServletRequest, httpServletResponse, modelAndView, true);
@@ -103,7 +101,6 @@ public class ContentController {
     @ResponseBody
     @RequestMapping("/api/**")
     public String defaultApiMethod(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) {
-        System.out.println("defaultMethod called");
         JsonObject context = new JsonObject();
         modelAndView.getModel().put("context", context);
         pluginManager.applyAllPluginsForUrl(httpServletRequest, httpServletResponse, modelAndView, true);
