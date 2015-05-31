@@ -91,18 +91,22 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
         String domainName = httpServletRequest.getServerName();
         UrlMapping urlMapping = (UrlMapping) httpServletRequest.getAttribute(HttpParameters.URL_MAPPING);
         if (urlMapping == null) {
+            System.out.println("No URL Mapping Found");
             return "No Template Defined";
         }
         DomainPageTemplate domainPageTemplate = getDomainPageTemplate(domainName, urlMapping.getId());
         if(domainPageTemplate == null){
+            System.out.println("No Domain page Template Found");
             return "No Template Defined";
         }
         return domainPageTemplate.getHtmlContent();
     }
 
     private DomainPageTemplate getDomainPageTemplate(String domain, Long urlMappingId) {
+        System.out.println("Getting domain = " + domain + " , urlMappingId=" + urlMappingId);
         Map<Long, DomainPageTemplate> domainPageTemplateMap = domainUiTemplateMap.get(domain.toLowerCase());
         if (domainPageTemplateMap == null) {
+            System.out.println("Not found");
             return null;
         }
         return domainPageTemplateMap.get(urlMappingId);
