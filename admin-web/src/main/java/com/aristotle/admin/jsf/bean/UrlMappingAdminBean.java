@@ -41,7 +41,7 @@ public class UrlMappingAdminBean extends BaseMultiPermissionAdminJsfBean {
 			return;
 		}
         refreshPluginList();
-        dataPlugins = dataPluginService.getAllDataPlugins();
+        dataPlugins = dataPluginService.getAllNonGlobalDataPlugins();
 	}
 
     private void refreshPluginList() {

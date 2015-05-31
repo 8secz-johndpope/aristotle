@@ -18,6 +18,7 @@ public class ScheduleEvent extends DefaultScheduleEvent {
 	private String contactNumber2;
 	private String contactNumber3;
 	private String contactNumber4;
+    private String contactEmail;
 	private String fbEventId;
 	private boolean national;
 	private Long dbId;
@@ -130,6 +131,14 @@ public class ScheduleEvent extends DefaultScheduleEvent {
 	public void setDbId(Long dbId) {
 		this.dbId = dbId;
 	}
+
+    public String getContactEmail() {
+        return contactEmail;
+    }
+
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
+    }
 	
 
 }

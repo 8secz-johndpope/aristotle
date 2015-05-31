@@ -66,6 +66,9 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
             List<UrlMapping> urlMappings = dataPluginService.getAllUrlMappings();
             for (UrlMapping oneUrlMapping : urlMappings) {
                 System.out.println("oneUrlMapping.getUrlPattern()=" + oneUrlMapping.getUrlPattern());
+                if (oneUrlMapping.getUrlPattern().startsWith("/api")) {
+                    continue;
+                }
                 urls.put(oneUrlMapping.getUrlPattern(), oneUrlMapping.getUrlPattern());
                 urlToUrlMapping.put(oneUrlMapping.getUrlPattern(), oneUrlMapping);
             }
