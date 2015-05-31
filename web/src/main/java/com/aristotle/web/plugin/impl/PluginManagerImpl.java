@@ -65,7 +65,7 @@ public class PluginManagerImpl implements PluginManager {
             try {
 
                 JsonParser jsonParser = new JsonParser();
-                loadGlobalDataPlugins(jsonParser);
+
                 List<UrlMapping> urlMappings = dataPluginService.getAllUrlMappings();
                 urlPatterns = new ArrayList<PatternUrlMapping>();
                 List<WebDataPlugin> dataPlugins;
@@ -88,8 +88,9 @@ public class PluginManagerImpl implements PluginManager {
                     }
                     PatternUrlMapping onePatternUrlMapping = new PatternUrlMapping(oneUrlMapping, dataPlugins);
                     urlPatterns.add(onePatternUrlMapping);
-                    isInitialized = true;
                 }
+                loadGlobalDataPlugins(jsonParser);
+                isInitialized = true;
             } catch (AppException e) {
                 e.printStackTrace();
             }
@@ -99,14 +100,17 @@ public class PluginManagerImpl implements PluginManager {
     }
 
     private void loadGlobalDataPlugins(JsonParser jsonParser) throws AppException {
+        System.out.println("Loading Global Data Plugins");
         List<DataPlugin> globalDataPlugins = dataPluginService.getAllGlobalDataPlugins();
-        
+        globalWebDataPlugins = new ArrayList<WebDataPlugin>(globalDataPlugins.size());
         for(DataPlugin oneDataPlugin : globalDataPlugins){
+            System.out.println(oneDataPlugin.getPluginName());
             WebDataPlugin oneWebDataPlugin = createDataPlugin(oneDataPlugin, jsonParser);
             oneWebDataPlugin.setSettings("{}");// just empty valid Json
             globalWebDataPlugins.add(oneWebDataPlugin);
 
         }
+        System.out.println("Loading Global Data Plugins Done");
     }
 
     private WebDataPlugin createDataPlugin(CustomDataPlugin customDataPlugin, JsonParser jsonParser) {
