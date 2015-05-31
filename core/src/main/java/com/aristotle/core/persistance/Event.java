@@ -53,7 +53,10 @@ public class Event extends BaseEntity {
 	@Column(name = "contact_number4", length=16)
 	private String contactNumber4;
 
-	@Column(name = "fb_event_id", length=32)
+    @Column(name = "contact_email", length = 32)
+    private String contactEmail;
+
+    @Column(name = "fb_event_id", length = 32)
 	private String fbEventId;
 
 	@Column(name = "national")
@@ -314,6 +317,14 @@ public class Event extends BaseEntity {
 
     public void setLocations(Set<Location> locations) {
         this.locations = locations;
+    }
+
+    public String getContactEmail() {
+        return contactEmail;
+    }
+
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
     }
 
 }

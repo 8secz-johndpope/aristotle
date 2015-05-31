@@ -39,7 +39,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> getLocationEvents(Location location) {
+    public List<Event> getLocationEvents(Location location, int size) {
         if(location == null){
             return eventRepository.getAllNationalEvents();
         }

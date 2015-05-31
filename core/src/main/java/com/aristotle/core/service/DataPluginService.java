@@ -24,6 +24,8 @@ public interface DataPluginService {
 
     List<DataPlugin> getAllDataPlugins() throws AppException;
 
+    List<DataPlugin> getAllGlobalDataPlugins() throws AppException;
+
     List<DomainTemplate> getAllDomainTemplates(Long locationId) throws AppException;
 
     DomainTemplate saveDomainTemplate(DomainTemplate domainTemplate) throws AppException;

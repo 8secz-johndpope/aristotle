@@ -45,6 +45,7 @@ public class PluginManagerImpl implements PluginManager {
     private ApplicationContext applicationContext;
 
     private List<PatternUrlMapping> urlPatterns;
+    private List<WebDataPlugin> globalWebDataPlugins;
     private volatile boolean isInitialized = false;
 
     @Override
@@ -62,7 +63,9 @@ public class PluginManagerImpl implements PluginManager {
                 return;
             }
             try {
+
                 JsonParser jsonParser = new JsonParser();
+                loadGlobalDataPlugins(jsonParser);
                 List<UrlMapping> urlMappings = dataPluginService.getAllUrlMappings();
                 urlPatterns = new ArrayList<PatternUrlMapping>();
                 List<WebDataPlugin> dataPlugins;
@@ -71,6 +74,9 @@ public class PluginManagerImpl implements PluginManager {
                     dataPlugins = new ArrayList<WebDataPlugin>();
                     for (UrlMappingPlugin oneUrlMappingPlugin : oneUrlMapping.getUrlMappingPlugins()) {
                         if (oneUrlMappingPlugin.getDataPlugin().isDisabled()) {
+                            continue;
+                        }
+                        if (oneUrlMappingPlugin.getDataPlugin().isGlobal()) {
                             continue;
                         }
                         oneWebDataPlugin = createDataPlugin(oneUrlMappingPlugin.getDataPlugin(), jsonParser);
@@ -90,6 +96,17 @@ public class PluginManagerImpl implements PluginManager {
 
         }
 
+    }
+
+    private void loadGlobalDataPlugins(JsonParser jsonParser) throws AppException {
+        List<DataPlugin> globalDataPlugins = dataPluginService.getAllGlobalDataPlugins();
+        
+        for(DataPlugin oneDataPlugin : globalDataPlugins){
+            WebDataPlugin oneWebDataPlugin = createDataPlugin(oneDataPlugin, jsonParser);
+            oneWebDataPlugin.setSettings("{}");// just empty valid Json
+            globalWebDataPlugins.add(oneWebDataPlugin);
+
+        }
     }
 
     private WebDataPlugin createDataPlugin(CustomDataPlugin customDataPlugin, JsonParser jsonParser) {
@@ -130,9 +147,14 @@ public class PluginManagerImpl implements PluginManager {
             return;
         }
         if(addData){
+            // First apply all Global Data Plugins
+            for (WebDataPlugin oneWebDataPlugin : globalWebDataPlugins) {
+                oneWebDataPlugin.applyPlugin(httpServletRequest, httpServletResponse, modelAndView);
+            }
             for (WebDataPlugin oneWebDataPlugin : plugins) {
                 oneWebDataPlugin.applyPlugin(httpServletRequest, httpServletResponse, modelAndView);
-            }    
+            }
+
         }
         
     }

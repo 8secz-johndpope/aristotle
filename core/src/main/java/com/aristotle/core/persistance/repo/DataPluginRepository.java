@@ -11,4 +11,8 @@ public interface DataPluginRepository extends JpaRepository<DataPlugin, Long> {
 
     @Query("select distinct dp from DataPlugin dp, UrlMapping up join up.urlMappingPlugins ump where  up.id=?1 and ump.dataPluginId=dp.id")
     List<DataPlugin> getDataPluginOfUrlMapping(Long urlMappingId);
+
+    @Query("select dp from DataPlugin dp where dp.global=true")
+    List<DataPlugin> getAllGlobalDataPlugins();
+
 }

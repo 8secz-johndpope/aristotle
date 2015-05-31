@@ -186,4 +186,9 @@ public class DataPluginServiceImpl implements DataPluginService {
         return fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
     }
 
+    @Override
+    public List<DataPlugin> getAllGlobalDataPlugins() throws AppException {
+        return dataPluginRepository.getAllGlobalDataPlugins();
+    }
+
 }
