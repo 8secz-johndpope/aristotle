@@ -191,4 +191,8 @@ public class DataPluginServiceImpl implements DataPluginService {
         return dataPluginRepository.getAllGlobalDataPlugins();
     }
 
+    @Override
+    public List<DataPlugin> getAllNonGlobalDataPlugins() throws AppException {
+        return dataPluginRepository.getAllNonGlobalDataPlugins();
+    }
 }

@@ -15,4 +15,6 @@ public interface DataPluginRepository extends JpaRepository<DataPlugin, Long> {
     @Query("select dp from DataPlugin dp where dp.global='1'")
     List<DataPlugin> getAllGlobalDataPlugins();
 
+    @Query("select dp from DataPlugin dp where dp.global='0'")
+    List<DataPlugin> getAllNonGlobalDataPlugins();
 }
