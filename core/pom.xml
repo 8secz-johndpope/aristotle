@@ -91,7 +91,7 @@
 			<version>1.47.1</version>
             <exclusions>
                 <exclusion>
-                    <artifactId>project</artifactId>
+                    <artifactId>servlet-api</artifactId>
                     <groupId>org.mortbay.jetty</groupId>
                 </exclusion>
             </exclusions>

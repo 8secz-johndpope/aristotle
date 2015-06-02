@@ -97,10 +97,10 @@
 			<artifactId>core</artifactId>
 			<version>1.47.1</version>
 			<exclusions>
-				<exclusion>
-				    <artifactId>project</artifactId>
-				    <groupId>org.mortbay.jetty</groupId>
-				</exclusion>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>org.mortbay.jetty</groupId>
+                </exclusion>
 			</exclusions>
 		</dependency>
 	</dependencies>
