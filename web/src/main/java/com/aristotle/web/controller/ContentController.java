@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,7 +57,7 @@ public class ContentController {
         return modelAndView;
     }
 
-    @RequestMapping(value = { "/content/**", "/", "/index.html", "/**" })
+    @RequestMapping(value = { "/content/**", "/", "/index.html", "/**" }, produces = MediaType.TEXT_HTML_VALUE)
     @ResponseBody
     public String serverSideHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws IOException {
 
@@ -81,7 +82,6 @@ public class ContentController {
         String result = template.apply(context);
 
         httpServletResponse.setHeader("Cache-Control", "max-age=300");
-        httpServletResponse.setHeader("content-type ", "text/html; charset=UTF-8");
         return result;
     }
 
