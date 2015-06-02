@@ -22,6 +22,7 @@ import com.aristotle.core.persistance.Blog;
 import com.aristotle.core.persistance.Event;
 import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.News;
+import com.aristotle.core.persistance.Video;
 import com.aristotle.web.parameters.HttpParameters;
 import com.aristotle.web.plugin.WebDataPlugin;
 import com.google.gson.JsonArray;
@@ -287,6 +288,37 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
         }
         for (Event oneNews : eventList) {
             JsonObject newsJsonObject = convertEvent(oneNews);
+            jsonArray.add(newsJsonObject);
+        }
+        return jsonArray;
+    }
+
+    protected JsonObject convertVideo(Video event) {
+        JsonObject eventJsonObject = new JsonObject();
+        eventJsonObject.addProperty("id", event.getId());
+        eventJsonObject.addProperty("title", event.getTitle());
+        eventJsonObject.addProperty("description", event.getDescription());
+        eventJsonObject.addProperty("channelId", event.getChannelId());
+        eventJsonObject.addProperty("webUrl", event.getWebUrl());
+        eventJsonObject.addProperty("youtubeVideoId", event.getYoutubeVideoId());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(event.getPublishDate());
+
+        eventJsonObject.addProperty("month", calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.UK).toUpperCase());
+        eventJsonObject.addProperty("date", calendar.get(Calendar.DATE));
+        eventJsonObject.addProperty("year", calendar.get(Calendar.YEAR));
+
+        return eventJsonObject;
+
+    }
+
+    protected JsonArray convertVideoList(Collection<Video> videoList) {
+        JsonArray jsonArray = new JsonArray();
+        if (videoList == null) {
+            return jsonArray;
+        }
+        for (Video oneVideo : videoList) {
+            JsonObject newsJsonObject = convertVideo(oneVideo);
             jsonArray.add(newsJsonObject);
         }
         return jsonArray;

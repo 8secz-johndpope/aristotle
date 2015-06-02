@@ -106,7 +106,18 @@ public class Video {
 	inverseJoinColumns = {
 	@JoinColumn(name="state_id")
 	})
-	private List<State> states;
+    private List<State> states;
+	
+	
+	@ManyToMany(cascade=CascadeType.ALL)
+    @JoinTable(name = "video_location",
+    joinColumns = {
+    @JoinColumn(name="video_id") 
+    },
+    inverseJoinColumns = {
+    @JoinColumn(name="location_id")
+    })
+    private List<Location> locations;
 	
 	@ManyToMany(cascade=CascadeType.ALL)
 	@JoinTable(name = "video_country",
@@ -264,4 +275,12 @@ public class Video {
 	public void setChannelId(String channelId) {
 		this.channelId = channelId;
 	}
+
+    public List<Location> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(List<Location> locations) {
+        this.locations = locations;
+    }
 }

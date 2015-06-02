@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.aristotle.core.exception.AppException;
+import com.aristotle.core.service.VideoDownloader;
 import com.aristotle.core.service.temp.LocationUpgradeService;
 import com.aristotle.web.plugin.PluginManager;
 import com.aristotle.web.ui.template.UiTemplateManager;
@@ -28,6 +29,9 @@ public class SetupController {
 
     @Autowired
     private LocationUpgradeService locationUpgradeService;
+
+    @Autowired
+    private VideoDownloader videoDownloader;
 
     @ExceptionHandler({ Exception.class })
     public String handleException(Exception ex) {
@@ -67,6 +71,13 @@ public class SetupController {
     @ResponseBody
     public String updatePermissions(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
         locationUpgradeService.copyLocationTypeRoles();
+        return "Success";
+    }
+
+    @RequestMapping("/video/update")
+    @ResponseBody
+    public String downloadVideos(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
+        videoDownloader.refreshVideoList();
         return "Success";
     }
 
