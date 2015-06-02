@@ -24,6 +24,9 @@ public class DomainTemplatePart extends BaseEntity {
     @Column(name = "html_content", columnDefinition = "LONGTEXT")
     private String htmlContent;
 
+    @Column(name = "html_content_draft", columnDefinition = "LONGTEXT")
+    private String htmlContentDraft;
+
     public String getName() {
         return name;
     }
@@ -54,6 +57,14 @@ public class DomainTemplatePart extends BaseEntity {
 
     public void setHtmlContent(String htmlContent) {
         this.htmlContent = htmlContent;
+    }
+
+    public String getHtmlContentDraft() {
+        return htmlContentDraft;
+    }
+
+    public void setHtmlContentDraft(String htmlContentDraft) {
+        this.htmlContentDraft = htmlContentDraft;
     }
 
 }

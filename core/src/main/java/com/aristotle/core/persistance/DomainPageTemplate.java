@@ -15,6 +15,9 @@ public class DomainPageTemplate extends BaseEntity {
     @Column(name = "html_content", columnDefinition = "LONGTEXT")
     private String htmlContent;
 
+    @Column(name = "html_content_draft", columnDefinition = "LONGTEXT")
+    private String htmlContentDraft;
+
     @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
     @JoinColumn(name = "domain_template_id")
     private DomainTemplate domainTemplate;
@@ -37,6 +40,14 @@ public class DomainPageTemplate extends BaseEntity {
 
     public void setHtmlContent(String htmlContent) {
         this.htmlContent = htmlContent;
+    }
+
+    public String getHtmlContentDraft() {
+        return htmlContentDraft;
+    }
+
+    public void setHtmlContentDraft(String htmlContentDraft) {
+        this.htmlContentDraft = htmlContentDraft;
     }
 
     public DomainTemplate getDomainTemplate() {
