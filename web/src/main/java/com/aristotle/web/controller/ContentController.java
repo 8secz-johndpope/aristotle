@@ -79,6 +79,8 @@ public class ContentController {
         }
 
         String result = template.apply(context);
+
+        httpServletResponse.setHeader("Cache-Control", "max-age=300");
         return result;
     }
 
