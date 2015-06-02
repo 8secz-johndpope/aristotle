@@ -81,6 +81,7 @@ public class ContentController {
         String result = template.apply(context);
 
         httpServletResponse.setHeader("Cache-Control", "max-age=300");
+        httpServletResponse.setHeader("content-type ", "text/html; charset=UTF-8");
         return result;
     }
 
