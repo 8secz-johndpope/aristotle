@@ -64,6 +64,12 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
                         pageTemplates.put(detachedDomainPageTemplate.getUrlMappingId(), detachedDomainPageTemplate);
                     }
                     domainUiTemplateMap.put(oneDomain.getName().toLowerCase(), pageTemplates);
+                    if (!StringUtils.isEmpty(oneDomain.getNameAliases())) {
+                        String[] otherDomainNames = StringUtils.commaDelimitedListToStringArray(oneDomain.getNameAliases());
+                        for (String oneOtherDomainName : otherDomainNames) {
+                            domainUiTemplateMap.put(oneOtherDomainName.toLowerCase(), pageTemplates);
+                        }
+                    }
                 }
                 isInitialised = true;
 

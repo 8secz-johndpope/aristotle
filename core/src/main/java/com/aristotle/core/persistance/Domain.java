@@ -14,6 +14,9 @@ public class Domain extends BaseEntity {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "name_aliases")
+    private String nameAliases;
+
     @Column(name = "active")
     private boolean active;
 
@@ -63,6 +66,14 @@ public class Domain extends BaseEntity {
 
     public void setLocationId(Long locationId) {
         this.locationId = locationId;
+    }
+
+    public String getNameAliases() {
+        return nameAliases;
+    }
+
+    public void setNameAliases(String nameAliases) {
+        this.nameAliases = nameAliases;
     }
 
     @Override
