@@ -3,6 +3,7 @@ package com.aristotle.web.ui.template.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -82,6 +83,9 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
             String templateKey = "[[" + oneDomainTemplatePart.getName() + "]]";
             String htmlContent = StringUtils.replace(oneDomainPageTemplate.getHtmlContent(), templateKey, oneDomainTemplatePart.getHtmlContent());
             oneDomainPageTemplate.setHtmlContent(htmlContent);
+
+            String htmlContentDraft = StringUtils.replace(oneDomainPageTemplate.getHtmlContentDraft(), templateKey, oneDomainTemplatePart.getHtmlContentDraft());
+            oneDomainPageTemplate.setHtmlContentDraft(htmlContentDraft);
         }
     }
 
@@ -99,11 +103,17 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
             System.out.println("No Domain page Template Found");
             return "No Template Defined";
         }
-        return domainPageTemplate.getHtmlContent();
+        if (httpServletRequest.getParameter("draft") == null) {
+            return domainPageTemplate.getHtmlContent();
+        }
+        return domainPageTemplate.getHtmlContentDraft();
     }
 
     private DomainPageTemplate getDomainPageTemplate(String domain, Long urlMappingId) {
         System.out.println("Getting domain = " + domain + " , urlMappingId=" + urlMappingId);
+        for (Entry<String, Map<Long, DomainPageTemplate>> oneNtry : domainUiTemplateMap.entrySet()) {
+
+        }
         Map<Long, DomainPageTemplate> domainPageTemplateMap = domainUiTemplateMap.get(domain.toLowerCase());
         if (domainPageTemplateMap == null) {
             System.out.println("Not found");
