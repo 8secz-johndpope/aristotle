@@ -185,6 +185,7 @@ public class UserServiceImpl implements UserService {
         if (userRegisterBean.isVolunteer()) {
             Volunteer volunteer = new Volunteer();
             BeanUtils.copyProperties(userRegisterBean, volunteer);
+            volunteer.setUser(dbUser);
             volunteer = volunteerRepository.save(volunteer);
 
             volunteer.setInterests(new HashSet<Interest>());
