@@ -38,7 +38,7 @@ public class HttpSessionUtil {
 
     public Set<Long> getLoggedInUserLocations(HttpServletRequest httpServletRequest) {
         Set<Long> locationIds = (Set<Long>) httpServletRequest.getSession(true).getAttribute(LOGGED_IN_USER_LOCATION_PARAM_NAME);
-        if(locationIds == null){
+        if (locationIds == null && httpServletRequest.getCookies() != null) {
             for(Cookie oneCookie : httpServletRequest.getCookies()){
                 if(oneCookie.getName().equals(LOGGED_IN_USER_LOCATION_COOLKIE_NAME)){
                     Set<String> locationIdsStr = StringUtils.commaDelimitedListToSet(oneCookie.getValue());
