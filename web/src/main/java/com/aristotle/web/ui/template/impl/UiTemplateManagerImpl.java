@@ -55,6 +55,14 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
                 DomainPageTemplate detachedDomainPageTemplate;
                 for (Domain oneDomain : domains) {
                     List<DomainPageTemplate> domainPageTemplates = uiTemplateService.getCurrentDomainPageTemplate(oneDomain.getId());
+                    domainLocationMap.put(oneDomain.getName().toLowerCase(), oneDomain.getLocationId());
+                    String[] otherDomainNames = null;
+                    if (!StringUtils.isEmpty(oneDomain.getNameAliases())) {
+                        otherDomainNames = StringUtils.commaDelimitedListToStringArray(oneDomain.getNameAliases());
+                        for (String oneOtherDomainName : otherDomainNames) {
+                            domainLocationMap.put(oneOtherDomainName.toLowerCase(), oneDomain.getLocationId());
+                        }
+                    }
                     if (domainPageTemplates == null || domainPageTemplates.isEmpty()) {
                         continue;
                     }
@@ -69,15 +77,12 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
                     }
 
                     domainUiTemplateMap.put(oneDomain.getName().toLowerCase(), pageTemplates);
-                    domainLocationMap.put(oneDomain.getName().toLowerCase(), oneDomain.getLocationId());
                     if (oneDomain.getLocationId() == null) {
                         domainUiTemplateMap.put("default", pageTemplates);
                     }
-                    if (!StringUtils.isEmpty(oneDomain.getNameAliases())) {
-                        String[] otherDomainNames = StringUtils.commaDelimitedListToStringArray(oneDomain.getNameAliases());
+                    if (otherDomainNames != null) {
                         for (String oneOtherDomainName : otherDomainNames) {
                             domainUiTemplateMap.put(oneOtherDomainName.toLowerCase(), pageTemplates);
-                            domainLocationMap.put(oneOtherDomainName.toLowerCase(), oneDomain.getLocationId());
                         }
                     }
                 }
