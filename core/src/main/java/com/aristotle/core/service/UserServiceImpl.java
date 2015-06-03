@@ -23,6 +23,7 @@ import com.aristotle.core.persistance.Email;
 import com.aristotle.core.persistance.Email.ConfirmationType;
 import com.aristotle.core.persistance.Interest;
 import com.aristotle.core.persistance.Location;
+import com.aristotle.core.persistance.LoginAccount;
 import com.aristotle.core.persistance.Phone;
 import com.aristotle.core.persistance.Phone.PhoneType;
 import com.aristotle.core.persistance.User;
@@ -31,6 +32,7 @@ import com.aristotle.core.persistance.Volunteer;
 import com.aristotle.core.persistance.repo.EmailRepository;
 import com.aristotle.core.persistance.repo.InterestRepository;
 import com.aristotle.core.persistance.repo.LocationRepository;
+import com.aristotle.core.persistance.repo.LoginAccountRepository;
 import com.aristotle.core.persistance.repo.PhoneRepository;
 import com.aristotle.core.persistance.repo.UserLocationRepository;
 import com.aristotle.core.persistance.repo.UserRepository;
@@ -54,6 +56,10 @@ public class UserServiceImpl implements UserService {
     private VolunteerRepository volunteerRepository;
     @Autowired
     private InterestRepository interestRepository;
+    @Autowired
+    private PasswordUtil passwordUtil;
+    @Autowired
+    private LoginAccountRepository loginAccountRepository;
 
     private final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
@@ -195,6 +201,23 @@ public class UserServiceImpl implements UserService {
                 }
             }
         }
+        // create user login account
+        if (!StringUtils.isEmpty(userRegisterBean.getPassword())) {
+            LoginAccount loginAccount = new LoginAccount();
+            loginAccount.setUser(dbUser);
+            loginAccount.setPassword(passwordUtil.encryptPassword(userRegisterBean.getPassword()));
+
+            if (!StringUtils.isEmpty(userRegisterBean.getEmailId())) {
+                loginAccount.setEmail(userRegisterBean.getEmailId().toLowerCase());
+                loginAccount.setUserName(userRegisterBean.getEmailId().toLowerCase());
+            }
+            if (StringUtils.isEmpty(loginAccount.getUserName())) {
+                throw new AppException("Login User name/email must be provided");
+            }
+            loginAccount = loginAccountRepository.save(loginAccount);
+        }
+
+        //
     }
 
     private Map<Long, String> getLocationMap(UserRegisterBean userRegisterBean) {
@@ -284,6 +307,18 @@ public class UserServiceImpl implements UserService {
         FieldsAppException fieldsAppException = new FieldsAppException(error);
         fieldsAppException.addFieldError(fieldName, error);
         throw fieldsAppException;
+    }
+
+    @Override
+    public User login(String userName, String password) throws AppException {
+        LoginAccount loginAccount = loginAccountRepository.getLoginAccountByUserName(userName.toLowerCase());
+        if (loginAccount == null) {
+            throw new AppException("Invalid user name/password");
+        }
+        if (!passwordUtil.checkPassword(password, loginAccount.getPassword())) {
+            throw new AppException("Invalid user name/password");
+        }
+        return loginAccount.getUser();
     }
 
 }

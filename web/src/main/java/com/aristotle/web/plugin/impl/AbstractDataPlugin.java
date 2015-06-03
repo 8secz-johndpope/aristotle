@@ -22,6 +22,7 @@ import com.aristotle.core.persistance.Blog;
 import com.aristotle.core.persistance.Event;
 import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.News;
+import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.Video;
 import com.aristotle.web.parameters.HttpParameters;
 import com.aristotle.web.plugin.WebDataPlugin;
@@ -322,5 +323,13 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
             jsonArray.add(newsJsonObject);
         }
         return jsonArray;
+    }
+
+    protected JsonObject convertUser(User user) {
+        JsonObject userJsonObject = new JsonObject();
+        userJsonObject.addProperty("id", user.getId());
+        userJsonObject.addProperty("name", user.getName());
+        userJsonObject.addProperty("profilePic", user.getProfilePic());
+        return userJsonObject;
     }
 }

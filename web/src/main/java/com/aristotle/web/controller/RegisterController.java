@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.exception.FieldsAppException;
+import com.aristotle.core.persistance.User;
 import com.aristotle.core.service.UserService;
 import com.aristotle.core.service.dto.UserContactBean;
+import com.aristotle.core.service.dto.UserLoginBean;
 import com.aristotle.core.service.dto.UserRegisterBean;
 import com.google.gson.JsonObject;
 
@@ -75,6 +77,7 @@ public class RegisterController {
             jsonObject.addProperty("message", "User Not saved, Server running in test mode");
         } else {
             Map<String, String> errors = new LinkedHashMap<String, String>();
+
             if (!user.isNri()) {
                 if (user.getStateLivingId() == null || user.getStateLivingId() == 0) {
                     addError(errors, "stateLivingId", "Please select State where you are living currently");
@@ -153,6 +156,34 @@ public class RegisterController {
         }
 
         ResponseEntity<String> returnDt = new ResponseEntity<String>(jsonObject.toString(), httpStatus);
+        return returnDt;
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> loginUser(HttpServletRequest httpServletRequest, @RequestBody UserLoginBean userLoginBean) {
+        JsonObject jsonObject = new JsonObject();
+        ResponseEntity<String> returnDt;
+        HttpStatus httpStatus;
+        try {
+            User user = userService.login(userLoginBean.getUserName(), userLoginBean.getPassword());
+            if (user != null) {
+                jsonObject.addProperty("message", "user logged in Succesfully");
+                httpStatus = HttpStatus.OK;
+                httpServletRequest.getSession(true).setAttribute("loggedInUser", user);
+            } else {
+                jsonObject.addProperty("message", "unable to login user");
+                httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+
+            }
+        } catch (AppException e) {
+            jsonObject.addProperty("message", "Unable to login : " + e.getMessage());
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        } catch (Exception e) {
+            jsonObject.addProperty("message", "Unable to login : " + e.getMessage());
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        returnDt = new ResponseEntity<String>(jsonObject.toString(), httpStatus);
         return returnDt;
     }
 

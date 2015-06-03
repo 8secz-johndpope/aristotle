@@ -11,6 +11,7 @@ public class UserRegisterBean {
 	private String fatherName;
 	private String motherName;
 	private String address;
+    private String password;
 	private String gender;
     @JsonFormat(pattern = "dd-MM-yyyy")
 	private Date dateOfBirth;
@@ -405,6 +406,14 @@ public class UserRegisterBean {
 
     public void setNriCountryCode(String nriCountryCode) {
         this.nriCountryCode = nriCountryCode;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
