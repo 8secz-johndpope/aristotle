@@ -2,6 +2,7 @@ package com.aristotle.core.service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -81,15 +82,18 @@ public class NewsSericeImpl implements NewsService {
     }
 
     @Override
-    public List<News> getAllLocationNews(Long locationId) throws AppException {
+    public List<ContentTweet> getNewsContentTweets(Long newsId) throws AppException {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public List<ContentTweet> getNewsContentTweets(Long newsId) throws AppException {
-        // TODO Auto-generated method stub
-        return null;
+    public List<News> getAllLocationPublishedNews(Set<Long> locationIds, int pageNumber, int pageSize) throws AppException {
+        Pageable pageable = new PageRequest(pageNumber, pageSize);
+        if (locationIds == null || locationIds.isEmpty()) {
+            return newsRepository.getGlobalPublishdNews(pageable);
+        }
+        return newsRepository.getLocationPublishedNews(locationIds, pageable);
     }
 
 }

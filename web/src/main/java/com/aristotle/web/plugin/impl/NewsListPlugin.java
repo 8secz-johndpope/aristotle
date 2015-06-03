@@ -1,6 +1,7 @@
 package com.aristotle.web.plugin.impl;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +20,7 @@ import com.google.gson.JsonObject;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class NewsListPlugin extends AbstractDataPlugin {
+public class NewsListPlugin extends LocationAwareDataPlugin {
 
     @Autowired
     private NewsService newsService;
@@ -34,8 +35,7 @@ public class NewsListPlugin extends AbstractDataPlugin {
     }
 
     @Override
-    public void applyPlugin(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView mv) {
-        logger.info("Applying {} plugin", name);
+    public void applyPluginForLocation(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView mv, Set<Long> locations) {
         try {
             JsonObject context = (JsonObject) mv.getModel().get("context");
             Pageable pageRequest = getPageRequest(httpServletRequest);
@@ -47,6 +47,5 @@ public class NewsListPlugin extends AbstractDataPlugin {
             ex.printStackTrace();
         }
     }
-
 
 }

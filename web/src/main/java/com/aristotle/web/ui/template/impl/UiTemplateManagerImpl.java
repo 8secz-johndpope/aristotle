@@ -24,6 +24,9 @@ import com.aristotle.web.ui.template.UiTemplateManager;
 public class UiTemplateManagerImpl implements UiTemplateManager {
 
     private Map<String, Map<Long, DomainPageTemplate>> domainUiTemplateMap;
+
+    private Map<String, Long> domainLocationMap;
+
     @Autowired
     private UiTemplateService uiTemplateService;
 
@@ -47,6 +50,7 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
             try {
 
                 domainUiTemplateMap = new HashMap<String, Map<Long, DomainPageTemplate>>();
+                domainLocationMap = new HashMap<String, Long>();
                 List<Domain> domains = uiTemplateService.getAllDomains();
                 DomainPageTemplate detachedDomainPageTemplate;
                 for (Domain oneDomain : domains) {
@@ -63,11 +67,17 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
                         applySubTemplates(detachedDomainPageTemplate, subTemplates);
                         pageTemplates.put(detachedDomainPageTemplate.getUrlMappingId(), detachedDomainPageTemplate);
                     }
+
                     domainUiTemplateMap.put(oneDomain.getName().toLowerCase(), pageTemplates);
+                    domainLocationMap.put(oneDomain.getName().toLowerCase(), oneDomain.getLocationId());
+                    if (oneDomain.getLocationId() == null) {
+                        domainUiTemplateMap.put("default", pageTemplates);
+                    }
                     if (!StringUtils.isEmpty(oneDomain.getNameAliases())) {
                         String[] otherDomainNames = StringUtils.commaDelimitedListToStringArray(oneDomain.getNameAliases());
                         for (String oneOtherDomainName : otherDomainNames) {
                             domainUiTemplateMap.put(oneOtherDomainName.toLowerCase(), pageTemplates);
+                            domainLocationMap.put(oneOtherDomainName.toLowerCase(), oneDomain.getLocationId());
                         }
                     }
                 }
@@ -122,10 +132,19 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
         }
         Map<Long, DomainPageTemplate> domainPageTemplateMap = domainUiTemplateMap.get(domain.toLowerCase());
         if (domainPageTemplateMap == null) {
+            domainPageTemplateMap = domainUiTemplateMap.get("default");
+        }
+        if (domainPageTemplateMap == null) {
             System.out.println("Not found");
             return null;
         }
         return domainPageTemplateMap.get(urlMappingId);
+    }
+
+    @Override
+    public Long getDomainLocation(HttpServletRequest httpServletRequest) {
+        String domain = httpServletRequest.getServerName().toLowerCase();
+        return domainLocationMap.get(domain);
     }
 
 }

@@ -1,10 +1,14 @@
 package com.aristotle.web.controller;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.exception.FieldsAppException;
 import com.aristotle.core.persistance.User;
+import com.aristotle.core.persistance.UserLocation;
 import com.aristotle.core.service.UserService;
 import com.aristotle.core.service.dto.UserContactBean;
 import com.aristotle.core.service.dto.UserLoginBean;
@@ -30,6 +35,8 @@ public class RegisterController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private HttpSessionUtil httpSessionUtil;
 
     @RequestMapping(value = "/registerquick", method = RequestMethod.POST)
     @ResponseBody
@@ -161,7 +168,7 @@ public class RegisterController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<String> loginUser(HttpServletRequest httpServletRequest, @RequestBody UserLoginBean userLoginBean) {
+    public ResponseEntity<String> loginUser(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @RequestBody UserLoginBean userLoginBean) {
         JsonObject jsonObject = new JsonObject();
         ResponseEntity<String> returnDt;
         HttpStatus httpStatus;
@@ -170,7 +177,14 @@ public class RegisterController {
             if (user != null) {
                 jsonObject.addProperty("message", "user logged in Succesfully");
                 httpStatus = HttpStatus.OK;
-                httpServletRequest.getSession(true).setAttribute("loggedInUser", user);
+
+                List<UserLocation> userLocations = userService.getUserLocations(user.getId());
+                httpSessionUtil.setLoggedInUser(httpServletRequest, user);
+                Set<Long> userLocationIds = new HashSet<Long>();
+                for (UserLocation oneUserLocation : userLocations) {
+                    userLocationIds.add(oneUserLocation.getId());
+                }
+                httpSessionUtil.setLoggedInUserLocations(httpServletRequest, httpServletResponse, userLocationIds);
             } else {
                 jsonObject.addProperty("message", "unable to login user");
                 httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;

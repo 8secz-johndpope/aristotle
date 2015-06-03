@@ -1,7 +1,9 @@
 package com.aristotle.admin.jsf.bean;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -62,7 +64,9 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
             if (menuBean.isGlobalSelected()) {
                 newsList = newsService.getAllGlobalNews();
             } else {
-                newsList = newsService.getAllLocationNews(menuBean.getSelectedLocation().getId());
+                Set<Long> locationIds = new HashSet<Long>();
+                locationIds.add(menuBean.getSelectedLocation().getId());
+                newsList = newsService.getAllLocationPublishedNews(locationIds, 0, 100);
             }
 
         } catch (Exception ex) {

@@ -321,4 +321,9 @@ public class UserServiceImpl implements UserService {
         return loginAccount.getUser();
     }
 
+    @Override
+    public List<UserLocation> getUserLocations(Long userId) throws AppException {
+        return userLocationRepository.getUserLocationByUserId(userId);
+    }
+
 }
