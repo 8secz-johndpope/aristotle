@@ -80,13 +80,14 @@
 							<p:commandButton id="addButton" update="@form" value="Save" actionListener="#{adminEventBean.saveEvent}" />
 						</p:outputPanel>
 						<h:panelGrid columns="1" styleClass="topAlignPanelColumns">
-							<p:outputLabel
+						<p:outputLabel value="Please Move marker on the Map with mouse on exact location" />
+							<p:outputLabel id="markerPosition"
 								value=" - #{adminEventBean.event.lattitude},#{adminEventBean.event.longitude},#{adminEventBean.event.depth}"></p:outputLabel>
 							<p:gmap center="#{adminEventBean.event.lattitude},#{adminEventBean.event.longitude}"
 								zoom="#{adminEventBean.event.depth}" type="HYBRID" model="#{adminEventBean.draggableMapModel}" fitBounds="true"
 								style="width:600px;height:600px">
-								<p:ajax event="markerDrag" listener="#{adminEventBean.onMarkerDrag}" />
-								<p:ajax event="stateChange" listener="#{adminEventBean.onStateChange}" />
+								<p:ajax event="markerDrag" listener="#{adminEventBean.onMarkerDrag}" update="markerPosition"/>
+								<p:ajax event="stateChange" listener="#{adminEventBean.onStateChange}" update="markerPosition"/>
 
 							</p:gmap>
 						</h:panelGrid>

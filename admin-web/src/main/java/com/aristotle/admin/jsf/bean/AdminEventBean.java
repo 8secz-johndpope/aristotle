@@ -222,6 +222,9 @@ public class AdminEventBean extends BaseMultiPermissionAdminJsfBean {
 
 	public void onMarkerDrag(MarkerDragEvent event) {
 		marker = event.getMarker();
+        this.event.setLattitude(marker.getLatlng().getLat());
+        this.event.setLongitude(marker.getLatlng().getLng());
+        this.event.setDepth(marker.getZindex());
 	}
 
 	public void onStateChange(StateChangeEvent stateChangeEvent) {
