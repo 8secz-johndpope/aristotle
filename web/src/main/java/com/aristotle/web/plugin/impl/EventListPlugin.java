@@ -31,7 +31,7 @@ public class EventListPlugin extends AbstractDataPlugin {
 
     @Override
     public void applyPlugin(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView mv) {
-        int size = getIntSettingPramater("events.size", 10);
+        int size = getIntSettingPramater("events.size", 3);
         List<Event> events = eventService.getLocationEvents(null, size);
         JsonArray eventJsonArray = convertEventList(events);
         JsonObject context = (JsonObject) mv.getModel().get("context");

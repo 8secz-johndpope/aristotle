@@ -7,6 +7,8 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.aristotle.core.persistance.Event;
@@ -46,10 +48,11 @@ public class EventServiceImpl implements EventService {
     @Cacheable(value = "events")
     public List<Event> getLocationEvents(Location location, int size) {
         System.out.println("Getting Data From Database");
+        Pageable pageRequest = new PageRequest(0, size);
         if(location == null){
-            return eventRepository.getAllNationalEvents();
+            return eventRepository.getAllNationalUpComingEvents(pageRequest);
         }
-        return eventRepository.getLocationEvents(location.getId());
+        return eventRepository.getLocationUpcomingEvents(location.getId(), pageRequest);
     }
 
     @Override
