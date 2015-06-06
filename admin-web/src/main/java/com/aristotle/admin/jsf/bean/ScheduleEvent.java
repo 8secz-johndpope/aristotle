@@ -41,6 +41,7 @@ public class ScheduleEvent extends DefaultScheduleEvent {
 		contactNumber2 = eventDto.getContactNumber2();
 		contactNumber3 = eventDto.getContactNumber3();
 		contactNumber4 = eventDto.getContactNumber4();
+        contactEmail = eventDto.getContactEmail();
 		fbEventId = eventDto.getFbEventId();
 		national = eventDto.isNational();
 		dbId = eventDto.getId();
