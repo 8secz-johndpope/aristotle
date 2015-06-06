@@ -152,6 +152,7 @@ public class AdminEventBean extends BaseMultiPermissionAdminJsfBean {
 
 	public void onEventSelect(SelectEvent selectEvent) {
 		try {
+            System.out.println("Existing Event Selected  : " + selectEvent.getObject());
 			event = (ScheduleEvent) selectEvent.getObject();
 			marker.setLatlng(new LatLng(((ScheduleEvent) selectEvent.getObject()).getLattitude(), ((ScheduleEvent) selectEvent.getObject())
 					.getLongitude()));
@@ -163,6 +164,7 @@ public class AdminEventBean extends BaseMultiPermissionAdminJsfBean {
 
 	public void onDateSelect(SelectEvent selectEvent) {
 		try {
+            System.out.println("New Event creation for Date " + selectEvent.getObject());
 			event = new ScheduleEvent("", (Date) selectEvent.getObject(), (Date) selectEvent.getObject());
 			event.setLattitude(defaultLattitude);
 			event.setLongitude(defaultLongitude);

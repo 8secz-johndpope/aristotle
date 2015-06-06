@@ -148,6 +148,13 @@ public class ScheduleEvent extends DefaultScheduleEvent {
     public void setVer(int ver) {
         this.ver = ver;
     }
+
+    @Override
+    public String toString() {
+        return "ScheduleEvent [description=" + description + ", lattitude=" + lattitude + ", longitude=" + longitude + ", depth=" + depth + ", address=" + address + ", contactNumber1="
+                + contactNumber1 + ", contactNumber2=" + contactNumber2 + ", contactNumber3=" + contactNumber3 + ", contactNumber4=" + contactNumber4 + ", contactEmail=" + contactEmail
+                + ", fbEventId=" + fbEventId + ", national=" + national + ", dbId=" + dbId + ", ver=" + ver + "]";
+    }
 	
 
 }
