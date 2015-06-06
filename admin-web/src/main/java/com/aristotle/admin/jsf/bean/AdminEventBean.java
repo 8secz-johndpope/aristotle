@@ -140,7 +140,7 @@ public class AdminEventBean extends BaseMultiPermissionAdminJsfBean {
 		eventDto.setFbEventId(event.getFbEventId());
 		eventDto.setLattitude(marker.getLatlng().getLat());
 		eventDto.setLongitude(marker.getLatlng().getLng());
-		
+        eventDto.setVer(event.getVer());
 		eventDto.setStartDate(event.getStartDate());
 		eventDto.setTitle(event.getTitle());
 

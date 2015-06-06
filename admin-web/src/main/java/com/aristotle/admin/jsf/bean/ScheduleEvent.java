@@ -22,6 +22,7 @@ public class ScheduleEvent extends DefaultScheduleEvent {
 	private String fbEventId;
 	private boolean national;
 	private Long dbId;
+    private int ver;
 	
 	
 	public ScheduleEvent() {
@@ -44,6 +45,7 @@ public class ScheduleEvent extends DefaultScheduleEvent {
 		fbEventId = eventDto.getFbEventId();
 		national = eventDto.isNational();
 		dbId = eventDto.getId();
+        ver = eventDto.getVer();
 	}
 	public ScheduleEvent(String title, Date start, Date end, boolean allDay) {
 		super(title, start, end, allDay);
@@ -138,6 +140,14 @@ public class ScheduleEvent extends DefaultScheduleEvent {
 
     public void setContactEmail(String contactEmail) {
         this.contactEmail = contactEmail;
+    }
+
+    public int getVer() {
+        return ver;
+    }
+
+    public void setVer(int ver) {
+        this.ver = ver;
     }
 	
 
