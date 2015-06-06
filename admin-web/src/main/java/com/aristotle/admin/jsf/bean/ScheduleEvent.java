@@ -24,7 +24,6 @@ public class ScheduleEvent extends DefaultScheduleEvent {
 	private Long dbId;
     private int ver;
 	
-	
 	public ScheduleEvent() {
 		super();
 	}

@@ -144,8 +144,6 @@ public class AdminEventBean extends BaseMultiPermissionAdminJsfBean {
 		eventDto.setStartDate(event.getStartDate());
 		eventDto.setTitle(event.getTitle());
 
-        Long selectedLocationId = null;
-
         eventDto = eventService.saveEvent(eventDto, menuBean.getSelectedLocation());
 		event = new ScheduleEvent(eventDto);
 		//eventModel.addEvent(event);

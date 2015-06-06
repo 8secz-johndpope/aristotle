@@ -25,6 +25,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event saveEvent(Event event, Location location) {
+        System.out.println("Saving Event : " + event);
+        System.out.println("Saving Event : " + event.getVer());
+        System.out.println("Saving Event : " + event.getId());
         event = eventRepository.save(event);
         if (location == null) {
             event.setNational(true);
