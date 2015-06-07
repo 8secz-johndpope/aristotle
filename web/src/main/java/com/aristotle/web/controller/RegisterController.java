@@ -203,4 +203,12 @@ public class RegisterController {
         return returnDt;
     }
 
+    @RequestMapping(value = "/js/logout", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<String> logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        ResponseEntity<String> returnDt = new ResponseEntity<String>("{\"message\":\"Success\"}", HttpStatus.OK);
+        httpServletRequest.getSession().invalidate();
+        return returnDt;
+
+    }
 }
