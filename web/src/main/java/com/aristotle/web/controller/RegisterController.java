@@ -191,9 +191,11 @@ public class RegisterController {
 
             }
         } catch (AppException e) {
+            e.printStackTrace();
             jsonObject.addProperty("message", "Unable to login : " + e.getMessage());
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         } catch (Exception e) {
+            e.printStackTrace();
             jsonObject.addProperty("message", "Unable to login : " + e.getMessage());
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }
