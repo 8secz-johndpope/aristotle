@@ -46,11 +46,17 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Cacheable(value = "events")
-    public List<Event> getLocationEvents(Location location, int size) {
+    public List<Event> getLocationEvents(Location location, int size, boolean publishedOnly) {
         System.out.println("Getting Data From Database");
         Pageable pageRequest = new PageRequest(0, size);
         if(location == null){
+            if (publishedOnly) {
+                return eventRepository.getAllNationalUpComingPublishedEvents(pageRequest);
+            }
             return eventRepository.getAllNationalUpComingEvents(pageRequest);
+        }
+        if (publishedOnly) {
+            return eventRepository.getLocationUpcomingPublishedEvents(location.getId(), pageRequest);
         }
         return eventRepository.getLocationUpcomingEvents(location.getId(), pageRequest);
     }

@@ -212,7 +212,7 @@ public class AdminEventBean extends BaseMultiPermissionAdminJsfBean {
 
 	private void refreshEvents() {
 		try {
-            List<Event> events = eventService.getLocationEvents(menuBean.getSelectedLocation(), 100);
+            List<Event> events = eventService.getLocationEvents(menuBean.getSelectedLocation(), 100, false);
 			eventModel.clear();
             for (Event oneEvent : events) {
 				eventModel.addEvent(new ScheduleEvent(oneEvent));
