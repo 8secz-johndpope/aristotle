@@ -100,11 +100,9 @@ public class PluginManagerImpl implements PluginManager {
     }
 
     private void loadGlobalDataPlugins(JsonParser jsonParser) throws AppException {
-        System.out.println("Loading Global Data Plugins");
         List<DataPlugin> globalDataPlugins = dataPluginService.getAllGlobalDataPlugins();
         globalWebDataPlugins = new ArrayList<WebDataPlugin>(globalDataPlugins.size());
         for(DataPlugin oneDataPlugin : globalDataPlugins){
-            System.out.println(oneDataPlugin.getPluginName());
             WebDataPlugin oneWebDataPlugin = createDataPlugin(oneDataPlugin, jsonParser);
             oneWebDataPlugin.setSettings("{}");// just empty valid Json
             globalWebDataPlugins.add(oneWebDataPlugin);
@@ -189,7 +187,6 @@ public class PluginManagerImpl implements PluginManager {
                     Map<String, String> pathParameters = new LinkedHashMap<String, String>();
                     int count = 1;
                     for (String oneParam : onePatternUrlMapping.getParameters()) {
-                        System.out.println("Found " + oneParam + ": " + m.group(count));
                         pathParameters.put(oneParam, m.group(count));
                         count++;
                     }
