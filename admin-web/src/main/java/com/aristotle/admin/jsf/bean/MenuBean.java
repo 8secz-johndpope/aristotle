@@ -150,6 +150,10 @@ public class MenuBean extends BaseJsfBean {
         return isAllowed(AppPermission.EDIT_OFFICE_ADDRESS);
     }
 
+    public boolean isSearchVolunteerAllowed() {
+        return isAllowed(AppPermission.SEARCH_MEMBER);
+    }
+
     public void goToVoiceOfAapAdminPageFb() {
         if (isVoiceOfAapFbAllowed()) {
             buildAndRedirect("/admin/voiceofaapfb");
@@ -273,6 +277,14 @@ public class MenuBean extends BaseJsfBean {
     public void goToEditOfficeDetailPage() {
         if (isEditOfficeDetailAllowed()) {
             buildAndRedirect("/admin/office");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
+
+    public void goToSearchVolunteerPage() {
+        if (isSearchVolunteerAllowed()) {
+            buildAndRedirect("/admin/search");
         } else {
             buildAndRedirect("/admin/notallowed");
         }

@@ -86,6 +86,7 @@ body {
             <p:submenu label="Admin" rendered="#{menuBean.adminAllowed}">
                 <p:menuitem value="Manage User Roles" actionListener="#{menuBean.goToManageUserRolePage}" rendered="#{menuBean.manageUserRoleAllowed}"></p:menuitem>
                 <p:menuitem value="Edit Office Detail" actionListener="#{menuBean.goToEditOfficeDetailPage}" rendered="#{menuBean.editOfficeDetailAllowed}"></p:menuitem>
+                <p:menuitem value="Search Volunteer" actionListener="#{menuBean.goToSearchVolunteerPage}" rendered="#{menuBean.searchVolunteerAllowed}"></p:menuitem>
             </p:submenu>
 <!-- 
 			<p:submenu label="Members" rendered="#{menuBean.memberAllowed}">

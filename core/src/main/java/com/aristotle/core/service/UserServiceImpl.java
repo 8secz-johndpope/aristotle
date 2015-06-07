@@ -1,6 +1,7 @@
 package com.aristotle.core.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -13,6 +14,8 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -101,21 +104,38 @@ public class UserServiceImpl implements UserService {
         }
         Email email = emailRepository.getEmailByEmailUp(emailId.toUpperCase());
         if (email != null && email.getUser() != null) {
-            UserSearchResult userSearchResult = convertUser(email.getUser());
+            UserSearchResult userSearchResult = convertUserToResult(email.getUser());
             userSearchResult.setEmail(emailId);
             userSearchResults.add(userSearchResult);
-
-            Set<Phone> phones = email.getUser().getPhones();
-            if (phones != null) {
-                StringBuilder sb = new StringBuilder();
-                for (Phone onePhone : phones) {
-                    sb.append(onePhone.getCountryCode() + "-" + onePhone.getPhoneNumber() + ",");
-                }
-                userSearchResult.setMobileNumber(sb.toString());
-            }
-
         }
         return email;
+    }
+
+    private UserSearchResult convertUserToResult(User user) {
+        UserSearchResult userSearchResult = convertUser(user);
+
+        Set<Phone> phones = user.getPhones();
+        if (phones != null) {
+            StringBuilder sb = new StringBuilder();
+            for (Phone onePhone : phones) {
+                sb.append(onePhone.getCountryCode() + "-" + onePhone.getPhoneNumber() + ",");
+            }
+            userSearchResult.setMobileNumber(sb.toString());
+        }
+        Set<Email> emails = user.getEmails();
+        if (emails != null) {
+            StringBuilder sb = new StringBuilder();
+            boolean first = true;
+            for (Email oneEmail : emails) {
+                if (!first) {
+                    sb.append(",");
+                }
+                sb.append(oneEmail.getEmail());
+                first = false;
+            }
+            userSearchResult.setEmail(sb.toString());
+        }
+        return userSearchResult;
     }
 
     private Phone searchUserForMobile(List<UserSearchResult> userSearchResults, String mobileNumber, String countryCode) throws AppException {
@@ -325,6 +345,59 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserLocation> getUserLocations(Long userId) throws AppException {
         return userLocationRepository.getUserLocationByUserId(userId);
+    }
+
+    @Override
+    public List<UserSearchResult> searchUserByEmail(String emailId) throws AppException {
+        List<UserSearchResult> list = new ArrayList<UserSearchResult>();
+        searchUserForEmail(list, emailId);
+        return list;
+    }
+
+
+    private List<UserSearchResult> convertUserList(List<User> users) {
+        if (users == null) {
+            return Collections.emptyList();
+        }
+        List<UserSearchResult> returnList = new ArrayList<UserSearchResult>(users.size());
+        for (User oneUser : users) {
+            returnList.add(convertUserToResult(oneUser));
+        }
+        return returnList;
+    }
+    @Override
+    public List<UserSearchResult> searchNriUserForVolunteerIntrest(List<Long> intrests) throws AppException {
+        List<User> users;
+        if (intrests == null || intrests.isEmpty()) {
+            Pageable pageable = new PageRequest(0, 200);
+            users = userRepository.findAll(pageable).getContent();
+        } else {
+            users = userRepository.searchNriUserForVolunteerIntrest(intrests);
+        }
+        return convertUserList(users);
+    }
+
+    @Override
+    public List<UserSearchResult> searchGlobalUserForVolunteerIntrest(List<Long> intrests) throws AppException {
+        List<User> users;
+        if(intrests == null || intrests.isEmpty()){
+            Pageable pageable = new PageRequest(0, 200);
+            users = userRepository.findAll(pageable).getContent();
+        } else {
+            users = userRepository.searchGlobalUserForVolunteerIntrest(intrests);
+        }
+        return convertUserList(users);
+    }
+
+    @Override
+    public List<UserSearchResult> searchLocationUserForVolunteerIntrest(Long locationId, List<Long> intrests) throws AppException {
+        List<User> users;
+        if (intrests == null || intrests.isEmpty()) {
+            users = userRepository.searchLocationUser(locationId);
+        } else {
+            users = userRepository.searchLocationUserForVolunteerIntrest(locationId, intrests);
+        }
+        return convertUserList(users);
     }
 
 }

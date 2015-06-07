@@ -9,6 +9,7 @@ public enum AppPermission {
     APPROVE_NEWS,
     ADD_MEMBER,
     UPDATE_MEMBER,
+    SEARCH_MEMBER,
     UPDATE_GLOBAL_MEMBER,
     VIEW_MEMBER,
     EDIT_USER_ROLES,

@@ -231,6 +231,7 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 	}
 	public void createNews(){
         selectedNews = new News();
+        selectedNews.setContentStatus(ContentStatus.Pending);
 		showList = false;
 		tweetList = new ArrayList<>();
 	}

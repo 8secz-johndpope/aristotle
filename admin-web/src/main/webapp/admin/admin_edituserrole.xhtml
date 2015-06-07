@@ -342,7 +342,7 @@
   -->
 								<h:panelGrid columns="3">
 									<p:outputLabel for="car" value="Location :" />
-									<p:selectOneMenu id="car" value="#{adminEditUserRoleBean.selectedLocationForRole}" converter="#{jsfLocationConvertor}" 
+									<p:selectOneMenu id="car" value="#{adminEditUserRoleBean.selectedLocationForRole}" converter="#{adminEditUserRoleBean.locationConvertor}" 
 									>
 										<f:selectItem itemLabel="Select Location" itemValue="" />
 										<f:selectItems value="#{adminEditUserRoleBean.memberLocationList}" />

@@ -21,4 +21,12 @@ public interface UserService {
     User login(String userName, String password) throws AppException;
 
     List<UserLocation> getUserLocations(Long userId) throws AppException;
+
+    List<UserSearchResult> searchUserByEmail(String emailId) throws AppException;
+
+    List<UserSearchResult> searchNriUserForVolunteerIntrest(List<Long> intrests) throws AppException;
+
+    List<UserSearchResult> searchGlobalUserForVolunteerIntrest(List<Long> intrests) throws AppException;
+
+    List<UserSearchResult> searchLocationUserForVolunteerIntrest(Long locationId, List<Long> intrests) throws AppException;
 }

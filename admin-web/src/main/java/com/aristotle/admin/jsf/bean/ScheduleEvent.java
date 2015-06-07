@@ -21,6 +21,7 @@ public class ScheduleEvent extends DefaultScheduleEvent {
     private String contactEmail;
 	private String fbEventId;
 	private boolean national;
+    private boolean published;
 	private Long dbId;
     private int ver;
 	
@@ -46,6 +47,7 @@ public class ScheduleEvent extends DefaultScheduleEvent {
 		national = eventDto.isNational();
 		dbId = eventDto.getId();
         ver = eventDto.getVer();
+        published = eventDto.isPublished();
 	}
 	public ScheduleEvent(String title, Date start, Date end, boolean allDay) {
 		super(title, start, end, allDay);
@@ -148,6 +150,14 @@ public class ScheduleEvent extends DefaultScheduleEvent {
 
     public void setVer(int ver) {
         this.ver = ver;
+    }
+
+    public boolean isPublished() {
+        return published;
+    }
+
+    public void setPublished(boolean published) {
+        this.published = published;
     }
 
     @Override

@@ -1,6 +1,9 @@
 package com.aristotle.core.persistance.repo;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.aristotle.core.persistance.User;
 
@@ -29,6 +32,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 */
 	public abstract User getUserByPassportNumber(String passportNumber);
 
+    @Query("select distinct user from User user, Volunteer vl join vl.interests interests where  interests.id in ?1 and vl.userId=user.id and user.nri=true")
+    List<User> searchNriUserForVolunteerIntrest(List<Long> interestIds);
+
+    @Query("select distinct user from User user, Volunteer vl join vl.interests interests where  interests.id in ?1 and vl.userId=user.id")
+    List<User> searchGlobalUserForVolunteerIntrest(List<Long> interestIds);
+
+    @Query("select distinct user from User user, UserLocation ul, Volunteer vl join vl.interests interests where interests.id in ?2 and vl.userId=user.id and ul.userId=user.id and ul.locationId=?1")
+    List<User> searchLocationUserForVolunteerIntrest(Long locationId, List<Long> interestIds);
+
+    @Query("select distinct user from User user, UserLocation ul where ul.locationId=?1 and ul.userId=user.id")
+    List<User> searchLocationUser(Long locationId);
 	/*
 	List<User> searchUserOfAssemblyConstituency(String name,Long livingAcId,Long votingAcId);
 	

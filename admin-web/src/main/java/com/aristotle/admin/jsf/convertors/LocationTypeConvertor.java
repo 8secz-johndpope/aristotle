@@ -8,33 +8,27 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.aristotle.core.persistance.Location;
+import com.aristotle.core.persistance.LocationType;
 
-@Component
-@Scope("prototype")
-public class LocationConvertor implements Converter {
+@Component("jsfLocationTypeConvertor")
+public class LocationTypeConvertor implements Converter {
 
-    private List<Location> locations;
+    private List<LocationType> locationTypes;
 
-    public LocationConvertor() {
+    public LocationTypeConvertor() {
     }
 
 
     @Override
     public Object getAsObject(FacesContext fc, UIComponent uic, String value) {
-        System.out.println(this);
-        if (locations == null) {
-            return null;
-        }
         if (value != null && value.trim().length() > 0) {
             try {
                 long id = Long.parseLong(value);
-                for (Location oneLocation : locations) {
-                    if (oneLocation.getId().equals(id)) {
-                        return oneLocation;
+                for (LocationType oneLocationType : locationTypes) {
+                    if (oneLocationType.getId().equals(id)) {
+                        return oneLocationType;
                     }
                 }
                 return null;
@@ -52,19 +46,18 @@ public class LocationConvertor implements Converter {
             if (object instanceof String) {
                 return (String) object;
             }
-            return String.valueOf(((Location) object).getId());
+            return String.valueOf(((LocationType) object).getId());
         } else {
             return null;
         }
     }
 
-    public List<Location> getLocations() {
-        return locations;
+    public List<LocationType> getLocationTypes() {
+        return locationTypes;
     }
 
-    public void setLocations(List<Location> locations) {
-        System.out.println("Setting Locations");
-        this.locations = locations;
+    public void setLocationTypes(List<LocationType> locationTypes) {
+        this.locationTypes = locationTypes;
     }
 
 

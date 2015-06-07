@@ -73,6 +73,8 @@
 
 								<h:outputLabel for="allDay" value="All Day:" />
 								<h:selectBooleanCheckbox id="allDay" value="#{adminEventBean.event.allDay}" />
+								<h:outputLabel for="published" value="Published:" />
+                                <h:selectBooleanCheckbox id="published" value="#{adminEventBean.event.published}" />
 
 							</h:panelGrid>
 							<p:commandButton type="reset" value="Reset" />

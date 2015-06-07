@@ -1,0 +1,266 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Search Member/Volunteers</title>
+	<style>
+.topAlignPanelColumns td {
+	vertical-align: top;
+}
+
+.pf-dock-container-top {
+	background-image: none;
+	background-color: white;
+}
+
+.ui-dock-item-top {
+	color: black;
+}
+
+.ui-dock-container-top {
+	color: black;
+}
+
+.ui-selectonemenu {
+	width: 100px;
+}
+
+
+</style>
+
+</h:head>
+<h:body>
+	<!-- menu starts -->
+	<ui:include src="admin_menu.xhtml" />
+	<!-- menu ends -->
+	<div style="width: 1200px; margin: 0 auto;">
+		<div style="width: 1200px; margin: 0;">
+
+			<!-- header starts -->
+			<h2>Search Member/Volunteers</h2>
+
+			<h:form id="userSearchForm">
+				<p:messages id="messages" autoUpdate="true" closable="true" />
+				<p:outputPanel id="userSearchFormMainPanel">
+					<h:panelGrid columns="3" styleClass="topAlignPanelColumns" id="emailPanel">
+						<p:selectBooleanCheckbox value="#{adminSearchMemberBean.emailSearch}">
+							<p:ajax update="@form" listener="#{adminSearchMemberBean.emailSearchSelectionHandler}" />
+						</p:selectBooleanCheckbox>
+                        Search By Email
+                        <p:inputText id="email" value="#{adminSearchMemberBean.emailText}" style="width:400px;" rendered="#{adminSearchMemberBean.emailSearch}" />
+					</h:panelGrid>
+					<h:panelGrid columns="3" styleClass="topAlignPanelColumns" id="locationTypePanel">
+
+						<p:selectBooleanCheckbox value="#{adminSearchMemberBean.locationSearch}">
+							<p:ajax update="@form" listener="#{adminSearchMemberBean.locationSearchSelectionHandler}" />
+						</p:selectBooleanCheckbox>
+						Search By Location
+						<p:outputPanel rendered="#{adminSearchMemberBean.locationSearch}">
+							<p:selectOneMenu id="locationType" value="#{adminSearchMemberBean.selectedLocationType}" effect="fold" editable="false" converter="#{jsfLocationTypeConvertor}">
+								<f:selectItems value="#{adminSearchMemberBean.locationTypes}" var="oneLocationType" itemLabel="#{oneLocationType.name}" itemValue="#{oneLocationType}" />
+								<p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminSearchMemberBean.handleLocationTypeSelection}" />
+							</p:selectOneMenu>
+						</p:outputPanel>
+					</h:panelGrid>
+
+				</p:outputPanel>
+				<p:outputPanel id="locationSelectionPanel">
+					<p:panel header="Location Selection" style="margin-bottom:20px" rendered="#{adminSearchMemberBean.showLocationSearchPanel}">
+						<h:panelGrid columns="4" styleClass="topAlignPanelColumns" id="locationPanel">
+							<h:outputLabel for="state" value="State*" rendered="#{adminSearchMemberBean.showStateLocationSelectionOption}" />
+							<p:selectOneMenu id="state" effect="fold" editable="false" rendered="#{adminSearchMemberBean.showStateLocationSelectionOption}"
+								value="#{adminSearchMemberBean.selectedState}" converter="#{adminSearchMemberBean.stateLocationConvertor}">
+								<f:selectItems value="#{adminSearchMemberBean.states}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState}" />
+								<p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminSearchMemberBean.handleStateChange}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="district" value="District*" rendered="#{adminSearchMemberBean.showDistrictLocationSelectionOption}" />
+							<p:selectOneMenu id="district" effect="fold" editable="false" rendered="#{adminSearchMemberBean.showDistrictLocationSelectionOption}"
+								value="#{adminSearchMemberBean.selectedDistrict}" converter="#{adminSearchMemberBean.districtLocationConvertor}">
+								<f:selectItems value="#{adminSearchMemberBean.districts}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict}" />
+								<p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminSearchMemberBean.handleDistrictChange}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="ac" value="Assembly Constituency*" rendered="#{adminSearchMemberBean.showAcLocationSelectionOption}" />
+							<p:selectOneMenu id="ac" effect="fold" editable="false" rendered="#{adminSearchMemberBean.showAcLocationSelectionOption}" value="#{adminSearchMemberBean.selectedAc}"
+								converter="#{adminSearchMemberBean.acLocationConvertor}">
+								<f:selectItems value="#{adminSearchMemberBean.acs}" var="oneAc" itemLabel="#{oneAc.name}" itemValue="#{oneAc}" />
+								<p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminSearchMemberBean.handleAcChange}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="pc" value="Parliament Constituency*" rendered="#{adminSearchMemberBean.showPcLocationSelectionOption}" />
+							<p:selectOneMenu id="pc" effect="fold" editable="false" rendered="#{adminSearchMemberBean.showPcLocationSelectionOption}" value="#{adminSearchMemberBean.selectedPc}"
+								converter="#{adminSearchMemberBean.pcLocationConvertor}">
+								<f:selectItems value="#{adminSearchMemberBean.pcs}" var="onePc" itemLabel="#{onePc.name}" itemValue="#{onePc}" />
+								<p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminSearchMemberBean.handlePcChange}" />
+							</p:selectOneMenu>
+
+							<h:outputLabel for="country" value="Country*" rendered="#{adminSearchMemberBean.showCountryLocationSelectionOption}" />
+							<p:selectOneMenu id="country" effect="fold" editable="false" rendered="#{adminSearchMemberBean.showCountryLocationSelectionOption}"
+								value="#{adminSearchMemberBean.selectedCountry}" converter="#{adminSearchMemberBean.countryLocationConvertor}">
+								<f:selectItems value="#{adminSearchMemberBean.countries}" var="oneCountry" itemLabel="#{oneCountry.name}" itemValue="#{oneCountry}" />
+								<p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminSearchMemberBean.handleCountryChange}" />
+							</p:selectOneMenu>
+
+							<h:outputLabel for="countryRegion" value="Country Region*" rendered="#{adminSearchMemberBean.showCountryRegionLocationSelectionOption}" />
+							<p:selectOneMenu id="countryRegion" effect="fold" editable="false" rendered="#{adminSearchMemberBean.showCountryRegionLocationSelectionOption}"
+								value="#{adminSearchMemberBean.selectedCountryRegion}" converter="#{adminSearchMemberBean.countryRegionLocationConvertor}">
+								<f:selectItems value="#{adminSearchMemberBean.countryRegions}" var="oneCountryRegion" itemLabel="#{oneCountryRegion.name}" itemValue="#{oneCountryRegion}" />
+								<p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminSearchMemberBean.handleCountryRegionChange}" />
+							</p:selectOneMenu>
+
+							<h:outputLabel for="countryRegionArea" value="Country Region Area*" rendered="#{adminSearchMemberBean.showCountryRegionAreaLocationSelectionOption}" />
+							<p:selectOneMenu id="countryRegionArea" effect="fold" editable="false" rendered="#{adminSearchMemberBean.showCountryRegionAreaLocationSelectionOption}"
+								value="#{adminSearchMemberBean.selectedCountryRegionArea}" converter="#{adminSearchMemberBean.countryRegionAreaLocationConvertor}">
+								<f:selectItems value="#{adminSearchMemberBean.countryRegionAreas}" var="oneCountryRegionArea" itemLabel="#{oneCountryRegionArea.name}" itemValue="#{oneCountryRegionArea}" />
+								<p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminSearchMemberBean.handleCountryRegionAreaChange}" />
+							</p:selectOneMenu>
+						</h:panelGrid>
+					</p:panel>
+				</p:outputPanel>
+				<p:outputPanel id="volunteerSearchPanel" rendered="#{!adminSearchMemberBean.emailSearch}">
+					<p:outputPanel>
+						<ui:include src="common/volunteer.xhtml">
+							<ui:param name="param_VolunteerBean" value="#{adminSearchMemberBean.volunteerBean}" />
+							<ui:param name="param_show_volunteer_detail_panel" value="false" />
+						</ui:include>
+
+					</p:outputPanel>
+				</p:outputPanel>
+				<p:commandButton id="searchButton" update="@form" value="Search" actionListener="#{adminSearchMemberBean.searchUser}" ajax="true" />
+
+				<p:outputPanel id="userResultPanel">
+					<p:outputPanel>
+						<p:dataTable id="listOfUsers" var="oneUser" value="#{adminSearchMemberBean.userSearchResults}" paginator="true" rows="50" paginatorPosition="bottom"
+							paginatorAlwaysVisible="false" emptyMessage="No Member Found" style="width:100%;"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+							<p:ajax event="rowToggle" listener="#{adminSearchMemberBean.onRowToggle}" />
+							<f:facet name="header">Members/Volunteers</f:facet>
+							<f:facet name="footer" rendered="#{adminSearchMemberBean.showExporter}">
+							Export Data : 
+								<h:commandLink>
+									<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/document-icons-2/30/647708-excel-24.png" width="24" />
+									<p:dataExporter type="xls" target="listOfUsers" fileName="users" />
+								</h:commandLink>
+
+								<h:commandLink>
+									<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/document-icons-2/30/647716-pdf-24.png" width="24" />
+									<p:dataExporter type="pdf" target="listOfUsers" fileName="users" />
+								</h:commandLink>
+
+								<h:commandLink>
+									<p:graphicImage value="https://cdn2.iconfinder.com/data/icons/windows-8-metro-style/26/csv.png" width="24" />
+									<p:dataExporter type="csv" target="listOfUsers" fileName="users" />
+								</h:commandLink>
+
+								<h:commandLink>
+									<p:graphicImage value="https://cdn1.iconfinder.com/data/icons/hawcons/32/699748-icon-102-document-file-xml-24.png" width="24" />
+									<p:dataExporter type="xml" target="listOfUsers" fileName="users" />
+								</h:commandLink>
+							</f:facet>
+							<p:column style="width:5%" exportable="false">
+								<p:rowToggler />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="ID" />
+								</f:facet>
+								<h:outputText value="#{oneUser.id}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Name" />
+								</f:facet>
+								<h:outputText value="#{oneUser.name}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Address" />
+								</f:facet>
+								<h:outputText value="#{oneUser.address}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Phone" />
+								</f:facet>
+								<h:outputText value="#{oneUser.mobileNumber}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Email" />
+								</f:facet>
+								<h:outputText value="#{oneUser.email}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="NRI" />
+								</f:facet>
+								<h:outputText value="#{oneUser.nri}" />
+							</p:column>
+
+
+
+							<p:rowExpansion>
+								<p:panelGrid columns="2" styleClass="topAlignPanelColumns">
+									<f:facet name="header">Member Details</f:facet>
+
+									<h:panelGrid id="display" columns="2" cellpadding="4">
+										<f:facet name="header">
+											<p:graphicImage value="#{oneUser.profilePic}" width="200"/>
+										</f:facet>
+
+										<h:outputText value="Name" />
+										<h:outputText value="#{oneUser.name}" />
+
+										<h:outputText value="Gender" />
+										<h:outputText value="#{oneUser.gender}" />
+
+										<h:outputText value="Date Of Birth" />
+										<h:outputText value="#{oneUser.dateOfBirth}">
+											<f:convertDateTime pattern="dd-MMM-yyyy" />
+										</h:outputText>
+
+										<h:outputText value="Phone" />
+										<h:outputText value="#{oneUser.mobileNumber}" />
+                                        <h:outputText value="Email" />
+                                        <h:outputText value="#{oneUser.email}" />
+
+									</h:panelGrid>
+									<p:dataTable var="oneInterest" value="#{oneUser.interests}" emptyMessage="No Interests" style="width:100%;">
+										<p:column>
+											<h:outputText value="#{oneInterest.description}" />
+										</p:column>
+									</p:dataTable>
+								</p:panelGrid>
+
+								<!-- 
+								<p:outputLabel value="You can not edit this member" rendered="#{!adminSearchMemberBean.isMemberUpdateAllowed(oneUser)}"></p:outputLabel>
+								<p:commandButton id="editMemberButton" update=":userProfileForm:userProfileFormMainPanel" value="Update Member"
+									rendered="#{adminSearchMemberBean.isMemberUpdateAllowed(oneUser)}">
+									<f:setPropertyActionListener value="#{oneUser}" target="#{adminSearchMemberBean.selectedUserForEditing}" />
+								</p:commandButton>
+ -->
+							</p:rowExpansion>
+						</p:dataTable>
+						<br></br>
+					</p:outputPanel>
+				</p:outputPanel>
+			</h:form>
+			<!-- header ends -->
+
+
+			<!-- footer starts -->
+			<div class="footerWrapper">
+				<div class="container_24">
+					<div class="grid_24 panel footer">
+						Copyright &copy; 2015 <a href="#">www.swarajabhiyan.org</a>. All Rights Reserved.
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<!-- footer ends -->
+			<br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br>
+
+		</div>
+	</div>
+
+</h:body>
+</html>

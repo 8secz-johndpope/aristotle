@@ -1,6 +1,10 @@
 package com.aristotle.core.service.dto;
 
 import java.util.Date;
+import java.util.Set;
+
+import com.aristotle.core.persistance.Interest;
+import com.aristotle.core.persistance.Volunteer;
 
 public class UserSearchResult {
 
@@ -30,6 +34,9 @@ public class UserSearchResult {
     private String identityType;
     private String mobileNumber;
     private String email;
+
+    private Set<Interest> interests;
+    private Volunteer volunteer;
 
     public Long getId() {
         return id;
@@ -149,6 +156,22 @@ public class UserSearchResult {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Set<Interest> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(Set<Interest> interests) {
+        this.interests = interests;
+    }
+
+    public Volunteer getVolunteer() {
+        return volunteer;
+    }
+
+    public void setVolunteer(Volunteer volunteer) {
+        this.volunteer = volunteer;
     }
 
 }

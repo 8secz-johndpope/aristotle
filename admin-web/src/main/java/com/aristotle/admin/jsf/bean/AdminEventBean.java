@@ -143,6 +143,7 @@ public class AdminEventBean extends BaseMultiPermissionAdminJsfBean {
         eventDto.setVer(event.getVer());
 		eventDto.setStartDate(event.getStartDate());
 		eventDto.setTitle(event.getTitle());
+        eventDto.setPublished(event.isPublished());
 
         eventDto = eventService.saveEvent(eventDto, menuBean.getSelectedLocation());
 		event = new ScheduleEvent(eventDto);
@@ -171,6 +172,7 @@ public class AdminEventBean extends BaseMultiPermissionAdminJsfBean {
 			event.setDepth(defaultDepth);
             event.setContactEmail("contact@swarajabhiyan.org");
 			marker.setLatlng(new LatLng(defaultLattitude, defaultLongitude));
+            event.setPublished(true);
             showCalendarView = false;
 		} catch (Exception ex) {
 			sendErrorMessageToJsfScreen(ex);

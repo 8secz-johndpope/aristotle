@@ -14,6 +14,8 @@ public interface LocationService {
 
     List<LocationType> getAllLocationTypes() throws AppException;
 
+    List<LocationType> getAllLocationUnderLocationType(Long locationTypeId) throws AppException;
+
     // Helper Functions
     List<Location> getAllCountries() throws AppException;
 

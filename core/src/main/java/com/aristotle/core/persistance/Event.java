@@ -143,6 +143,9 @@ public class Event extends BaseEntity {
     })
     private Set<Location> locations;
 
+    @Column(name = "published", columnDefinition = "BIT(1) DEFAULT 1")
+    private boolean published;
+
 	public String getTitle() {
 		return title;
 	}
@@ -325,6 +328,14 @@ public class Event extends BaseEntity {
 
     public void setContactEmail(String contactEmail) {
         this.contactEmail = contactEmail;
+    }
+
+    public boolean isPublished() {
+        return published;
+    }
+
+    public void setPublished(boolean published) {
+        this.published = published;
     }
 
 }
