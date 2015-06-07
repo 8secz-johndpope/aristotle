@@ -166,7 +166,7 @@ public class RegisterController {
         return returnDt;
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/js/login", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<String> loginUser(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @RequestBody UserLoginBean userLoginBean) {
         JsonObject jsonObject = new JsonObject();
