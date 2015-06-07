@@ -73,6 +73,9 @@ public class UserPlugin extends LocationAwareDataPlugin {
             fieldsToIgnore.add("countryRegionRoles");
             fieldsToIgnore.add("countryRegionAreaRoles");
             fieldsToIgnore.add("superAdmin");
+            fieldsToIgnore.add("dateOfBirth");
+            fieldsToIgnore.add("dateCreated");
+            fieldsToIgnore.add("dateModified");
 
         }
         @Override
