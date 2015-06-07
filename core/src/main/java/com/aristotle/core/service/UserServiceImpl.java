@@ -215,12 +215,15 @@ public class UserServiceImpl implements UserService {
             volunteer = volunteerRepository.save(volunteer);
 
             volunteer.setInterests(new HashSet<Interest>());
-            for (Long oneInterestId : userRegisterBean.getInterests()) {
-                Interest oneInterest = interestRepository.findOne(oneInterestId);
-                if (oneInterest != null) {
-                    volunteer.getInterests().add(oneInterest);
+            if (userRegisterBean.getInterests() != null) {
+                for (Long oneInterestId : userRegisterBean.getInterests()) {
+                    Interest oneInterest = interestRepository.findOne(oneInterestId);
+                    if (oneInterest != null) {
+                        volunteer.getInterests().add(oneInterest);
+                    }
                 }
             }
+
         }
         // create user login account
         if (!StringUtils.isEmpty(userRegisterBean.getPassword())) {
