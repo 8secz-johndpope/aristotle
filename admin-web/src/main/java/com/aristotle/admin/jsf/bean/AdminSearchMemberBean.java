@@ -161,19 +161,19 @@ public class AdminSearchMemberBean extends BaseMultiPermissionAdminJsfBean {
         if (event.getVisibility().equals(Visibility.VISIBLE)) {
             try {
                 Volunteer selectedVolunteer = appService.getVolunteerDataForUser(selectedUser.getId());
-                selectedUser.setVolunteer(selectedVolunteer);
+                selectedUser.setVolunteerRecord(selectedVolunteer);
                 if (selectedVolunteer == null) {
                     System.out.println("Selected Volunteer is null null");
-                    selectedUser.setInterests(Collections.emptySet());
+                    selectedUser.setVolunteerInterests(Collections.emptySet());
                 } else {
                     System.out.println("Selected Volunteer is not null");
                     Set<Interest> userInterests = selectedVolunteer.getInterests();
                     if (userInterests == null || userInterests.isEmpty()) {
                         System.out.println("No User Interests");
-                        selectedUser.setInterests(Collections.emptySet());
+                        selectedUser.setVolunteerInterests(Collections.emptySet());
                     } else {
                         System.out.println("Some User Interests");
-                        selectedUser.setInterests(userInterests);
+                        selectedUser.setVolunteerInterests(userInterests);
                     }
 
                 }

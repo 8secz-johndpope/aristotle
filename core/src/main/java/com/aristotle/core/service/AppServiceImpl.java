@@ -1,9 +1,9 @@
 package com.aristotle.core.service;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,15 +29,17 @@ public class AppServiceImpl implements AppService {
 
     @Override
     public Volunteer getVolunteerDataForUser(Long userId) throws AppException {
-        Sort sort;
         Volunteer volunteer = volunteerRepository.getVolunteersByUserId(userId);
         if (volunteer == null) {
             return null;
         }
-        if (volunteer.getInterests() != null) {
+        if (volunteer.getInterests() == null) {
+            volunteer.setInterests(Collections.emptySet());
+        } else {
             for (Interest oneInterest : volunteer.getInterests()) {
                 oneInterest.getDescription();
             }
+
         }
 
         return volunteer;

@@ -35,8 +35,8 @@ public class UserSearchResult {
     private String mobileNumber;
     private String email;
 
-    private Set<Interest> interests;
-    private Volunteer volunteer;
+    private Set<Interest> volunteerInterests;
+    private Volunteer volunteerRecord;
 
     public Long getId() {
         return id;
@@ -158,20 +158,20 @@ public class UserSearchResult {
         this.email = email;
     }
 
-    public Set<Interest> getInterests() {
-        return interests;
+    public Set<Interest> getVolunteerInterests() {
+        return volunteerInterests;
     }
 
-    public void setInterests(Set<Interest> interests) {
-        this.interests = interests;
+    public void setVolunteerInterests(Set<Interest> volunteerInterests) {
+        this.volunteerInterests = volunteerInterests;
     }
 
-    public Volunteer getVolunteer() {
-        return volunteer;
+    public Volunteer getVolunteerRecord() {
+        return volunteerRecord;
     }
 
-    public void setVolunteer(Volunteer volunteer) {
-        this.volunteer = volunteer;
+    public void setVolunteerRecord(Volunteer volunteerRecord) {
+        this.volunteerRecord = volunteerRecord;
     }
 
 }
