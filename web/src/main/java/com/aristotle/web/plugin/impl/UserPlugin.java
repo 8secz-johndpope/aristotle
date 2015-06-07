@@ -40,7 +40,7 @@ public class UserPlugin extends LocationAwareDataPlugin {
     public void init() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         UserFieldExclusionStrategy exclusionStrategy = new UserFieldExclusionStrategy();
-        gsonBuilder.setExclusionStrategies(exclusionStrategy);
+        gsonBuilder.addDeserializationExclusionStrategy(exclusionStrategy);
         gson = gsonBuilder.create();
     }
 
