@@ -26,6 +26,7 @@ import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.Video;
 import com.aristotle.web.parameters.HttpParameters;
 import com.aristotle.web.plugin.WebDataPlugin;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -36,6 +37,7 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
     private DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
     private SimpleDateFormat ddMMMyyyyFormat = new SimpleDateFormat("dd-MMM-yyyy");
+    private Gson gson = new Gson();
 
     Map<String, String> settingMap = new LinkedHashMap<String, String>();
     protected final String name;
@@ -332,4 +334,5 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
         userJsonObject.addProperty("profilePic", user.getProfilePic());
         return userJsonObject;
     }
+
 }

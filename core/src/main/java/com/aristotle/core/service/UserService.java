@@ -20,6 +20,8 @@ public interface UserService {
 
     User login(String userName, String password) throws AppException;
 
+    User getUserById(Long userId) throws AppException;
+
     List<UserLocation> getUserLocations(Long userId) throws AppException;
 
     List<UserSearchResult> searchUserByEmail(String emailId) throws AppException;

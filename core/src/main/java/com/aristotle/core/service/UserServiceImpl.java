@@ -400,4 +400,9 @@ public class UserServiceImpl implements UserService {
         return convertUserList(users);
     }
 
+    @Override
+    public User getUserById(Long userId) throws AppException {
+        return userRepository.findOne(userId);
+    }
+
 }
