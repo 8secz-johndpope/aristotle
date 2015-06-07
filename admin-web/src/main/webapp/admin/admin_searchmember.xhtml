@@ -25,8 +25,6 @@
 .ui-selectonemenu {
 	width: 100px;
 }
-
-
 </style>
 
 </h:head>
@@ -42,9 +40,12 @@
 
 			<h:form id="userSearchForm">
 				<p:messages id="messages" autoUpdate="true" closable="true" />
+				<p:blockUI block="userProfileForm" trigger="@form:emailCheckBox,@form:locationCheckBox,@form:locationType">
+					<p:graphicImage value="http://www.jsclasses.org/browse/view/image/file/3815/name/loading.gif" />
+				</p:blockUI>
 				<p:outputPanel id="userSearchFormMainPanel">
 					<h:panelGrid columns="3" styleClass="topAlignPanelColumns" id="emailPanel">
-						<p:selectBooleanCheckbox value="#{adminSearchMemberBean.emailSearch}">
+						<p:selectBooleanCheckbox id="emailCheckBox" value="#{adminSearchMemberBean.emailSearch}">
 							<p:ajax update="@form" listener="#{adminSearchMemberBean.emailSearchSelectionHandler}" />
 						</p:selectBooleanCheckbox>
                         Search By Email
@@ -52,7 +53,7 @@
 					</h:panelGrid>
 					<h:panelGrid columns="3" styleClass="topAlignPanelColumns" id="locationTypePanel">
 
-						<p:selectBooleanCheckbox value="#{adminSearchMemberBean.locationSearch}">
+						<p:selectBooleanCheckbox id="locationCheckBox" value="#{adminSearchMemberBean.locationSearch}">
 							<p:ajax update="@form" listener="#{adminSearchMemberBean.locationSearchSelectionHandler}" />
 						</p:selectBooleanCheckbox>
 						Search By Location
@@ -204,7 +205,7 @@
 
 									<h:panelGrid id="display" columns="2" cellpadding="4">
 										<f:facet name="header">
-											<p:graphicImage value="#{oneUser.profilePic}" width="200"/>
+											<p:graphicImage value="#{oneUser.profilePic}" width="200" />
 										</f:facet>
 
 										<h:outputText value="Name" />
@@ -220,8 +221,8 @@
 
 										<h:outputText value="Phone" />
 										<h:outputText value="#{oneUser.mobileNumber}" />
-                                        <h:outputText value="Email" />
-                                        <h:outputText value="#{oneUser.email}" />
+										<h:outputText value="Email" />
+										<h:outputText value="#{oneUser.email}" />
 
 									</h:panelGrid>
 									<p:dataTable var="oneInterest" value="#{oneUser.volunteerInterests}" emptyMessage="No Interests" style="width:100%;">
