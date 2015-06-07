@@ -80,6 +80,7 @@ public class UserPlugin extends LocationAwareDataPlugin {
         }
         @Override
         public boolean shouldSkipField(FieldAttributes f) {
+            System.out.println("Field : " + f.getName());
             if (fieldsToIgnore.contains(f.getName())) {
                 return true;
             }
