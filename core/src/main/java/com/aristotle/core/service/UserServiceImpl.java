@@ -215,6 +215,7 @@ public class UserServiceImpl implements UserService {
             volunteer = volunteerRepository.save(volunteer);
 
             volunteer.setInterests(new HashSet<Interest>());
+            System.out.println("userRegisterBean.getInterests()=" + userRegisterBean.getInterests());
             if (userRegisterBean.getInterests() != null) {
                 for (Long oneInterestId : userRegisterBean.getInterests()) {
                     Interest oneInterest = interestRepository.findOne(oneInterestId);
