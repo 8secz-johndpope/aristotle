@@ -409,4 +409,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.findOne(userId);
     }
 
+    @Override
+    public void changePassword(Long userId, String oldPassword, String newPassword) throws AppException {
+        LoginAccount loginAccount = loginAccountRepository.getLoginAccountByUserId(userId);
+        if (!passwordUtil.checkPassword(oldPassword, loginAccount.getPassword())) {
+            throw new AppException("Old password Do not match");
+        }
+        loginAccount.setPassword(passwordUtil.encryptPassword(newPassword));
+        loginAccount = loginAccountRepository.save(loginAccount);
+    }
+
 }

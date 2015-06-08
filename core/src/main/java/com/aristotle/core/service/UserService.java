@@ -31,4 +31,6 @@ public interface UserService {
     List<UserSearchResult> searchGlobalUserForVolunteerIntrest(List<Long> intrests) throws AppException;
 
     List<UserSearchResult> searchLocationUserForVolunteerIntrest(Long locationId, List<Long> intrests) throws AppException;
+
+    void changePassword(Long userId, String oldPassword, String newPassword) throws AppException;
 }

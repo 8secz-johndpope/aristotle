@@ -25,7 +25,9 @@ import com.aristotle.core.persistance.DataPlugin;
 import com.aristotle.core.persistance.StaticDataPlugin;
 import com.aristotle.core.persistance.UrlMapping;
 import com.aristotle.core.persistance.UrlMappingPlugin;
+import com.aristotle.core.persistance.User;
 import com.aristotle.core.service.DataPluginService;
+import com.aristotle.web.exception.NotLoggedInException;
 import com.aristotle.web.parameters.HttpParameters;
 import com.aristotle.web.plugin.PatternUrlMapping;
 import com.aristotle.web.plugin.PluginManager;
@@ -140,11 +142,21 @@ public class PluginManagerImpl implements PluginManager {
     }
 
     @Override
-    public void applyAllPluginsForUrl(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView, boolean addData) {
+    public void applyAllPluginsForUrl(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView, boolean addData) throws NotLoggedInException {
         init();
         String requestedUrl = httpServletRequest.getRequestURI();
         System.out.println("Handling Url = " + requestedUrl);
-        List<WebDataPlugin> plugins = findDataPlugins(httpServletRequest, requestedUrl);
+        PatternUrlMapping patternUrlMapping = findDataPlugins(httpServletRequest, requestedUrl);
+        if(patternUrlMapping == null){
+            return;
+        }
+        if (patternUrlMapping.getUrlMapping().isSecured()) {
+            User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
+            if (user == null) {
+                throw new NotLoggedInException("User Not logged In");
+            }
+        }
+        List<WebDataPlugin> plugins = patternUrlMapping.getDataPlugins();
         if (plugins == null || plugins.isEmpty()) {
             return;
         }
@@ -161,7 +173,7 @@ public class PluginManagerImpl implements PluginManager {
         
     }
 
-    private List<WebDataPlugin> findDataPlugins(HttpServletRequest httpServletRequest, String url) {
+    private PatternUrlMapping findDataPlugins(HttpServletRequest httpServletRequest, String url) {
         String apiUrl = url;
         if (url.startsWith("/api")) {
             apiUrl = url.replaceAll("/api", "");
@@ -172,13 +184,13 @@ public class PluginManagerImpl implements PluginManager {
                 if (url.equalsIgnoreCase(onePatternUrlMapping.getUrlMapping().getUrlPattern()) || apiUrl.equalsIgnoreCase(onePatternUrlMapping.getUrlMapping().getUrlPattern())) {
                     httpServletRequest.setAttribute(HttpParameters.PATH_PARAMETER_PARAM, Collections.emptyMap());
                     httpServletRequest.setAttribute(HttpParameters.URL_MAPPING, onePatternUrlMapping.getUrlMapping());
-                    return onePatternUrlMapping.getDataPlugins();
+                    return onePatternUrlMapping;
                 }
                 for (String oneUrl : onePatternUrlMapping.getAliases()) {
                     if (url.equalsIgnoreCase(oneUrl)) {
                         httpServletRequest.setAttribute(HttpParameters.PATH_PARAMETER_PARAM, Collections.emptyMap());
                         httpServletRequest.setAttribute(HttpParameters.URL_MAPPING, onePatternUrlMapping.getUrlMapping());
-                        return onePatternUrlMapping.getDataPlugins();
+                        return onePatternUrlMapping;
                     }
                 }
             } else {
@@ -193,7 +205,7 @@ public class PluginManagerImpl implements PluginManager {
 
                     httpServletRequest.setAttribute(HttpParameters.PATH_PARAMETER_PARAM, pathParameters);
                     httpServletRequest.setAttribute(HttpParameters.URL_MAPPING, onePatternUrlMapping.getUrlMapping());
-                    return onePatternUrlMapping.getDataPlugins();
+                    return onePatternUrlMapping;
                 }
             }
 

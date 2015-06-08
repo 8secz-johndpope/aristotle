@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.aristotle.web.exception.NotLoggedInException;
 import com.aristotle.web.plugin.PluginManager;
 import com.aristotle.web.ui.template.UiTemplateManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -42,20 +43,6 @@ public class ContentController {
         return ex.getMessage();
     }
 
-    // @RequestMapping("/content/**")
-    public ModelAndView defaultMethod(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) {
-
-        JsonObject context = new JsonObject();
-        modelAndView.getModel().put("context", context);
-        pluginManager.applyAllPluginsForUrl(httpServletRequest, httpServletResponse, modelAndView, false);
-
-        String template = uiTemplateManager.getTemplate(httpServletRequest);
-        modelAndView.getModel().put("template", template);
-
-        modelAndView.setViewName("handlebar");
-        return modelAndView;
-    }
-
     @RequestMapping(value = { "/content/**", "/", "/index.html", "/**" }, produces = MediaType.TEXT_HTML_VALUE)
     @ResponseBody
     public String serverSideHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws IOException {
@@ -63,7 +50,11 @@ public class ContentController {
         
         JsonObject jsonContext = new JsonObject();
         modelAndView.getModel().put("context", jsonContext);
-        pluginManager.applyAllPluginsForUrl(httpServletRequest, httpServletResponse, modelAndView, true);
+        try {
+            pluginManager.applyAllPluginsForUrl(httpServletRequest, httpServletResponse, modelAndView, true);
+        } catch (NotLoggedInException e) {
+            return "User not logged In";
+        }
 
         String stringTemplate = uiTemplateManager.getTemplate(httpServletRequest);
         modelAndView.getModel().put("template", stringTemplate);
@@ -94,7 +85,11 @@ public class ContentController {
     public String defaultContentApiMethod(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) {
         JsonObject context = new JsonObject();
         modelAndView.getModel().put("context", context);
-        pluginManager.applyAllPluginsForUrl(httpServletRequest, httpServletResponse, modelAndView, true);
+        try {
+            pluginManager.applyAllPluginsForUrl(httpServletRequest, httpServletResponse, modelAndView, true);
+        } catch (NotLoggedInException e) {
+            e.printStackTrace();
+        }
         return context.toString();
     }
 
@@ -103,7 +98,11 @@ public class ContentController {
     public String defaultApiMethod(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) {
         JsonObject context = new JsonObject();
         modelAndView.getModel().put("context", context);
-        pluginManager.applyAllPluginsForUrl(httpServletRequest, httpServletResponse, modelAndView, true);
+        try {
+            pluginManager.applyAllPluginsForUrl(httpServletRequest, httpServletResponse, modelAndView, true);
+        } catch (NotLoggedInException e) {
+            e.printStackTrace();
+        }
         return context.toString();
     }
 }
