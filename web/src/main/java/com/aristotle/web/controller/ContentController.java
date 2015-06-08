@@ -1,7 +1,6 @@
 package com.aristotle.web.controller;
 
 import java.io.IOException;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -75,13 +74,11 @@ public class ContentController {
 
         JsonNode rootNode = convertDataToJackSon(jsonContext);
         Context context = Context.newBuilder(rootNode).resolver(JsonNodeValueResolver.INSTANCE).build();
-        for (Entry<String, Object> oneEntry : context.propertySet()) {
-            // System.out.println("oneEntry = " + oneEntry.getKey());
-        }
 
         String result = template.apply(context);
-
-        httpServletResponse.setHeader("Cache-Control", "max-age=300");
+        if (httpServletRequest.getRequestURI().contains("content")) {
+            httpServletResponse.setHeader("Cache-Control", "max-age=300");
+        }
         return result;
     }
 
