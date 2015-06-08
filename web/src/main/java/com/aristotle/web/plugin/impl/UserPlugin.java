@@ -108,15 +108,21 @@ public class UserPlugin extends LocationAwareDataPlugin {
             User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
             if (user != null) {
                 User dbUser = userService.getUserById(user.getId());
-                String userJson = gson.toJson(dbUser);
-                System.out.println("userJson=" + userJson);
-                JsonObject userJsonObject = (JsonObject) jsonParser.parse(userJson);
-
+                JsonObject userJsonObject = convertUserFull(dbUser);
                 context.add(name, userJsonObject);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    private JsonObject convertUserFull(User user) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("id", user.getId());
+        jsonObject.addProperty("name", user.getName());
+        jsonObject.addProperty("address", user.getAddress());
+        jsonObject.addProperty("fatherName", user.getFatherName());
+        return jsonObject;
     }
 
 }
