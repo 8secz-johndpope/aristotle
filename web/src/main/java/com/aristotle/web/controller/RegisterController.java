@@ -232,7 +232,7 @@ public class RegisterController {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
             e.printStackTrace();
         }
-        ResponseEntity<String> returnDt = new ResponseEntity<String>("{\"message\":\"Success\"}", httpStatus);
+        ResponseEntity<String> returnDt = new ResponseEntity<String>(body.toString(), httpStatus);
         return returnDt;
 
     }
