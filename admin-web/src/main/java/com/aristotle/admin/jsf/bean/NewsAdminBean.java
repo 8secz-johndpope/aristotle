@@ -152,8 +152,6 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 		}
 	}
 	
-	private void refreshNewsInCache(){
-	}
 	public void publishPost(){
 		try{
 			if(selectedNews == null){
@@ -169,8 +167,6 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
                 selectedNews = newsService.publishNews(selectedNews.getId());
 				sendInfoMessageToJsfScreen("News Published Succesfully");
 				refreshNewsList();
-				refreshNewsInCache();
-				
 			}
 			
 		}catch(Exception ex){
@@ -196,7 +192,6 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
                 selectedNews = newsService.rejectNews(selectedNews.getId(), rejectionReason);
 				sendInfoMessageToJsfScreen("News Rejected Succesfully");
 				refreshNewsList();
-				refreshNewsInCache();
 			}
 			
 		}catch(Exception ex){

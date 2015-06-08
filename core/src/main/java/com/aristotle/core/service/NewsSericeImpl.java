@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.aristotle.core.enums.ContentStatus;
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.ContentTweet;
 import com.aristotle.core.persistance.Location;
@@ -27,14 +28,18 @@ public class NewsSericeImpl implements NewsService {
 
     @Override
     public News publishNews(Long newsId) {
-        newsRepository.findOne(newsId);
-        return null;
+        News news = newsRepository.findOne(newsId);
+        news.setContentStatus(ContentStatus.Published);
+        news = newsRepository.save(news);
+        return news;
     }
 
     @Override
     public News rejectNews(Long newsId, String reason) {
-        // TODO Auto-generated method stub
-        return null;
+        News news = newsRepository.findOne(newsId);
+        news.setContentStatus(ContentStatus.Rejected);
+        news = newsRepository.save(news);
+        return news;
     }
 
     @Override
