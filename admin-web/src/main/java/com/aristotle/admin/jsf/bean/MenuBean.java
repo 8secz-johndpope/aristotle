@@ -139,7 +139,7 @@ public class MenuBean extends BaseJsfBean {
     }
 
     public boolean isAdminAllowed() {
-        return isManageUserRoleAllowed() || isEditOfficeDetailAllowed();
+        return isManageUserRoleAllowed() || isEditOfficeDetailAllowed() || isSearchVolunteerAllowed();
     }
 
     public boolean isManageUserRoleAllowed() {
