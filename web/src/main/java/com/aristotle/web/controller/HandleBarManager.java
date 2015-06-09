@@ -25,13 +25,21 @@ public class HandleBarManager {
 
     @PostConstruct
     public void init() {
-        registerTrimStringFunction();
+        // registerTrimStringFunction();
+        handlebars.registerHelpers(new HelperSource());
     }
 
     private void registerTrimStringFunction() {
         handlebars.registerHelper("trimString", new Helper<String>() {
             @Override
             public CharSequence apply(String context, Options options) throws IOException {
+                System.out.println("Checking Params " + options.params);
+                if (options.params.length > 1) {
+                    System.out.println("First Parameter " + options.param(0));
+                }
+                if (options.params.length > 2) {
+                    System.out.println("Second Parameter " + options.param(1));
+                }
                 int trimLength = 150;
                 if (options.params.length >= 1) {
                     trimLength = options.param(0);

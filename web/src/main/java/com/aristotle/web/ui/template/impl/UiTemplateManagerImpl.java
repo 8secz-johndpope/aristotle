@@ -3,7 +3,6 @@ package com.aristotle.web.ui.template.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -98,9 +97,6 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
 
     private void applySubTemplates(DomainPageTemplate oneDomainPageTemplate, List<DomainTemplatePart> subTemplates) {
         for (DomainTemplatePart oneDomainTemplatePart : subTemplates) {
-            if (oneDomainTemplatePart.getName().equals("FOOTER")) {
-                System.out.println(oneDomainTemplatePart.getHtmlContent());
-            }
             String templateKey = "[[" + oneDomainTemplatePart.getName() + "]]";
             String htmlContent = StringUtils.replace(oneDomainPageTemplate.getHtmlContent(), templateKey, oneDomainTemplatePart.getHtmlContent());
             oneDomainPageTemplate.setHtmlContent(htmlContent);
@@ -131,10 +127,6 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
     }
 
     private DomainPageTemplate getDomainPageTemplate(String domain, Long urlMappingId) {
-        System.out.println("Getting domain = " + domain + " , urlMappingId=" + urlMappingId);
-        for (Entry<String, Map<Long, DomainPageTemplate>> oneNtry : domainUiTemplateMap.entrySet()) {
-
-        }
         Map<Long, DomainPageTemplate> domainPageTemplateMap = domainUiTemplateMap.get(domain.toLowerCase());
         if (domainPageTemplateMap == null) {
             domainPageTemplateMap = domainUiTemplateMap.get("default");
@@ -151,9 +143,6 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
         init();
         String domain = httpServletRequest.getServerName().toLowerCase();
         System.out.println("Getting Domain location for " + domain);
-        for (Entry<String, Long> oneEntry : domainLocationMap.entrySet()) {
-            System.out.println(oneEntry.getKey() + " = " + oneEntry.getValue());
-        }
         return domainLocationMap.get(domain);
     }
 
