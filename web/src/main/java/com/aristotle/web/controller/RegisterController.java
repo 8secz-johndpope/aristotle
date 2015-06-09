@@ -236,4 +236,28 @@ public class RegisterController {
         return returnDt;
 
     }
+
+    @RequestMapping(value = "/js/personaldetail", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> updatePersonalDetail(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @RequestBody UserChangePasswordBean userChangePasswordBean) {
+        HttpStatus httpStatus;
+        JsonObject body = new JsonObject();
+        try {
+            User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
+            userService.changePassword(user.getId(), userChangePasswordBean.getOldPassword(), userChangePasswordBean.getNewPassword());
+            httpStatus = HttpStatus.OK;
+            body.addProperty("message", "Password Changed Succesfully");
+        } catch (AppException e) {
+            body.addProperty("message", "Unable to change password : " + e.getMessage());
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            e.printStackTrace();
+        } catch (Exception e) {
+            body.addProperty("message", "Unable to change password : ");
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            e.printStackTrace();
+        }
+        ResponseEntity<String> returnDt = new ResponseEntity<String>(body.toString(), httpStatus);
+        return returnDt;
+
+    }
 }
