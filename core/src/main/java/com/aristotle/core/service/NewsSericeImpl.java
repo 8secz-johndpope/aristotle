@@ -1,5 +1,6 @@
 package com.aristotle.core.service;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,6 +31,9 @@ public class NewsSericeImpl implements NewsService {
     public News publishNews(Long newsId) {
         News news = newsRepository.findOne(newsId);
         news.setContentStatus(ContentStatus.Published);
+        if (news.getPublishDate() == null) {
+            news.setPublishDate(new Date());
+        }
         news = newsRepository.save(news);
         return news;
     }
@@ -61,7 +65,12 @@ public class NewsSericeImpl implements NewsService {
 
     @Override
     public News saveNews(News news, List<ContentTweet> contentTweetDtos, Long locationId) {
+        if (news.getDateCreated() == null) {
+            news.setDateCreated(new Date());
+        }
+        news.setDateModified(new Date());
         news = newsRepository.save(news);
+
         addLocationToNews(news, locationId);
         return news;
     }

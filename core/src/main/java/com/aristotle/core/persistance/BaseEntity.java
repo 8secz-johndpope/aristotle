@@ -70,4 +70,12 @@ public class BaseEntity {
     public Long getModifierId() {
         return modifierId;
     }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public void setDateModified(Date dateModified) {
+        this.dateModified = dateModified;
+    }
 }
