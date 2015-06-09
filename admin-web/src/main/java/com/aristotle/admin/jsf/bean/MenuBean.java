@@ -114,6 +114,15 @@ public class MenuBean extends BaseJsfBean {
     public boolean isPublishNewsAllowed() {
         return isAllowed(AppPermission.APPROVE_NEWS);
     }
+
+    public boolean isEditBlogAllowed() {
+        return isAllowed(AppPermission.CREATE_BLOG, AppPermission.UPDATE_BLOG, AppPermission.DELETE_BLOG, AppPermission.APPROVE_BLOG);
+    }
+
+    public boolean isPublishBlogAllowed() {
+        return isAllowed(AppPermission.APPROVE_BLOG);
+    }
+
     public boolean isManageBlogAllowed() {
         return isAllowed(AppPermission.CREATE_BLOG, AppPermission.UPDATE_BLOG, AppPermission.DELETE_BLOG, AppPermission.APPROVE_BLOG);
     }

@@ -53,7 +53,6 @@ public class LoginBean extends BaseJsfBean {
 
     @PostConstruct
     public void init() {
-        System.out.println("Creating LoginBean");
     }
 
     public void login() {
