@@ -19,7 +19,7 @@ import com.aristotle.core.persistance.repo.LocationRepository;
 import com.aristotle.core.persistance.repo.NewsRepository;
 
 @Service
-public class NewsSericeImpl implements NewsService {
+public class NewsServiceImpl implements NewsService {
 
     @Autowired
     private NewsRepository newsRepository;
@@ -65,10 +65,6 @@ public class NewsSericeImpl implements NewsService {
 
     @Override
     public News saveNews(News news, List<ContentTweet> contentTweetDtos, Long locationId) {
-        if (news.getDateCreated() == null) {
-            news.setDateCreated(new Date());
-        }
-        news.setDateModified(new Date());
         news = newsRepository.save(news);
 
         addLocationToNews(news, locationId);
