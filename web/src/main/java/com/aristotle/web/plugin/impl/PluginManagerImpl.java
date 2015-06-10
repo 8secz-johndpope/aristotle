@@ -142,7 +142,7 @@ public class PluginManagerImpl implements PluginManager {
     }
 
     @Override
-    public void applyAllPluginsForUrl(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView, boolean addData) throws NotLoggedInException {
+    public void applyAllPluginsForUrl(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView, boolean addData, boolean applyGenericPlugins) throws NotLoggedInException {
         init();
         String requestedUrl = httpServletRequest.getRequestURI();
         System.out.println("Handling Url = " + requestedUrl);
@@ -162,8 +162,10 @@ public class PluginManagerImpl implements PluginManager {
         }
         if(addData){
             // First apply all Global Data Plugins
-            for (WebDataPlugin oneWebDataPlugin : globalWebDataPlugins) {
-                oneWebDataPlugin.applyPlugin(httpServletRequest, httpServletResponse, modelAndView);
+            if(applyGenericPlugins){
+                for (WebDataPlugin oneWebDataPlugin : globalWebDataPlugins) {
+                    oneWebDataPlugin.applyPlugin(httpServletRequest, httpServletResponse, modelAndView);
+                }
             }
             for (WebDataPlugin oneWebDataPlugin : plugins) {
                 oneWebDataPlugin.applyPlugin(httpServletRequest, httpServletResponse, modelAndView);

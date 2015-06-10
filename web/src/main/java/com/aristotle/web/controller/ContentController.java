@@ -51,7 +51,7 @@ public class ContentController {
         JsonObject jsonContext = new JsonObject();
         modelAndView.getModel().put("context", jsonContext);
         try {
-            pluginManager.applyAllPluginsForUrl(httpServletRequest, httpServletResponse, modelAndView, true);
+            pluginManager.applyAllPluginsForUrl(httpServletRequest, httpServletResponse, modelAndView, true, true);
         } catch (NotLoggedInException e) {
             return "User not logged In";
         }
@@ -86,7 +86,7 @@ public class ContentController {
         JsonObject context = new JsonObject();
         modelAndView.getModel().put("context", context);
         try {
-            pluginManager.applyAllPluginsForUrl(httpServletRequest, httpServletResponse, modelAndView, true);
+            pluginManager.applyAllPluginsForUrl(httpServletRequest, httpServletResponse, modelAndView, true, true);
         } catch (NotLoggedInException e) {
             e.printStackTrace();
         }
@@ -99,7 +99,7 @@ public class ContentController {
         JsonObject context = new JsonObject();
         modelAndView.getModel().put("context", context);
         try {
-            pluginManager.applyAllPluginsForUrl(httpServletRequest, httpServletResponse, modelAndView, true);
+            pluginManager.applyAllPluginsForUrl(httpServletRequest, httpServletResponse, modelAndView, true, false);
         } catch (NotLoggedInException e) {
             e.printStackTrace();
         }
