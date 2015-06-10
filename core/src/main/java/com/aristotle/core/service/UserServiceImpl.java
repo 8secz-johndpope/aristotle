@@ -42,6 +42,7 @@ import com.aristotle.core.persistance.repo.UserRepository;
 import com.aristotle.core.persistance.repo.VolunteerRepository;
 import com.aristotle.core.service.dto.SearchUser;
 import com.aristotle.core.service.dto.UserContactBean;
+import com.aristotle.core.service.dto.UserPersonalDetailBean;
 import com.aristotle.core.service.dto.UserRegisterBean;
 import com.aristotle.core.service.dto.UserSearchResult;
 
@@ -417,6 +418,21 @@ public class UserServiceImpl implements UserService {
         }
         loginAccount.setPassword(passwordUtil.encryptPassword(newPassword));
         loginAccount = loginAccountRepository.save(loginAccount);
+    }
+
+    @Override
+    public void updatePersonalDetails(Long userId, UserPersonalDetailBean userPersonalDetailBean) throws AppException {
+        User user = userRepository.findOne(userId);
+        user.setName(userPersonalDetailBean.getName());
+        user.setGender(userPersonalDetailBean.getGender());
+        user.setIdentityType(userPersonalDetailBean.getIdentityType());
+        user.setIdentityNumber(userPersonalDetailBean.getIdentityNumber());
+        user.setDateOfBirth(userPersonalDetailBean.getDateOfBirth());
+        user.setFatherName(userPersonalDetailBean.getFatherName());
+        user.setMotherName(userPersonalDetailBean.getMotherName());
+
+        user = userRepository.save(user);
+
     }
 
 }

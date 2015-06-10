@@ -122,7 +122,64 @@ public class UserPlugin extends LocationAwareDataPlugin {
         jsonObject.addProperty("name", user.getName());
         jsonObject.addProperty("address", user.getAddress());
         jsonObject.addProperty("fatherName", user.getFatherName());
+        jsonObject.addProperty("gender", user.getGender());
+        jsonObject.addProperty("identityNumber", user.getIdentityNumber());
+        jsonObject.addProperty("identityType", user.getIdentityType());
+        jsonObject.addProperty("motherName", user.getMotherName());
+        jsonObject.addProperty("passportNumber", user.getPassportNumber());
+        jsonObject.addProperty("profilePic", user.getProfilePic());
+        jsonObject.addProperty("dateOfBirth", ddMMyyyyFormat.format(user.getDateOfBirth()));
+        addGenderOptions(jsonObject, user);
+        addIdentityTypeOptions(jsonObject, user);
         return jsonObject;
+    }
+
+    private void addGenderOptions(JsonObject jsonObject, User user) {
+        StringBuilder sb = new StringBuilder();
+
+        if ("Male".equalsIgnoreCase(user.getGender())) {
+            sb.append("<option selected=\"selected\">Male</option>");
+        } else {
+            sb.append("<option>Male</option>");
+        }
+        if ("Female".equalsIgnoreCase(user.getGender())) {
+            sb.append("<option selected=\"selected\">Female</option>");
+        } else {
+            sb.append("<option>Female</option>");
+        }
+        if ("Other".equalsIgnoreCase(user.getGender())) {
+            sb.append("<option selected=\"selected\">Other</option>");
+        } else {
+            sb.append("<option>Other</option>");
+        }
+        jsonObject.addProperty("genderChoices", sb.toString());
+    }
+
+    private void addIdentityTypeOptions(JsonObject jsonObject, User user) {
+        StringBuilder sb = new StringBuilder();
+
+        if ("Ration Card".equalsIgnoreCase(user.getGender())) {
+            sb.append("<option selected=\"selected\">Ration Card</option>");
+        } else {
+            sb.append("<option>Ration Card</option>");
+        }
+        if ("Driving License".equalsIgnoreCase(user.getGender())) {
+            sb.append("<option selected=\"selected\">Driving License</option>");
+        } else {
+            sb.append("<option>Driving License</option>");
+        }
+        if ("Voter Card".equalsIgnoreCase(user.getGender())) {
+            sb.append("<option selected=\"selected\">Voter Card</option>");
+        } else {
+            sb.append("<option>Voter Card</option>");
+        }
+        if ("Passport".equalsIgnoreCase(user.getGender())) {
+            sb.append("<option selected=\"selected\">Passport</option>");
+        } else {
+            sb.append("<option>Passport</option>");
+        }
+
+        jsonObject.addProperty("identityChoices", sb.toString());
     }
 
 }

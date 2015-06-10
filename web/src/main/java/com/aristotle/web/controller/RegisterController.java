@@ -28,6 +28,7 @@ import com.aristotle.core.service.UserService;
 import com.aristotle.core.service.dto.UserChangePasswordBean;
 import com.aristotle.core.service.dto.UserContactBean;
 import com.aristotle.core.service.dto.UserLoginBean;
+import com.aristotle.core.service.dto.UserPersonalDetailBean;
 import com.aristotle.core.service.dto.UserRegisterBean;
 import com.google.gson.JsonObject;
 
@@ -239,20 +240,20 @@ public class RegisterController {
 
     @RequestMapping(value = "/js/personaldetail", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<String> updatePersonalDetail(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @RequestBody UserChangePasswordBean userChangePasswordBean) {
+    public ResponseEntity<String> updatePersonalDetail(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @RequestBody UserPersonalDetailBean userPersonalDetailBean) {
         HttpStatus httpStatus;
         JsonObject body = new JsonObject();
         try {
             User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
-            userService.changePassword(user.getId(), userChangePasswordBean.getOldPassword(), userChangePasswordBean.getNewPassword());
+            userService.updatePersonalDetails(user.getId(), userPersonalDetailBean);
             httpStatus = HttpStatus.OK;
-            body.addProperty("message", "Password Changed Succesfully");
+            body.addProperty("message", "Personal Details updated Succesfully");
         } catch (AppException e) {
-            body.addProperty("message", "Unable to change password : " + e.getMessage());
+            body.addProperty("message", "Unable to save : " + e.getMessage());
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
             e.printStackTrace();
         } catch (Exception e) {
-            body.addProperty("message", "Unable to change password : ");
+            body.addProperty("message", "Unable to save");
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
             e.printStackTrace();
         }

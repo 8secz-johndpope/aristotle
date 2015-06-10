@@ -36,7 +36,8 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
     private DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-    private SimpleDateFormat ddMMMyyyyFormat = new SimpleDateFormat("dd-MMM-yyyy");
+    protected SimpleDateFormat ddMMMyyyyFormat = new SimpleDateFormat("dd-MMM-yyyy");
+    protected SimpleDateFormat ddMMyyyyFormat = new SimpleDateFormat("dd-MM-yyyy");
     private Gson gson = new Gson();
 
     Map<String, String> settingMap = new LinkedHashMap<String, String>();

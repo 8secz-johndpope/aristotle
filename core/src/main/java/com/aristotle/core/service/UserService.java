@@ -7,6 +7,7 @@ import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.UserLocation;
 import com.aristotle.core.service.dto.SearchUser;
 import com.aristotle.core.service.dto.UserContactBean;
+import com.aristotle.core.service.dto.UserPersonalDetailBean;
 import com.aristotle.core.service.dto.UserRegisterBean;
 import com.aristotle.core.service.dto.UserSearchResult;
 
@@ -33,4 +34,6 @@ public interface UserService {
     List<UserSearchResult> searchLocationUserForVolunteerIntrest(Long locationId, List<Long> intrests) throws AppException;
 
     void changePassword(Long userId, String oldPassword, String newPassword) throws AppException;
+    
+    void updatePersonalDetails(Long userId, UserPersonalDetailBean userPersonalDetailBean) throws AppException;
 }
