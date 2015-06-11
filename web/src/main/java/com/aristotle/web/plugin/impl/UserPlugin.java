@@ -128,7 +128,10 @@ public class UserPlugin extends LocationAwareDataPlugin {
         jsonObject.addProperty("motherName", user.getMotherName());
         jsonObject.addProperty("passportNumber", user.getPassportNumber());
         jsonObject.addProperty("profilePic", user.getProfilePic());
-        jsonObject.addProperty("dateOfBirth", ddMMyyyyFormat.format(user.getDateOfBirth()));
+        if (user.getDateOfBirth() != null) {
+            jsonObject.addProperty("dateOfBirth", ddMMyyyyFormat.format(user.getDateOfBirth()));
+        }
+
         addGenderOptions(jsonObject, user);
         addIdentityTypeOptions(jsonObject, user);
         return jsonObject;
