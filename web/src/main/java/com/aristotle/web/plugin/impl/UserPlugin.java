@@ -1,6 +1,7 @@
 package com.aristotle.web.plugin.impl;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -13,7 +14,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.aristotle.core.exception.AppException;
+import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.User;
+import com.aristotle.core.persistance.UserLocation;
+import com.aristotle.core.service.LocationService;
 import com.aristotle.core.service.NewsService;
 import com.aristotle.core.service.UserService;
 import com.google.gson.ExclusionStrategy;
@@ -32,6 +37,9 @@ public class UserPlugin extends LocationAwareDataPlugin {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private LocationService locationService;
 
     private Gson gson;
     private JsonParser jsonParser = new JsonParser();
@@ -135,6 +143,114 @@ public class UserPlugin extends LocationAwareDataPlugin {
         addGenderOptions(jsonObject, user);
         addIdentityTypeOptions(jsonObject, user);
         return jsonObject;
+    }
+
+    private void addLocations(JsonObject jsonObject, User user) throws AppException {
+        List<UserLocation> userLocations = userService.getUserLocations(user.getId());
+        if (userLocations == null || userLocations.isEmpty()) {
+            // then just load State or Country(if NRI)
+            return;
+        }
+
+        Long selectedCountry = getSelectedLocation(userLocations, "Country", "Living");
+        Long selectedCountryRegion = getSelectedLocation(userLocations, "CountryRegion", "Living");
+        Long selectedCountryRegionArea = getSelectedLocation(userLocations, "CountryRegionArea", "Living");
+        Long selectedLivingState = getSelectedLocation(userLocations, "State", "Living");
+        Long selectedLivingPc = getSelectedLocation(userLocations, "ParliamentConstituency", "Living");
+        Long selectedLivingAc = getSelectedLocation(userLocations, "AssemblyConstituency", "Living");
+        Long selectedLivingDistrict = getSelectedLocation(userLocations, "District", "Living");
+        Long selectedVotingState = getSelectedLocation(userLocations, "State", "Voting");
+        Long selectedVotingPc = getSelectedLocation(userLocations, "ParliamentConstituency", "Voting");
+        Long selectedVotingAc = getSelectedLocation(userLocations, "AssemblyConstituency", "Voting");
+        Long selectedVotingDistrict = getSelectedLocation(userLocations, "District", "Voting");
+
+        addCountries(jsonObject, selectedCountry);
+        addCountryRegions(jsonObject, "CountryRegions", selectedCountry, selectedCountryRegion);
+        addCountryRegionAreas(jsonObject, "CountryRegionAreas", selectedCountryRegion, selectedCountryRegionArea);
+        addStates(jsonObject, selectedLivingState, selectedVotingState);
+        addDistricts(jsonObject, "LivingDistricts", selectedLivingState, selectedLivingDistrict);
+        addDistricts(jsonObject, "VotingDistricts", selectedVotingState, selectedVotingDistrict);
+        addAcs(jsonObject, "LivingAcs", selectedLivingDistrict, selectedLivingAc);
+        addAcs(jsonObject, "VotingAcs", selectedVotingDistrict, selectedVotingAc);
+        addPcs(jsonObject, "LivingPcs", selectedLivingState, selectedLivingPc);
+        addPcs(jsonObject, "VotingPcs", selectedVotingState, selectedVotingPc);
+
+    }
+
+
+    private Long getSelectedLocation(List<UserLocation> userLocations, String locationTypeName, String userLocationType) {
+        if (userLocations == null) {
+            return null;
+        }
+        for (UserLocation oneUserLocation : userLocations) {
+            if (oneUserLocation.getLocation().getLocationType().getName().equalsIgnoreCase(locationTypeName) && oneUserLocation.getUserLocationType().equalsIgnoreCase(userLocationType)) {
+                return oneUserLocation.getLocationId();
+            }
+        }
+        return null;
+    }
+
+    private void addCountries(JsonObject jsonObject, Long selectedCountry) throws AppException {
+        List<Location> countries = locationService.getAllCountries();
+        addLocationOptions(jsonObject, "Countries", countries, selectedCountry);
+    }
+
+    private void addStates(JsonObject jsonObject, Long selectedLivingState, Long selectedVotingState) throws AppException {
+        List<Location> states = locationService.getAllStates();
+        addLocationOptions(jsonObject, "LivingStates", states, selectedLivingState);
+        addLocationOptions(jsonObject, "VotingStates", states, selectedVotingState);
+    }
+
+    private void addCountryRegions(JsonObject jsonObject, String fieldName, Long selectedCountry, Long selectedCountryRegion) throws AppException {
+        if (selectedCountry == null) {
+            return;
+        }
+        List<Location> countryRegions = locationService.getAllChildLocations(selectedCountry);
+        addLocationOptions(jsonObject, fieldName, countryRegions, selectedCountryRegion);
+    }
+
+    private void addCountryRegionAreas(JsonObject jsonObject, String fieldName, Long selectedCountryRegion, Long selectedCountryRegionArea) throws AppException {
+        if (selectedCountryRegion == null) {
+            return;
+        }
+        List<Location> countryRegions = locationService.getAllChildLocations(selectedCountryRegion);
+        addLocationOptions(jsonObject, fieldName, countryRegions, selectedCountryRegionArea);
+    }
+
+    private void addDistricts(JsonObject jsonObject, String fieldName, Long selectedState, Long selectedDistrict) throws AppException {
+        if (selectedState == null) {
+            return;
+        }
+        List<Location> districts = locationService.getAllDistrictOfState(selectedState);
+        addLocationOptions(jsonObject, fieldName, districts, selectedDistrict);
+    }
+
+    private void addPcs(JsonObject jsonObject, String fieldName, Long selectedState, Long selectedPc) throws AppException {
+        if (selectedState == null) {
+            return;
+        }
+        List<Location> pcs = locationService.getAllParliamentConstituenciesOfState(selectedState);
+        addLocationOptions(jsonObject, fieldName, pcs, selectedPc);
+    }
+
+    private void addAcs(JsonObject jsonObject, String fieldName, Long selectedDistrict, Long selectedAc) throws AppException {
+        if (selectedDistrict == null) {
+            return;
+        }
+        List<Location> acs = locationService.getAllAssemblyConstituenciesOfDistrict(selectedDistrict);
+        addLocationOptions(jsonObject, fieldName, acs, selectedAc);
+    }
+
+    private void addLocationOptions(JsonObject jsonObject, String name, List<Location> locations, Long selectedLocation) {
+        StringBuilder sb = new StringBuilder("<option value=\"0\">Select Country</option>");
+        for (Location oneLocation : locations) {
+            if (selectedLocation != null && oneLocation.getId().equals(selectedLocation)) {
+                sb.append("<option selected=\"selected\" value=\"" + oneLocation.getId() + "\">" + oneLocation.getName() + "</option>");
+            } else {
+                sb.append("<option value=\"" + oneLocation.getId() + "\">" + oneLocation.getName() + "</option>");
+            }
+        }
+        jsonObject.addProperty(name, sb.toString());
     }
 
     private void addGenderOptions(JsonObject jsonObject, User user) {
