@@ -10,7 +10,7 @@ import com.aristotle.web.exception.NotLoggedInException;
 
 public interface PluginManager {
 
-    void applyAllPluginsForUrl(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView, boolean addData) throws NotLoggedInException;
+    void applyAllPluginsForUrl(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView, boolean addData, boolean applyGenericPlugins) throws NotLoggedInException;
 
     void refresh();
 
