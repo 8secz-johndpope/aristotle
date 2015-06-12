@@ -386,7 +386,7 @@ public class UserServiceImpl implements UserService {
     public List<UserSearchResult> searchGlobalUserForVolunteerIntrest(List<Long> intrests) throws AppException {
         List<User> users;
         if(intrests == null || intrests.isEmpty()){
-            Pageable pageable = new PageRequest(0, 200);
+            Pageable pageable = new PageRequest(0, 2000);
             users = userRepository.findAll(pageable).getContent();
         } else {
             users = userRepository.searchGlobalUserForVolunteerIntrest(intrests);
