@@ -1,6 +1,7 @@
 package com.aristotle.core.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -14,6 +15,7 @@ import com.amazonaws.services.simpleemail.model.Message;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import com.aristotle.core.exception.AppException;
 
+@Service
 public class EmailManagerImpl implements EmailManager {
 
     @Value("${aws_access_key}")
