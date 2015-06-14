@@ -26,7 +26,7 @@
 	width: 100px;
 }
 
-.ui-widget,.ui-widget .ui-widget {
+.ui-widget, .ui-widget .ui-widget {
 	font-size: 90% !important;
 }
 </style>
@@ -35,8 +35,8 @@
 <h:body>
 	<ui:include src="admin_menu.xhtml" />
 	<!-- menu ends -->
-	<div style="width: 800px; margin: 0 auto;">
-		<div style="width: 800px; margin: 0;">
+	<div style="width: 1200px; margin: 0 auto;">
+		<div style="width: 1200px; margin: 0;">
 			<p:blockUI block="adminNewsForm" trigger=":adminNewsForm:saveNews,:adminNewsForm:saveNewsAndPublish,:adminNewsForm:publish">
 			Saving Profile<br />
 				<p:graphicImage value="/images/ajax-loader.gif" />
@@ -99,23 +99,45 @@
 							</p:inputText>
 							<p:outputLabel value="Message"></p:outputLabel>
 							<p:outputPanel>
-							<p:outputLabel value="#{newsAdminBean.selectedNews.content}" escape="false" rendered="#{!newsAdminBean.editAllowed}" />
-							<p:editor id="editor" value="#{newsAdminBean.selectedNews.content}" width="600" height="500" rendered="#{newsAdminBean.editAllowed and newsAdminBean.showEditor}">
-							</p:editor>
-							<p:inputTextarea rows="25" cols="100" value="#{newsAdminBean.htmlNewsContent}" rendered="#{newsAdminBean.editAllowed and !newsAdminBean.showEditor}"/>
-							<p:commandButton value="Edit Raw HTML" update=":adminNewsForm" actionListener="#{newsAdminBean.editRawHtml}" styleClass="ui-priority-primary"
-							rendered="#{newsAdminBean.editAllowed and newsAdminBean.showEditor}" >
-								</p:commandButton>  
-							<p:commandButton value="Edit Text" update=":adminNewsForm" actionListener="#{newsAdminBean.editText}" styleClass="ui-priority-primary"
-							rendered="#{newsAdminBean.editAllowed and !newsAdminBean.showEditor}" >
-								</p:commandButton>  
-								</p:outputPanel>
+								<p:outputLabel value="#{newsAdminBean.selectedNews.content}" escape="false" rendered="#{!newsAdminBean.editAllowed}" />
+								<p:editor id="editor" value="#{newsAdminBean.selectedNews.content}" width="600" height="500" rendered="#{newsAdminBean.editAllowed and newsAdminBean.showEditor}">
+								</p:editor>
+								<p:inputTextarea rows="25" cols="100" value="#{newsAdminBean.htmlNewsContent}" rendered="#{newsAdminBean.editAllowed and !newsAdminBean.showEditor}" />
+								<p:commandButton value="Edit Raw HTML" update=":adminNewsForm" actionListener="#{newsAdminBean.editRawHtml}" styleClass="ui-priority-primary"
+									rendered="#{newsAdminBean.editAllowed and newsAdminBean.showEditor}">
+								</p:commandButton>
+								<p:commandButton value="Edit Text" update=":adminNewsForm" actionListener="#{newsAdminBean.editText}" styleClass="ui-priority-primary"
+									rendered="#{newsAdminBean.editAllowed and !newsAdminBean.showEditor}">
+								</p:commandButton>
+							</p:outputPanel>
 							<p:outputLabel value="Author"></p:outputLabel>
 							<p:inputText value="#{newsAdminBean.selectedNews.author}" disabled="#{!newsAdminBean.editAllowed}" />
 							<p:outputLabel value="Source"></p:outputLabel>
 							<p:inputText value="#{newsAdminBean.selectedNews.source}" disabled="#{!newsAdminBean.editAllowed}" />
 						</p:panelGrid>
 						<br></br>
+						<p:outputPanel id="filePanel">
+
+							<p:outputPanel rendered="#{newsAdminBean.showFileUpload}">
+							    <p:fileUpload fileUploadListener="#{newsAdminBean.handleFileUpload}" mode="advanced" fileLimit="100" multiple="true" update=":adminNewsForm:filePanel" allowTypes="/(\.|\/)(gif|jpe?g|png|pdf|doc)$/"/>
+								<br></br>
+								<p:dataTable id="listOfFiles" var="oneFile" value="#{newsAdminBean.newsFilesList}" emptyMessage="No Files" >
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Id" />
+										</f:facet>
+										<h:outputText value="#{oneFile.id}" />
+									</p:column>
+									<p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="File" />
+                                        </f:facet>
+                                        <h:outputText value="http://static.swarajabhiyan.org/#{oneFile.fileName}" />
+                                    </p:column>
+								</p:dataTable>
+								<br></br>
+							</p:outputPanel>
+						</p:outputPanel>
 						<p:outputPanel id="tweetPanel">
 							<p:outputPanel rendered="#{!newsAdminBean.showTweetList}">
 								<p:inputTextarea rows="5" cols="50" counter="counter" maxlength="140" counterTemplate="{0} characters remaining." value="#{newsAdminBean.selectedTweet.tweetContent}">
@@ -170,6 +192,8 @@
 
 							</p:outputPanel>
 
+
+
 							<p:dialog id="rejectionDialog" modal="true" header="Rejection Reason" widgetVar="rejectionDialogWidget" resizable="false">
 
 								<h:panelGrid columns="2" cellpadding="5" id="rejectionDialogPanelGrid">
@@ -184,11 +208,11 @@
 									</p:selectOneMenu>
 
 									<h:outputLabel value="" />
-									<p:inputText value="#{newsAdminBean.otherReason}" rendered="#{newsAdminBean.showOtherReasonTextBox}" id="otherReason" required="false"/>
+									<p:inputText value="#{newsAdminBean.otherReason}" rendered="#{newsAdminBean.showOtherReasonTextBox}" id="otherReason" required="false" />
 
 									<f:facet name="footer">
-										<p:commandButton id="finalRejectionButton" value="Reject" update=":adminNewsForm:mainPanel" actionListener="#{newsAdminBean.rejectPost}" 
-										oncomplete="rejectionDialogWidget.hide()" />
+										<p:commandButton id="finalRejectionButton" value="Reject" update=":adminNewsForm:mainPanel" actionListener="#{newsAdminBean.rejectPost}"
+											oncomplete="rejectionDialogWidget.hide()" />
 									</f:facet>
 								</h:panelGrid>
 

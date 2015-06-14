@@ -6,6 +6,7 @@ import java.util.Set;
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.ContentTweet;
 import com.aristotle.core.persistance.News;
+import com.aristotle.core.persistance.UploadedFile;
 
 public interface NewsService {
 
@@ -28,5 +29,9 @@ public interface NewsService {
     List<News> getAllLocationPublishedNews(Set<Long> locationIds, int pageNumber, int pageSize) throws AppException;
 
     List<ContentTweet> getNewsContentTweets(Long newsId) throws AppException;
+
+    UploadedFile saveNewsUploadedFile(Long newsId, String filePathAndName, long fileSize, String type) throws AppException;
+
+    List<UploadedFile> getNewsUploadedFiles(Long newsId) throws AppException;
 
 }

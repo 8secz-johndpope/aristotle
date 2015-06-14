@@ -36,15 +36,15 @@ public abstract class LocationAwareDataPlugin extends AbstractDataPlugin {
     @Override
     public final void applyPlugin(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView mv) {
         logger.info("Applying {} plugin", name);
-        // First get location from loggeed In User
-        Set<Long> loggedInUserLocations = httpSessionUtil.getLoggedInUserLocations(httpServletRequest);
-        // if user location not found then deriveit from domain
+        // First get location from Domain
+        Set<Long> loggedInUserLocations = new HashSet<Long>();
+        Long domainLocation = uiTemplateManager.getDomainLocation(httpServletRequest);
+        if (domainLocation != null) {
+            loggedInUserLocations.add(domainLocation);
+        }
+        // if user location not found then deriveit from user session/cookies
         if (loggedInUserLocations == null || loggedInUserLocations.isEmpty()) {
-            Long domainLocation = uiTemplateManager.getDomainLocation(httpServletRequest);
-            if(domainLocation != null){
-                loggedInUserLocations = new HashSet<Long>(1, 1);
-                loggedInUserLocations.add(domainLocation);
-            }
+            loggedInUserLocations = httpSessionUtil.getLoggedInUserLocations(httpServletRequest);
         }
         applyPluginForLocation(httpServletRequest, httpServletResponse, mv, loggedInUserLocations);
     }

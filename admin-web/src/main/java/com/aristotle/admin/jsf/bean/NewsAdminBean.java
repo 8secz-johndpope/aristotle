@@ -5,7 +5,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+
+import org.primefaces.event.FileUploadEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
@@ -16,6 +21,7 @@ import com.aristotle.core.enums.ContentStatus;
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.ContentTweet;
 import com.aristotle.core.persistance.News;
+import com.aristotle.core.persistance.UploadedFile;
 import com.aristotle.core.service.NewsService;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
@@ -36,6 +42,7 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 	
 	private boolean showList = true;
     private List<ContentTweet> tweetList;
+    private List<UploadedFile> newsFilesList;
     private ContentTweet selectedTweet;
 	private boolean newTweet = false;
 	private boolean showTweetList = true;
@@ -43,7 +50,15 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 	private boolean showOtherReasonTextBox;
 	private String htmlNewsContent;
 	private boolean showEditor;
-	
+
+    @Value("${static_data_env:dev}")
+    private String staticDataEnv;
+
+    @Value("${aws_access_key}")
+    private String awsKey;
+    @Value("${aws_access_secret}")
+    private String awsSecret;
+
     private List<News> newsList;
 	public NewsAdminBean(){
 		super("/admin/news", AppPermission.CREATE_NEWS,AppPermission.UPDATE_NEWS, AppPermission.DELETE_NEWS, AppPermission.APPROVE_NEWS);
@@ -100,10 +115,33 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 		showList = false;
         try {
             tweetList = newsService.getNewsContentTweets(selectedNews.getId());
+            newsFilesList = newsService.getNewsUploadedFiles(selectedNews.getId());
         } catch (AppException e) {
             sendErrorMessageToJsfScreen(e);
         }
 	}
+
+    private String getFileType(String fileName) {
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
+    }
+    public void handleFileUpload(FileUploadEvent event) {
+        System.out.println("Uploading File");
+        String remoteFileName = "content/news/" + staticDataEnv + "/" + selectedNews.getId() + "/" + event.getFile().getFileName();
+        String bucketName = "static.swarajabhiyan.org";
+        System.out.println("remoteFileName = " + remoteFileName);
+        try {
+            awsFileManager.uploadFileToS3(awsKey, awsSecret, bucketName, remoteFileName, event.getFile().getInputstream());
+            System.out.println("File uploaded = " + remoteFileName);
+            newsService.saveNewsUploadedFile(selectedNews.getId(), remoteFileName, event.getFile().getSize(), getFileType(event.getFile().getFileName()));
+            FacesMessage message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            newsFilesList = newsService.getNewsUploadedFiles(selectedNews.getId());
+        } catch (Exception ex) {
+            logger.error("Unable to upload File", ex);
+            FacesMessage message = new FacesMessage("Failed", event.getFile().getFileName() + " is failed to uploaded.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
+    }
 	public boolean isSaveDraft(){
         return menuBean.isEditNewsAllowed();
 	}
@@ -306,6 +344,21 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 	public void setShowEditor(boolean showEditor) {
 		this.showEditor = showEditor;
 	}
+
+    public boolean isShowFileUpload() {
+        if (selectedNews == null || selectedNews.getId() == null || selectedNews.getId() <= 0) {
+            return false;
+        }
+        return true;
+    }
+
+    public List<UploadedFile> getNewsFilesList() {
+        return newsFilesList;
+    }
+
+    public void setNewsFilesList(List<UploadedFile> newsFilesList) {
+        this.newsFilesList = newsFilesList;
+    }
 
 
 }

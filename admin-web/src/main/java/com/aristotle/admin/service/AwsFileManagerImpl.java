@@ -104,6 +104,12 @@ public class AwsFileManagerImpl implements AwsFileManager {
         if (fileName.endsWith(".gif")) {
             return "image/gif";
         }
+        if (fileName.endsWith(".pdf")) {
+            return "application/pdf";
+        }
+        if (fileName.endsWith(".doc") || fileName.endsWith(".docx")) {
+            return "application/msword";
+        }
 
         return null;
     }

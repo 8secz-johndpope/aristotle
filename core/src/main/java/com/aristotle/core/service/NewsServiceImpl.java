@@ -1,5 +1,7 @@
 package com.aristotle.core.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -15,8 +17,10 @@ import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.ContentTweet;
 import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.News;
+import com.aristotle.core.persistance.UploadedFile;
 import com.aristotle.core.persistance.repo.LocationRepository;
 import com.aristotle.core.persistance.repo.NewsRepository;
+import com.aristotle.core.persistance.repo.UploadedFileRepository;
 
 @Service
 public class NewsServiceImpl implements NewsService {
@@ -26,6 +30,9 @@ public class NewsServiceImpl implements NewsService {
 
     @Autowired
     private LocationRepository locationRepository;
+
+    @Autowired
+    private UploadedFileRepository uploadedFileRepository;
 
     @Override
     public News publishNews(Long newsId) {
@@ -104,6 +111,34 @@ public class NewsServiceImpl implements NewsService {
             return newsRepository.getGlobalPublishdNews(pageable);
         }
         return newsRepository.getLocationPublishedNews(locationIds, pageable);
+    }
+
+    @Override
+    public UploadedFile saveNewsUploadedFile(Long newsId, String filePathAndName, long fileSize, String type) throws AppException {
+        News news = newsRepository.findOne(newsId);
+        filePathAndName = filePathAndName.toLowerCase();
+        UploadedFile uploadedFile = uploadedFileRepository.getUploadedFileByFileName(filePathAndName);
+        if (uploadedFile == null) {
+            uploadedFile = new UploadedFile();
+            uploadedFile.setFileName(filePathAndName);
+        }
+        uploadedFile.setSize(fileSize);
+        uploadedFile.setFileType(type);
+        uploadedFile = uploadedFileRepository.save(uploadedFile);
+        if (news.getFiles() == null) {
+            news.setFiles(new HashSet<UploadedFile>());
+        }
+        news.getFiles().add(uploadedFile);
+        return uploadedFile;
+    }
+
+    @Override
+    public List<UploadedFile> getNewsUploadedFiles(Long newsId) throws AppException {
+        News news = newsRepository.findOne(newsId);
+        if (news.getFiles() == null) {
+            return Collections.emptyList();
+        }
+        return new ArrayList<UploadedFile>(news.getFiles());
     }
 
 }

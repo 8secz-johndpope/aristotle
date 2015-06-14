@@ -25,6 +25,7 @@ public class EmailManagerImpl implements EmailManager {
 
     @Override
     public void sendEmail(String toEmail, String fromName, String fromEmail, String subjectStr, String bodyStr, String htmlContent) throws AppException {
+        System.out.println("Sending Email to " + toEmail + ", from : " + fromEmail + " with Subject " + subjectStr);
         // Construct an object to contain the recipient address.
         Destination destination = new Destination().withToAddresses(new String[] { toEmail });
 
