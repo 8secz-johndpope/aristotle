@@ -165,32 +165,36 @@ public class UserPlugin extends LocationAwareDataPlugin {
     private void addVolunteerOptions(JsonObject context, User user) throws AppException {
         List<InterestGroup> interestGroups = appService.getAllInterests();
         Volunteer volunteer = appService.getVolunteerDataForUser(user.getId());
-        if (volunteer == null) {
-            return;
-        }
-        context.addProperty("knowExistingMember", volunteer.isKnowExistingMember());
-        context.addProperty("pastVolunteer", volunteer.isPastVolunteer());
-        context.addProperty("domainExpertise", volunteer.getDomainExpertise());
-        context.addProperty("education", volunteer.getEducation());
-        context.addProperty("emergencyContactName", volunteer.getEmergencyContactName());
-        context.addProperty("emergencyContactNo", volunteer.getEmergencyContactNo());
-        context.addProperty("emergencyContactCountryCode", volunteer.getEmergencyContactCountryCode());
-        context.addProperty("emergencyContactCountryIso2", volunteer.getEmergencyContactCountryIso2());
-        context.addProperty("emergencyContactRelation", volunteer.getEmergencyContactRelation());
-        context.addProperty("existingMemberCountryCode", volunteer.getExistingMemberCountryCode());
-        context.addProperty("existingMemberCountryIso2", volunteer.getExistingMemberCountryIso2());
-        context.addProperty("existingMemberEmail", volunteer.getExistingMemberEmail());
-        context.addProperty("existingMemberMobile", volunteer.getExistingMemberMobile());
-        context.addProperty("existingMemberName", volunteer.getExistingMemberName());
-        context.addProperty("offences", volunteer.getOffences());
-        context.addProperty("pastOrganisation", volunteer.getPastOrganisation());
-        context.addProperty("professionalBackground", volunteer.getProfessionalBackground());
+
         Set<Long> userIntrests = new HashSet<Long>();
-        if (volunteer.getInterests() != null) {
-            for (Interest oneInterest : volunteer.getInterests()) {
-                userIntrests.add(oneInterest.getId());
+        if (volunteer == null) {
+
+        } else {
+            context.addProperty("knowExistingMember", volunteer.isKnowExistingMember());
+            context.addProperty("pastVolunteer", volunteer.isPastVolunteer());
+            context.addProperty("domainExpertise", volunteer.getDomainExpertise());
+            context.addProperty("education", volunteer.getEducation());
+            context.addProperty("emergencyContactName", volunteer.getEmergencyContactName());
+            context.addProperty("emergencyContactNo", volunteer.getEmergencyContactNo());
+            context.addProperty("emergencyContactCountryCode", volunteer.getEmergencyContactCountryCode());
+            context.addProperty("emergencyContactCountryIso2", volunteer.getEmergencyContactCountryIso2());
+            context.addProperty("emergencyContactRelation", volunteer.getEmergencyContactRelation());
+            context.addProperty("existingMemberCountryCode", volunteer.getExistingMemberCountryCode());
+            context.addProperty("existingMemberCountryIso2", volunteer.getExistingMemberCountryIso2());
+            context.addProperty("existingMemberEmail", volunteer.getExistingMemberEmail());
+            context.addProperty("existingMemberMobile", volunteer.getExistingMemberMobile());
+            context.addProperty("existingMemberName", volunteer.getExistingMemberName());
+            context.addProperty("offences", volunteer.getOffences());
+            context.addProperty("pastOrganisation", volunteer.getPastOrganisation());
+            context.addProperty("professionalBackground", volunteer.getProfessionalBackground());
+
+            if (volunteer.getInterests() != null) {
+                for (Interest oneInterest : volunteer.getInterests()) {
+                    userIntrests.add(oneInterest.getId());
+                }
             }
         }
+
 
         int rowSize = 3;
         JsonArray interestGroupJsonArray = new JsonArray();
