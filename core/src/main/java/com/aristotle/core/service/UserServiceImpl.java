@@ -548,7 +548,7 @@ public class UserServiceImpl implements UserService {
             loginAccount = loginAccountRepository.save(loginAccount);
             sendLoginAccountDetails(loginAccount, password);
         } else {
-            sendLoginAccountDetails(loginAccount, "");
+            throw new AppException("Login Account already Exists");
         }
 
 
