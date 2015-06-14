@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +25,7 @@ import com.aristotle.core.persistance.repo.NewsRepository;
 import com.aristotle.core.persistance.repo.UploadedFileRepository;
 
 @Service
+@Transactional
 public class NewsServiceImpl implements NewsService {
 
     @Autowired
