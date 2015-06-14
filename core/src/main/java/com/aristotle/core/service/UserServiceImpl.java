@@ -15,6 +15,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -66,6 +67,8 @@ public class UserServiceImpl implements UserService {
     private PasswordUtil passwordUtil;
     @Autowired
     private LoginAccountRepository loginAccountRepository;
+    @Value("${registration_mail_id}")
+    private String regsitrationEmailId;
 
     private final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
@@ -606,7 +609,7 @@ public class UserServiceImpl implements UserService {
         String contentWithOutHtml = sb.toString();
         contentWithOutHtml = contentWithOutHtml.replaceAll("<br>", "\n");
         contentWithOutHtml = contentWithOutHtml.replaceAll("\\<[^>]*>", "");
-        emailManager.sendEmail(loginAccount.getEmail(), "Registration", "mailer@swarajabhiyan.co.in", "Your Swaraj Abhiyan Account is ready", contentWithOutHtml, sb.toString());
+        emailManager.sendEmail(loginAccount.getEmail(), "Registration", regsitrationEmailId, "Your Swaraj Abhiyan Account is ready", contentWithOutHtml, sb.toString());
 
     }
 
