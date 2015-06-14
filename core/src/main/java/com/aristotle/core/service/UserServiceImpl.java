@@ -586,6 +586,9 @@ public class UserServiceImpl implements UserService {
         sb.append("password  : " + password);
         sb.append("</p><br>");
         sb.append("<br>");
+        sb.append("<br>");
+        sb.append("<p><b>Once Loged in, please visit 'My Account' Section from top of the page and make sure your details are updated correctly.</b></p>");
+        sb.append("<br>");
         sb.append("<br>Thanks");
         sb.append("<br>Swaraj Abhiyan Team ");
         sb.append("<br><br>++++++++++++++++++++++++++++");
