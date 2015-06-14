@@ -525,10 +525,30 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    private void generateLoginAccountsForAllEmail() {
+        List<Email> emails = emailRepository.findAll();
+        int totalFailed = 0;
+        int totalSuccess = 0;
+        for (Email oneEmail : emails) {
+            try {
+                generateUserLoginAccount(oneEmail.getEmail());
+                totalSuccess++;
+            } catch (Exception ex) {
+                totalFailed++;
+                ex.printStackTrace();
+            }
+        }
+        System.out.println("Total Success : " + totalSuccess);
+        System.out.println("Total Failed : " + totalFailed);
+    }
     final String RANDOM_CHAR = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     final Random random = new Random();
     @Override
     public void generateUserLoginAccount(String emailId) throws AppException {
+        if ("all".equals(emailId)) {
+            generateLoginAccountsForAllEmail();
+            return;
+        }
         Email email = emailRepository.getEmailByEmailUp(emailId.toUpperCase());
         if (email == null) {
             throw new AppException("Email Is not registered");
