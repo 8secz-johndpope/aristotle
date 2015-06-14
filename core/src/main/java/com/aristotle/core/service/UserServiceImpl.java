@@ -561,10 +561,24 @@ public class UserServiceImpl implements UserService {
         sb.append("<br>");
         sb.append("<p>Your account at <a href=\"http://www.swarajabhiyan.org\">www.swarajabhiyan.org</a> is ready to use. Click on Sign in at the top of the page and enter following details.");
         sb.append("<br>");
-        sb.append("<p>user name : " + loginAccount.getUserName());
+        sb.append("user name : " + loginAccount.getUserName());
         sb.append("<br>");
-        sb.append("<p>password  : " + password);
+        sb.append("password  : " + password);
         sb.append("</p><br>");
+        sb.append("<br>");
+        sb.append("<br>Thanks");
+        sb.append("<br>Swaraj Abhiyan Team ");
+        sb.append("<br><br>++++++++++++++++++++++++++++");
+        sb.append("<br>Website : www.swarajabhiyan.org");
+        sb.append("<br>Email Id: contact@swarajabhiyan.org");
+        sb.append("<br>Helpline no : +91-7210222333");
+        sb.append("<br>Twitter Handle : https://twitter.com/swaraj_abhiyan");
+        sb.append("<br>Facebook Pages : https://www.facebook.com/swarajabhiyan");
+        sb.append("<br>Facebook group : https://www.facebook.com/groups/swarajabhiyan/");
+        sb.append("<br>Volunteer Registration : http://www.swarajabhiyan.org/register");
+        sb.append("<br>Swaraj Abhiyan Channel https://www.youtube.com/watch?t=44&v=RYDDsO5tHZY");
+        sb.append("<br>Head Office : A-189, Sec-43, Noida UP");
+         
         // now send Email
         String contentWithOutHtml = sb.toString();
         contentWithOutHtml = contentWithOutHtml.replaceAll("<br>", "\n");
