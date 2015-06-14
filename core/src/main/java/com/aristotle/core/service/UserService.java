@@ -39,4 +39,6 @@ public interface UserService {
     void updatePersonalDetails(Long userId, UserPersonalDetailBean userPersonalDetailBean) throws AppException;
 
     void updateVolunteerDetails(Long userId, UserVolunteerBean userVolunteerBean) throws AppException;
+
+    void generateUserLoginAccount(String email) throws AppException;
 }

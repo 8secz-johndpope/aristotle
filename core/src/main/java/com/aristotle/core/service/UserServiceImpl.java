@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -74,6 +75,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PhoneRepository phoneRepository;
+
+    @Autowired
+    private EmailManager emailManager;
 
     @Override
     public List<UserSearchResult> searchUsers(SearchUser searchUser) throws AppException {
@@ -519,6 +523,59 @@ public class UserServiceImpl implements UserService {
         }
         volunteer = volunteerRepository.save(volunteer);
 
+    }
+
+    final String RANDOM_CHAR = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    final Random random = new Random();
+    @Override
+    public void generateUserLoginAccount(String emailId) throws AppException {
+        Email email = emailRepository.getEmailByEmailUp(emailId.toUpperCase());
+        if (email == null) {
+            throw new AppException("Email Is not registered");
+        }
+        User user = email.getUser();
+        if (user == null) {
+            throw new AppException("Email(user) Is not registered");
+        }
+        LoginAccount loginAccount = loginAccountRepository.getLoginAccountByUserId(user.getId());
+        if (loginAccount == null) {
+            loginAccount = new LoginAccount();
+            loginAccount.setEmail(emailId.toLowerCase());
+            String password = generateRandompassword();
+            loginAccount.setPassword(passwordUtil.encryptPassword(password));
+            loginAccount.setUser(user);
+            loginAccount.setUserName(emailId.toLowerCase());
+            loginAccount = loginAccountRepository.save(loginAccount);
+            sendLoginAccountDetails(loginAccount, password);
+        } else {
+            sendLoginAccountDetails(loginAccount, "");
+        }
+
+
+    }
+
+
+    private void sendLoginAccountDetails(LoginAccount loginAccount, String password) throws AppException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Hello " + loginAccount.getUser().getName());
+        sb.append("<br>");
+        sb.append("<p>Your account at <a href=\"http://www.swarajabhiyan.org\">www.swarajabhiyan.org</a> is ready to use. Click on Sign in at the top of the page and enter following details.");
+        sb.append("<br>");
+        sb.append("<p>user name : " + loginAccount.getUserName());
+        sb.append("<br>");
+        sb.append("<p>password  : " + password);
+        sb.append("</p><br>");
+        // now send Email
+        emailManager.sendEmail(loginAccount.getEmail(), "Registration", "ping2ravi@gmail.com", "Your Swaraj Abhiyan Account is ready", "", "");
+
+    }
+
+    private String generateRandompassword() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 8; i++) {
+            sb.append(RANDOM_CHAR.charAt(random.nextInt(RANDOM_CHAR.length())));
+        }
+        return sb.toString();
     }
 
 }

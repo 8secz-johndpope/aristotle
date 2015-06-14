@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.aristotle.core.exception.AppException;
+import com.aristotle.core.service.UserService;
 import com.aristotle.core.service.VideoDownloader;
 import com.aristotle.core.service.temp.LocationUpgradeService;
 import com.aristotle.web.plugin.PluginManager;
@@ -32,6 +33,9 @@ public class SetupController {
 
     @Autowired
     private VideoDownloader videoDownloader;
+
+    @Autowired
+    private UserService userService;
 
     @ExceptionHandler({ Exception.class })
     public String handleException(Exception ex) {
@@ -105,6 +109,23 @@ public class SetupController {
         String result = template.apply("Handlebars.java");
         return result;
 
+    }
+
+    @RequestMapping("/admin/sendemail")
+    @ResponseBody
+    public String sendUserAccountEmail(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
+        String email = httpServletRequest.getParameter("email");
+        if (email == null) {
+            return "Emai is required";
+        }
+        try {
+            userService.generateUserLoginAccount(email);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ex.getMessage();
+        }
+
+        return "done";
     }
 
 }
