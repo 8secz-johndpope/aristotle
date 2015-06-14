@@ -103,7 +103,6 @@ public class SetupController {
         Template template = handlebars.compileInline("Hello {{this}}!");
 
         String result = template.apply("Handlebars.java");
-        System.out.println(result);
         return result;
 
     }

@@ -31,6 +31,10 @@ public class Volunteer extends BaseEntity {
 	private String emergencyContactRelation;
 	@Column(name = "emergency_contact_no")
 	private String emergencyContactNo;
+    @Column(name = "emergency_contact_no_country_code")
+    private String emergencyContactCountryCode;
+    @Column(name = "emergency_contact_no_country_iso2")
+    private String emergencyContactCountryIso2;
 	@Column(name = "info_recorded_by")
 	private String infoRecordedBy;
 	@Column(name = "info_recorded_at")
@@ -41,8 +45,6 @@ public class Volunteer extends BaseEntity {
     private String pastOrganisation;
     @Column(name = "know_existing_member")
     private boolean knowExistingMember;
-    @Column(name = "existingMember", length = 256)
-    private String existingMember;
     @Column(name = "existing_member_name", length = 64)
     private String existingMemberName;
     @Column(name = "existing_member_email", length = 64)
@@ -51,6 +53,8 @@ public class Volunteer extends BaseEntity {
     private String existingMemberMobile;
     @Column(name = "existing_member_country_code", length = 8)
     private String existingMemberCountryCode;
+    @Column(name = "existing_member_country_iso2", length = 8)
+    private String existingMemberCountryIso2;
 
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="user_id")
@@ -89,14 +93,16 @@ public class Volunteer extends BaseEntity {
     public Date getDateCreated() {
 		return dateCreated;
 	}
-	public void setDateCreated(Date dateCreated) {
+	@Override
+    public void setDateCreated(Date dateCreated) {
 		this.dateCreated = dateCreated;
 	}
 	@Override
     public Date getDateModified() {
 		return dateModified;
 	}
-	public void setDateModified(Date dateModified) {
+	@Override
+    public void setDateModified(Date dateModified) {
 		this.dateModified = dateModified;
 	}
 	@Override
@@ -210,14 +216,6 @@ public class Volunteer extends BaseEntity {
         this.knowExistingMember = knowExistingMember;
     }
 
-    public String getExistingMember() {
-        return existingMember;
-    }
-
-    public void setExistingMember(String existingMember) {
-        this.existingMember = existingMember;
-    }
-
     public String getExistingMemberName() {
         return existingMemberName;
     }
@@ -248,6 +246,30 @@ public class Volunteer extends BaseEntity {
 
     public void setExistingMemberCountryCode(String existingMemberCountryCode) {
         this.existingMemberCountryCode = existingMemberCountryCode;
+    }
+
+    public String getEmergencyContactCountryCode() {
+        return emergencyContactCountryCode;
+    }
+
+    public void setEmergencyContactCountryCode(String emergencyContactCountryCode) {
+        this.emergencyContactCountryCode = emergencyContactCountryCode;
+    }
+
+    public String getEmergencyContactCountryIso2() {
+        return emergencyContactCountryIso2;
+    }
+
+    public void setEmergencyContactCountryIso2(String emergencyContactCountryIso2) {
+        this.emergencyContactCountryIso2 = emergencyContactCountryIso2;
+    }
+
+    public String getExistingMemberCountryIso2() {
+        return existingMemberCountryIso2;
+    }
+
+    public void setExistingMemberCountryIso2(String existingMemberCountryIso2) {
+        this.existingMemberCountryIso2 = existingMemberCountryIso2;
     }
     @Override
     public String toString() {

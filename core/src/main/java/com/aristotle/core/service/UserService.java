@@ -10,6 +10,7 @@ import com.aristotle.core.service.dto.UserContactBean;
 import com.aristotle.core.service.dto.UserPersonalDetailBean;
 import com.aristotle.core.service.dto.UserRegisterBean;
 import com.aristotle.core.service.dto.UserSearchResult;
+import com.aristotle.core.service.dto.UserVolunteerBean;
 
 public interface UserService {
 
@@ -36,4 +37,6 @@ public interface UserService {
     void changePassword(Long userId, String oldPassword, String newPassword) throws AppException;
     
     void updatePersonalDetails(Long userId, UserPersonalDetailBean userPersonalDetailBean) throws AppException;
+
+    void updateVolunteerDetails(Long userId, UserVolunteerBean userVolunteerBean) throws AppException;
 }

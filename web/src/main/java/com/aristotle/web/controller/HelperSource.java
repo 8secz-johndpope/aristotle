@@ -8,7 +8,6 @@ public class HelperSource {
         if (trimLength == null) {
             trimLength = 150;
         }
-        System.out.println("Checking Params " + content + ", " + trimLength);
         if (content.length() > trimLength) {
             return content.substring(0, trimLength);
         }

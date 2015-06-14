@@ -15,9 +15,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.aristotle.core.exception.AppException;
+import com.aristotle.core.persistance.Interest;
+import com.aristotle.core.persistance.InterestGroup;
 import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.UserLocation;
+import com.aristotle.core.persistance.Volunteer;
+import com.aristotle.core.service.AppService;
 import com.aristotle.core.service.LocationService;
 import com.aristotle.core.service.NewsService;
 import com.aristotle.core.service.UserService;
@@ -25,6 +29,7 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -37,6 +42,9 @@ public class UserPlugin extends LocationAwareDataPlugin {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AppService appService;
 
     @Autowired
     private LocationService locationService;
@@ -117,6 +125,7 @@ public class UserPlugin extends LocationAwareDataPlugin {
             if (user != null) {
                 User dbUser = userService.getUserById(user.getId());
                 JsonObject userJsonObject = convertUserFull(dbUser);
+                addVolunteerOptions(userJsonObject, dbUser);
                 context.add(name, userJsonObject);
             }
         } catch (Exception ex) {
@@ -136,21 +145,91 @@ public class UserPlugin extends LocationAwareDataPlugin {
         jsonObject.addProperty("motherName", user.getMotherName());
         jsonObject.addProperty("passportNumber", user.getPassportNumber());
         jsonObject.addProperty("profilePic", user.getProfilePic());
+        jsonObject.addProperty("nri", user.isNri());
+        jsonObject.addProperty("volunteer", user.isVolunteer());
+
         if (user.getDateOfBirth() != null) {
             jsonObject.addProperty("dateOfBirth", ddMMyyyyFormat.format(user.getDateOfBirth()));
         }
 
         addGenderOptions(jsonObject, user);
         addIdentityTypeOptions(jsonObject, user);
+        try {
+            addLocations(jsonObject, user);
+        } catch (AppException e) {
+            e.printStackTrace();
+        }
         return jsonObject;
     }
 
-    private void addLocations(JsonObject jsonObject, User user) throws AppException {
-        List<UserLocation> userLocations = userService.getUserLocations(user.getId());
-        if (userLocations == null || userLocations.isEmpty()) {
-            // then just load State or Country(if NRI)
+    private void addVolunteerOptions(JsonObject context, User user) throws AppException {
+        List<InterestGroup> interestGroups = appService.getAllInterests();
+        Volunteer volunteer = appService.getVolunteerDataForUser(user.getId());
+        if (volunteer == null) {
             return;
         }
+        context.addProperty("knowExistingMember", volunteer.isKnowExistingMember());
+        context.addProperty("pastVolunteer", volunteer.isPastVolunteer());
+        context.addProperty("domainExpertise", volunteer.getDomainExpertise());
+        context.addProperty("education", volunteer.getEducation());
+        context.addProperty("emergencyContactName", volunteer.getEmergencyContactName());
+        context.addProperty("emergencyContactNo", volunteer.getEmergencyContactNo());
+        context.addProperty("emergencyContactCountryCode", volunteer.getEmergencyContactCountryCode());
+        context.addProperty("emergencyContactCountryIso2", volunteer.getEmergencyContactCountryIso2());
+        context.addProperty("emergencyContactRelation", volunteer.getEmergencyContactRelation());
+        context.addProperty("existingMemberCountryCode", volunteer.getExistingMemberCountryCode());
+        context.addProperty("existingMemberCountryIso2", volunteer.getExistingMemberCountryIso2());
+        context.addProperty("existingMemberEmail", volunteer.getExistingMemberEmail());
+        context.addProperty("existingMemberMobile", volunteer.getExistingMemberMobile());
+        context.addProperty("existingMemberName", volunteer.getExistingMemberName());
+        context.addProperty("offences", volunteer.getOffences());
+        context.addProperty("pastOrganisation", volunteer.getPastOrganisation());
+        context.addProperty("professionalBackground", volunteer.getProfessionalBackground());
+        Set<Long> userIntrests = new HashSet<Long>();
+        if (volunteer.getInterests() != null) {
+            for (Interest oneInterest : volunteer.getInterests()) {
+                userIntrests.add(oneInterest.getId());
+            }
+        }
+
+        int rowSize = 3;
+        JsonArray interestGroupJsonArray = new JsonArray();
+        for (InterestGroup oneInterestGroup : interestGroups) {
+            JsonObject oneInterestGroupJsonObject = new JsonObject();
+            oneInterestGroupJsonObject.addProperty("description", oneInterestGroup.getDescription());
+            JsonArray interestJsonArray = new JsonArray();
+            JsonArray interestRowJsonArray = new JsonArray();
+            int count = 0;
+            if ("Can volunteer for: (Click all that apply)".equals(oneInterestGroup.getDescription())) {
+                rowSize = 2;
+            } else {
+                rowSize = 3;
+            }
+            for (Interest oneInterest : oneInterestGroup.getInterests()) {
+                JsonObject oneInterestJsonObject = new JsonObject();
+                oneInterestJsonObject.addProperty("id", oneInterest.getId());
+                oneInterestJsonObject.addProperty("description", oneInterest.getDescription());
+                if (userIntrests.contains(oneInterest.getId())) {
+                    oneInterestJsonObject.addProperty("selected", true);
+                }
+
+                interestRowJsonArray.add(oneInterestJsonObject);
+                count++;
+                if (count % rowSize == 0) {
+                    interestJsonArray.add(interestRowJsonArray);
+                    interestRowJsonArray = new JsonArray();
+                }
+            }
+            oneInterestGroupJsonObject.add("interests", interestJsonArray);
+            interestGroupJsonArray.add(oneInterestGroupJsonObject);
+        }
+        context.add("userinterests", interestGroupJsonArray);
+
+    }
+
+    private void addLocations(JsonObject jsonObject, User user) throws AppException {
+        System.out.println("Adding Locations");
+        List<UserLocation> userLocations = userService.getUserLocations(user.getId());
 
         Long selectedCountry = getSelectedLocation(userLocations, "Country", "Living");
         Long selectedCountryRegion = getSelectedLocation(userLocations, "CountryRegion", "Living");
@@ -163,6 +242,18 @@ public class UserPlugin extends LocationAwareDataPlugin {
         Long selectedVotingPc = getSelectedLocation(userLocations, "ParliamentConstituency", "Voting");
         Long selectedVotingAc = getSelectedLocation(userLocations, "AssemblyConstituency", "Voting");
         Long selectedVotingDistrict = getSelectedLocation(userLocations, "District", "Voting");
+
+        System.out.println("selectedCountry=" + selectedCountry);
+        System.out.println("selectedCountryRegion=" + selectedCountryRegion);
+        System.out.println("selectedCountryRegionArea=" + selectedCountryRegionArea);
+        System.out.println("selectedLivingState=" + selectedLivingState);
+        System.out.println("selectedLivingPc=" + selectedLivingPc);
+        System.out.println("selectedLivingAc=" + selectedLivingAc);
+        System.out.println("selectedLivingDistrict=" + selectedLivingDistrict);
+        System.out.println("selectedVotingState=" + selectedVotingState);
+        System.out.println("selectedVotingPc=" + selectedVotingPc);
+        System.out.println("selectedVotingAc=" + selectedVotingAc);
+        System.out.println("selectedVotingDistrict=" + selectedVotingDistrict);
 
         addCountries(jsonObject, selectedCountry);
         addCountryRegions(jsonObject, "CountryRegions", selectedCountry, selectedCountryRegion);
@@ -242,7 +333,7 @@ public class UserPlugin extends LocationAwareDataPlugin {
     }
 
     private void addLocationOptions(JsonObject jsonObject, String name, List<Location> locations, Long selectedLocation) {
-        StringBuilder sb = new StringBuilder("<option value=\"0\">Select Country</option>");
+        StringBuilder sb = new StringBuilder("");
         for (Location oneLocation : locations) {
             if (selectedLocation != null && oneLocation.getId().equals(selectedLocation)) {
                 sb.append("<option selected=\"selected\" value=\"" + oneLocation.getId() + "\">" + oneLocation.getName() + "</option>");

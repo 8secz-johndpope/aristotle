@@ -45,6 +45,7 @@ import com.aristotle.core.service.dto.UserContactBean;
 import com.aristotle.core.service.dto.UserPersonalDetailBean;
 import com.aristotle.core.service.dto.UserRegisterBean;
 import com.aristotle.core.service.dto.UserSearchResult;
+import com.aristotle.core.service.dto.UserVolunteerBean;
 
 @Service
 @Transactional
@@ -430,8 +431,93 @@ public class UserServiceImpl implements UserService {
         user.setDateOfBirth(userPersonalDetailBean.getDateOfBirth());
         user.setFatherName(userPersonalDetailBean.getFatherName());
         user.setMotherName(userPersonalDetailBean.getMotherName());
+        user.setNri(userPersonalDetailBean.isNri());
+        updateLocations(user, userPersonalDetailBean);
 
         user = userRepository.save(user);
+
+    }
+
+    private void updateLocations(User user, UserPersonalDetailBean userPersonalDetailBean) {
+        updateUserLocation(user, "Living", "AssemblyConstituency", userPersonalDetailBean.getEditUserAssemblyConstituencyLivingId());
+        updateUserLocation(user, "Voting", "AssemblyConstituency", userPersonalDetailBean.getEditUserAssemblyConstituencyVotingId());
+        updateUserLocation(user, "Living", "ParliamentConstituency", userPersonalDetailBean.getEditUserParliamentConstituencyLivingId());
+        updateUserLocation(user, "Voting", "ParliamentConstituency", userPersonalDetailBean.getEditUserParliamentConstituencyVotingId());
+        updateUserLocation(user, "Living", "District", userPersonalDetailBean.getEditUserDistrictLivingId());
+        updateUserLocation(user, "Voting", "District", userPersonalDetailBean.getEditUserDistrictVotingId());
+        updateUserLocation(user, "Living", "State", userPersonalDetailBean.getEditUserStateLivingId());
+        updateUserLocation(user, "Voting", "State", userPersonalDetailBean.getEditUserStateVotingId());
+        updateUserLocation(user, "Living", "Country", userPersonalDetailBean.getEditUserNriCountryId());
+        updateUserLocation(user, "Living", "CountryRegion", userPersonalDetailBean.getEditUserNriCountryRegionId());
+        updateUserLocation(user, "Living", "CountryRegionArea", userPersonalDetailBean.getEditUserNriCountryRegionAreaId());
+    }
+    
+    private void updateUserLocation(User user, String userLocationType, String locationType, Long locationId) {
+        UserLocation userLocation = userLocationRepository.getUserLocationByUserIdAndLocationTypesAndUserLocationType(user.getId(), userLocationType, locationType);
+        if(locationId == null || locationId <= 0 ){
+            // delete User Location
+            if (userLocation != null) {
+                userLocationRepository.delete(userLocation);
+            }
+        } else {
+            Location location = locationRepository.findOne(locationId);
+            if (userLocation == null) {
+                userLocation = new UserLocation();
+                userLocation.setUser(user);
+                userLocation.setUserLocationType(userLocationType);
+                userLocation.setLocation(location);
+                userLocation = userLocationRepository.save(userLocation);
+            } else {
+                userLocation.setLocation(location);
+                userLocation = userLocationRepository.save(userLocation);
+            }
+        }
+    }
+
+    @Override
+    public void updateVolunteerDetails(Long userId, UserVolunteerBean userVolunteerBean) throws AppException {
+        User user = userRepository.findOne(userId);
+        if (!userVolunteerBean.isEditUserVolunteer()) {
+            user.setVolunteer(false);
+            return;
+        }
+
+        Volunteer volunteer = volunteerRepository.getVolunteersByUserId(userId);
+        if (volunteer == null) {
+            volunteer = new Volunteer();
+        }
+        volunteer.setDomainExpertise(userVolunteerBean.getEditUserDomainExpertise());
+        volunteer.setEducation(userVolunteerBean.getEditUserEducation());
+        volunteer.setEmergencyContactCountryCode(userVolunteerBean.getEditUserEmergencyContactCountryCode());
+        volunteer.setEmergencyContactCountryIso2(userVolunteerBean.getEditUserEmergencyContactCountryIso2());
+        volunteer.setEmergencyContactName(userVolunteerBean.getEditUserEmergencyContactName());
+        volunteer.setEmergencyContactNo(userVolunteerBean.getEditUserEmergencyContactNo());
+        volunteer.setEmergencyContactRelation(userVolunteerBean.getEditUserEmergencyContactRelation());
+        volunteer.setExistingMemberCountryCode(userVolunteerBean.getEditUserExistingMemberCountryCode());
+        volunteer.setExistingMemberCountryIso2(userVolunteerBean.getEditUserExistingMemberCountryIso2());
+        volunteer.setExistingMemberEmail(userVolunteerBean.getEditUserExistingMemberEmail());
+        volunteer.setExistingMemberMobile(userVolunteerBean.getEditUserExistingMemberMobile());
+        volunteer.setExistingMemberName(userVolunteerBean.getEditUserExistingMemberName());
+        volunteer.setOffences(userVolunteerBean.getEditUserOffences());
+        volunteer.setPastOrganisation(userVolunteerBean.getEditUserPastOrganisation());
+        volunteer.setProfessionalBackground(userVolunteerBean.getEditUserProfessionalBackground());
+
+            
+        if(volunteer.getInterests() == null){
+            volunteer.setInterests(new HashSet<Interest>());
+        } else {
+            volunteer.getInterests().clear();
+        }
+
+        if (userVolunteerBean.getEditUserInterests() != null) {
+            for (Long oneInterestId : userVolunteerBean.getEditUserInterests()) {
+                Interest oneInterest = interestRepository.findOne(oneInterestId);
+                if (oneInterest != null) {
+                    volunteer.getInterests().add(oneInterest);
+                }
+            }
+        }
+        volunteer = volunteerRepository.save(volunteer);
 
     }
 

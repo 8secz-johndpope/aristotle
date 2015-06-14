@@ -14,34 +14,27 @@ public class UserPersonalDetailBean {
 
     private boolean nri;
 
-    private Long nriCountryId;
+    private Long editUserNriCountryId;
 
-    private Long nriCountryRegionId;
+    private Long editUserNriCountryRegionId;
 
-    private Long nriCountryRegionAreaId;
+    private Long editUserNriCountryRegionAreaId;
 
-    private Long stateLivingId;
+    private Long editUserStateLivingId;
 
-    private Long districtLivingId;
+    private Long editUserDistrictLivingId;
 
-    private Long assemblyConstituencyLivingId;
+    private Long editUserAssemblyConstituencyLivingId;
 
-    private Long parliamentConstituencyLivingId;
+    private Long editUserParliamentConstituencyLivingId;
 
-    private Long stateVotingId;
+    private Long editUserStateVotingId;
 
-    private Long districtVotingId;
+    private Long editUserDistrictVotingId;
 
-    private Long assemblyConstituencyVotingId;
+    private Long editUserAssemblyConstituencyVotingId;
 
-    private Long parliamentConstituencyVotingId;
-
-    private String email;
-
-    private String countryCode;
-    private String mobileNumber;
-
-    private String passportNumber;
+    private Long editUserParliamentConstituencyVotingId;
 
     private String identityNumber;
 
@@ -83,124 +76,92 @@ public class UserPersonalDetailBean {
         this.nri = nri;
     }
 
-    public Long getNriCountryId() {
-        return nriCountryId;
+    public Long getEditUserNriCountryId() {
+        return editUserNriCountryId;
     }
 
-    public void setNriCountryId(Long nriCountryId) {
-        this.nriCountryId = nriCountryId;
+    public void setEditUserNriCountryId(Long editUserNriCountryId) {
+        this.editUserNriCountryId = editUserNriCountryId;
     }
 
-    public Long getNriCountryRegionId() {
-        return nriCountryRegionId;
+    public Long getEditUserNriCountryRegionId() {
+        return editUserNriCountryRegionId;
     }
 
-    public void setNriCountryRegionId(Long nriCountryRegionId) {
-        this.nriCountryRegionId = nriCountryRegionId;
+    public void setEditUserNriCountryRegionId(Long editUserNriCountryRegionId) {
+        this.editUserNriCountryRegionId = editUserNriCountryRegionId;
     }
 
-    public Long getNriCountryRegionAreaId() {
-        return nriCountryRegionAreaId;
+    public Long getEditUserNriCountryRegionAreaId() {
+        return editUserNriCountryRegionAreaId;
     }
 
-    public void setNriCountryRegionAreaId(Long nriCountryRegionAreaId) {
-        this.nriCountryRegionAreaId = nriCountryRegionAreaId;
+    public void setEditUserNriCountryRegionAreaId(Long editUserNriCountryRegionAreaId) {
+        this.editUserNriCountryRegionAreaId = editUserNriCountryRegionAreaId;
     }
 
-    public Long getStateLivingId() {
-        return stateLivingId;
+    public Long getEditUserStateLivingId() {
+        return editUserStateLivingId;
     }
 
-    public void setStateLivingId(Long stateLivingId) {
-        this.stateLivingId = stateLivingId;
+    public void setEditUserStateLivingId(Long editUserStateLivingId) {
+        this.editUserStateLivingId = editUserStateLivingId;
     }
 
-    public Long getDistrictLivingId() {
-        return districtLivingId;
+    public Long getEditUserDistrictLivingId() {
+        return editUserDistrictLivingId;
     }
 
-    public void setDistrictLivingId(Long districtLivingId) {
-        this.districtLivingId = districtLivingId;
+    public void setEditUserDistrictLivingId(Long editUserDistrictLivingId) {
+        this.editUserDistrictLivingId = editUserDistrictLivingId;
     }
 
-    public Long getAssemblyConstituencyLivingId() {
-        return assemblyConstituencyLivingId;
+    public Long getEditUserAssemblyConstituencyLivingId() {
+        return editUserAssemblyConstituencyLivingId;
     }
 
-    public void setAssemblyConstituencyLivingId(Long assemblyConstituencyLivingId) {
-        this.assemblyConstituencyLivingId = assemblyConstituencyLivingId;
+    public void setEditUserAssemblyConstituencyLivingId(Long editUserAssemblyConstituencyLivingId) {
+        this.editUserAssemblyConstituencyLivingId = editUserAssemblyConstituencyLivingId;
     }
 
-    public Long getParliamentConstituencyLivingId() {
-        return parliamentConstituencyLivingId;
+    public Long getEditUserParliamentConstituencyLivingId() {
+        return editUserParliamentConstituencyLivingId;
     }
 
-    public void setParliamentConstituencyLivingId(Long parliamentConstituencyLivingId) {
-        this.parliamentConstituencyLivingId = parliamentConstituencyLivingId;
+    public void setEditUserParliamentConstituencyLivingId(Long editUserParliamentConstituencyLivingId) {
+        this.editUserParliamentConstituencyLivingId = editUserParliamentConstituencyLivingId;
     }
 
-    public Long getStateVotingId() {
-        return stateVotingId;
+    public Long getEditUserStateVotingId() {
+        return editUserStateVotingId;
     }
 
-    public void setStateVotingId(Long stateVotingId) {
-        this.stateVotingId = stateVotingId;
+    public void setEditUserStateVotingId(Long editUserStateVotingId) {
+        this.editUserStateVotingId = editUserStateVotingId;
     }
 
-    public Long getDistrictVotingId() {
-        return districtVotingId;
+    public Long getEditUserDistrictVotingId() {
+        return editUserDistrictVotingId;
     }
 
-    public void setDistrictVotingId(Long districtVotingId) {
-        this.districtVotingId = districtVotingId;
+    public void setEditUserDistrictVotingId(Long editUserDistrictVotingId) {
+        this.editUserDistrictVotingId = editUserDistrictVotingId;
     }
 
-    public Long getAssemblyConstituencyVotingId() {
-        return assemblyConstituencyVotingId;
+    public Long getEditUserAssemblyConstituencyVotingId() {
+        return editUserAssemblyConstituencyVotingId;
     }
 
-    public void setAssemblyConstituencyVotingId(Long assemblyConstituencyVotingId) {
-        this.assemblyConstituencyVotingId = assemblyConstituencyVotingId;
+    public void setEditUserAssemblyConstituencyVotingId(Long editUserAssemblyConstituencyVotingId) {
+        this.editUserAssemblyConstituencyVotingId = editUserAssemblyConstituencyVotingId;
     }
 
-    public Long getParliamentConstituencyVotingId() {
-        return parliamentConstituencyVotingId;
+    public Long getEditUserParliamentConstituencyVotingId() {
+        return editUserParliamentConstituencyVotingId;
     }
 
-    public void setParliamentConstituencyVotingId(Long parliamentConstituencyVotingId) {
-        this.parliamentConstituencyVotingId = parliamentConstituencyVotingId;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getCountryCode() {
-        return countryCode;
-    }
-
-    public void setCountryCode(String countryCode) {
-        this.countryCode = countryCode;
-    }
-
-    public String getMobileNumber() {
-        return mobileNumber;
-    }
-
-    public void setMobileNumber(String mobileNumber) {
-        this.mobileNumber = mobileNumber;
-    }
-
-    public String getPassportNumber() {
-        return passportNumber;
-    }
-
-    public void setPassportNumber(String passportNumber) {
-        this.passportNumber = passportNumber;
+    public void setEditUserParliamentConstituencyVotingId(Long editUserParliamentConstituencyVotingId) {
+        this.editUserParliamentConstituencyVotingId = editUserParliamentConstituencyVotingId;
     }
 
     public String getIdentityNumber() {
@@ -233,6 +194,16 @@ public class UserPersonalDetailBean {
 
     public void setMotherName(String motherName) {
         this.motherName = motherName;
+    }
+
+    @Override
+    public String toString() {
+        return "UserPersonalDetailBean [name=" + name + ", gender=" + gender + ", dateOfBirth=" + dateOfBirth + ", nri=" + nri + ", editUserNriCountryId=" + editUserNriCountryId
+                + ", editUserNriCountryRegionId=" + editUserNriCountryRegionId + ", editUserNriCountryRegionAreaId=" + editUserNriCountryRegionAreaId + ", editUserStateLivingId="
+                + editUserStateLivingId + ", editUserDistrictLivingId=" + editUserDistrictLivingId + ", editUserAssemblyConstituencyLivingId=" + editUserAssemblyConstituencyLivingId
+                + ", editUserParliamentConstituencyLivingId=" + editUserParliamentConstituencyLivingId + ", editUserStateVotingId=" + editUserStateVotingId + ", editUserDistrictVotingId="
+                + editUserDistrictVotingId + ", editUserAssemblyConstituencyVotingId=" + editUserAssemblyConstituencyVotingId + ", editUserParliamentConstituencyVotingId="
+                + editUserParliamentConstituencyVotingId + ", identityNumber=" + identityNumber + ", identityType=" + identityType + ", fatherName=" + fatherName + ", motherName=" + motherName + "]";
     }
 
 }

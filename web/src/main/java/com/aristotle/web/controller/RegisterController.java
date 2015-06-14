@@ -30,6 +30,7 @@ import com.aristotle.core.service.dto.UserContactBean;
 import com.aristotle.core.service.dto.UserLoginBean;
 import com.aristotle.core.service.dto.UserPersonalDetailBean;
 import com.aristotle.core.service.dto.UserRegisterBean;
+import com.aristotle.core.service.dto.UserVolunteerBean;
 import com.google.gson.JsonObject;
 
 @Controller
@@ -241,12 +242,37 @@ public class RegisterController {
     @RequestMapping(value = "/js/personaldetail", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<String> updatePersonalDetail(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @RequestBody UserPersonalDetailBean userPersonalDetailBean) {
+        System.out.println("Saving : " + userPersonalDetailBean);
         HttpStatus httpStatus;
         JsonObject body = new JsonObject();
         try {
             User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
             userService.updatePersonalDetails(user.getId(), userPersonalDetailBean);
             httpStatus = HttpStatus.OK;
+            body.addProperty("message", "Personal Details updated Succesfully");
+        } catch (AppException e) {
+            body.addProperty("message", "Unable to save : " + e.getMessage());
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            e.printStackTrace();
+        } catch (Exception e) {
+            body.addProperty("message", "Unable to save");
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            e.printStackTrace();
+        }
+        ResponseEntity<String> returnDt = new ResponseEntity<String>(body.toString(), httpStatus);
+        return returnDt;
+
+    }
+
+    @RequestMapping(value = "/js/volunteerdetail", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> updateVolunteerDetail(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @RequestBody UserVolunteerBean userVolunteerBean) {
+        System.out.println("Saving : " + userVolunteerBean);
+        HttpStatus httpStatus = HttpStatus.OK;
+        JsonObject body = new JsonObject();
+        try {
+            User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
+            userService.updateVolunteerDetails(user.getId(), userVolunteerBean);
             body.addProperty("message", "Personal Details updated Succesfully");
         } catch (AppException e) {
             body.addProperty("message", "Unable to save : " + e.getMessage());
