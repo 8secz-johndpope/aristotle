@@ -103,6 +103,15 @@ public class ContentController {
         } catch (NotLoggedInException e) {
             e.printStackTrace();
         }
+        addCorsHeaders(httpServletResponse);
         return context.toString();
+    }
+
+    private void addCorsHeaders(HttpServletResponse httpServletResponse) {
+        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+        httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET");
+        httpServletResponse.setHeader("Access-Control-Max-Age", "3600");
+        httpServletResponse.setHeader("Access-Control-Allow-Headers", "x-requested-with");
+
     }
 }
