@@ -566,7 +566,7 @@ public class UserServiceImpl implements UserService {
         sb.append("<p>password  : " + password);
         sb.append("</p><br>");
         // now send Email
-        emailManager.sendEmail(loginAccount.getEmail(), "Registration", "ping2ravi@gmail.com", "Your Swaraj Abhiyan Account is ready", "", "");
+        emailManager.sendEmail(loginAccount.getEmail(), "Registration", "mailer@swarajabhiyan.co.in", "Your Swaraj Abhiyan Account is ready", "", "");
 
     }
 
