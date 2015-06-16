@@ -647,7 +647,7 @@ public class UserServiceImpl implements UserService {
             passwordResetRequest = new PasswordResetRequest();
         }
         passwordResetRequest.setUserName(emailId.toLowerCase());
-        passwordResetRequest.setToken(UUID.fromString(emailId).toString());
+        passwordResetRequest.setToken(UUID.randomUUID().toString());
         passwordResetRequest.setLoginAccountId(loginAccount.getId());
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR_OF_DAY, 24);
