@@ -162,8 +162,10 @@ public class PluginManagerImpl implements PluginManager {
         }
         if(addData){
             // First apply all Global Data Plugins
+            System.out.println("applyGenericPlugins=" + applyGenericPlugins);
             if(applyGenericPlugins){
                 for (WebDataPlugin oneWebDataPlugin : globalWebDataPlugins) {
+                    System.out.println("plugin=" + oneWebDataPlugin);
                     oneWebDataPlugin.applyPlugin(httpServletRequest, httpServletResponse, modelAndView);
                 }
             }
