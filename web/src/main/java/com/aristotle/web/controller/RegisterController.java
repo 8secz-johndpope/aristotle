@@ -319,7 +319,7 @@ public class RegisterController {
         HttpStatus httpStatus = HttpStatus.OK;
         JsonObject body = new JsonObject();
         try {
-            userService.sendPasswordResetEmail(resetPasswordBean.getEmail());
+            userService.updatePassword(resetPasswordBean.getEmail(), resetPasswordBean.getPassword(), resetPasswordBean.getToken());
             body.addProperty("message", "Email sent to " + resetPasswordBean.getEmail() + ", please check your email box including spam folder");
         } catch (AppException e) {
             body.addProperty("message", "Unable to save : " + e.getMessage());

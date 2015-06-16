@@ -660,11 +660,11 @@ public class UserServiceImpl implements UserService {
         StringBuilder sb = new StringBuilder();
         sb.append("Dear " + loginAccount.getUser().getName());
         sb.append("<br>");
-        sb.append("<p>A password reset request has been submitted on your behalf for the helpdesk at <a href=\"http://www.swarajabhiyan.org\">www.swarajabhiyan.org</a>");
+        sb.append("<p>A password reset request has been submitted on your behalf at <a href=\"http://www.swarajabhiyan.org\">www.swarajabhiyan.org</a>");
         sb.append("<br><br>");
         sb.append("<p>If you feel that this has been done in error, delete and disregard this email. Your account is still secure and no one has been given access to it. It is not locked and your password has not been reset. Someone could have mistakenly entered your email address.</p>");
         sb.append("<br><br>");
-        sb.append("<p>Follow the link below to login to the help desk and change your password.</p>");
+        sb.append("<p>Follow the link below to change your password.</p>");
         sb.append("<br>http://www.swarajabhiyan.org/password/update?token=" + passwordResetRequest.getToken());
         sb.append("<br>");
         sb.append("<br>");
@@ -707,6 +707,7 @@ public class UserServiceImpl implements UserService {
         LoginAccount loginAccount = loginAccountRepository.findOne(passwordResetRequest.getLoginAccountId());
         loginAccount.setPassword(passwordUtil.encryptPassword(newPassword));
         loginAccount = loginAccountRepository.save(loginAccount);
+        passwordResetRequestRepository.delete(passwordResetRequest);
     }
 
 }
