@@ -299,13 +299,13 @@ public class RegisterController {
             userService.sendPasswordResetEmail(resetPasswordBean.getEmail());
             body.addProperty("message", "Email sent to " + resetPasswordBean.getEmail() + ", please check your email box including spam folder");
         } catch (AppException e) {
-            body.addProperty("message", "Unable to save : " + e.getMessage());
+            body.addProperty("message", e.getMessage());
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
             e.printStackTrace();
         } catch (Exception e) {
-            body.addProperty("message", "Unable to save");
-            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
             e.printStackTrace();
+            body.addProperty("message", "Unable to reset password : " + e.getMessage());
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }
         ResponseEntity<String> returnDt = new ResponseEntity<String>(body.toString(), httpStatus);
         return returnDt;
@@ -326,7 +326,7 @@ public class RegisterController {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
             e.printStackTrace();
         } catch (Exception e) {
-            body.addProperty("message", "Unable to save");
+            body.addProperty("message", "Unable to save ");
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
             e.printStackTrace();
         }
