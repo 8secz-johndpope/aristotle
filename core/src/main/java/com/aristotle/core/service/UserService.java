@@ -41,4 +41,8 @@ public interface UserService {
     void updateVolunteerDetails(Long userId, UserVolunteerBean userVolunteerBean) throws AppException;
 
     void generateUserLoginAccount(String email) throws AppException;
+
+    void sendPasswordResetEmail(String email) throws AppException;
+
+    void updatePassword(String email, String newPassword, String token) throws AppException;
 }

@@ -1,6 +1,7 @@
 package com.aristotle.core.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,6 +31,7 @@ import com.aristotle.core.persistance.Email.ConfirmationType;
 import com.aristotle.core.persistance.Interest;
 import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.LoginAccount;
+import com.aristotle.core.persistance.PasswordResetRequest;
 import com.aristotle.core.persistance.Phone;
 import com.aristotle.core.persistance.Phone.PhoneType;
 import com.aristotle.core.persistance.User;
@@ -38,6 +41,7 @@ import com.aristotle.core.persistance.repo.EmailRepository;
 import com.aristotle.core.persistance.repo.InterestRepository;
 import com.aristotle.core.persistance.repo.LocationRepository;
 import com.aristotle.core.persistance.repo.LoginAccountRepository;
+import com.aristotle.core.persistance.repo.PasswordResetRequestRepository;
 import com.aristotle.core.persistance.repo.PhoneRepository;
 import com.aristotle.core.persistance.repo.UserLocationRepository;
 import com.aristotle.core.persistance.repo.UserRepository;
@@ -67,6 +71,8 @@ public class UserServiceImpl implements UserService {
     private PasswordUtil passwordUtil;
     @Autowired
     private LoginAccountRepository loginAccountRepository;
+    @Autowired
+    private PasswordResetRequestRepository passwordResetRequestRepository;
     @Value("${registration_mail_id}")
     private String regsitrationEmailId;
 
@@ -619,6 +625,88 @@ public class UserServiceImpl implements UserService {
             sb.append(RANDOM_CHAR.charAt(random.nextInt(RANDOM_CHAR.length())));
         }
         return sb.toString();
+    }
+
+    @Override
+    public void sendPasswordResetEmail(String emailId) throws AppException {
+        Email email = emailRepository.getEmailByEmailUp(emailId.toUpperCase());
+        if (email == null) {
+            throw new AppException("No accounts exists for email " + emailId);
+        }
+        User user = email.getUser();
+        if (user == null) {
+            throw new AppException("No accounts exists for email " + emailId);
+        }
+        LoginAccount loginAccount = loginAccountRepository.getLoginAccountByUserId(user.getId());
+        if (loginAccount == null) {
+            throw new AppException("No accounts exists for email " + emailId);
+        }
+
+        PasswordResetRequest passwordResetRequest = passwordResetRequestRepository.getPasswordResetRequestByLoginAccountId(loginAccount.getId());
+        if (passwordResetRequest == null) {
+            passwordResetRequest = new PasswordResetRequest();
+        }
+        passwordResetRequest.setUserName(emailId.toLowerCase());
+        passwordResetRequest.setToken(UUID.fromString(emailId).toString());
+        passwordResetRequest.setLoginAccountId(loginAccount.getId());
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR_OF_DAY, 24);
+        passwordResetRequest.setValidTill(calendar.getTime());
+        passwordResetRequest = passwordResetRequestRepository.save(passwordResetRequest);
+        sendPasswordEmail(loginAccount, passwordResetRequest);
+    }
+
+    private void sendPasswordEmail(LoginAccount loginAccount, PasswordResetRequest passwordResetRequest) throws AppException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Dear " + loginAccount.getUser().getName());
+        sb.append("<br>");
+        sb.append("<p>A password reset request has been submitted on your behalf for the helpdesk at <a href=\"http://www.swarajabhiyan.org\">www.swarajabhiyan.org</a>");
+        sb.append("<br><br>");
+        sb.append("<p>If you feel that this has been done in error, delete and disregard this email. Your account is still secure and no one has been given access to it. It is not locked and your password has not been reset. Someone could have mistakenly entered your email address.</p>");
+        sb.append("<br><br>");
+        sb.append("<p>Follow the link below to login to the help desk and change your password.</p>");
+        sb.append("<br>http://www.swarajabhiyan.org/password/update?token=" + passwordResetRequest.getToken());
+        sb.append("<br>");
+        sb.append("<br>");
+        sb.append("<br>");
+        sb.append("<br>Thanks");
+        sb.append("<br>Swaraj Abhiyan Team");
+        sb.append("<br><br>++++++++++++++++++++++++++++");
+        sb.append("<br>Website : www.swarajabhiyan.org");
+        sb.append("<br>Email Id: contact@swarajabhiyan.org");
+        sb.append("<br>Helpline no : +91-7210222333");
+        sb.append("<br>Twitter Handle : https://twitter.com/swaraj_abhiyan");
+        sb.append("<br>Facebook Pages : https://www.facebook.com/swarajabhiyan");
+        sb.append("<br>Facebook group : https://www.facebook.com/groups/swarajabhiyan/");
+        sb.append("<br>Volunteer Registration : http://www.swarajabhiyan.org/register");
+        sb.append("<br>Swaraj Abhiyan Channel https://www.youtube.com/watch?t=44&v=RYDDsO5tHZY");
+        sb.append("<br>Head Office : A-189, Sec-43, Noida UP");
+
+        // now send Email
+        String contentWithOutHtml = sb.toString();
+        contentWithOutHtml = contentWithOutHtml.replaceAll("<br>", "\n");
+        contentWithOutHtml = contentWithOutHtml.replaceAll("\\<[^>]*>", "");
+        emailManager.sendEmail(loginAccount.getEmail(), "Password Reset", regsitrationEmailId, "Swaraj Abhiyan Password Reset Request", contentWithOutHtml, sb.toString());
+
+    }
+
+    @Override
+    public void updatePassword(String email, String newPassword, String token) throws AppException {
+        PasswordResetRequest passwordResetRequest = passwordResetRequestRepository.getPasswordResetRequestByToken(token);
+        if (passwordResetRequest == null) {
+            throw new AppException("Invalid Token");
+        }
+        if (passwordResetRequest.getValidTill().getTime() < System.currentTimeMillis()) {
+            passwordResetRequestRepository.delete(passwordResetRequest);
+            throw new AppException("Token expired, please request again using forgot password option");
+        }
+        if (!passwordResetRequest.getUserName().equals(email.toLowerCase())) {
+            throw new AppException("Invalid Token");
+        }
+
+        LoginAccount loginAccount = loginAccountRepository.findOne(passwordResetRequest.getLoginAccountId());
+        loginAccount.setPassword(passwordUtil.encryptPassword(newPassword));
+        loginAccount = loginAccountRepository.save(loginAccount);
     }
 
 }

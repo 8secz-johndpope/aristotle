@@ -25,6 +25,7 @@ import com.aristotle.core.exception.FieldsAppException;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.UserLocation;
 import com.aristotle.core.service.UserService;
+import com.aristotle.core.service.dto.ResetPasswordBean;
 import com.aristotle.core.service.dto.UserChangePasswordBean;
 import com.aristotle.core.service.dto.UserContactBean;
 import com.aristotle.core.service.dto.UserLoginBean;
@@ -274,6 +275,52 @@ public class RegisterController {
             User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
             userService.updateVolunteerDetails(user.getId(), userVolunteerBean);
             body.addProperty("message", "Personal Details updated Succesfully");
+        } catch (AppException e) {
+            body.addProperty("message", "Unable to save : " + e.getMessage());
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            e.printStackTrace();
+        } catch (Exception e) {
+            body.addProperty("message", "Unable to save");
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            e.printStackTrace();
+        }
+        ResponseEntity<String> returnDt = new ResponseEntity<String>(body.toString(), httpStatus);
+        return returnDt;
+
+    }
+
+    @RequestMapping(value = "/js/passwordreset", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> resetPassword(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @RequestBody ResetPasswordBean resetPasswordBean) {
+        System.out.println("resetPasswordBean : " + resetPasswordBean);
+        HttpStatus httpStatus = HttpStatus.OK;
+        JsonObject body = new JsonObject();
+        try {
+            userService.sendPasswordResetEmail(resetPasswordBean.getEmail());
+            body.addProperty("message", "Email sent to " + resetPasswordBean.getEmail() + ", please check your email box including spam folder");
+        } catch (AppException e) {
+            body.addProperty("message", "Unable to save : " + e.getMessage());
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            e.printStackTrace();
+        } catch (Exception e) {
+            body.addProperty("message", "Unable to save");
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            e.printStackTrace();
+        }
+        ResponseEntity<String> returnDt = new ResponseEntity<String>(body.toString(), httpStatus);
+        return returnDt;
+
+    }
+
+    @RequestMapping(value = "/js/passwordupdate", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> updatePassword(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @RequestBody ResetPasswordBean resetPasswordBean) {
+        System.out.println("resetPasswordBean : " + resetPasswordBean);
+        HttpStatus httpStatus = HttpStatus.OK;
+        JsonObject body = new JsonObject();
+        try {
+            userService.sendPasswordResetEmail(resetPasswordBean.getEmail());
+            body.addProperty("message", "Email sent to " + resetPasswordBean.getEmail() + ", please check your email box including spam folder");
         } catch (AppException e) {
             body.addProperty("message", "Unable to save : " + e.getMessage());
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
