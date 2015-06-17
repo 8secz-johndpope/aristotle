@@ -71,6 +71,16 @@ public class SitemapController {
         for (News oneNews : allNews) {
             sb.append("<url>");
             sb.append("<loc>http://www.swarajabhiyan.org/content/news"+oneNews.getId()+"</loc>");
+            if(oneNews.getPublishDate() != null){
+                //sb.append("   <news:publication_date>"+sdf.format(oneNews.getPublishDate())+"</news:publication_date>");
+                sb.append("<lastmod>"+sdf.format(oneNews.getPublishDate())+"</lastmod>");
+            }else if(oneNews.getDateModified() != null){
+                //sb.append("   <news:publication_date>"+sdf.format(oneNews.getDateModified())+"</news:publication_date>");
+                sb.append("<lastmod>"+sdf.format(oneNews.getDateModified())+"</lastmod>");
+            }
+            sb.append("<changefreq>weekly</changefreq>");
+            sb.append("<priority>0.8</priority>");
+            /*
             sb.append("<news:news>");
             sb.append("   <news:publication>");
             sb.append("   <news:name>Swaraj Abhiyan</news:name>");
@@ -78,16 +88,12 @@ public class SitemapController {
             sb.append("   </news:publication>");
             sb.append("   <news:access>Subscription</news:access>");
             sb.append("   <news:genres>PressRelease</news:genres>");
-            if(oneNews.getPublishDate() != null){
-                sb.append("   <news:publication_date>"+sdf.format(oneNews.getPublishDate())+"</news:publication_date>");    
-            }else if(oneNews.getDateModified() != null){
-                sb.append("   <news:publication_date>"+sdf.format(oneNews.getDateModified())+"</news:publication_date>");
-            }
-            
+
             sb.append("   <news:title>" + StringEscapeUtils.escapeXml(oneNews.getTitle()) + "</news:title>");
             String keyWords = oneNews.getTitle().replaceAll(" ", ",");
             sb.append("   <news:keywords>" + StringEscapeUtils.escapeXml(keyWords) + "</news:keywords>");
             sb.append("   </news:news>");
+            */
             sb.append("</url>");
         }
         sb.append("</urlset>");
