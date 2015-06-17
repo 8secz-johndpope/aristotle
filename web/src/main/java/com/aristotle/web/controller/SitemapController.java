@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -84,13 +85,14 @@ public class SitemapController {
                 sb.append("   <news:publication_date>"+sdf.format(oneNews.getDateModified())+"</news:publication_date>");
             }
             
-            sb.append("   <news:title>"+oneNews.getTitle()+"</news:title>");
+            sb.append("   <news:title>" + StringEscapeUtils.escapeXml(oneNews.getTitle()) + "</news:title>");
             String keyWords = oneNews.getTitle().replaceAll(" ", ",");
-            sb.append("   <news:keywords>"+keyWords+"</news:keywords>");
+            sb.append("   <news:keywords>" + StringEscapeUtils.escapeXml(keyWords) + "</news:keywords>");
             sb.append("   </news:news>");
             sb.append("</url>");
         }
         sb.append("</sitemap>");
+
         return sb.toString();
     }
 
