@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +35,7 @@ public class SitemapController {
         return ex.getMessage();
     }
 
-    @RequestMapping(value = { "/sitemap/index.xml" }, produces = MediaType.TEXT_XML_VALUE)
+    @RequestMapping(value = { "/sitemap/index.xml" })
     @ResponseBody
     public String serverSideHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws IOException {
 
@@ -62,7 +61,7 @@ public class SitemapController {
     }
 
     @ResponseBody
-    @RequestMapping(value = { "/sitemap/news.xml" }, produces = MediaType.TEXT_XML_VALUE)
+    @RequestMapping(value = { "/sitemap/news.xml" })
     public String defaultContentApiMethod(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws AppException {
         List<News> allNews = newsService.getAllGlobalNews();
         StringBuilder sb = new StringBuilder();
