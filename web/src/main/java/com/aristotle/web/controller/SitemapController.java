@@ -47,7 +47,6 @@ public class SitemapController {
         sb.append("<sitemapindex xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">");
         sb.append("<sitemap>");
         sb.append("<loc>http://www.swarajabhiyan.org/sitemap/news.xml</loc>");
-        sb.append("<changefreq>daily</changefreq>");
         sb.append("<lastmod>" + sdf.format(calendar.getTime()) + "</lastmod>");
         sb.append("</sitemap>");
         /*
