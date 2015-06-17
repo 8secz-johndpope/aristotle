@@ -66,9 +66,8 @@ public class SitemapController {
         List<News> allNews = newsService.getAllGlobalNews();
         StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        sb.append("<sitemapindex xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:news=\"http://www.google.com/schemas/sitemap-news/0.9\">");
+        sb.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:news=\"http://www.google.com/schemas/sitemap-news/0.9\">");
 
-        sb.append("<sitemap>");
         for (News oneNews : allNews) {
             sb.append("<url>");
             sb.append("<loc>http://www.swarajabhiyan.org/content/news"+oneNews.getId()+"</loc>");
@@ -91,7 +90,7 @@ public class SitemapController {
             sb.append("   </news:news>");
             sb.append("</url>");
         }
-        sb.append("</sitemap>");
+        sb.append("</urlset>");
 
         return sb.toString();
     }
