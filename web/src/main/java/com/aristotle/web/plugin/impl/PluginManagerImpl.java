@@ -156,18 +156,16 @@ public class PluginManagerImpl implements PluginManager {
                 throw new NotLoggedInException("User Not logged In");
             }
         }
-        List<WebDataPlugin> plugins = patternUrlMapping.getDataPlugins();
-        if (plugins == null || plugins.isEmpty()) {
-            return;
-        }
         if(addData){
             // First apply all Global Data Plugins
-            System.out.println("applyGenericPlugins=" + applyGenericPlugins);
             if(applyGenericPlugins){
                 for (WebDataPlugin oneWebDataPlugin : globalWebDataPlugins) {
-                    System.out.println("plugin=" + oneWebDataPlugin);
                     oneWebDataPlugin.applyPlugin(httpServletRequest, httpServletResponse, modelAndView);
                 }
+            }
+            List<WebDataPlugin> plugins = patternUrlMapping.getDataPlugins();
+            if (plugins == null) {
+                return;
             }
             for (WebDataPlugin oneWebDataPlugin : plugins) {
                 oneWebDataPlugin.applyPlugin(httpServletRequest, httpServletResponse, modelAndView);
