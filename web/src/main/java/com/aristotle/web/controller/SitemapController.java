@@ -77,7 +77,7 @@ public class SitemapController {
             sb.append("   <news:language>en</news:language>");
             sb.append("   </news:publication>");
             sb.append("   <news:access>Subscription</news:access>");
-            sb.append("   <news:genres>PressRelease, Swaraj Abhiyan, News</news:genres>");
+            sb.append("   <news:genres>PressRelease</news:genres>");
             if(oneNews.getPublishDate() != null){
                 sb.append("   <news:publication_date>"+sdf.format(oneNews.getPublishDate())+"</news:publication_date>");    
             }else if(oneNews.getDateModified() != null){
