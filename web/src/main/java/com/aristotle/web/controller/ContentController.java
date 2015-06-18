@@ -52,6 +52,7 @@ public class ContentController {
         modelAndView.getModel().put("context", jsonContext);
         try {
             pluginManager.applyAllPluginsForUrl(httpServletRequest, httpServletResponse, modelAndView, true, true);
+            addPageAttributes(httpServletRequest, httpServletResponse, modelAndView);
         } catch (NotLoggedInException e) {
             return "User not logged In";
         }
@@ -113,5 +114,41 @@ public class ContentController {
         httpServletResponse.setHeader("Access-Control-Max-Age", "3600");
         httpServletResponse.setHeader("Access-Control-Allow-Headers", "x-requested-with");
 
+    }
+
+    private void addPageAttributes(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) {
+        JsonObject jsonContext = (JsonObject) modelAndView.getModel().get("context");
+        JsonObject pageObject = new JsonObject();
+        jsonContext.add("WebPage", pageObject);
+        String requestedUrl = httpServletRequest.getRequestURI();
+        if (requestedUrl.startsWith("/content/news/")) {
+            addNewsItemTitleDescription(pageObject, jsonContext);
+            return;
+        }
+        if (requestedUrl.startsWith("/content/news")) {
+            addNewsListDescription(pageObject, jsonContext);
+            return;
+        }
+    }
+
+    private void addNewsItemTitleDescription(JsonObject pageObject, JsonObject jsonContext) {
+        try {
+            String newsDescription = jsonContext.get("SingleNewsPlugin").getAsJsonObject().get("contentSummary").getAsString();
+            String title = jsonContext.get("SingleNewsPlugin").getAsJsonObject().get("title").getAsString();
+            pageObject.addProperty("description", newsDescription);
+            pageObject.addProperty("title", title + " | Swaraj Abhiyan News");
+        } catch (Exception ex) {
+            pageObject.addProperty("description", "Swaraj Abhiyan News");
+            pageObject.addProperty("title", "Swaraj Abhiyan News");
+        }
+    }
+    private void addNewsListDescription(JsonObject pageObject, JsonObject jsonContext){
+        try{
+            pageObject.addProperty("title", "Swaraj Abhiyan Latest News");
+            String firstNewsDescription = jsonContext.get("NewsListPlugin").getAsJsonArray().get(0).getAsJsonObject().get("contentSummary").getAsString();
+            pageObject.addProperty("description", firstNewsDescription);
+        } catch (Exception ex) {
+            pageObject.addProperty("description", "All Latest Swaraj Abhiyan News");
+        }
     }
 }
