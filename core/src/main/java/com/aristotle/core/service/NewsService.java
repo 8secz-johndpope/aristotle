@@ -28,6 +28,8 @@ public interface NewsService {
 
     List<News> getAllLocationPublishedNews(Set<Long> locationIds, int pageNumber, int pageSize) throws AppException;
 
+    long getAllLocationPublishedNewsCount(Set<Long> locationIds) throws AppException;
+
     List<ContentTweet> getNewsContentTweets(Long newsId) throws AppException;
 
     UploadedFile saveNewsUploadedFile(Long newsId, String filePathAndName, long fileSize, String type) throws AppException;

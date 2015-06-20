@@ -42,14 +42,60 @@ public class NewsListPlugin extends LocationAwareDataPlugin {
             int pageSize = getIntSettingPramater("news.size", 6);
             System.out.println("Getting news for " + locations + ", page number = " + pageNumber + ", pageSize=" + pageSize);
             List<News> newsList = newsService.getAllLocationPublishedNews(locations, pageNumber, pageSize);
+            long totalNews = newsService.getAllLocationPublishedNewsCount(locations);
             if (newsList == null || newsList.isEmpty()) {
                 newsList = newsService.getAllLocationPublishedNews(null, pageNumber, pageSize);
+                totalNews = newsService.getAllLocationPublishedNewsCount(null);
             }
             JsonArray jsonArray = convertNewsList(newsList);
             context.add(name, jsonArray);
+            addPaginInformation(pageNumber, pageSize, totalNews, context);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    private void addPaginInformation(int currentPage, int pageSize, long totalRecords, JsonObject context) {
+        JsonObject pageJsonObject = new JsonObject();
+        int totalPages = (int) totalRecords / pageSize;
+        if (totalRecords % pageSize > 0) {
+            totalPages++;
+        }
+        if (currentPage > 1) {
+            pageJsonObject.addProperty("previous", true);
+            pageJsonObject.addProperty("previousPage", (currentPage - 1));
+        }
+        if (currentPage < totalPages) {
+            pageJsonObject.addProperty("next", true);
+            pageJsonObject.addProperty("nextPage", (currentPage + 1));
+        }
+        pageJsonObject.addProperty("lastPage", totalPages);
+        // 1 2 3
+        int pageListStart = 1;
+        int pageListEnd = totalPages;
+        if (currentPage + 2 <= totalPages) {
+            if (currentPage > 2) {
+                pageListStart = currentPage - 2;
+            }
+            pageListEnd = pageListStart + 4;
+        } else {
+            pageListEnd = totalPages;
+            pageListStart = pageListEnd - 4;
+            if (pageListStart <= 0) {
+                pageListStart = 1;
+            }
+        }
+        JsonArray pageListJsonArray = new JsonArray();
+        for (int count = pageListStart; count <= pageListEnd; count++) {
+            JsonObject onePage = new JsonObject();
+            onePage.addProperty("pageNumber", count);
+            if (count == currentPage) {
+                onePage.addProperty("selected", true);
+            }
+            pageListJsonArray.add(onePage);
+        }
+        pageJsonObject.add("pages", pageListJsonArray);
+        context.add("pageInfo", pageJsonObject);
     }
 
 }

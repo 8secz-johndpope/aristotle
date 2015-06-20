@@ -144,4 +144,12 @@ public class NewsServiceImpl implements NewsService {
         return new ArrayList<UploadedFile>(news.getFiles());
     }
 
+    @Override
+    public long getAllLocationPublishedNewsCount(Set<Long> locationIds) throws AppException {
+        if (locationIds == null || locationIds.isEmpty()) {
+            return newsRepository.getGlobalPublishdNewsCount();
+        }
+        return newsRepository.getLocationPublishedNewsCount(locationIds);
+    }
+
 }
