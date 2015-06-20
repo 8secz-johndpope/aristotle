@@ -6,7 +6,7 @@ import com.aristotle.core.persistance.EmailConfirmationRequest;
 
 public interface EmailConfirmationRequestRepository extends JpaRepository<EmailConfirmationRequest, Long> {
 
-    EmailConfirmationRequest getPasswordResetRequestByToken(String token);
+    EmailConfirmationRequest getEmailConfirmationRequestByToken(String token);
 
-    EmailConfirmationRequest getPasswordResetRequestByEmail(String email);
+    EmailConfirmationRequest getEmailConfirmationRequestByEmail(String email);
 }

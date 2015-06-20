@@ -3,12 +3,12 @@ package com.aristotle.web.controller;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -66,7 +66,8 @@ public class SitemapController {
         List<News> allNews = newsService.getAllGlobalNews();
         StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        sb.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:news=\"http://www.google.com/schemas/sitemap-news/0.9\">");
+        // sb.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:news=\"http://www.google.com/schemas/sitemap-news/0.9\">");
+        sb.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"");
 
         for (News oneNews : allNews) {
             sb.append("<url>");
@@ -99,6 +100,32 @@ public class SitemapController {
         sb.append("</urlset>");
 
         return sb.toString();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = { "/sitemap/custom.xml" })
+    public String customSiteMap(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws AppException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        sb.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"");
+        addOneUrlToSiteMap(sb, "http://www.swarajabhiyan.org/", new Date(), "daily", "1.0");
+        addOneUrlToSiteMap(sb, "http://www.swarajabhiyan.org/organisation/vision", new Date(), "monthly", "0.9");
+        addOneUrlToSiteMap(sb, "http://www.swarajabhiyan.org/organisation/constitution", new Date(), "monthly", "0.9");
+        addOneUrlToSiteMap(sb, "http://www.swarajabhiyan.org/organisation/nwc", new Date(), "monthly", "0.9");
+        addOneUrlToSiteMap(sb, "http://www.swarajabhiyan.org/organisation/nsc", new Date(), "monthly", "0.9");
+        addOneUrlToSiteMap(sb, "http://www.swarajabhiyan.org/organisation/contactus", new Date(), "weekly", "0.9");
+        sb.append("</urlset>");
+
+        return sb.toString();
+    }
+
+    private void addOneUrlToSiteMap(StringBuilder sb, String url, Date publishDate, String changefreq, String priority) {
+        sb.append("<url>");
+        sb.append("<loc>" + url + "</loc>");
+        sb.append("<lastmod>" + sdf.format(publishDate) + "</lastmod>");
+        sb.append("<changefreq>" + changefreq + "</changefreq>");
+        sb.append("<priority>" + priority + "</priority>");
+        sb.append("</url>");
     }
 
 }

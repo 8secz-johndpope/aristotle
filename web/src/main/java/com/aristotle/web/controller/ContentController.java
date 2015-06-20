@@ -129,6 +129,10 @@ public class ContentController {
             addNewsListDescription(pageObject, jsonContext);
             return;
         }
+        if (requestedUrl.startsWith("/content/home") || requestedUrl.startsWith("/index.html") || requestedUrl.equals("/")) {
+            addIndexPageTitleAndDescription(pageObject, jsonContext);
+            return;
+        }
     }
 
     private void addNewsItemTitleDescription(JsonObject pageObject, JsonObject jsonContext) {
@@ -145,6 +149,16 @@ public class ContentController {
     private void addNewsListDescription(JsonObject pageObject, JsonObject jsonContext){
         try{
             pageObject.addProperty("title", "Swaraj Abhiyan Latest News");
+            String firstNewsDescription = jsonContext.get("NewsListPlugin").getAsJsonArray().get(0).getAsJsonObject().get("contentSummary").getAsString();
+            pageObject.addProperty("description", firstNewsDescription);
+        } catch (Exception ex) {
+            pageObject.addProperty("description", "All Latest Swaraj Abhiyan News");
+        }
+    }
+    
+    private void addIndexPageTitleAndDescription(JsonObject pageObject, JsonObject jsonContext){
+        try{
+            pageObject.addProperty("title", "Swaraj Abhiyan Official Website");
             String firstNewsDescription = jsonContext.get("NewsListPlugin").getAsJsonArray().get(0).getAsJsonObject().get("contentSummary").getAsString();
             pageObject.addProperty("description", firstNewsDescription);
         } catch (Exception ex) {

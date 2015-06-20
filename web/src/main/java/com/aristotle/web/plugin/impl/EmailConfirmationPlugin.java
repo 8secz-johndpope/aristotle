@@ -36,6 +36,7 @@ public class EmailConfirmationPlugin extends AbstractDataPlugin {
 
             String emailId = httpServletRequest.getParameter("email");
             String token = httpServletRequest.getParameter("token");
+            System.out.println("Confirm : " + emailId + ", token=" + token);
             userService.confirmEmail(emailId, token);
 
             emailConfirmationjsonObject.addProperty("message", "Email confirmed succesfully");

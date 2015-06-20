@@ -747,7 +747,7 @@ public class UserServiceImpl implements UserService {
         if (email == null) {
             throw new AppException("No accounts exists for email " + emailId);
         }
-        EmailConfirmationRequest emailConfirmationRequest = emailConfirmationRequestRepository.getPasswordResetRequestByEmail(emailId.toLowerCase());
+        EmailConfirmationRequest emailConfirmationRequest = emailConfirmationRequestRepository.getEmailConfirmationRequestByEmail(emailId.toLowerCase());
         if (emailConfirmationRequest == null) {
             emailConfirmationRequest = new EmailConfirmationRequest();
         }
@@ -796,7 +796,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void confirmEmail(String emailId, String token) throws AppException {
 
-        EmailConfirmationRequest emailConfirmationRequest = emailConfirmationRequestRepository.getPasswordResetRequestByEmail(emailId);
+        EmailConfirmationRequest emailConfirmationRequest = emailConfirmationRequestRepository.getEmailConfirmationRequestByEmail(emailId);
         if (emailConfirmationRequest == null) {
             throw new AppException("Invalid Request - 1001");
         }
