@@ -45,4 +45,8 @@ public interface UserService {
     void sendPasswordResetEmail(String email) throws AppException;
 
     void updatePassword(String email, String newPassword, String token) throws AppException;
+
+    void sendEmailConfirmtionEmail(String email) throws AppException;
+
+    void confirmEmail(String email, String token) throws AppException;
 }

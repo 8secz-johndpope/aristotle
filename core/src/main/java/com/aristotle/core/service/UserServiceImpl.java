@@ -3,6 +3,7 @@ package com.aristotle.core.service;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -28,6 +29,7 @@ import com.aristotle.core.exception.AppException;
 import com.aristotle.core.exception.FieldsAppException;
 import com.aristotle.core.persistance.Email;
 import com.aristotle.core.persistance.Email.ConfirmationType;
+import com.aristotle.core.persistance.EmailConfirmationRequest;
 import com.aristotle.core.persistance.Interest;
 import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.LoginAccount;
@@ -37,6 +39,7 @@ import com.aristotle.core.persistance.Phone.PhoneType;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.UserLocation;
 import com.aristotle.core.persistance.Volunteer;
+import com.aristotle.core.persistance.repo.EmailConfirmationRequestRepository;
 import com.aristotle.core.persistance.repo.EmailRepository;
 import com.aristotle.core.persistance.repo.InterestRepository;
 import com.aristotle.core.persistance.repo.LocationRepository;
@@ -73,6 +76,9 @@ public class UserServiceImpl implements UserService {
     private LoginAccountRepository loginAccountRepository;
     @Autowired
     private PasswordResetRequestRepository passwordResetRequestRepository;
+    @Autowired
+    private EmailConfirmationRequestRepository emailConfirmationRequestRepository;
+
     @Value("${registration_mail_id}")
     private String regsitrationEmailId;
 
@@ -708,6 +714,78 @@ public class UserServiceImpl implements UserService {
         loginAccount.setPassword(passwordUtil.encryptPassword(newPassword));
         loginAccount = loginAccountRepository.save(loginAccount);
         passwordResetRequestRepository.delete(passwordResetRequest);
+    }
+
+    @Override
+    public void sendEmailConfirmtionEmail(String emailId) throws AppException {
+        Email email = emailRepository.getEmailByEmailUp(emailId.toUpperCase());
+        if (email == null) {
+            throw new AppException("No accounts exists for email " + emailId);
+        }
+        EmailConfirmationRequest emailConfirmationRequest = emailConfirmationRequestRepository.getPasswordResetRequestByEmail(emailId.toLowerCase());
+        if (emailConfirmationRequest == null) {
+            emailConfirmationRequest = new EmailConfirmationRequest();
+        }
+        emailConfirmationRequest.setEmail(emailId.toLowerCase());
+        emailConfirmationRequest.setToken(UUID.randomUUID().toString());
+        emailConfirmationRequest = emailConfirmationRequestRepository.save(emailConfirmationRequest);
+        sendEmailConfirmationEmail(emailId.toLowerCase(), emailConfirmationRequest);
+
+    }
+
+    private void sendEmailConfirmationEmail(String emailId, EmailConfirmationRequest emailConfirmationRequest) throws AppException {
+        String emailValidationUrl = "http://www.swarajabhiyan.org/email/verify?email=" + emailId + "&token=" + emailConfirmationRequest.getToken();
+        StringBuilder sb = new StringBuilder();
+        sb.append("Hello ");
+        sb.append("<br>");
+        sb.append("<br>");
+        sb.append("<p>thanks for registering at <a href=\"http://www.swarajabhiyan.org\">www.swarajabhiyan.org</a>");
+        sb.append("<br><br>");
+        sb.append("<p>As part of registration process you need to validate your email by clicking <a href=\"" + emailValidationUrl + "\" >here</a> or copy following url and open it in a browser.</p>");
+        sb.append("<br><br>");
+        sb.append("<p>" + emailValidationUrl + "</p>");
+        sb.append("<br>");
+        sb.append("<br>");
+        sb.append("<br>");
+        sb.append("<br>Thanks");
+        sb.append("<br>Swaraj Abhiyan Team");
+        sb.append("<br><br>++++++++++++++++++++++++++++");
+        sb.append("<br>Website : www.swarajabhiyan.org");
+        sb.append("<br>Email Id: contact@swarajabhiyan.org");
+        sb.append("<br>Helpline no : +91-7210222333");
+        sb.append("<br>Twitter Handle : https://twitter.com/swaraj_abhiyan");
+        sb.append("<br>Facebook Pages : https://www.facebook.com/swarajabhiyan");
+        sb.append("<br>Facebook group : https://www.facebook.com/groups/swarajabhiyan/");
+        sb.append("<br>Volunteer Registration : http://www.swarajabhiyan.org/register");
+        sb.append("<br>Swaraj Abhiyan Channel https://www.youtube.com/watch?t=44&v=RYDDsO5tHZY");
+        sb.append("<br>Head Office : A-189, Sec-43, Noida UP");
+
+        // now send Email
+        String contentWithOutHtml = sb.toString();
+        contentWithOutHtml = contentWithOutHtml.replaceAll("<br>", "\n");
+        contentWithOutHtml = contentWithOutHtml.replaceAll("\\<[^>]*>", "");
+        emailManager.sendEmail(emailId, "Registration", regsitrationEmailId, "Swaraj Abhiyan Email Verification", contentWithOutHtml, sb.toString());
+
+    }
+
+    @Override
+    public void confirmEmail(String emailId, String token) throws AppException {
+        EmailConfirmationRequest emailConfirmationRequest = emailConfirmationRequestRepository.getPasswordResetRequestByEmail(emailId);
+        if (emailConfirmationRequest == null) {
+            throw new AppException("Invalid Request - 1001");
+        }
+        if (!emailConfirmationRequest.getToken().equals(token)) {
+            throw new AppException("Invalid Request - 1002");
+        }
+        Email email = emailRepository.getEmailByEmailUp(emailId.toUpperCase());
+        if (email == null) {
+            throw new AppException("Invalid Request - 1003");
+        }
+        email.setConfirmationType(ConfirmationType.VIA_EMAIL_VERIFICATION_FLOW);
+        email.setConfirmed(true);
+        email.setConfirmationDate(new Date());
+        email = emailRepository.save(email);
+        emailConfirmationRequestRepository.delete(emailConfirmationRequest);
     }
 
 }

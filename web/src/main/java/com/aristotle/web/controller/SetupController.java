@@ -128,4 +128,21 @@ public class SetupController {
         return "done";
     }
 
+    @RequestMapping("/admin/sendverificationemail")
+    @ResponseBody
+    public String sendUserVerificationEmail(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
+        String email = httpServletRequest.getParameter("email");
+        if (email == null) {
+            return "Emai is required";
+        }
+        try {
+            userService.sendEmailConfirmtionEmail(email);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ex.getMessage();
+        }
+
+        return "done";
+    }
+
 }
