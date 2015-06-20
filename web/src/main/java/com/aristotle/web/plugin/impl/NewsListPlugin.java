@@ -61,7 +61,7 @@ public class NewsListPlugin extends LocationAwareDataPlugin {
         if (totalRecords % pageSize > 0) {
             totalPages++;
         }
-        if (currentPage > 1) {
+        if (currentPage > 0) {
             pageJsonObject.addProperty("previous", true);
             pageJsonObject.addProperty("previousPage", (currentPage - 1));
         }
@@ -70,16 +70,19 @@ public class NewsListPlugin extends LocationAwareDataPlugin {
             pageJsonObject.addProperty("nextPage", (currentPage + 1));
         }
         pageJsonObject.addProperty("lastPage", totalPages);
-        // 1 2 3
-        int pageListStart = 1;
+        // 1 2 3 4
+        int pageListStart = 0;
         int pageListEnd = totalPages;
-        if (currentPage + 2 <= totalPages) {
+        if (currentPage + 2 < totalPages) {
             if (currentPage > 2) {
                 pageListStart = currentPage - 2;
             }
             pageListEnd = pageListStart + 4;
+            if(pageListEnd > totalPages){
+                pageListEnd = totalPages - 1;
+            }
         } else {
-            pageListEnd = totalPages;
+            pageListEnd = totalPages - 1;
             pageListStart = pageListEnd - 4;
             if (pageListStart <= 0) {
                 pageListStart = 1;
@@ -88,7 +91,7 @@ public class NewsListPlugin extends LocationAwareDataPlugin {
         JsonArray pageListJsonArray = new JsonArray();
         for (int count = pageListStart; count <= pageListEnd; count++) {
             JsonObject onePage = new JsonObject();
-            onePage.addProperty("pageNumber", count);
+            onePage.addProperty("pageNumber", (count + 1));
             if (count == currentPage) {
                 onePage.addProperty("selected", true);
             }
