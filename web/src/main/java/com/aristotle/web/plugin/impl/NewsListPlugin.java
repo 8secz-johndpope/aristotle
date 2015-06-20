@@ -70,7 +70,7 @@ public class NewsListPlugin extends LocationAwareDataPlugin {
             pageJsonObject.addProperty("nextPage", (currentPage + 1));
         }
         pageJsonObject.addProperty("lastPage", totalPages);
-        // 0 1 2 3 4
+        // 1 2 3 4
         int pageListStart = 1;
         int pageListEnd = totalPages;
         if (currentPage + 2 <= totalPages) {
