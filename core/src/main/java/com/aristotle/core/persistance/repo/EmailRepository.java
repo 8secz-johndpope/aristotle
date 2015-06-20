@@ -9,7 +9,7 @@ import com.aristotle.core.persistance.Email;
 public interface EmailRepository extends JpaRepository<Email, Long> {
 
     public abstract Email getEmailByEmailUp(String email);
-	
+
 	public abstract List<Email> getEmailsByUserId(Long userId);
 
 }

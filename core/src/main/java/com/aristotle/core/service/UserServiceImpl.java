@@ -262,7 +262,9 @@ public class UserServiceImpl implements UserService {
             }
             loginAccount = loginAccountRepository.save(loginAccount);
         }
-
+        if (email != null) {
+            sendEmailConfirmtionEmail(email.getEmail());
+        }
         //
     }
 
@@ -716,8 +718,31 @@ public class UserServiceImpl implements UserService {
         passwordResetRequestRepository.delete(passwordResetRequest);
     }
 
+    private void confirmAllEmail() {
+        List<Email> emails = emailRepository.findAll();
+        int totalFailed = 0;
+        int totalSuccess = 0;
+        for (Email oneEmail : emails) {
+            if (oneEmail.isConfirmed()) {
+                continue;
+            }
+            try {
+                sendEmailConfirmtionEmail(oneEmail.getEmail());
+                totalSuccess++;
+            } catch (Exception ex) {
+                totalFailed++;
+                ex.printStackTrace();
+            }
+        }
+        System.out.println("Total Success : " + totalSuccess);
+        System.out.println("Total Failed : " + totalFailed);
+    }
     @Override
     public void sendEmailConfirmtionEmail(String emailId) throws AppException {
+        if ("all".equals(emailId)) {
+            confirmAllEmail();
+            return;
+        }
         Email email = emailRepository.getEmailByEmailUp(emailId.toUpperCase());
         if (email == null) {
             throw new AppException("No accounts exists for email " + emailId);
@@ -739,10 +764,10 @@ public class UserServiceImpl implements UserService {
         sb.append("Hello ");
         sb.append("<br>");
         sb.append("<br>");
-        sb.append("<p>thanks for registering at <a href=\"http://www.swarajabhiyan.org\">www.swarajabhiyan.org</a>");
-        sb.append("<br><br>");
+        sb.append("<p>Thankyou for registering at <a href=\"http://www.swarajabhiyan.org\">www.swarajabhiyan.org</a></p>");
+        sb.append("<br>");
         sb.append("<p>As part of registration process you need to validate your email by clicking <a href=\"" + emailValidationUrl + "\" >here</a> or copy following url and open it in a browser.</p>");
-        sb.append("<br><br>");
+        sb.append("<br>");
         sb.append("<p>" + emailValidationUrl + "</p>");
         sb.append("<br>");
         sb.append("<br>");
@@ -770,6 +795,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void confirmEmail(String emailId, String token) throws AppException {
+
         EmailConfirmationRequest emailConfirmationRequest = emailConfirmationRequestRepository.getPasswordResetRequestByEmail(emailId);
         if (emailConfirmationRequest == null) {
             throw new AppException("Invalid Request - 1001");
