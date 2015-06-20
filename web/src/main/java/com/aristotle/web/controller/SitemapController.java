@@ -67,7 +67,7 @@ public class SitemapController {
         StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         // sb.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:news=\"http://www.google.com/schemas/sitemap-news/0.9\">");
-        sb.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"");
+        sb.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">");
 
         for (News oneNews : allNews) {
             sb.append("<url>");
@@ -107,7 +107,7 @@ public class SitemapController {
     public String customSiteMap(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws AppException {
         StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        sb.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"");
+        sb.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">");
         addOneUrlToSiteMap(sb, "http://www.swarajabhiyan.org/", new Date(), "daily", "1.0");
         addOneUrlToSiteMap(sb, "http://www.swarajabhiyan.org/organisation/vision", new Date(), "monthly", "0.9");
         addOneUrlToSiteMap(sb, "http://www.swarajabhiyan.org/organisation/constitution", new Date(), "monthly", "0.9");
