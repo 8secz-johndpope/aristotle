@@ -94,31 +94,35 @@ public class VideoDownloader{
         Video existingVideo;
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
         for (int i = allVideos.size() - 1; i >= 0; i--) {
-            JsonObject videoEntry = allVideos.get(i).getAsJsonObject();
-            // printVideoEntry(videoEntry, detailed, count);
-            String videoId = videoEntry.get("id").getAsJsonObject().get("videoId").getAsString();
-            existingVideo = videoRepository.getVideoByYoutubeVideoId(videoId);
-            videoItem = new Video();
-            if (existingVideo != null) {
-                videoItem.setId(existingVideo.getId());
-                continue;
-            } else {
-                newVideoAvailable = true;
+            try {
+                JsonObject videoEntry = allVideos.get(i).getAsJsonObject();
+                System.out.println(videoEntry.get("id"));
+                String videoId = videoEntry.get("id").getAsJsonObject().get("videoId").getAsString();
+                existingVideo = videoRepository.getVideoByYoutubeVideoId(videoId);
+                videoItem = new Video();
+                if (existingVideo != null) {
+                    videoItem.setId(existingVideo.getId());
+                    continue;
+                } else {
+                    newVideoAvailable = true;
+                }
+                String dateStr = videoEntry.get("snippet").getAsJsonObject().get("publishedAt").getAsString();
+                dateStr = dateStr.replace("Z", "");
+                Date date = dateFormat.parse(dateStr);
+                videoItem.setPublishDate(date);
+                videoItem.setContentStatus(ContentStatus.Published);
+                videoItem.setDescription(videoEntry.get("snippet").getAsJsonObject().get("description").getAsString());
+                videoItem.setGlobal(true);
+                videoItem.setImageUrl("http://i.ytimg.com/vi/" + videoId + "/hqdefault.jpg");
+                videoItem.setYoutubeVideoId(videoId);
+                videoItem.setTitle(videoEntry.get("snippet").getAsJsonObject().get("title").getAsString());
+                videoItem.setChannelId(channelId);
+                videoItem.setWebUrl("http://www.youtube.com/watch?v=" + videoId);
+                logger.info("Saving Youtube Video : " + videoItem.getTitle() + ", Video Id = " + videoItem.getYoutubeVideoId());
+                videoItem = videoRepository.save(videoItem);
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-            String dateStr = videoEntry.get("snippet").getAsJsonObject().get("publishedAt").getAsString();
-            dateStr = dateStr.replace("Z", "");
-            Date date = dateFormat.parse(dateStr);
-            videoItem.setPublishDate(date);
-            videoItem.setContentStatus(ContentStatus.Published);
-            videoItem.setDescription(videoEntry.get("snippet").getAsJsonObject().get("description").getAsString());
-            videoItem.setGlobal(true);
-            videoItem.setImageUrl("http://i.ytimg.com/vi/" + videoId + "/hqdefault.jpg");
-            videoItem.setYoutubeVideoId(videoId);
-            videoItem.setTitle(videoEntry.get("snippet").getAsJsonObject().get("title").getAsString());
-            videoItem.setChannelId(channelId);
-            videoItem.setWebUrl("http://www.youtube.com/watch?v=" + videoId);
-            logger.info("Saving Youtube Video : " + videoItem.getTitle() + ", Video Id = " + videoItem.getYoutubeVideoId());
-            videoItem = videoRepository.save(videoItem);
         }
         return newVideoAvailable;
     }
