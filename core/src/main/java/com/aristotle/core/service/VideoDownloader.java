@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,9 @@ public class VideoDownloader{
 	@Autowired
     private VideoRepository videoRepository;
 	
+    @Value("${google_api_key}")
+    private String googleApiKey;
+
     @Autowired
     private HttpUtil httpUtil;
 	
@@ -62,7 +66,7 @@ public class VideoDownloader{
 
             logger.info("StartIndex = "+startIndex+", MaxResults="+maxResult);
             String feedUrl = "http://gdata.youtube.com/feeds/api/users/"+channelId+"/uploads?start-index="+startIndex+"&max-results="+maxResult;
-            feedUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=" + channelId + "&maxResults=" + maxResult;
+            feedUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=" + channelId + "&maxResults=" + maxResult + "&key=" + googleApiKey;
             if (nextPageToken != null) {
                 feedUrl = feedUrl + "&pageToken=" + nextPageToken;
             }
