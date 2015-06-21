@@ -41,20 +41,6 @@ public class HttpUtil {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	public static void main(String[] args) throws ClientProtocolException, IOException{
-		String request = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
-				"<soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">" +
-				"<soap12:Body>" +
-				"<DonorStatus xmlns=\"http://tempuri.org/\">" +
-				"<DonorTransactionID>NI338217</DonorTransactionID>" +
-				"<DonorEmailId></DonorEmailId>" +
-				"</DonorStatus>" +
-				"</soap12:Body>" +
-				"</soap12:Envelope>";
-		HttpUtil httpUtil = new HttpUtil();
-		httpUtil.postSoapRequest("https://donate.aamaadmiparty.org/webservice/donationservice.asmx", request);
-	}
-	
     public String getResponse(String url) throws ClientProtocolException, IOException {
 		logger.info("Hitting Url = {}", url);
 		HttpGet httpGet = new HttpGet(url);
