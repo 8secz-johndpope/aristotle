@@ -1,5 +1,8 @@
 package com.aristotle.core.service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.annotation.PostConstruct;
@@ -85,10 +88,16 @@ public class VideoDownloader{
         return true;
     }
 
-    public boolean downloadAndSaveVideoNew(JsonArray allVideos, String channelId) {
+    public static void main(String[] args) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        System.out.println(dateFormat.parse("2015-04-14T07:35:40.000"));
+    }
+
+    public boolean downloadAndSaveVideoNew(JsonArray allVideos, String channelId) throws ParseException {
         boolean newVideoAvailable = false;
         Video videoItem;
         Video existingVideo;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
         for (int i = allVideos.size() - 1; i >= 0; i--) {
             JsonObject videoEntry = allVideos.get(i).getAsJsonObject();
             // printVideoEntry(videoEntry, detailed, count);
@@ -101,7 +110,9 @@ public class VideoDownloader{
             } else {
                 newVideoAvailable = true;
             }
-            Date date = new Date(videoEntry.get("snippet").getAsJsonObject().get("publishedAt").getAsString());
+            String dateStr = videoEntry.get("snippet").getAsJsonObject().get("publishedAt").getAsString();
+            dateStr = dateStr.replace("Z", "");
+            Date date = dateFormat.parse(dateStr);
             videoItem.setPublishDate(date);
             videoItem.setContentStatus(ContentStatus.Published);
             videoItem.setDescription(videoEntry.get("snippet").getAsJsonObject().get("description").getAsString());
