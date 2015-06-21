@@ -9,4 +9,6 @@ public class HttpParameters {
     public static final String PATH_PARAMETER_PARAM = "PATH_PARAMETER_PARAM";
 
     public static final String URL_MAPPING = "URL_MAPPING";
+
+    public static final String VIDEO_ID_PARAM = "videoId";
 }
