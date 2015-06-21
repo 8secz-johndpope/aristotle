@@ -32,6 +32,9 @@ import com.google.gdata.data.youtube.YouTubeMediaGroup;
 import com.google.gdata.data.youtube.YouTubeMediaRating;
 import com.google.gdata.data.youtube.YtPublicationState;
 import com.google.gdata.data.youtube.YtStatistics;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 @Component
 @Transactional
@@ -43,7 +46,10 @@ public class VideoDownloader{
 	@Autowired
     private VideoRepository videoRepository;
 	
+    @Autowired
+    private HttpUtil httpUtil;
 	
+
 	@PostConstruct
 	public void init(){
         service = new YouTubeService("aristotle",
@@ -60,7 +66,7 @@ public class VideoDownloader{
 			
 			for(String oneChannel:channelIds){
 				logger.info("oneChannel = "+oneChannel);
-				newVideos = newVideos || downloadVideosOfChannel(oneChannel);
+                newVideos = newVideos || downloadVideosOfChannelNew(oneChannel);
 			}
 
 		}catch(Exception ex){
@@ -68,6 +74,35 @@ public class VideoDownloader{
 		}
 		return newVideos;
 	}
+
+    private boolean downloadVideosOfChannelNew(String channelId) throws Exception{
+        List<VideoEntry> allVideos = new ArrayList<VideoEntry>();
+        int maxResult = 50;
+        int startIndex = 1;
+        String nextPageToken = null;
+        JsonParser jsonParser = new JsonParser();
+        while(true){
+
+            logger.info("StartIndex = "+startIndex+", MaxResults="+maxResult);
+            String feedUrl = "http://gdata.youtube.com/feeds/api/users/"+channelId+"/uploads?start-index="+startIndex+"&max-results="+maxResult;
+            feedUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=" + channelId + "&maxResults=" + maxResult;
+            if (nextPageToken != null) {
+                feedUrl = feedUrl + "&pageToken=" + nextPageToken;
+            }
+            logger.info("feedUrl = "+feedUrl);
+            String response = httpUtil.getResponse(feedUrl);
+            JsonObject jsonObject = (JsonObject) jsonParser.parse(response);
+            int totalResults = jsonObject.get("pageInfo").getAsJsonObject().get("totalResults").getAsInt();
+            JsonArray itemJsonArray = jsonObject.get("items").getAsJsonArray();
+            downloadAndSaveVideoNew(itemJsonArray, channelId);
+            if(totalResults < maxResult){
+                break;
+            }
+            nextPageToken = jsonObject.get("nextPageToken").getAsString();
+        }
+        return downloadAndSaveVideo(allVideos, channelId);
+        
+    }
 	private boolean downloadVideosOfChannel(String channelId) throws Exception{
 		List<VideoEntry> allVideos = new ArrayList<VideoEntry>();
 		int maxResult = 25;
@@ -87,6 +122,38 @@ public class VideoDownloader{
 		return downloadAndSaveVideo(allVideos, channelId);
 		
 	}
+
+    public boolean downloadAndSaveVideoNew(JsonArray allVideos, String channelId) {
+        boolean newVideoAvailable = false;
+        Video videoItem;
+        Video existingVideo;
+        for (int i = allVideos.size() - 1; i >= 0; i--) {
+            JsonObject videoEntry = allVideos.get(i).getAsJsonObject();
+            // printVideoEntry(videoEntry, detailed, count);
+            String videoId = videoEntry.get("id").getAsJsonObject().get("videoId").getAsString();
+            existingVideo = videoRepository.getVideoByYoutubeVideoId(videoId);
+            videoItem = new Video();
+            if (existingVideo != null) {
+                videoItem.setId(existingVideo.getId());
+                continue;
+            } else {
+                newVideoAvailable = true;
+            }
+            Date date = new Date(videoEntry.get("snippet").getAsJsonObject().get("publishedAt").getAsString());
+            videoItem.setPublishDate(date);
+            videoItem.setContentStatus(ContentStatus.Published);
+            videoItem.setDescription(videoEntry.get("snippet").getAsJsonObject().get("description").getAsString());
+            videoItem.setGlobal(true);
+            videoItem.setImageUrl("http://i.ytimg.com/vi/" + videoId + "/hqdefault.jpg");
+            videoItem.setYoutubeVideoId(videoId);
+            videoItem.setTitle(videoEntry.get("snippet").getAsJsonObject().get("title").getAsString());
+            videoItem.setChannelId(channelId);
+            videoItem.setWebUrl("http://www.youtube.com/watch?v=" + videoId);
+            logger.info("Saving Youtube Video : " + videoItem.getTitle() + ", Video Id = " + videoItem.getYoutubeVideoId());
+            videoItem = videoRepository.save(videoItem);
+        }
+        return newVideoAvailable;
+    }
 
 	public boolean downloadAndSaveVideo(List<VideoEntry> allVideos, String channelId) {
 		boolean newVideoAvailable = false;
