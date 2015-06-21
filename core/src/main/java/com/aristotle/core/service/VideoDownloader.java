@@ -96,6 +96,9 @@ public class VideoDownloader{
         for (int i = allVideos.size() - 1; i >= 0; i--) {
             try {
                 JsonObject videoEntry = allVideos.get(i).getAsJsonObject();
+                if (!"youtube#video".equals(videoEntry.get("id").getAsJsonObject().get("kind").getAsString())) {
+                    continue;
+                }
                 System.out.println(videoEntry.get("id"));
                 String videoId = videoEntry.get("id").getAsJsonObject().get("videoId").getAsString();
                 existingVideo = videoRepository.getVideoByYoutubeVideoId(videoId);
