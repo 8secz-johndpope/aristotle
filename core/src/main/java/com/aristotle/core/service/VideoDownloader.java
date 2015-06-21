@@ -88,11 +88,6 @@ public class VideoDownloader{
         return true;
     }
 
-    public static void main(String[] args) throws ParseException {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-        System.out.println(dateFormat.parse("2015-04-14T07:35:40.000"));
-    }
-
     public boolean downloadAndSaveVideoNew(JsonArray allVideos, String channelId) throws ParseException {
         boolean newVideoAvailable = false;
         Video videoItem;
