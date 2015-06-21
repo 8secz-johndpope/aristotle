@@ -68,6 +68,7 @@ public class VideoDownloader{
             }
             logger.info("feedUrl = "+feedUrl);
             String response = httpUtil.getResponse(feedUrl);
+            logger.info("response = " + response);
             JsonObject jsonObject = (JsonObject) jsonParser.parse(response);
             int totalResults = jsonObject.get("pageInfo").getAsJsonObject().get("totalResults").getAsInt();
             JsonArray itemJsonArray = jsonObject.get("items").getAsJsonArray();
