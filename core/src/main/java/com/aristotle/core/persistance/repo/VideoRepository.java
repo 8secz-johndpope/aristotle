@@ -16,6 +16,9 @@ public interface VideoRepository extends JpaRepository<Video, Long> {
     @Query("select distinct video from Video video where video.global=true order by publishDate desc")
     public abstract List<Video> getGloablVideos(Pageable pageable);
 
+    @Query("select count(video) from Video video where video.global=true")
+    public abstract long getGloablVideoCount();
+
     @Query("select distinct video from Video video join video.locations locations where locations.id in ?1 order by video.publishDate desc")
     public abstract List<Video> getLocationVideos(Set<Long> locationId, Pageable pageable);
 

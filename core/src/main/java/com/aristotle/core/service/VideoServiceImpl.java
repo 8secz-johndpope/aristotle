@@ -42,6 +42,9 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     public long getLocationVideosCount(Set<Long> locationIds) {
+        if (locationIds == null || locationIds.isEmpty()) {
+            return videoRepository.getGloablVideoCount();
+        }
         return videoRepository.getLocationVideoCount(locationIds);
     }
 
