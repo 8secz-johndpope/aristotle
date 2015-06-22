@@ -1,6 +1,7 @@
 package com.aristotle.core.persistance.repo;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,10 +14,13 @@ public interface VideoRepository extends JpaRepository<Video, Long> {
     Video getVideoByYoutubeVideoId(String videoId);
 
     @Query("select distinct video from Video video where video.global=true order by publishDate desc")
-    public abstract List<Video> getAllGloablVideos(Pageable pageable);
+    public abstract List<Video> getGloablVideos(Pageable pageable);
 
-    @Query("select distinct video from Video video join video.locations locations where locations.id=?1 order by video.publishDate desc")
-    public abstract List<Video> getLocationVideos(Long locationId, Pageable pageable);
+    @Query("select distinct video from Video video join video.locations locations where locations.id in ?1 order by video.publishDate desc")
+    public abstract List<Video> getLocationVideos(Set<Long> locationId, Pageable pageable);
+
+    @Query("select count(video) from Video video join video.locations locations where locations.id in ?1")
+    public long getLocationVideoCount(Set<Long> locationId);
 
     @Query("select distinct video from Video video join video.locations locations where locations.id=?1 order by video.publishDate desc")
     public abstract List<Video> getLocationsVideos(List<Long> locationIds);

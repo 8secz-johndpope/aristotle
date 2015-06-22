@@ -1,6 +1,7 @@
 package com.aristotle.core.service;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -10,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.Video;
 import com.aristotle.core.persistance.repo.LocationRepository;
 import com.aristotle.core.persistance.repo.VideoRepository;
@@ -26,18 +26,23 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     @Cacheable(value = "videos")
-    public List<Video> getLocationVideos(Location location, int size) {
+    public List<Video> getLocationVideos(Set<Long> locationIds, int pageNumber, int size) {
         System.out.println("Getting Data From Database");
-        Pageable pageable = new PageRequest(0, size);
-        if(location == null){
-            return videoRepository.getAllGloablVideos(pageable);
+        Pageable pageable = new PageRequest(pageNumber, size);
+        if (locationIds == null || locationIds.isEmpty()) {
+            return videoRepository.getGloablVideos(pageable);
         }
-        return videoRepository.getLocationVideos(location.getId(), pageable);
+        return videoRepository.getLocationVideos(locationIds, pageable);
     }
 
     @Override
     public Video getVideoById(Long videoId) {
         return videoRepository.findOne(videoId);
+    }
+
+    @Override
+    public long getLocationVideosCount(Set<Long> locationIds) {
+        return videoRepository.getLocationVideoCount(locationIds);
     }
 
 }
