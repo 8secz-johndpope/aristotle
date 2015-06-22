@@ -17,37 +17,10 @@ import javax.persistence.Version;
 @Entity
 @Table(name="twitter_account")
 //@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region="Account", include="all")
-public class TwitterAccount {
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO,  generator="TWITTER_ACCOUNT_SEQ_GEN")
-	@SequenceGenerator(
-    name="TWITTER_ACCOUNT_SEQ_GEN",
-    sequenceName="TWITTER_ACCOUNT_SEQ",
-    allocationSize=20
-	)
-	private Long id;
-	@Version
-	@Column(name="ver")
-	private int ver;
-	
-	@Column(name="date_created")
-	private Date dateCreated;
-	@Column(name="date_modified")
-	private Date dateModified;
-	@Column(name="creator_id")
-	private Long creatorId;
-	@Column(name="modifier_id")
-	private Long modifierId;
+public class TwitterAccount extends BaseEntity{
 
 	@Column(name = "image_url", nullable = false)
 	private String imageUrl;
-
-	@Column(name = "token", nullable = false, length=256)
-	private String token;
-	
-	@Column(name = "token_secret", nullable = false, length=256)
-	private String tokenSecret;
 
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="user_id")
@@ -62,94 +35,52 @@ public class TwitterAccount {
 	@Column(name="screen_name_cap")
 	private String screenNameCap;
 
-	
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public int getVer() {
-		return ver;
-	}
-	public void setVer(int ver) {
-		this.ver = ver;
-	}
-	public Date getDateCreated() {
-		return dateCreated;
-	}
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-	public Date getDateModified() {
-		return dateModified;
-	}
-	public void setDateModified(Date dateModified) {
-		this.dateModified = dateModified;
-	}
-	public Long getCreatorId() {
-		return creatorId;
-	}
-	public void setCreatorId(Long creatorId) {
-		this.creatorId = creatorId;
-	}
-	public Long getModifierId() {
-		return modifierId;
-	}
-	public void setModifierId(Long modifierId) {
-		this.modifierId = modifierId;
-	}
-	public String getToken() {
-		return token;
-	}
-	public void setToken(String token) {
-		this.token = token;
-	}
-	public String getTokenSecret() {
-		return tokenSecret;
-	}
-	public void setTokenSecret(String tokenSecret) {
-		this.tokenSecret = tokenSecret;
-	}
-	public User getUser() {
-		return user;
-	}
-	public void setUser(User user) {
-		this.user = user;
-	}
-	public Long getUserId() {
-		return userId;
-	}
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-	public String getTwitterId() {
-		return twitterId;
-	}
-	public void setTwitterId(String twitterId) {
-		this.twitterId = twitterId;
-	}
-	public String getScreenName() {
-		return screenName;
-	}
-	public void setScreenName(String screenName) {
-		this.screenName = screenName;
-	}
 	public String getScreenNameCap() {
 		return screenNameCap;
 	}
+
 	public void setScreenNameCap(String screenNameCap) {
 		this.screenNameCap = screenNameCap;
 	}
+
 	public String getImageUrl() {
 		return imageUrl;
 	}
+
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
-	
-	
 
+	public User getUser() {
+		return user;
+	}
 
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public String getTwitterId() {
+		return twitterId;
+	}
+
+	public void setTwitterId(String twitterId) {
+		this.twitterId = twitterId;
+	}
+
+	public String getScreenName() {
+		return screenName;
+	}
+
+	public void setScreenName(String screenName) {
+		this.screenName = screenName;
+	}
 
 }
