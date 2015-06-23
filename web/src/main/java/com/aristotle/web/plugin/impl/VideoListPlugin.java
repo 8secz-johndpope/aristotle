@@ -41,8 +41,8 @@ public class VideoListPlugin extends LocationAwareDataPlugin {
             List<Video> videoList = videoService.getLocationVideos(locations, (pageNumber - 1), pageSize);
             long totalNews = videoService.getLocationVideosCount(locations);
             if (videoList == null || videoList.isEmpty()) {
-                videoList = videoService.getLocationVideos(locations, (pageNumber - 1), pageSize);
-                totalNews = videoService.getLocationVideosCount(locations);
+                videoList = videoService.getLocationVideos(null, (pageNumber - 1), pageSize);
+                totalNews = videoService.getLocationVideosCount(null);
             }
             JsonArray videoJsonArray = convertVideoList(videoList);
             context.add(name, videoJsonArray);

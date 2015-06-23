@@ -23,6 +23,7 @@ import com.github.jknack.handlebars.Context;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.JsonNodeValueResolver;
 import com.github.jknack.handlebars.Template;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 @Controller
@@ -133,8 +134,81 @@ public class ContentController {
             addIndexPageTitleAndDescription(pageObject, jsonContext);
             return;
         }
+        if (requestedUrl.startsWith("/content/video/")) {
+            addVideoItemTitleDescription(pageObject, jsonContext);
+            return;
+        }
+        if (requestedUrl.startsWith("/content/videos")) {
+            addVideoListDescription(pageObject, jsonContext);
+            return;
+        }
+        if (requestedUrl.startsWith("/organisation/nwc")) {
+            addNationalWorkingCommiteeTitleDescription(pageObject, jsonContext);
+            return;
+        }
+        if (requestedUrl.startsWith("/organisation/nsc")) {
+            addNationalSteeringCommiteeTitleDescription(pageObject, jsonContext);
+            return;
+        }
+
     }
 
+    private void addNationalWorkingCommiteeTitleDescription(JsonObject pageObject, JsonObject jsonContext) {
+        try {
+            pageObject.addProperty("description", "List of National Working Committee(NWC) Members | Swaraj Abhiyan Video");
+            pageObject.addProperty("title", "List of National Working Committee(NWC) Members | Swaraj Abhiyan Video");
+        } catch (Exception ex) {
+            pageObject.addProperty("description", "List of National Working Committee(NSC) Members | Swaraj Abhiyan Video");
+            pageObject.addProperty("title", "List of National Working Committee(NSC) Members | Swaraj Abhiyan Video");
+        }
+    }
+
+    private void addNationalSteeringCommiteeTitleDescription(JsonObject pageObject, JsonObject jsonContext) {
+        try {
+            pageObject.addProperty("description", "List of National Steering Committee(NSC) Members | Swaraj Abhiyan Video");
+            pageObject.addProperty("title", "List of National Steering Committee(NSC) Members | Swaraj Abhiyan Video");
+        } catch (Exception ex) {
+            pageObject.addProperty("description", "List of National Steering Committee(NSC) Members | Swaraj Abhiyan Video");
+            pageObject.addProperty("title", "List of National Steering Committee(NSC) Members | Swaraj Abhiyan Video");
+        }
+    }
+    private void addVideoItemTitleDescription(JsonObject pageObject, JsonObject jsonContext) {
+        try {
+            String videoDescription = jsonContext.get("SingleVideoPlugin").getAsJsonObject().get("description").getAsString();
+            String title = jsonContext.get("SingleVideoPlugin").getAsJsonObject().get("title").getAsString();
+            String youtubeVideoId = jsonContext.get("SingleVideoPlugin").getAsJsonObject().get("youtubeVideoId").getAsString();
+            JsonArray images = new JsonArray();
+            JsonObject oneImage = new JsonObject();
+            oneImage.addProperty("image", "http://i.ytimg.com/vi/" + youtubeVideoId + "/maxresdefault.jpg");
+            images.add(oneImage);
+            pageObject.addProperty("description", videoDescription);
+            pageObject.addProperty("title", title + " | Swaraj Abhiyan Video");
+            pageObject.add("images", images);
+        } catch (Exception ex) {
+            pageObject.addProperty("description", "Swaraj Abhiyan News");
+            pageObject.addProperty("title", "Swaraj Abhiyan News");
+        }
+    }
+
+    private void addVideoListDescription(JsonObject pageObject, JsonObject jsonContext) {
+        try {
+            pageObject.addProperty("title", "Watch Latest videos from Swaraj Abhiyan");
+            String firstNewsDescription = jsonContext.get("VideoListPlugin").getAsJsonArray().get(0).getAsJsonObject().get("description").getAsString();
+            pageObject.addProperty("description", firstNewsDescription);
+            JsonArray videos = jsonContext.get("VideoListPlugin").getAsJsonArray();
+            JsonArray images = new JsonArray();
+            JsonObject oneVideo;
+            for (int i = 0; i < videos.size(); i++) {
+                oneVideo = videos.get(i).getAsJsonObject();
+                JsonObject oneImage = new JsonObject();
+                oneImage.addProperty("image", "http://i.ytimg.com/vi/" + oneVideo.get("youtubeVideoId").getAsString() + "/maxresdefault.jpg");
+                images.add(oneImage);
+            }
+            pageObject.add("images", images);
+        } catch (Exception ex) {
+            pageObject.addProperty("description", "All Latest Swaraj Abhiyan News");
+        }
+    }
     private void addNewsItemTitleDescription(JsonObject pageObject, JsonObject jsonContext) {
         try {
             String newsDescription = jsonContext.get("SingleNewsPlugin").getAsJsonObject().get("contentSummary").getAsString();
