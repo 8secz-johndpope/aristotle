@@ -9,6 +9,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.aristotle.core.persistance.Video;
+import com.aristotle.core.service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,6 +29,8 @@ public class SitemapController {
     private HandleBarManager handleBarManager;
     @Autowired
     private NewsService newsService;
+    @Autowired
+    private VideoService videoService;
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -71,7 +75,7 @@ public class SitemapController {
 
         for (News oneNews : allNews) {
             sb.append("<url>");
-            sb.append("<loc>http://www.swarajabhiyan.org/content/news"+oneNews.getId()+"</loc>");
+            sb.append("<loc>http://www.swarajabhiyan.org/content/news/"+oneNews.getId()+"</loc>");
             if(oneNews.getPublishDate() != null){
                 //sb.append("   <news:publication_date>"+sdf.format(oneNews.getPublishDate())+"</news:publication_date>");
                 sb.append("<lastmod>"+sdf.format(oneNews.getPublishDate())+"</lastmod>");
@@ -118,6 +122,37 @@ public class SitemapController {
 
         return sb.toString();
     }
+
+    @ResponseBody
+    @RequestMapping(value = { "/sitemap/videos.xml" })
+    public String videoSiteMap(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws AppException {
+        List<Video> allVideos = videoService.getLocationVideos(null, 0, 10000);
+        StringBuilder sb = new StringBuilder();
+        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        // sb.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:news=\"http://www.google.com/schemas/sitemap-news/0.9\">");
+        sb.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">");
+
+        for (Video oneNews : allVideos) {
+            sb.append("<url>");
+            sb.append("<loc>http://www.swarajabhiyan.org/content/video/"+oneNews.getId()+"</loc>");
+            try{
+                if(oneNews.getPublishDate() != null){
+                    sb.append("<lastmod>"+sdf.format(oneNews.getPublishDate())+"</lastmod>");
+                }else if(oneNews.getDateModified() != null){
+                    sb.append("<lastmod>"+sdf.format(oneNews.getDateModified())+"</lastmod>");
+                }
+
+            }catch(Exception ex){
+            }
+            sb.append("<changefreq>monthly</changefreq>");
+            sb.append("<priority>0.9</priority>");
+            sb.append("</url>");
+        }
+        sb.append("</urlset>");
+
+        return sb.toString();
+    }
+
 
     private void addOneUrlToSiteMap(StringBuilder sb, String url, Date publishDate, String changefreq, String priority) {
         sb.append("<url>");
