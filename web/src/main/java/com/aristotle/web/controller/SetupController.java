@@ -81,7 +81,12 @@ public class SetupController {
     @RequestMapping("/video/update")
     @ResponseBody
     public String downloadVideos(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
-        videoDownloader.refreshVideoList();
+        if(httpServletRequest.getParameter("updateall") == null){
+            videoDownloader.refreshVideoList(false);
+        }else{
+            videoDownloader.refreshVideoList(true);
+        }
+
         return "Success";
     }
 

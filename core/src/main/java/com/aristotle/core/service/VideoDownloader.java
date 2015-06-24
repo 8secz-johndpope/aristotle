@@ -35,7 +35,8 @@ public class VideoDownloader{
 
     @Autowired
     private HttpUtil httpUtil;
-	
+
+    private final JsonParser jsonParser = new JsonParser();
 
 	@PostConstruct
 	public void init(){
@@ -43,7 +44,7 @@ public class VideoDownloader{
 	// http://www.quartz-scheduler.org/documentation/quartz-1.x/tutorials/crontrigger
 	// http://freshgroundjava.blogspot.in/2012/07/spring-scheduled-tasks-cron-expression.html
 	// ss mm hh dd
-	public boolean refreshVideoList() {
+	public boolean refreshVideoList(boolean updateAll) {
         logger.info("Downloading Videos");
         String channelIds[] = { "UCYm-AJyEXXAWOrw_qp0XQDw" };
 		boolean newVideos = false;
@@ -51,7 +52,7 @@ public class VideoDownloader{
 			
 			for(String oneChannel:channelIds){
 				logger.info("oneChannel = "+oneChannel);
-                newVideos = newVideos || downloadVideosOfChannelNew(oneChannel);
+                newVideos = newVideos || downloadVideosOfChannelNew(oneChannel, updateAll);
 			}
 
 		}catch(Exception ex){
@@ -60,11 +61,11 @@ public class VideoDownloader{
 		return newVideos;
 	}
 
-    private boolean downloadVideosOfChannelNew(String channelId) throws Exception{
+    private boolean downloadVideosOfChannelNew(String channelId, boolean updateAll) throws Exception{
         int maxResult = 50;
         int startIndex = 1;
         String nextPageToken = null;
-        JsonParser jsonParser = new JsonParser();
+
         while(true){
 
             logger.info("StartIndex = "+startIndex+", MaxResults="+maxResult);
@@ -79,7 +80,7 @@ public class VideoDownloader{
             JsonObject jsonObject = (JsonObject) jsonParser.parse(response);
             int totalResults = jsonObject.get("pageInfo").getAsJsonObject().get("totalResults").getAsInt();
             JsonArray itemJsonArray = jsonObject.get("items").getAsJsonArray();
-            downloadAndSaveVideoNew(itemJsonArray, channelId);
+            downloadAndSaveVideoNew(itemJsonArray, channelId, updateAll);
             if(totalResults < maxResult){
                 break;
             }
@@ -88,7 +89,7 @@ public class VideoDownloader{
         return true;
     }
 
-    public boolean downloadAndSaveVideoNew(JsonArray allVideos, String channelId) throws ParseException {
+    public boolean downloadAndSaveVideoNew(JsonArray allVideos, String channelId, boolean updateAll) throws ParseException {
         boolean newVideoAvailable = false;
         Video videoItem;
         Video existingVideo;
@@ -101,10 +102,15 @@ public class VideoDownloader{
                 }
                 System.out.println(videoEntry.get("id"));
                 String videoId = videoEntry.get("id").getAsJsonObject().get("videoId").getAsString();
+
                 existingVideo = videoRepository.getVideoByYoutubeVideoId(videoId);
                 videoItem = new Video();
                 if (existingVideo != null) {
                     videoItem.setId(existingVideo.getId());
+                    if(updateAll){
+                        String description = getDescription(videoId);
+                        existingVideo.setDescription(description);
+                    }
                     continue;
                 } else {
                     newVideoAvailable = true;
@@ -114,7 +120,8 @@ public class VideoDownloader{
                 Date date = dateFormat.parse(dateStr);
                 videoItem.setPublishDate(date);
                 videoItem.setContentStatus(ContentStatus.Published);
-                videoItem.setDescription(videoEntry.get("snippet").getAsJsonObject().get("description").getAsString());
+                String description = getDescription(videoId);
+                videoItem.setDescription(description);
                 videoItem.setGlobal(true);
                 videoItem.setImageUrl("http://i.ytimg.com/vi/" + videoId + "/hqdefault.jpg");
                 videoItem.setYoutubeVideoId(videoId);
@@ -128,6 +135,14 @@ public class VideoDownloader{
             }
         }
         return newVideoAvailable;
+    }
+
+    private String getDescription(String videoId) throws Exception{
+        String response = httpUtil.getResponse("https://www.googleapis.com/youtube/v3/videos?part=snippet&id="+videoId+"&key="+googleApiKey);
+        JsonObject videoJsonObject = jsonParser.parse(response).getAsJsonObject();
+        String description = videoJsonObject.get("items").getAsJsonArray().get(0).getAsJsonObject().get("snippet").getAsJsonObject().get("description").getAsString();
+        return description;
+
     }
 
 }

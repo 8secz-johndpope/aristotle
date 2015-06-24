@@ -29,7 +29,7 @@ public class ForwardController {
     }
 
     @RequestMapping(value = {"/register"})
-    public ModelAndView refreshTemplates(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) {
+    public ModelAndView registerRedirect(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) {
         RedirectView rv = new RedirectView("/index.html?register=1");
         rv.setExposeModelAttributes(false);
         modelAndView.setView(rv);
