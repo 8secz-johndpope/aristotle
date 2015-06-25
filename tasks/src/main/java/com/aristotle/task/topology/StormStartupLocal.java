@@ -1,25 +1,26 @@
 package com.aristotle.task.topology;
 
-import backtype.storm.generated.TopologySummary;
-import backtype.storm.utils.NimbusClient;
-import backtype.storm.utils.Utils;
-import org.apache.thrift7.TException;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.thrift7.TException;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import backtype.storm.generated.TopologySummary;
+import backtype.storm.utils.NimbusClient;
+import backtype.storm.utils.Utils;
+
 public class StormStartupLocal {
 
 	public static void main(String[] args) throws Exception {
-        String topologyName = "Local";
+        String topologyName = "Tasks";
         System.out.println("Toplogy Name to Start " + topologyName);
         
 		System.out.println("Creating Context");
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("storm-topology.xml");
         
-        killToplogyIfAlreadyRunning(topologyName);
+        // killToplogyIfAlreadyRunning(topologyName);
 
         startToplogy(topologyName, applicationContext);
 

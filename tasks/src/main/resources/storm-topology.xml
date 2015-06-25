@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+    <context:component-scan base-package="com.aristotle.task.test.spout" />
+
+   	<bean class="com.aristotle.task.topology.SpringTopology">
+		<property name="name" value="Tasks" />
+		<property name="maxSpoutPending" value="5000" />
+		<property name="messageTimeoutSeconds" value="3600" />
+		
+		<property name="numWorkers" value="4" />
+		<property name="numParallel" value="4" />
+		
+		<property name="topologyProperties">
+            <map>
+            </map>
+        </property>
+
+		<property name="spoutConfigs">
+			<list>
+				<ref bean="TestSpoutBean" />
+			</list>
+		</property>
+		<property name="boltConfigs">
+			<list>
+				<ref bean="simpleBoltBean" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="TestSpoutBean" class="com.aristotle.task.test.spout.TestSpout">
+		<property name="componentId" value="TestSpout" />
+		<property name="outputStream" value="TestStream" />
+		<!-- Properties define which services will be available for spout -->
+		<property name="maxSpoutPending" value="2" />
+
+	</bean>
+
+	<bean id="simpleBoltBean" class="com.aristotle.task.topology.SimpleBolt">
+		<property name="componentId" value="SimpleBolt" />
+		<property name="outputStream" value="SimpleStream" />
+		<property name="boltProcessor" value="com.aristotle.task.test.spout.TestBoltProcessor" />
+		
+		<property name="sourceComponentStreams">
+			<map>
+				<entry key="TestSpout" value="TestStream" />
+			</map>
+		</property>
+        <property name="fields">
+            <list>
+                <value>Fields1</value>
+                <value>Fields2</value>
+                <value>Fields3</value>
+            </list>
+        </property>
+		
+	</bean>
+
+</beans>

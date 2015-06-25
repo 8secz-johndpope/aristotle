@@ -4,9 +4,11 @@ import java.io.Serializable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import backtype.storm.tuple.Tuple;
+
+import com.aristotle.task.spring.SpringContext;
 
 /**
  * This class gives Basic Support to bolts and Spouts
@@ -21,18 +23,12 @@ public abstract class BaseComponent implements Serializable {
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private int paralellism = 1;
-    private static ClassPathXmlApplicationContext applicationContext;
+    private static ConfigurableApplicationContext applicationContext;
     private transient ThreadLocal<Tuple> tupleThreadLocal;
 
 
-    protected ClassPathXmlApplicationContext getApplicationContext() {
-        if (applicationContext == null) {
-            synchronized (this) {
-                if (applicationContext == null) {
-                    applicationContext = new ClassPathXmlApplicationContext("task-spring-context.xml");
-                }
-            }
-        }
+    protected ConfigurableApplicationContext getApplicationContext() {
+        applicationContext = SpringContext.getContext();
         return applicationContext;
     }
     protected void init() {
