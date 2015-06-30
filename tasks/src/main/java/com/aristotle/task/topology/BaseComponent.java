@@ -1,12 +1,14 @@
 package com.aristotle.task.topology;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import backtype.storm.tuple.Tuple;
+import backtype.storm.spout.SpoutOutputCollector;
 
 import com.aristotle.task.spring.SpringContext;
 
@@ -22,25 +24,26 @@ public abstract class BaseComponent implements Serializable {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private int paralellism = 1;
     private static ConfigurableApplicationContext applicationContext;
-    private transient ThreadLocal<Tuple> tupleThreadLocal;
+    Map<String, Object> configuration;
+    private SpoutOutputCollector collector;
+    private int retry;
+    private List<String> outputStreams;
+    private String componentId;
+    private int paralellism = 1;
+    private int maxSpoutPending;
 
 
     protected ConfigurableApplicationContext getApplicationContext() {
         applicationContext = SpringContext.getContext();
         return applicationContext;
     }
-    protected void init() {
-        tupleThreadLocal = new ThreadLocal<>();
-    }
-
     protected void destroy() {
         if (applicationContext != null) {
             try {
                 applicationContext.close();
             } catch (Exception ex) {
-                logError("Unable to close application context", ex);
+                logger.error("Unable to close application context", ex);
             }
         }
     }
@@ -53,26 +56,16 @@ public abstract class BaseComponent implements Serializable {
         this.paralellism = paralellism;
     }
 
-    protected void setCurrentTuple(Tuple tuple) {
-        getTupleThreadLocal().set(tuple);
+    protected void writeToStream(List<Object> tuple, Object messageId, String streamId) {
+        logInfo("Writing To Stream " + streamId + " with message id as " + messageId);
+        collector.emit(streamId, tuple, messageId);
     }
 
-    protected void clearCurrentTuple() {
-        getTupleThreadLocal().remove();
+    protected void writeToStream(List<Object> tuple, String streamId) {
+        logInfo("Writing To Stream " + streamId);
+        collector.emit(streamId, tuple);
     }
 
-    protected String getCurremtTupleAnchor() {
-        ThreadLocal<Tuple> threadLocal = getTupleThreadLocal();
-        if (threadLocal == null) {
-            return "NI";
-        }
-        Tuple tuple = threadLocal.get();
-        if (tuple == null) {
-            return "NI";
-        }
-        return tuple.getMessageId().getAnchors().toString();
-    }
-    // Log related functions
     protected void logInfo(String message) {
         logger.info(getCurremtTupleAnchor() + " : " + message);
     }
@@ -105,8 +98,12 @@ public abstract class BaseComponent implements Serializable {
         logger.error(getCurremtTupleAnchor() + " : " + message, ex);
     }
 
-    public ThreadLocal<Tuple> getTupleThreadLocal() {
-        return tupleThreadLocal;
+    protected String getCurremtTupleAnchor() {
+        /*
+         * ThreadLocal<Tuple> threadLocal = getTupleThreadLocal(); if (threadLocal == null) { return "NI"; } Tuple tuple = threadLocal.get(); if (tuple == null) { return "NI"; } return
+         * tuple.getMessageId().getAnchors().toString();
+         */
+        return "NI";
     }
 
 }

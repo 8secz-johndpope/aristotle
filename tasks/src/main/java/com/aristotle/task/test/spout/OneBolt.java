@@ -3,26 +3,25 @@ package com.aristotle.task.test.spout;
 import java.util.Date;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
+import backtype.storm.topology.IRichBolt;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Tuple;
 
-import com.aristotle.task.topology.BoltProcessor;
+import com.aristotle.task.spring.SpringContext;
 
-@Component
-public class TestBoltProcessor implements BoltProcessor {
+public class OneBolt implements IRichBolt {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Autowired
+    private SpringClass springClass;
 
     @Override
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
-        // TODO Auto-generated method stub
-
+        SpringContext.getContext().getAutowireCapableBeanFactory().autowireBeanProperties(this, AutowireCapableBeanFactory.AUTOWIRE_AUTODETECT, true);
     }
 
     @Override
@@ -32,6 +31,7 @@ public class TestBoltProcessor implements BoltProcessor {
             // Read the incoming Message
             String message = input.getString(0);
             System.out.println("message Recieved : " + message);
+            springClass.printData("message Recieved : " + message);
         } catch (Exception ex) {
             // logError("Unable to save lcoation file in redis ", ex);
         } finally {

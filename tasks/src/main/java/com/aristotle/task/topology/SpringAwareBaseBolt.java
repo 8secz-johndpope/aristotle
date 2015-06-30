@@ -11,7 +11,6 @@ import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.IRichBolt;
 import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 
 /**
@@ -21,13 +20,12 @@ import backtype.storm.tuple.Tuple;
  * @data Jul 25, 2014
  */
 
-public abstract class SpringAwareBaseBolt extends BaseComponent implements IRichBolt {
+public class SpringAwareBaseBolt extends BaseComponent implements IRichBolt {
 
 	private static final long serialVersionUID = 1L;
     public SpringAwareBaseBolt() {}
 
     protected OutputCollector outputCollector;
-    protected String outputStream;
     protected String componentId;
     private String boltProcessor;
     // key - CompnenetId , Value - Stream
@@ -37,19 +35,18 @@ public abstract class SpringAwareBaseBolt extends BaseComponent implements IRich
 
     protected BoltProcessor getBoltProcessor() {
         try {
-            logDebug("Getting Bolt Processor for {}", boltProcessor);
+            logger.debug("Getting Bolt Processor for {}", boltProcessor);
             BoltProcessor boltProcessorObject =  (BoltProcessor)getApplicationContext().getBean(Class.forName(boltProcessor));
-            boltProcessorObject.initBoltProcessorForTuple(getTupleThreadLocal(), this);
+            // boltProcessorObject.initBoltProcessorForTuple(getTupleThreadLocal(), this);
             return boltProcessorObject;
         } catch (Exception e) {
-            logError("Unable to create Bolt Processor " + boltProcessor, e);
+            logger.error("Unable to create Bolt Processor " + boltProcessor, e);
         }
-        logWarning("Returning Null Processor");
+        logger.warn("Returning Null Processor");
         return null;
     }
     @Override
     public final void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
-        super.init();
         this.outputCollector = collector;
         onPrepare(stormConf, context, collector);
     }
@@ -60,39 +57,21 @@ public abstract class SpringAwareBaseBolt extends BaseComponent implements IRich
 
     @Override
     public final void declareOutputFields(OutputFieldsDeclarer declarer) {
-        logInfo("outputStream = " + outputStream);
-        if (outputStream != null) {
-            declarer.declareStream(outputStream, new Fields(getFields()));
-        }
-        if (outputStreams != null) {
-            for (String oneOutpurStream : outputStreams) {
-                declarer.declareStream(oneOutpurStream, new Fields(getFields()));
-            }
-        }
+        getBoltProcessor().declareOutputFields(declarer);
     }
 
     public enum Result {
         Success, Failed;
     }
 
-    protected abstract Result processTuple(Tuple inputTuple);
-
     @Override
     public final void execute(Tuple inputTuple) {
-        logDebug("Received Message {} in component {}", inputTuple.getMessageId(), componentId);
-        getTupleThreadLocal().set(inputTuple);
+        logger.debug("Received Message {} in component {}", inputTuple.getMessageId(), componentId);
         try {
-            Result result = processTuple(inputTuple);
-            if (Result.Success.equals(result)) {
-                acknowledgeTuple(inputTuple);
-            } else {
-                failTuple(inputTuple);
-            }
+            getBoltProcessor().execute(inputTuple);
         } catch (Throwable t) {
-            logError("Bolt Processor threw Exception", t);
+            logger.error("Bolt Processor threw Exception", t);
             failTuple(inputTuple);
-        } finally {
-            getTupleThreadLocal().remove();
         }
     }
 
@@ -103,39 +82,29 @@ public abstract class SpringAwareBaseBolt extends BaseComponent implements IRich
         return fields.toArray(new String[fields.size()]);
     }
 
-    public void writeToStream(Tuple anchor, List<Object> tuple) {
-        if (outputStream == null) {
-            logDebug("no output stream defined so wont be writing anything");
-        } else {
-            logDebug("Writing To Stream {}", outputStream);
-            List<Integer> taskIds = outputCollector.emit(outputStream, anchor, tuple);
-            logDebug("Sent to task {}", taskIds);
-        }
-    }
+    /*
+     * public void writeToStream(Tuple anchor, List<Object> tuple) { logger.debug("Writing To Stream {}", outputStream); List<Integer> taskIds = outputCollector.emit(outputStream, anchor, tuple);
+     * logger.debug("Sent to task {}", taskIds); }
+     */
 
     public void writeToParticularStream(Tuple anchor, List<Object> tuple, String stream) {
-        logDebug("Writing To Stream {}", stream);
+        logger.debug("Writing To Stream {}", stream);
         List<Integer> taskIds = outputCollector.emit(stream, anchor, tuple);
-        logDebug("Sent to task {}", taskIds);
+        logger.debug("Sent to task {}", taskIds);
     }
-
-    public void writeToTaskStream(int taskId, Tuple anchor, List<Object> tuple) {
-        if (outputStream == null) {
-            logDebug("no output stream defined so wont be writing anything");
-        } else {
-            logDebug("Writing To Stream {}", outputStream);
-            outputCollector.emitDirect(taskId, outputStream, anchor, tuple);
-        }
-
-    }
+    
+    /*
+     * public void writeToTaskStream(int taskId, Tuple anchor, List<Object> tuple) { logger.debug("Writing To Stream {}", outputStream); outputCollector.emitDirect(taskId, outputStream, anchor,
+     * tuple); }
+     */
 
     private void acknowledgeTuple(Tuple input) {
-        logDebug("acknowledgeTuple : " + printTuple(input));
+        logger.debug("acknowledgeTuple : " + printTuple(input));
         outputCollector.ack(input);
     }
 
     private void failTuple(Tuple input) {
-        logWarning("***Failed acknowledgeTuple : " + printTuple(input));
+        logger.warn("***Failed acknowledgeTuple : " + printTuple(input));
         outputCollector.fail(input);
     }
 
@@ -160,14 +129,6 @@ public abstract class SpringAwareBaseBolt extends BaseComponent implements IRich
     @Override
     public Map<String, Object> getComponentConfiguration() {
         return null;
-    }
-
-    public String getOutputStream() {
-        return outputStream;
-    }
-
-    public void setOutputStream(String outputStream) {
-        this.outputStream = outputStream;
     }
 
     public String getComponentId() {

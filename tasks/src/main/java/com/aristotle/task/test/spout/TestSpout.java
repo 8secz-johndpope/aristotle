@@ -1,45 +1,36 @@
 package com.aristotle.task.test.spout;
 
+import org.springframework.stereotype.Component;
+
 import backtype.storm.tuple.Values;
 
-import com.aristotle.task.topology.SpringAwareBaseSpout;
+import com.aristotle.task.topology.AbstractBaseSpoutProcessor;
 
-public class TestSpout extends SpringAwareBaseSpout {
+@Component
+public class TestSpout extends AbstractBaseSpoutProcessor {
 
     private static final long serialVersionUID = 1L;
     
 
     @Override
-    public void getNextTuple() {
-        String message;
+    public void nextTuple() {
         try {
             System.out.println("Getting Next message");
-            writeToStream(new Values("Hello World " + System.currentTimeMillis()));
+            writeToStream(new Values("Hello World " + System.currentTimeMillis()), "TestStream");
             Thread.sleep(5000);
         } catch (Exception e) {
             logError("Unable to receive Location File message from AWS Quque", e);
         }
     }
     
-
     @Override
-    protected String[] getFields() {
-        return new String[] { "LocationSaveMessage" };
-    }
+    public void ack(Object msgId) {
+        System.out.println("Message Ack");
 
-    @Override
-    public void onAck(Object msgId) {
-        updateFileStatus(msgId, "Done", true);
     }
 
     @Override
-    public void onFail(Object msgId) {
-        updateFileStatus(msgId, "Fail", false);
+    public void fail(Object msgId) {
+        System.out.println("Message Fail");
     }
-
-    private void updateFileStatus(Object msg, String status, boolean active) {
-        System.out.println("status=" + status);
-
-    }
-
 }

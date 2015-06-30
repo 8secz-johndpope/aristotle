@@ -1,13 +1,8 @@
 package com.aristotle.task.topology;
 
-import backtype.storm.tuple.Tuple;
-
-import com.aristotle.task.topology.SpringAwareBaseBolt.Result;
+import backtype.storm.topology.IRichBolt;
 
 
-public interface BoltProcessor {
+public interface BoltProcessor extends IRichBolt {
 
-    public Result processTuple(Tuple input) throws Exception;
-    
-    public void initBoltProcessorForTuple(ThreadLocal<Tuple> tuple, SpringAwareBaseBolt springAwareBaseBolt);
 }

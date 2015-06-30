@@ -27,7 +27,6 @@ public class SpringTopology {
 	private int numParallel;
     private int maxSpoutPending;
     private int messageTimeoutSeconds = 30;
-	private String kafkaZookeeper;
     private List<SpringAwareBaseSpout> spoutConfigs;
     private List<SpringAwareBaseBolt> boltConfigs;
     private Map<String, Object> topologyProperties;
@@ -40,8 +39,9 @@ public class SpringTopology {
 
 		TopologyBuilder builder = new TopologyBuilder();
         // Create a Multiple Tree to print in logs
+        System.out.println("Creating Spouts " + spoutConfigs + " , " + spoutConfigs.size());
         for (SpringAwareBaseSpout oneSpout : spoutConfigs) {
-            System.out.println("Building Spout id=[" + oneSpout.getComponentId() + "], output stream = [" + oneSpout.getOutputStream() + "]");
+            System.out.println("Building Spout id=[" + oneSpout.getComponentId() + "]");
             SpoutDeclarer sd = builder.setSpout(oneSpout.getComponentId(), oneSpout, oneSpout.getParalellism());
             if (oneSpout.getMaxSpoutPending() > 0) {
                 sd.setMaxSpoutPending(oneSpout.getMaxSpoutPending());
@@ -56,7 +56,6 @@ public class SpringTopology {
                     System.out.println("Shuffling to Spout ID =[" + oneSourceComponentStream.getKey() + "], Spout Stream = [" + oneSourceComponentStream.getValue() + "]");
                     boltDeclarer.shuffleGrouping(oneSourceComponentStream.getKey(), oneSourceComponentStream.getValue());
                 }
-
             }
         }
 		return builder.createTopology();
@@ -114,14 +113,6 @@ public class SpringTopology {
 
     public void setNumParallel(int numParallel) {
         this.numParallel = numParallel;
-    }
-
-    public String getKafkaZookeeper() {
-        return kafkaZookeeper;
-    }
-
-    public void setKafkaZookeeper(String kafkaZookeeper) {
-        this.kafkaZookeeper = kafkaZookeeper;
     }
 
     public List<SpringAwareBaseSpout> getSpoutConfigs() {

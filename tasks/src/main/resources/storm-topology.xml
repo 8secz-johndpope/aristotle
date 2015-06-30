@@ -32,17 +32,24 @@
 		</property>
 	</bean>
 	
-	<bean id="TestSpoutBean" class="com.aristotle.task.test.spout.TestSpout">
+	<bean id="TestSpoutBean" class="com.aristotle.task.topology.SpringAwareBaseSpout">
 		<property name="componentId" value="TestSpout" />
-		<property name="outputStream" value="TestStream" />
-		<!-- Properties define which services will be available for spout -->
-		<property name="maxSpoutPending" value="2" />
+		<property name="spoutProcessor" value="com.aristotle.task.test.spout.TestSpout"></property>
+		<property name="outputStreams">
+            <list>
+                <value>TestStream</value>
+            </list>
+        </property>
 
 	</bean>
 
-	<bean id="simpleBoltBean" class="com.aristotle.task.topology.SimpleBolt">
+	<bean id="simpleBoltBean" class="com.aristotle.task.topology.SpringAwareBaseBolt">
 		<property name="componentId" value="SimpleBolt" />
-		<property name="outputStream" value="SimpleStream" />
+		<property name="outputStreams">
+            <list>
+                <value>SimpleStream</value>
+            </list>
+        </property>
 		<property name="boltProcessor" value="com.aristotle.task.test.spout.TestBoltProcessor" />
 		
 		<property name="sourceComponentStreams">
