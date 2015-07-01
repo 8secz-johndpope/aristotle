@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Set;
 
 import com.aristotle.core.persistance.Interest;
+import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.Volunteer;
 
 public class UserSearchResult {
@@ -37,6 +38,20 @@ public class UserSearchResult {
 
     private Set<Interest> volunteerInterests;
     private Volunteer volunteerRecord;
+
+    private Location livingState;
+    private Location livingDistrict;
+    private Location livingAssemblyConstituency;
+    private Location livingParliamentConstituency;
+
+    private Location votingState;
+    private Location votingDistrict;
+    private Location votingAssemblyConstituency;
+    private Location votingParliamentConstituency;
+
+    private Location nriCountry;
+    private Location nriCountryRegion;
+    private Location nriCountryRegionArea;
 
     public Long getId() {
         return id;
@@ -172,6 +187,94 @@ public class UserSearchResult {
 
     public void setVolunteerRecord(Volunteer volunteerRecord) {
         this.volunteerRecord = volunteerRecord;
+    }
+
+    public Location getLivingState() {
+        return livingState;
+    }
+
+    public void setLivingState(Location livingState) {
+        this.livingState = livingState;
+    }
+
+    public Location getLivingDistrict() {
+        return livingDistrict;
+    }
+
+    public void setLivingDistrict(Location livingDistrict) {
+        this.livingDistrict = livingDistrict;
+    }
+
+    public Location getLivingAssemblyConstituency() {
+        return livingAssemblyConstituency;
+    }
+
+    public void setLivingAssemblyConstituency(Location livingAssemblyConstituency) {
+        this.livingAssemblyConstituency = livingAssemblyConstituency;
+    }
+
+    public Location getLivingParliamentConstituency() {
+        return livingParliamentConstituency;
+    }
+
+    public void setLivingParliamentConstituency(Location livingParliamentConstituency) {
+        this.livingParliamentConstituency = livingParliamentConstituency;
+    }
+
+    public Location getVotingState() {
+        return votingState;
+    }
+
+    public void setVotingState(Location votingState) {
+        this.votingState = votingState;
+    }
+
+    public Location getVotingDistrict() {
+        return votingDistrict;
+    }
+
+    public void setVotingDistrict(Location votingDistrict) {
+        this.votingDistrict = votingDistrict;
+    }
+
+    public Location getVotingAssemblyConstituency() {
+        return votingAssemblyConstituency;
+    }
+
+    public void setVotingAssemblyConstituency(Location votingAssemblyConstituency) {
+        this.votingAssemblyConstituency = votingAssemblyConstituency;
+    }
+
+    public Location getVotingParliamentConstituency() {
+        return votingParliamentConstituency;
+    }
+
+    public void setVotingParliamentConstituency(Location votingParliamentConstituency) {
+        this.votingParliamentConstituency = votingParliamentConstituency;
+    }
+
+    public Location getNriCountry() {
+        return nriCountry;
+    }
+
+    public void setNriCountry(Location nriCountry) {
+        this.nriCountry = nriCountry;
+    }
+
+    public Location getNriCountryRegion() {
+        return nriCountryRegion;
+    }
+
+    public void setNriCountryRegion(Location nriCountryRegion) {
+        this.nriCountryRegion = nriCountryRegion;
+    }
+
+    public Location getNriCountryRegionArea() {
+        return nriCountryRegionArea;
+    }
+
+    public void setNriCountryRegionArea(Location nriCountryRegionArea) {
+        this.nriCountryRegionArea = nriCountryRegionArea;
     }
 
 }

@@ -156,6 +156,46 @@ public class UserServiceImpl implements UserService {
             }
             userSearchResult.setEmail(sb.toString());
         }
+        List<UserLocation> userLocations = userLocationRepository.getUserLocationByUserId(user.getId());
+        for (UserLocation oneUserLocation : userLocations) {
+            if (oneUserLocation.getLocation().getLocationType().getName().equalsIgnoreCase("State")) {
+                if (oneUserLocation.getUserLocationType().equalsIgnoreCase("Living")) {
+                    userSearchResult.setLivingState(oneUserLocation.getLocation());
+                } else {
+                    userSearchResult.setVotingState(oneUserLocation.getLocation());
+                }
+            }
+            if (oneUserLocation.getLocation().getLocationType().getName().equalsIgnoreCase("District")) {
+                if (oneUserLocation.getUserLocationType().equalsIgnoreCase("Living")) {
+                    userSearchResult.setLivingDistrict(oneUserLocation.getLocation());
+                } else {
+                    userSearchResult.setVotingDistrict(oneUserLocation.getLocation());
+                }
+            }
+            if (oneUserLocation.getLocation().getLocationType().getName().equalsIgnoreCase("AssemblyConstituency")) {
+                if (oneUserLocation.getUserLocationType().equalsIgnoreCase("Living")) {
+                    userSearchResult.setLivingAssemblyConstituency(oneUserLocation.getLocation());
+                } else {
+                    userSearchResult.setVotingAssemblyConstituency(oneUserLocation.getLocation());
+                }
+            }
+            if (oneUserLocation.getLocation().getLocationType().getName().equalsIgnoreCase("ParliamentConstituency")) {
+                if (oneUserLocation.getUserLocationType().equalsIgnoreCase("Living")) {
+                    userSearchResult.setLivingParliamentConstituency(oneUserLocation.getLocation());
+                } else {
+                    userSearchResult.setVotingParliamentConstituency(oneUserLocation.getLocation());
+                }
+            }
+            if (oneUserLocation.getLocation().getLocationType().getName().equalsIgnoreCase("Country")) {
+                userSearchResult.setNriCountry(oneUserLocation.getLocation());
+            }
+            if (oneUserLocation.getLocation().getLocationType().getName().equalsIgnoreCase("CountryRegion")) {
+                userSearchResult.setNriCountryRegion(oneUserLocation.getLocation());
+            }
+            if (oneUserLocation.getLocation().getLocationType().getName().equalsIgnoreCase("CountryRegionArea")) {
+                userSearchResult.setNriCountryRegionArea(oneUserLocation.getLocation());
+            }
+        }
         return userSearchResult;
     }
 

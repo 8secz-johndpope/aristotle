@@ -197,6 +197,20 @@
 								</f:facet>
 								<h:outputText value="#{oneUser.nri}" />
 							</p:column>
+							<p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="State" />
+                                </f:facet>
+                                <h:outputText value="#{oneUser.livingState.name}" rendered="#{!empty oneUser.livingState}"/>
+                                <h:outputText value="#{oneUser.votingState.name}" rendered="#{empty oneUser.livingState}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="AC" />
+                                </f:facet>
+                                <h:outputText value="#{oneUser.livingAssemblyConstituency.name}" rendered="#{!empty oneUser.livingAssemblyConstituency}"/>
+                                <h:outputText value="#{oneUser.livingAssemblyConstituency.name}" rendered="#{empty oneUser.livingAssemblyConstituency}"/>
+                            </p:column>
 
 
 
@@ -224,6 +238,22 @@
 										<h:outputText value="#{oneUser.mobileNumber}" />
 										<h:outputText value="Email" />
 										<h:outputText value="#{oneUser.email}" />
+										
+                                        <h:outputText value="Living State" rendered="#{!empty oneUser.livingState}"/>
+                                        <h:outputText value="#{oneUser.livingState.name}" rendered="#{!empty oneUser.livingState}"/>
+                                        <h:outputText value="Living PC" rendered="#{!empty oneUser.livingParliamentConstituency}"/>
+                                        <h:outputText value="#{oneUser.livingParliamentConstituency.name}" rendered="#{!empty oneUser.livingParliamentConstituency}"/>
+                                        <h:outputText value="Living District" rendered="#{!empty oneUser.livingDistrict}"/>
+                                        <h:outputText value="#{oneUser.livingDistrict.name}" rendered="#{!empty oneUser.livingDistrict}"/>
+                                        <h:outputText value="Living AC" rendered="#{!empty oneUser.livingAssemblyConstituency}"/>
+                                        <h:outputText value="#{oneUser.livingAssemblyConstituency.name}" rendered="#{!empty oneUser.livingAssemblyConstituency}"/>
+										
+                                        <h:outputText value="NRI Country" rendered="#{!empty oneUser.nriCountry}"/>
+                                        <h:outputText value="#{oneUser.nriCountry.name}" rendered="#{!empty oneUser.nriCountry}"/>
+                                        <h:outputText value="NRI Country Region" rendered="#{!empty oneUser.nriCountryRegion}"/>
+                                        <h:outputText value="#{oneUser.nriCountryRegion.name}" rendered="#{!empty oneUser.nriCountryRegion}"/>
+                                        <h:outputText value="NRI Country Region Area" rendered="#{!empty oneUser.nriCountryRegionArea}"/>
+                                        <h:outputText value="#{oneUser.nriCountryRegionArea.name}" rendered="#{!empty oneUser.nriCountryRegionArea}"/>
 
 									</h:panelGrid>
 									<p:dataTable var="oneInterest" value="#{oneUser.volunteerInterests}" emptyMessage="No Interests" style="width:100%;">
