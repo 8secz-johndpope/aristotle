@@ -32,9 +32,8 @@
 		</property>
 	</bean>
 	
-	<bean id="TestSpoutBean" class="com.aristotle.task.topology.SpringAwareBaseSpout">
+	<bean id="TestSpoutBean" class="com.aristotle.task.test.spout.OneSpout">
 		<property name="componentId" value="TestSpout" />
-		<property name="spoutProcessor" value="com.aristotle.task.test.spout.TestSpout"></property>
 		<property name="outputStreams">
             <list>
                 <value>TestStream</value>
@@ -43,15 +42,13 @@
 
 	</bean>
 
-	<bean id="simpleBoltBean" class="com.aristotle.task.topology.SpringAwareBaseBolt">
+	<bean id="simpleBoltBean" class="com.aristotle.task.test.spout.OneBolt">
 		<property name="componentId" value="SimpleBolt" />
 		<property name="outputStreams">
             <list>
                 <value>SimpleStream</value>
             </list>
         </property>
-		<property name="boltProcessor" value="com.aristotle.task.test.spout.TestBoltProcessor" />
-		
 		<property name="sourceComponentStreams">
 			<map>
 				<entry key="TestSpout" value="TestStream" />

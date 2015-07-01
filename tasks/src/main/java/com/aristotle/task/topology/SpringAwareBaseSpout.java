@@ -3,59 +3,44 @@ package com.aristotle.task.topology;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.IRichSpout;
 import backtype.storm.topology.OutputFieldsDeclarer;
+import backtype.storm.tuple.Values;
 
-public class SpringAwareBaseSpout extends BaseComponent implements IRichSpout {
+import com.aristotle.task.spring.SpringContext;
+
+public abstract class SpringAwareBaseSpout extends BaseComponent implements IRichSpout {
 
 	private static final long serialVersionUID = 1L;
 
 
     protected String componentId;
-    private String spoutProcessor;
     private int maxSpoutPending;
     private List<String> outputStreams;
-
-    protected SpoutProcessor getSpoutProcessor() {
-        try {
-            logger.debug("Getting Spout Processor for {}", spoutProcessor);
-            SpoutProcessor boltProcessorObject = (SpoutProcessor) getApplicationContext().getBean(Class.forName(spoutProcessor));
-            return boltProcessorObject;
-        } catch (Exception e) {
-            logger.error("Unable to create Spout Processor " + spoutProcessor, e);
-        }
-        logger.warn("Returning Null Processor");
-        return null;
-    }
-    @Override
-    public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
-        getSpoutProcessor().open(conf, context, collector);
-    }
+    private Map<String, Object> config;
+    private SpoutOutputCollector collector;
 
     @Override
-    public final void declareOutputFields(OutputFieldsDeclarer declarer) {
-        try {
-            getSpoutProcessor().declareOutputFields(declarer);
-        } catch (Exception e) {
-            logger.error("Unable to declare output Fields", e);
-        }
-
+    public final void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
+        SpringContext.getContext().getAutowireCapableBeanFactory().autowireBeanProperties(this, AutowireCapableBeanFactory.AUTOWIRE_AUTODETECT, false);
+        this.config = conf;
+        this.collector = collector;
+        onOpen(conf, context, collector);
     }
 
-    protected String[] getFields() {
-        return getSpoutProcessor().getFields();
-    }
+    public abstract void onOpen(Map conf, TopologyContext context, SpoutOutputCollector collector);
 
     @Override
-    public final void nextTuple() {
-        try {
-            getSpoutProcessor().nextTuple();
-        } catch (Exception e) {
-            logger.error("Unable to get Next Tuple", e);
-        }
+    public void declareOutputFields(OutputFieldsDeclarer declarer) {
 
+    }
+
+    protected void emitTuple(String streamName, Values values) {
+        collector.emit(streamName, values);
     }
 
     protected MessageId<List<Object>> writeToStream(List<Object> tuple) {
@@ -90,18 +75,18 @@ public class SpringAwareBaseSpout extends BaseComponent implements IRichSpout {
     }
 
     @Override
-    public final void ack(Object msgId) {
-        getSpoutProcessor().ack(msgId);
+    public void ack(Object msgId) {
+
     }
 
     @Override
-    public final void fail(Object msgId) {
-        getSpoutProcessor().fail(msgId);
+    public void fail(Object msgId) {
+
     }
 
     @Override
     public Map<String, Object> getComponentConfiguration() {
-        return getSpoutProcessor().getComponentConfiguration();
+        return config;
     }
 
     public int getMaxSpoutPending() {
@@ -110,10 +95,6 @@ public class SpringAwareBaseSpout extends BaseComponent implements IRichSpout {
 
     public void setMaxSpoutPending(int maxSpoutPending) {
         this.maxSpoutPending = maxSpoutPending;
-    }
-
-    public void setSpoutProcessor(String spoutProcessor) {
-        this.spoutProcessor = spoutProcessor;
     }
 
     public List<String> getOutputStreams() {

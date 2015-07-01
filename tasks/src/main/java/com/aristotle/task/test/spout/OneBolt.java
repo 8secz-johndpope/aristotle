@@ -4,24 +4,21 @@ import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.IRichBolt;
-import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Tuple;
 
-import com.aristotle.task.spring.SpringContext;
+import com.aristotle.task.topology.SpringAwareBaseBolt;
 
-public class OneBolt implements IRichBolt {
+public class OneBolt extends SpringAwareBaseBolt {
 
     @Autowired
-    private SpringClass springClass;
+    private transient SpringClass springClass;
 
     @Override
-    public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
-        SpringContext.getContext().getAutowireCapableBeanFactory().autowireBeanProperties(this, AutowireCapableBeanFactory.AUTOWIRE_AUTODETECT, true);
+    public void onPrepare(Map stormConf, TopologyContext context, OutputCollector collector) {
+
     }
 
     @Override
@@ -38,24 +35,6 @@ public class OneBolt implements IRichBolt {
             Date endTime = new Date();
             // logInfo("Total time taken to process file " + ((endTime.getTime() - startTime.getTime()) / 1000) + " seconds");
         }
-    }
-
-    @Override
-    public void cleanup() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public Map<String, Object> getComponentConfiguration() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
 }

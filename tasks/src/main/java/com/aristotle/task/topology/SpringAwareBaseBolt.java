@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.util.CollectionUtils;
 
 import backtype.storm.task.OutputCollector;
@@ -13,6 +14,8 @@ import backtype.storm.topology.IRichBolt;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Tuple;
 
+import com.aristotle.task.spring.SpringContext;
+
 /**
  * All bolts should extend this class
  * 
@@ -20,33 +23,21 @@ import backtype.storm.tuple.Tuple;
  * @data Jul 25, 2014
  */
 
-public class SpringAwareBaseBolt extends BaseComponent implements IRichBolt {
+public abstract class SpringAwareBaseBolt extends BaseComponent implements IRichBolt {
 
 	private static final long serialVersionUID = 1L;
     public SpringAwareBaseBolt() {}
 
     protected OutputCollector outputCollector;
     protected String componentId;
-    private String boltProcessor;
     // key - CompnenetId , Value - Stream
     private Map<String, String> sourceComponentStreams;
     private List<String> fields;
     private List<String> outputStreams;
 
-    protected BoltProcessor getBoltProcessor() {
-        try {
-            logger.debug("Getting Bolt Processor for {}", boltProcessor);
-            BoltProcessor boltProcessorObject =  (BoltProcessor)getApplicationContext().getBean(Class.forName(boltProcessor));
-            // boltProcessorObject.initBoltProcessorForTuple(getTupleThreadLocal(), this);
-            return boltProcessorObject;
-        } catch (Exception e) {
-            logger.error("Unable to create Bolt Processor " + boltProcessor, e);
-        }
-        logger.warn("Returning Null Processor");
-        return null;
-    }
     @Override
     public final void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
+        SpringContext.getContext().getAutowireCapableBeanFactory().autowireBeanProperties(this, AutowireCapableBeanFactory.AUTOWIRE_AUTODETECT, false);
         this.outputCollector = collector;
         onPrepare(stormConf, context, collector);
     }
@@ -57,22 +48,10 @@ public class SpringAwareBaseBolt extends BaseComponent implements IRichBolt {
 
     @Override
     public final void declareOutputFields(OutputFieldsDeclarer declarer) {
-        getBoltProcessor().declareOutputFields(declarer);
     }
 
     public enum Result {
         Success, Failed;
-    }
-
-    @Override
-    public final void execute(Tuple inputTuple) {
-        logger.debug("Received Message {} in component {}", inputTuple.getMessageId(), componentId);
-        try {
-            getBoltProcessor().execute(inputTuple);
-        } catch (Throwable t) {
-            logger.error("Bolt Processor threw Exception", t);
-            failTuple(inputTuple);
-        }
     }
 
     protected String[] getFields() {
@@ -164,10 +143,6 @@ public class SpringAwareBaseBolt extends BaseComponent implements IRichBolt {
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MINUTE, 0);
         return calendar.getTimeInMillis();
-    }
-
-    public void setBoltProcessor(String boltProcessor) {
-        this.boltProcessor = boltProcessor;
     }
 
     public void setFields(List<String> fields) {
