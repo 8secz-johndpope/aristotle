@@ -1,8 +1,11 @@
 package com.aristotle.task.topology;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
+import backtype.storm.tuple.Fields;
+import com.aristotle.task.topology.beans.Stream;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 import backtype.storm.spout.SpoutOutputCollector;
@@ -20,7 +23,6 @@ public abstract class SpringAwareBaseSpout extends BaseComponent implements IRic
 
     protected String componentId;
     private int maxSpoutPending;
-    private List<String> outputStreams;
     private Map<String, Object> config;
     private SpoutOutputCollector collector;
 
@@ -36,7 +38,18 @@ public abstract class SpringAwareBaseSpout extends BaseComponent implements IRic
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
+        Field[] classFields = this.getClass().getFields();
+        for(Field oneClassField : classFields){
+            if(oneClassField.getType().isAssignableFrom(Stream.class)){
+                Fields fields = new Fields("default");
+                Stream stream = (Stream)oneClassField.get();
+                if(stream.getFields() != null && !stream.getFields().isEmpty()){
 
+                }
+                declarer.declareStream(outputStream, fields);
+
+            }
+        }
     }
 
     protected void emitTuple(String streamName, Values values) {
@@ -95,14 +108,6 @@ public abstract class SpringAwareBaseSpout extends BaseComponent implements IRic
 
     public void setMaxSpoutPending(int maxSpoutPending) {
         this.maxSpoutPending = maxSpoutPending;
-    }
-
-    public List<String> getOutputStreams() {
-        return outputStreams;
-    }
-
-    public void setOutputStreams(List<String> outputStreams) {
-        this.outputStreams = outputStreams;
     }
 
 }
