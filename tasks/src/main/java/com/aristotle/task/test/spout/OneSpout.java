@@ -4,14 +4,14 @@ import java.util.Map;
 
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 
 import com.aristotle.task.topology.SpringAwareBaseSpout;
+import com.aristotle.task.topology.beans.Stream;
 
 public class OneSpout extends SpringAwareBaseSpout {
 
+    private Stream outputStream;
     @Override
     public void onOpen(Map conf, TopologyContext context, SpoutOutputCollector collector) {
     }
@@ -42,15 +42,17 @@ public class OneSpout extends SpringAwareBaseSpout {
     }
 
     @Override
-    public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        Fields fields = new Fields("Test");
-        declarer.declareStream("TestStream", fields);
-    }
-
-    @Override
     public Map<String, Object> getComponentConfiguration() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    public Stream getOutputStream() {
+        return outputStream;
+    }
+
+    public void setOutputStream(Stream outputStream) {
+        this.outputStream = outputStream;
     }
 
 }

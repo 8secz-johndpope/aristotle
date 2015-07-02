@@ -8,8 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import backtype.storm.spout.SpoutOutputCollector;
-
 import com.aristotle.task.spring.SpringContext;
 
 /**
@@ -26,7 +24,6 @@ public abstract class BaseComponent implements Serializable {
 
     private static ConfigurableApplicationContext applicationContext;
     Map<String, Object> configuration;
-    private SpoutOutputCollector collector;
     private int retry;
     private List<String> outputStreams;
     private String componentId;
@@ -54,16 +51,6 @@ public abstract class BaseComponent implements Serializable {
 
     public void setParalellism(int paralellism) {
         this.paralellism = paralellism;
-    }
-
-    protected void writeToStream(List<Object> tuple, Object messageId, String streamId) {
-        logInfo("Writing To Stream " + streamId + " with message id as " + messageId);
-        collector.emit(streamId, tuple, messageId);
-    }
-
-    protected void writeToStream(List<Object> tuple, String streamId) {
-        logInfo("Writing To Stream " + streamId);
-        collector.emit(streamId, tuple);
     }
 
     protected void logInfo(String message) {

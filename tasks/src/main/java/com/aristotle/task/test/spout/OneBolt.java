@@ -27,8 +27,7 @@ public class OneBolt extends SpringAwareBaseBolt {
         try {
             // Read the incoming Message
             String message = input.getString(0);
-            System.out.println("message Recieved : " + message);
-            springClass.printData("message Recieved : " + message);
+            springClass.printData("message Recieved : " + message + " , " + new Date());
         } catch (Exception ex) {
             // logError("Unable to save lcoation file in redis ", ex);
         } finally {

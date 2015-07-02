@@ -1,12 +1,12 @@
 package com.aristotle.task.spring;
 
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootApplication
+@SpringBootApplication()
 @ComponentScan(basePackages = { "com.aristotle.task.test.spout" })
 public class SpringContext implements CommandLineRunner
 {
@@ -18,7 +18,8 @@ public class SpringContext implements CommandLineRunner
             synchronized (SpringContext.class) {
                 if (context == null) {
                     System.out.println("Creating Context");
-                    context = SpringApplication.run(SpringContext.class);
+                    context = new SpringApplicationBuilder(SpringContext.class, DatabaseConfig).web(false).run(new String[0]);
+                    // context = SpringApplication.run(SpringContext.class);
                 }
             }
         }

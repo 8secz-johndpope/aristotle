@@ -4,17 +4,17 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-import backtype.storm.tuple.Fields;
-import com.aristotle.task.topology.beans.Stream;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.IRichSpout;
 import backtype.storm.topology.OutputFieldsDeclarer;
+import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 
 import com.aristotle.task.spring.SpringContext;
+import com.aristotle.task.topology.beans.Stream;
 
 public abstract class SpringAwareBaseSpout extends BaseComponent implements IRichSpout {
 
@@ -28,28 +28,36 @@ public abstract class SpringAwareBaseSpout extends BaseComponent implements IRic
 
     @Override
     public final void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
+        logInfo("collector = " + collector);
         SpringContext.getContext().getAutowireCapableBeanFactory().autowireBeanProperties(this, AutowireCapableBeanFactory.AUTOWIRE_AUTODETECT, false);
         this.config = conf;
         this.collector = collector;
         onOpen(conf, context, collector);
+        logInfo("this.collector = " + this.collector);
     }
 
     public abstract void onOpen(Map conf, TopologyContext context, SpoutOutputCollector collector);
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        Field[] classFields = this.getClass().getFields();
-        for(Field oneClassField : classFields){
-            if(oneClassField.getType().isAssignableFrom(Stream.class)){
-                Fields fields = new Fields("default");
-                Stream stream = (Stream)oneClassField.get();
-                if(stream.getFields() != null && !stream.getFields().isEmpty()){
+        try {
+            Field[] classFields = this.getClass().getDeclaredFields();
+            for (Field oneClassField : classFields) {
+                if (oneClassField.getType().isAssignableFrom(Stream.class)) {
+                    oneClassField.setAccessible(true);
+                    Fields fields = new Fields("default");
+                    Stream stream = (Stream) oneClassField.get(this);
+                    if (stream.getFields() != null && !stream.getFields().isEmpty()) {
+                        fields = new Fields(stream.getFields());
+                    }
+                    declarer.declareStream(stream.getStreamId(), fields);
 
                 }
-                declarer.declareStream(outputStream, fields);
-
             }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+
     }
 
     protected void emitTuple(String streamName, Values values) {
@@ -63,6 +71,16 @@ public abstract class SpringAwareBaseSpout extends BaseComponent implements IRic
         return messageId;
     }
 
+    protected void writeToStream(List<Object> tuple, Object messageId, String streamId) {
+        logInfo("Writing To Stream " + streamId + " with message id as " + messageId);
+        collector.emit(streamId, tuple, messageId);
+    }
+
+    protected void writeToStream(List<Object> tuple, String streamId) {
+        logInfo("Writing To Stream " + streamId);
+        logInfo("collector =  " + collector);
+        collector.emit(streamId, tuple);
+    }
 
     public String getComponentId() {
         return componentId;

@@ -5,20 +5,20 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
-    <context:component-scan base-package="com.aristotle.task.test.spout" />
+	<context:component-scan base-package="com.aristotle.task.test.spout" />
 
-   	<bean class="com.aristotle.task.topology.SpringTopology">
+	<bean class="com.aristotle.task.topology.SpringTopology">
 		<property name="name" value="Tasks" />
-		<property name="maxSpoutPending" value="5000" />
+		<property name="maxSpoutPending" value="10" />
 		<property name="messageTimeoutSeconds" value="3600" />
-		
+
 		<property name="numWorkers" value="4" />
 		<property name="numParallel" value="4" />
-		
+
 		<property name="topologyProperties">
-            <map>
-            </map>
-        </property>
+			<map>
+			</map>
+		</property>
 
 		<property name="spoutConfigs">
 			<list>
@@ -31,37 +31,31 @@
 			</list>
 		</property>
 	</bean>
-	
-	<bean id="TestSpoutBean" class="com.aristotle.task.test.spout.OneSpout">
-		<property name="componentId" value="TestSpout" />
-		<property name="outputStreams">
-            <list>
-                <value>TestStream</value>
-            </list>
-        </property>
 
+	<bean id="TestSpoutBean" class="com.aristotle.task.spout.TimerSpout">
+		<property name="componentId" value="TestSpout" />
+		<property name="onStart" value="true" />
+		<property name="durationMs" value="30000" />
+		
+		<property name="outputStream">
+			<bean class="com.aristotle.task.topology.beans.Stream">
+				<property name="streamId" value="TestStream" />
+				<property name="fields">
+					<list>
+						<value>TestField</value>
+					</list>
+				</property>
+			</bean>
+		</property>
 	</bean>
 
-	<bean id="simpleBoltBean" class="com.aristotle.task.test.spout.OneBolt">
+	<bean id="simpleBoltBean" class="com.aristotle.task.bolt.twitter.TwitterListener">
 		<property name="componentId" value="SimpleBolt" />
-		<property name="outputStreams">
-            <list>
-                <value>SimpleStream</value>
-            </list>
-        </property>
 		<property name="sourceComponentStreams">
 			<map>
 				<entry key="TestSpout" value="TestStream" />
 			</map>
 		</property>
-        <property name="fields">
-            <list>
-                <value>Fields1</value>
-                <value>Fields2</value>
-                <value>Fields3</value>
-            </list>
-        </property>
-		
 	</bean>
 
 </beans>
