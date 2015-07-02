@@ -2,6 +2,7 @@ package com.aristotle.core.service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,8 @@ public class AppServiceImpl implements AppService {
             return null;
         }
         if (volunteer.getInterests() == null) {
-            volunteer.setInterests(Collections.emptySet());
+            Set<Interest> interestSet = Collections.emptySet();
+            volunteer.setInterests(interestSet);
         } else {
             for (Interest oneInterest : volunteer.getInterests()) {
                 oneInterest.getDescription();

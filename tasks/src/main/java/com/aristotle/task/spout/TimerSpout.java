@@ -29,7 +29,7 @@ public class TimerSpout extends SpringAwareBaseSpout {
     public void nextTuple() {
         Long currentTime = System.currentTimeMillis();
         if(currentTime - lastTime >= durationMs){
-            writeToStream(new Values("default"), outputStream.getStreamId());
+            emitTuple(outputStream.getStreamId(), new Values("default"));
             lastTime = currentTime;
         }
         sleepForMilliSeconds(durationMs - (currentTime - lastTime));

@@ -17,23 +17,7 @@ import com.aristotle.core.enums.PostLocationType;
 
 @Entity
 @Table(name = "planned_tweets")
-public class PlannedTweet {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	@Version
-	@Column(name = "ver")
-	private int ver;
-
-	@Column(name = "date_created")
-	private Date dateCreated;
-	@Column(name = "date_modified")
-	private Date dateModified;
-	@Column(name = "creator_id")
-	private Long creatorId;
-	@Column(name = "modifier_id")
-	private Long modifierId;
+public class PlannedTweet extends BaseEntity{
 
 	@Column(name = "tweet_type")
 	private String tweetType;

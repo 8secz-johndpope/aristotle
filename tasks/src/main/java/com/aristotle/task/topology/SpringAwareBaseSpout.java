@@ -28,12 +28,10 @@ public abstract class SpringAwareBaseSpout extends BaseComponent implements IRic
 
     @Override
     public final void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
-        logInfo("collector = " + collector);
         SpringContext.getContext().getAutowireCapableBeanFactory().autowireBeanProperties(this, AutowireCapableBeanFactory.AUTOWIRE_AUTODETECT, false);
         this.config = conf;
         this.collector = collector;
         onOpen(conf, context, collector);
-        logInfo("this.collector = " + this.collector);
     }
 
     public abstract void onOpen(Map conf, TopologyContext context, SpoutOutputCollector collector);

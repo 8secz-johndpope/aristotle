@@ -1,20 +1,18 @@
 package com.aristotle.task.topology;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.util.CollectionUtils;
-
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.IRichBolt;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Tuple;
-
 import com.aristotle.task.spring.SpringContext;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.util.CollectionUtils;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * All bolts should extend this class
@@ -47,11 +45,27 @@ public abstract class SpringAwareBaseBolt extends BaseComponent implements IRich
     }
 
     @Override
-    public final void declareOutputFields(OutputFieldsDeclarer declarer) {
-    }
+    public final void execute(Tuple input) {
+        Result result;
+        try{
+            result = onExecute(input);
+        }catch(Exception ex){
+            result = Result.Failed;
+        }
+        sendResponse(result, input);
 
-    public enum Result {
-        Success, Failed;
+    }
+    private void sendResponse(Result result, Tuple input){
+        if(result == Result.Failed){
+            failTuple(input);
+        }else{
+            acknowledgeTuple(input);
+        }
+    }
+    public abstract Result onExecute(Tuple input) throws Exception;
+
+    @Override
+    public final void declareOutputFields(OutputFieldsDeclarer declarer) {
     }
 
     protected String[] getFields() {
