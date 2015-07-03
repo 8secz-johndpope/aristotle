@@ -1,15 +1,22 @@
 package com.aristotle.core.service;
 
+import java.util.List;
+
+import org.springframework.social.twitter.api.Tweet;
+
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.PlannedTweet;
 import com.aristotle.core.persistance.TwitterAccount;
 
-import java.util.List;
-
 /**
- * Created by sharmar2 on 02/07/2015.
+ * Created by Ravi Sharma on 02/07/2015.
  */
 public interface TwitterService {
 
     List<TwitterAccount> getAllSourceTwitterAccounts() throws AppException;
+    
+    PlannedTweet planRetweet(Tweet tweet) throws AppException;
+
+    List<PlannedTweet> getAllPlannedTweetReadyToProcess() throws AppException;
+
 }

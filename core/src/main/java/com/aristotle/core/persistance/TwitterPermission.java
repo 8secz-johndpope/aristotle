@@ -1,9 +1,14 @@
 package com.aristotle.core.persistance;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
-@Table(name="twitter_account")
+@Table(name = "twitter_permission")
 //@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region="Account", include="all")
 public class TwitterPermission extends BaseEntity{
 

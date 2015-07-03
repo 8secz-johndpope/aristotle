@@ -1,18 +1,20 @@
 package com.aristotle.task.topology;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.util.CollectionUtils;
+
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.IRichBolt;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Tuple;
-import com.aristotle.task.spring.SpringContext;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.util.CollectionUtils;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import com.aristotle.task.spring.SpringContext;
 
 /**
  * All bolts should extend this class
@@ -51,6 +53,7 @@ public abstract class SpringAwareBaseBolt extends BaseComponent implements IRich
             result = onExecute(input);
         }catch(Exception ex){
             result = Result.Failed;
+            ex.printStackTrace();
         }
         sendResponse(result, input);
 
