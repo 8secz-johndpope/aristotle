@@ -77,7 +77,18 @@ public class AwsFileManagerImpl implements AwsFileManager {
 
         logger.info("Uploading a new object to S3 from input Stream to remote file " + bucketName + "/" + remoteFileNameAndPath);
         ObjectMetadata objectMetadata = new ObjectMetadata();
-        objectMetadata.setCacheControl("max-age=2592000");
+        if(contentType == null){
+            objectMetadata.setCacheControl("max-age=2592000");    
+        }else if(contentType.startsWith("image")){
+            objectMetadata.setCacheControl("max-age=2592000");
+        }else if(contentType.startsWith("application")){
+            objectMetadata.setCacheControl("max-age=3600");
+        }else if(contentType.startsWith("text")){
+            objectMetadata.setCacheControl("max-age=600");
+        }else{
+            objectMetadata.setCacheControl("max-age=2592000");
+        }
+        
         objectMetadata.setContentType(contentType);
         objectMetadata.addUserMetadata("x-amz-storage-class", "RRS");
         remoteFileNameAndPath = remoteFileNameAndPath.toLowerCase();
