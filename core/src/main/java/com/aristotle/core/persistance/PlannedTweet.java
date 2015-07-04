@@ -2,11 +2,7 @@ package com.aristotle.core.persistance;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.aristotle.core.enums.PlannedPostStatus;
 import com.aristotle.core.enums.PostLocationType;
@@ -54,6 +50,13 @@ public class PlannedTweet extends BaseEntity{
 	private int totalSuccessTweets;
 	@Column(name = "total_failed_tweets")
 	private int totalFailedTweets;
+
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@JoinColumn(name="twitter_account_id")
+	private TwitterAccount twitterAccount;
+	@Column(name="twitter_account_id", insertable=false,updatable=false)
+	private Long twitterAccountId;
+
 
 	@Override
     public Long getId() {
@@ -217,7 +220,24 @@ public class PlannedTweet extends BaseEntity{
         this.fromTwitterUserId = fromTwitterUserId;
     }
 
-    @Override
+	public Long getTwitterAccountId() {
+		return twitterAccountId;
+	}
+
+	public void setTwitterAccountId(Long twitterAccountId) {
+		this.twitterAccountId = twitterAccountId;
+	}
+
+	public TwitterAccount getTwitterAccount() {
+		return twitterAccount;
+	}
+
+	public void setTwitterAccount(TwitterAccount twitterAccount) {
+		this.twitterAccount = twitterAccount;
+	}
+
+
+	@Override
     public String toString() {
         return "PlannedTweet [id=" + id + ", ver=" + ver + ", dateCreated=" + dateCreated + ", dateModified=" + dateModified + ", creatorId=" + creatorId + ", modifierId=" + modifierId
                 + ", tweetType=" + tweetType + ", tweetId=" + tweetId + ", picture=" + picture + ", message=" + message + ", totalRequired=" + totalRequired + ", postingTime=" + postingTime

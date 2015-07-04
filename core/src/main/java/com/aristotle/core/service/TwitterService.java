@@ -15,7 +15,7 @@ public interface TwitterService {
 
     List<TwitterAccount> getAllSourceTwitterAccounts() throws AppException;
     
-    PlannedTweet planRetweet(Tweet tweet) throws AppException;
+    PlannedTweet planRetweet(Tweet tweet, TwitterAccount twitterAccount) throws AppException;
 
     List<PlannedTweet> getAllPlannedTweetReadyToProcess() throws AppException;
 

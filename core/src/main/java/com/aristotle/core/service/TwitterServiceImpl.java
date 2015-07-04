@@ -38,7 +38,7 @@ public class TwitterServiceImpl implements TwitterService {
     }
 
     @Override
-    public PlannedTweet planRetweet(Tweet tweet) throws AppException {
+    public PlannedTweet planRetweet(Tweet tweet, TwitterAccount twitterAccount) throws AppException {
         PlannedTweet plannedTweet = plannedTweetRepository.getPlannedTweetByTweetId(tweet.getId());
         logger.info("plannedTweetDto : " + plannedTweet);
         if (plannedTweet != null) {
@@ -56,6 +56,7 @@ public class TwitterServiceImpl implements TwitterService {
         plannedTweet.setTweetId(tweet.getId());
         plannedTweet.setPostingTime(new Date());
         plannedTweet.setFromTwitterUserId(tweet.getFromUserId());
+        plannedTweet.setTwitterAccount(twitterAccount);
         plannedTweet = plannedTweetRepository.save(plannedTweet);
         logger.info("Creating a planned Tweet Success");
         return plannedTweet;
