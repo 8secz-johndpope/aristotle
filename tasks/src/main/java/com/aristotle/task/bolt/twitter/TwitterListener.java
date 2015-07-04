@@ -42,7 +42,6 @@ public class TwitterListener extends SpringAwareBaseBolt {
     }
 
     private void processTweetsFromOneAccount(TwitterAccount twitterAccount) {
-        System.out.println(twitterAccount.getUser().getName());
         Twitter twitter = new TwitterTemplate(consumerKey, consumerSecret);
         List<Tweet> tweets = twitter.timelineOperations().getUserTimeline(Integer.parseInt(twitterAccount.getTwitterId()), 5);
         Calendar now = Calendar.getInstance();
@@ -51,9 +50,7 @@ public class TwitterListener extends SpringAwareBaseBolt {
             logger.info("Tweet : " + oneTweet.getCreatedAt() + " : " + oneTweet.getText());
             if (oneTweet.getCreatedAt().after(now.getTime())) {
                 try {
-                    PlannedTweet plannedTweet = twitterService.planRetweet(oneTweet);
-                    if (plannedTweet != null) {
-                    }
+                    twitterService.planRetweet(oneTweet, twitterAccount);
                 } catch (AppException e) {
                     e.printStackTrace();
                 }

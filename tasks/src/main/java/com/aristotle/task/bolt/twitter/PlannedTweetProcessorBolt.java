@@ -3,6 +3,7 @@ package com.aristotle.task.bolt.twitter;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -28,9 +29,15 @@ public class PlannedTweetProcessorBolt extends SpringAwareBaseBolt {
         logInfo("Message Recieved " + new Date());
         List<PlannedTweet> twitterAccounts = twitterService.getAllPlannedTweetReadyToProcess();
         for (PlannedTweet oneTwitterAccount : twitterAccounts) {
-            // processTweetsFromOneAccount(oneTwitterAccount);
+            //Send a Processing message to Queue to processed by Another Spout
         }
         return Result.Success;
+    }
+
+    private String createPlannedTweetMessage(PlannedTweet onePlannedTweet){
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("id", onePlannedTweet.getId());
+        jsonObject.addProperty("tweetType", onePlannedTweet.getTweetType());
     }
 
 }
