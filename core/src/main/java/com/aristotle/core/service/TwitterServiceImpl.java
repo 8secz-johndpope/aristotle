@@ -102,8 +102,9 @@ public class TwitterServiceImpl implements TwitterService {
 
     @Override
     public List<org.springframework.social.twitter.api.Tweet> processTweetsFromOneAccount(TwitterAccount twitterAccount) throws AppException {
+        twitterAccount = twitterAccountRepository.findOne(twitterAccount.getId());
         Twitter twitter = new TwitterTemplate(consumerKey, consumerSecret);
-        List<org.springframework.social.twitter.api.Tweet> tweets = twitter.timelineOperations().getUserTimeline(Integer.parseInt(twitterAccount.getTwitterId()), 5);
+        List<org.springframework.social.twitter.api.Tweet> tweets = twitter.timelineOperations().getUserTimeline(Long.parseLong(twitterAccount.getTwitterId()), 5);
         Calendar now = Calendar.getInstance();
         now.add(Calendar.MINUTE, -5);
         for (org.springframework.social.twitter.api.Tweet oneTweet : tweets) {
