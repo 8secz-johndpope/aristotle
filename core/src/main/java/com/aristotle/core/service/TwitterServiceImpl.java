@@ -38,9 +38,9 @@ import com.aristotle.core.persistance.repo.TwitterTeamRepository;
 public class TwitterServiceImpl implements TwitterService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Value("${consumer_key}")
+    @Value("${twitter_consumer_key}")
     private String consumerKey;
-    @Value("${consumer_secret}")
+    @Value("${twitter_consumer_secret}")
     private String consumerSecret;
 
     @Autowired
