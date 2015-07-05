@@ -32,6 +32,7 @@ public class PlannedTweetReaderBolt extends SpringAwareBaseBolt {
     public Result onExecute(Tuple input) throws Exception{
         logInfo("Message Recieved " + new Date());
         List<PlannedTweet> plannedTweets = twitterService.getAllPlannedTweetReadyToProcess();
+        logInfo("plannedTweets" + plannedTweets);
         String plannedTweetMessage;
         for (PlannedTweet onePlannedTweet : plannedTweets) {
             //Send a Processing message to Queue to processed by Another Spout
