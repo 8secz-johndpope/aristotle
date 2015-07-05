@@ -35,10 +35,15 @@ public class LoggedInUserPlugin extends AbstractDataPlugin {
         try {
             JsonObject context = (JsonObject) mv.getModel().get("context");
             User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
-            if (user != null) {
-                JsonObject userJsonObject = convertUser(user);
-                context.add(name, userJsonObject);
+            JsonObject userJsonObject;
+            if (user == null) {
+                userJsonObject = new JsonObject();
+                userJsonObject.addProperty("loggedIn", false);
+            } else {
+                userJsonObject = convertUser(user);
+                userJsonObject.addProperty("loggedIn", true);
             }
+            context.add(name, userJsonObject);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
