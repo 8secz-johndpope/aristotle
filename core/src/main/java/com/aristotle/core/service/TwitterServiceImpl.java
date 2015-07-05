@@ -242,6 +242,7 @@ public class TwitterServiceImpl implements TwitterService {
             org.springframework.social.twitter.api.Tweet remoteTweet = twitterTemplate.timelineOperations().retweet(tweet.getPlannedTweet().getTweetId());
             tweet.setTweetExternalId(remoteTweet.getId());
             tweet.setTweetContent(remoteTweet.getUnmodifiedText());
+            tweet.getTwitterAccount().setLastTweetSentTime(new Date());
             tweet = tweetRepository.save(tweet);
         }
     }
