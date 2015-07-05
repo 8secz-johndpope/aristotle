@@ -150,6 +150,14 @@ public class ContentController {
             addNationalSteeringCommiteeTitleDescription(pageObject, jsonContext);
             return;
         }
+        if (requestedUrl.startsWith("/organisation/vision")) {
+            addVisionTitleDescription(pageObject, jsonContext);
+            return;
+        }
+        if (requestedUrl.startsWith("/organisation/constitution")) {
+            addConstitutionTitleDescription(pageObject, jsonContext);
+            return;
+        }
 
     }
 
@@ -163,6 +171,25 @@ public class ContentController {
         }
     }
 
+    private void addVisionTitleDescription(JsonObject pageObject, JsonObject jsonContext) {
+        try {
+            pageObject.addProperty("description", "Vision of Swaraj Abhiyan");
+            pageObject.addProperty("title", "Vision of Swaraj Abhiyan");
+        } catch (Exception ex) {
+            pageObject.addProperty("description", "Vision of Swaraj Abhiyan");
+            pageObject.addProperty("title", "Vision of Swaraj Abhiyan");
+        }
+    }
+
+    private void addConstitutionTitleDescription(JsonObject pageObject, JsonObject jsonContext) {
+        try {
+            pageObject.addProperty("description", "Constitution of Swaraj Abhiyan");
+            pageObject.addProperty("title", "Constitution of Swaraj Abhiyan");
+        } catch (Exception ex) {
+            pageObject.addProperty("description", "Constitution of Swaraj Abhiyan");
+            pageObject.addProperty("title", "Constitution of Swaraj Abhiyan");
+        }
+    }
     private void addNationalSteeringCommiteeTitleDescription(JsonObject pageObject, JsonObject jsonContext) {
         try {
             pageObject.addProperty("description", "List of National Steering Committee(NSC) Members | Swaraj Abhiyan Video");
