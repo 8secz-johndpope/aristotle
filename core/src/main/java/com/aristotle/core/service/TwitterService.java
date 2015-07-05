@@ -2,6 +2,9 @@ package com.aristotle.core.service;
 
 import java.util.List;
 
+import org.springframework.social.connect.Connection;
+import org.springframework.social.twitter.api.Twitter;
+
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.PlannedTweet;
 import com.aristotle.core.persistance.Tweet;
@@ -40,4 +43,6 @@ public interface TwitterService {
     void tweetIt(Long tweetId) throws AppException;
 
     TwitterTeam getTwitterTeamByUrl(String url) throws AppException;
+    
+    TwitterAccount saveTwitterAccount(Connection<Twitter> twitterConnection, Long twitterAppId, Long twitterTeamId) throws AppException;
 }

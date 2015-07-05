@@ -9,4 +9,6 @@ import com.aristotle.core.persistance.TwitterPermission;
 public interface TwitterPermissionRepository extends JpaRepository<TwitterPermission, Long> {
 
     List<TwitterPermission> getTwitterPermissionByTwitterAccountId(Long twitterAccountId);
+
+    TwitterPermission getTwitterPermissionByTwitterAccountIdAndTwitterAppId(Long twitterAccountId, Long twitterAppId);
 }

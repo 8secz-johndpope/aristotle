@@ -1,7 +1,7 @@
 package com.aristotle.core.persistance;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -38,7 +38,7 @@ public class TwitterAccount extends BaseEntity{
     protected Date lastTweetSentTime;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "tweeter_team_tweet_twitter", joinColumns = { @JoinColumn(name = "twitter_account_id") }, inverseJoinColumns = { @JoinColumn(name = "twitter_team_id") })
-    private List<TwitterTeam> twitterTeams;
+    private Set<TwitterTeam> twitterTeams;
 
 	public String getScreenNameCap() {
 		return screenNameCap;
@@ -96,11 +96,11 @@ public class TwitterAccount extends BaseEntity{
         this.retweetable = retweetable;
     }
 
-    public List<TwitterTeam> getTwitterTeams() {
+    public Set<TwitterTeam> getTwitterTeams() {
         return twitterTeams;
     }
 
-    public void setTwitterTeams(List<TwitterTeam> twitterTeams) {
+    public void setTwitterTeams(Set<TwitterTeam> twitterTeams) {
         this.twitterTeams = twitterTeams;
     }
 

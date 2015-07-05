@@ -50,6 +50,7 @@ public class TwitterLoginController {
             TwitterConnectionFactory twitterConnectionFactory = new TwitterConnectionFactory(twitterApp.getConsumerKey(), twitterApp.getConsumerSecret());
             httpServletRequest.getSession().setAttribute("consumerKey", twitterApp.getConsumerKey());
             httpServletRequest.getSession().setAttribute("consumerSecret", twitterApp.getConsumerSecret());
+            httpServletRequest.getSession().setAttribute("twitterApp", twitterApp);
 
             OAuth1Operations oauthOperations = twitterConnectionFactory.getOAuthOperations();
 
@@ -79,7 +80,11 @@ public class TwitterLoginController {
     public ModelAndView loginSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView mv) {
         try {
             String consumerKey = (String) httpServletRequest.getSession().getAttribute("consumerKey");
+            httpServletRequest.getSession().removeAttribute("consumerKey");
             String consumerSecret = (String) httpServletRequest.getSession().getAttribute("consumerSecret");
+            httpServletRequest.getSession().removeAttribute("consumerSecret");
+            TwitterApp twitterApp = (TwitterApp) httpServletRequest.getSession().getAttribute("twitterApp");
+            httpServletRequest.getSession().removeAttribute("twitterApp");
             // upon receiving the callback from the provider:
             TwitterConnectionFactory twitterConnectionFactory = new TwitterConnectionFactory(consumerKey, consumerSecret);
             OAuth1Operations oauthOperations = twitterConnectionFactory.getOAuthOperations();
@@ -88,11 +93,7 @@ public class TwitterLoginController {
             OAuthToken requestToken = new OAuthToken(requestTokenValue, consumerSecret);
             OAuthToken accessToken = oauthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauthVerifier), null);
             Connection<Twitter> twitterConnection = twitterConnectionFactory.createConnection(accessToken);
-
-            // afterSuccesfullLogin(httpServletRequest, httpServletResponse, twitterConnection);
-            /*
-             * ConnectionRepository twitterConnectionRepository = usersConnectionRepository.createConnectionRepository(user.getExternalId()); twitterConnectionRepository.updateConnection(connection);
-             */
+            System.out.println("twitterConnection.getDisplayName()=" + twitterConnection.getDisplayName());
 
             String redirectUrl = getAndRemoveRedirectUrlFromSession(httpServletRequest);
             if (StringUtil.isEmpty(redirectUrl)) {

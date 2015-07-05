@@ -2,6 +2,7 @@ package com.aristotle.core.service;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -11,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.connect.ConnectionData;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.stereotype.Service;
@@ -22,11 +25,13 @@ import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.PlannedTweet;
 import com.aristotle.core.persistance.Tweet;
 import com.aristotle.core.persistance.TwitterAccount;
+import com.aristotle.core.persistance.TwitterApp;
 import com.aristotle.core.persistance.TwitterPermission;
 import com.aristotle.core.persistance.TwitterTeam;
 import com.aristotle.core.persistance.repo.PlannedTweetRepository;
 import com.aristotle.core.persistance.repo.TweetRepository;
 import com.aristotle.core.persistance.repo.TwitterAccountRepository;
+import com.aristotle.core.persistance.repo.TwitterAppRepository;
 import com.aristotle.core.persistance.repo.TwitterPermissionRepository;
 import com.aristotle.core.persistance.repo.TwitterTeamRepository;
 
@@ -53,6 +58,8 @@ public class TwitterServiceImpl implements TwitterService {
     private TweetRepository tweetRepository;
     @Autowired
     private TwitterPermissionRepository twitterPermissionRepository;
+    @Autowired
+    private TwitterAppRepository twitterAppRepository;
 
     @Override
     public List<TwitterAccount> getAllSourceTwitterAccounts() throws AppException {
@@ -246,5 +253,43 @@ public class TwitterServiceImpl implements TwitterService {
     @Override
     public TwitterTeam getTwitterTeamByUrl(String url) throws AppException {
         return twitterTeamRepository.getTwitterTeamByUrl(url);
+    }
+
+    @Override
+    public TwitterAccount saveTwitterAccount(Connection<Twitter> twitterConnection, Long twitterAppId, Long twitterTeamId) throws AppException {
+        TwitterApp twitterApp = twitterAppRepository.findOne(twitterAppId);
+        TwitterTeam twitterTeam = twitterTeamRepository.findOne(twitterTeamId);
+        ConnectionData twitterConnectionData = twitterConnection.createData();
+        
+        TwitterAccount twitterAccount = twitterAccountRepository.getTwitterAccountByTwitterId(twitterConnectionData.getProviderUserId());
+        if (twitterAccount == null) {
+            twitterAccount = new TwitterAccount();
+            twitterAccount.setDateCreated(new Date());
+            twitterAccount.setTwitterId(twitterConnectionData.getProviderUserId());
+            twitterAccount.setScreenName(twitterConnectionData.getDisplayName());
+            twitterAccount.setScreenNameCap(twitterConnectionData.getDisplayName().toUpperCase());
+            twitterAccount = twitterAccountRepository.save(twitterAccount);
+        }
+
+        twitterAccount.setDateModified(new Date());
+        twitterAccount.setImageUrl(twitterConnectionData.getImageUrl());
+
+        TwitterPermission twitterPermission = twitterPermissionRepository.getTwitterPermissionByTwitterAccountIdAndTwitterAppId(twitterAccount.getId(), twitterAppId);
+        if (twitterPermission == null) {
+            twitterPermission = new TwitterPermission();
+            twitterPermission.setTwitterApp(twitterApp);
+            twitterPermission.setTwitterAccount(twitterAccount);
+            twitterPermission = twitterPermissionRepository.save(twitterPermission);
+        }
+
+        twitterPermission.setToken(twitterConnectionData.getAccessToken());
+        twitterPermission.setTokenSecret(twitterConnectionData.getSecret());
+        
+        if (twitterAccount.getTwitterTeams() == null) {
+            twitterAccount.setTwitterTeams(new HashSet<TwitterTeam>());
+        }
+        twitterAccount.getTwitterTeams().add(twitterTeam);
+
+        return twitterAccount;
     }
 }
