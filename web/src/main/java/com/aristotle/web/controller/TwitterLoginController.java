@@ -6,9 +6,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.oauth1.AuthorizedRequestToken;
 import org.springframework.social.oauth1.OAuth1Operations;
 import org.springframework.social.oauth1.OAuth1Parameters;
 import org.springframework.social.oauth1.OAuthToken;
+import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.TwitterApp;
 import com.aristotle.core.persistance.TwitterTeam;
 import com.aristotle.core.service.TwitterService;
@@ -46,10 +48,14 @@ public class TwitterLoginController {
             TwitterTeam twitterTeam = twitterService.getTwitterTeamByUrl(teamUrl);
             TwitterApp twitterApp = twitterTeam.getTwitterApp();
             TwitterConnectionFactory twitterConnectionFactory = new TwitterConnectionFactory(twitterApp.getConsumerKey(), twitterApp.getConsumerSecret());
+            httpServletRequest.getSession().setAttribute("consumerKey", twitterApp.getConsumerKey());
+            httpServletRequest.getSession().setAttribute("consumerSecret", twitterApp.getConsumerSecret());
 
             OAuth1Operations oauthOperations = twitterConnectionFactory.getOAuthOperations();
 
-            OAuthToken requestToken = oauthOperations.fetchRequestToken(twitterRedirectUrl, null);
+            String finalRedirecturl = getFinalRedirecturl(httpServletRequest);
+
+            OAuthToken requestToken = oauthOperations.fetchRequestToken(finalRedirecturl, null);
             String authorizeUrl = oauthOperations.buildAuthenticateUrl(requestToken.getValue(), OAuth1Parameters.NONE);
 
             setRedirectUrlInSessiom(httpServletRequest, getRedirectUrlForRedirectionAfterLogin(httpServletRequest));
@@ -70,25 +76,47 @@ public class TwitterLoginController {
     }
 
     @RequestMapping(value = { "/twitter/team/success" })
-    public ModelAndView success(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView, @PathVariable String teamUrl) {
+    public ModelAndView loginSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView mv) {
         try {
-            TwitterTeam twitterTeam = twitterService.getTwitterTeamByUrl(teamUrl);
-            TwitterApp twitterApp = twitterTeam.getTwitterApp();
-            TwitterConnectionFactory twitterConnectionFactory = new TwitterConnectionFactory(twitterApp.getConsumerKey(), twitterApp.getConsumerSecret());
-
+            String consumerKey = (String) httpServletRequest.getSession().getAttribute("consumerKey");
+            String consumerSecret = (String) httpServletRequest.getSession().getAttribute("consumerSecret");
+            // upon receiving the callback from the provider:
+            TwitterConnectionFactory twitterConnectionFactory = new TwitterConnectionFactory(consumerKey, consumerSecret);
             OAuth1Operations oauthOperations = twitterConnectionFactory.getOAuthOperations();
-            OAuthToken requestToken = oauthOperations.fetchRequestToken(twitterRedirectUrl, null);
-            String authorizeUrl = oauthOperations.buildAuthenticateUrl(requestToken.getValue(), OAuth1Parameters.NONE);
+            String requestTokenValue = httpServletRequest.getParameter("oauth_token");
+            String oauthVerifier = httpServletRequest.getParameter("oauth_verifier");
+            OAuthToken requestToken = new OAuthToken(requestTokenValue, consumerSecret);
+            OAuthToken accessToken = oauthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauthVerifier), null);
+            Connection<Twitter> twitterConnection = twitterConnectionFactory.createConnection(accessToken);
 
-            setRedirectUrlInSessiom(httpServletRequest, getRedirectUrlForRedirectionAfterLogin(httpServletRequest));
+            // afterSuccesfullLogin(httpServletRequest, httpServletResponse, twitterConnection);
+            /*
+             * ConnectionRepository twitterConnectionRepository = usersConnectionRepository.createConnectionRepository(user.getExternalId()); twitterConnectionRepository.updateConnection(connection);
+             */
 
-            RedirectView rv = new RedirectView(authorizeUrl);
-            // logger.info("url= {}", authorizeUrl);
-            modelAndView.setView(rv);
-        } catch (AppException e) {
-            e.printStackTrace();
+            String redirectUrl = getAndRemoveRedirectUrlFromSession(httpServletRequest);
+            if (StringUtil.isEmpty(redirectUrl)) {
+                redirectUrl = httpServletRequest.getContextPath() + "/register";
+            }
+            RedirectView rv = new RedirectView(redirectUrl);
+            logger.info("url= {}", redirectUrl);
+            mv.setView(rv);
+
+            return mv;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-        return modelAndView;
+        return mv;
+    }
+
+    private String getFinalRedirecturl(HttpServletRequest httpServletRequest) {
+        String finalRedirecturl = httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName();
+        if (httpServletRequest.getServerPort() != 80) {
+            finalRedirecturl = finalRedirecturl + ":" + httpServletRequest.getServerPort();
+        }
+        finalRedirecturl = finalRedirecturl + twitterRedirectUrl;
+        return finalRedirecturl;
     }
 
     protected String getRedirectUrlForRedirectionAfterLogin(HttpServletRequest httpServletRequest) {
@@ -107,6 +135,12 @@ public class TwitterLoginController {
 
     protected void setRedirectUrlInSessiom(HttpServletRequest httpServletRequest, String redirectUrl) {
         httpServletRequest.getSession(true).setAttribute("redirect", redirectUrl);
+    }
+
+    protected String getAndRemoveRedirectUrlFromSession(HttpServletRequest httpServletRequest) {
+        String redirectUrl = (String) httpServletRequest.getSession().getAttribute("redirect");
+        httpServletRequest.getSession().removeAttribute("redirect");
+        return redirectUrl;
     }
 
 }
