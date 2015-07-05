@@ -656,7 +656,7 @@ public class UserServiceImpl implements UserService {
         sb.append("<br>Facebook Pages : https://www.facebook.com/swarajabhiyan");
         sb.append("<br>Facebook group : https://www.facebook.com/groups/swarajabhiyan/");
         sb.append("<br>Volunteer Registration : http://www.swarajabhiyan.org/register");
-        sb.append("<br>Swaraj Abhiyan Channel https://www.youtube.com/watch?t=44&v=RYDDsO5tHZY");
+        sb.append("<br>Swaraj Abhiyan Channel https://www.youtube.com/SwarajAbhiyanTV");
         sb.append("<br>Head Office : A-189, Sec-43, Noida UP");
          
         // now send Email
@@ -727,7 +727,7 @@ public class UserServiceImpl implements UserService {
         sb.append("<br>Facebook Pages : https://www.facebook.com/swarajabhiyan");
         sb.append("<br>Facebook group : https://www.facebook.com/groups/swarajabhiyan/");
         sb.append("<br>Volunteer Registration : http://www.swarajabhiyan.org/register");
-        sb.append("<br>Swaraj Abhiyan Channel https://www.youtube.com/watch?t=44&v=RYDDsO5tHZY");
+        sb.append("<br>Swaraj Abhiyan Channel https://www.youtube.com/SwarajAbhiyanTV");
         sb.append("<br>Head Office : A-189, Sec-43, Noida UP");
 
         // now send Email
@@ -822,7 +822,7 @@ public class UserServiceImpl implements UserService {
         sb.append("<br>Facebook Pages : https://www.facebook.com/swarajabhiyan");
         sb.append("<br>Facebook group : https://www.facebook.com/groups/swarajabhiyan/");
         sb.append("<br>Volunteer Registration : http://www.swarajabhiyan.org/register");
-        sb.append("<br>Swaraj Abhiyan Channel https://www.youtube.com/watch?t=44&v=RYDDsO5tHZY");
+        sb.append("<br>Swaraj Abhiyan Channel https://www.youtube.com/SwarajAbhiyanTV");
         sb.append("<br>Head Office : A-189, Sec-43, Noida UP");
 
         // now send Email
