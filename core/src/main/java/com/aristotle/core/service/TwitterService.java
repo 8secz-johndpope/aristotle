@@ -10,6 +10,7 @@ import com.aristotle.core.persistance.PlannedTweet;
 import com.aristotle.core.persistance.Tweet;
 import com.aristotle.core.persistance.TwitterAccount;
 import com.aristotle.core.persistance.TwitterTeam;
+import com.aristotle.core.persistance.User;
 
 /**
  * Created by Ravi Sharma on 02/07/2015.
@@ -44,5 +45,7 @@ public interface TwitterService {
 
     TwitterTeam getTwitterTeamByUrl(String url) throws AppException;
     
-    TwitterAccount saveTwitterAccount(Connection<Twitter> twitterConnection, Long twitterAppId, Long twitterTeamId) throws AppException;
+    TwitterAccount saveTwitterAccount(Connection<Twitter> twitterConnection, Long twitterAppId, Long twitterTeamId, User user) throws AppException;
+
+    boolean isUserPartOfTwitterTeam(long userId, Long twitterTeamId) throws AppException;
 }

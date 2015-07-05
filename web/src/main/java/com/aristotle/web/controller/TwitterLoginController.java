@@ -24,6 +24,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.aristotle.core.persistance.TwitterApp;
 import com.aristotle.core.persistance.TwitterTeam;
+import com.aristotle.core.persistance.User;
 import com.aristotle.core.service.TwitterService;
 import com.google.gdata.util.common.base.StringUtil;
 
@@ -97,7 +98,9 @@ public class TwitterLoginController {
             OAuthToken accessToken = oauthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauthVerifier), null);
             Connection<Twitter> twitterConnection = twitterConnectionFactory.createConnection(accessToken);
             System.out.println("twitterConnection.getDisplayName()=" + twitterConnection.getDisplayName());
-            twitterService.saveTwitterAccount(twitterConnection, twitterApp.getId(), twitterTeam.getId());
+            User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
+
+            twitterService.saveTwitterAccount(twitterConnection, twitterApp.getId(), twitterTeam.getId(), user);
             String redirectUrl = getAndRemoveRedirectUrlFromSession(httpServletRequest);
             if (StringUtil.isEmpty(redirectUrl)) {
                 redirectUrl = httpServletRequest.getContextPath() + "/register";

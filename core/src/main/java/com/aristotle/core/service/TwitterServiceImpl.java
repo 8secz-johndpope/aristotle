@@ -28,12 +28,14 @@ import com.aristotle.core.persistance.TwitterAccount;
 import com.aristotle.core.persistance.TwitterApp;
 import com.aristotle.core.persistance.TwitterPermission;
 import com.aristotle.core.persistance.TwitterTeam;
+import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.repo.PlannedTweetRepository;
 import com.aristotle.core.persistance.repo.TweetRepository;
 import com.aristotle.core.persistance.repo.TwitterAccountRepository;
 import com.aristotle.core.persistance.repo.TwitterAppRepository;
 import com.aristotle.core.persistance.repo.TwitterPermissionRepository;
 import com.aristotle.core.persistance.repo.TwitterTeamRepository;
+import com.aristotle.core.persistance.repo.UserRepository;
 
 /**
  * Created by Ravi Sharma on 02/07/2015.
@@ -60,6 +62,8 @@ public class TwitterServiceImpl implements TwitterService {
     private TwitterPermissionRepository twitterPermissionRepository;
     @Autowired
     private TwitterAppRepository twitterAppRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public List<TwitterAccount> getAllSourceTwitterAccounts() throws AppException {
@@ -256,7 +260,7 @@ public class TwitterServiceImpl implements TwitterService {
     }
 
     @Override
-    public TwitterAccount saveTwitterAccount(Connection<Twitter> twitterConnection, Long twitterAppId, Long twitterTeamId) throws AppException {
+    public TwitterAccount saveTwitterAccount(Connection<Twitter> twitterConnection, Long twitterAppId, Long twitterTeamId, User user) throws AppException {
         TwitterApp twitterApp = twitterAppRepository.findOne(twitterAppId);
         TwitterTeam twitterTeam = twitterTeamRepository.findOne(twitterTeamId);
         ConnectionData twitterConnectionData = twitterConnection.createData();
@@ -268,7 +272,12 @@ public class TwitterServiceImpl implements TwitterService {
             twitterAccount.setTwitterId(twitterConnectionData.getProviderUserId());
             twitterAccount.setScreenName(twitterConnectionData.getDisplayName());
             twitterAccount.setScreenNameCap(twitterConnectionData.getDisplayName().toUpperCase());
+            twitterAccount.setImageUrl(twitterConnectionData.getImageUrl());
             twitterAccount = twitterAccountRepository.save(twitterAccount);
+        }
+        if(user != null){
+            User dbUser = userRepository.findOne(user.getId());
+            twitterAccount.setUser(dbUser);
         }
 
         twitterAccount.setDateModified(new Date());
@@ -279,6 +288,8 @@ public class TwitterServiceImpl implements TwitterService {
             twitterPermission = new TwitterPermission();
             twitterPermission.setTwitterApp(twitterApp);
             twitterPermission.setTwitterAccount(twitterAccount);
+            twitterPermission.setToken(twitterConnectionData.getAccessToken());
+            twitterPermission.setTokenSecret(twitterConnectionData.getSecret());
             twitterPermission = twitterPermissionRepository.save(twitterPermission);
         }
 
@@ -291,5 +302,19 @@ public class TwitterServiceImpl implements TwitterService {
         twitterAccount.getTwitterTeams().add(twitterTeam);
 
         return twitterAccount;
+    }
+
+    @Override
+    public boolean isUserPartOfTwitterTeam(long userId, Long twitterTeamId) throws AppException {
+        TwitterAccount twitterAccount = twitterAccountRepository.getTwitterAccountByUserId(userId);
+        if (twitterAccount == null) {
+            return false;
+        }
+        TwitterTeam twitterTeam = twitterTeamRepository.findOne(twitterTeamId);
+        TwitterPermission twitterPermission = twitterPermissionRepository.getTwitterPermissionByTwitterAccountIdAndTwitterAppId(twitterAccount.getId(), twitterTeam.getTwitterAppId());
+        if (twitterPermission == null) {
+            return false;
+        }
+        return true;
     }
 }

@@ -13,8 +13,10 @@ public interface TwitterAccountRepository extends JpaRepository<TwitterAccount, 
 	public List<TwitterAccount> getAllSourceTwitterAccounts();
 
     public TwitterAccount getTwitterAccountByTwitterId(String String);
+    
+    public TwitterAccount getTwitterAccountByUserId(Long userId);
     /*
-	public abstract TwitterAccount getTwitterAccountByUserId(Long userId);
+	
 
 	public abstract TwitterAccount getTwitterAccountByHandle(String userName);
 
