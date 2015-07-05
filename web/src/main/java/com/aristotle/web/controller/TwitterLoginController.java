@@ -51,6 +51,7 @@ public class TwitterLoginController {
             httpServletRequest.getSession().setAttribute("consumerKey", twitterApp.getConsumerKey());
             httpServletRequest.getSession().setAttribute("consumerSecret", twitterApp.getConsumerSecret());
             httpServletRequest.getSession().setAttribute("twitterApp", twitterApp);
+            httpServletRequest.getSession().setAttribute("twitterTeam", twitterTeam);
 
             OAuth1Operations oauthOperations = twitterConnectionFactory.getOAuthOperations();
 
@@ -85,6 +86,8 @@ public class TwitterLoginController {
             httpServletRequest.getSession().removeAttribute("consumerSecret");
             TwitterApp twitterApp = (TwitterApp) httpServletRequest.getSession().getAttribute("twitterApp");
             httpServletRequest.getSession().removeAttribute("twitterApp");
+            TwitterTeam twitterTeam = (TwitterTeam) httpServletRequest.getSession().getAttribute("twitterTeam");
+            httpServletRequest.getSession().removeAttribute("twitterTeam");
             // upon receiving the callback from the provider:
             TwitterConnectionFactory twitterConnectionFactory = new TwitterConnectionFactory(consumerKey, consumerSecret);
             OAuth1Operations oauthOperations = twitterConnectionFactory.getOAuthOperations();
@@ -94,7 +97,7 @@ public class TwitterLoginController {
             OAuthToken accessToken = oauthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauthVerifier), null);
             Connection<Twitter> twitterConnection = twitterConnectionFactory.createConnection(accessToken);
             System.out.println("twitterConnection.getDisplayName()=" + twitterConnection.getDisplayName());
-
+            twitterService.saveTwitterAccount(twitterConnection, twitterApp.getId(), twitterTeam.getId());
             String redirectUrl = getAndRemoveRedirectUrlFromSession(httpServletRequest);
             if (StringUtil.isEmpty(redirectUrl)) {
                 redirectUrl = httpServletRequest.getContextPath() + "/register";
