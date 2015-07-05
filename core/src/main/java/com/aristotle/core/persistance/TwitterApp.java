@@ -19,7 +19,7 @@ public class TwitterApp extends BaseEntity{
 	private String consumerSecret;
 
 	@Column(name = "private_app")
-	private String privateApp;
+    private boolean privateApp;
 
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="user_id")
@@ -59,11 +59,11 @@ public class TwitterApp extends BaseEntity{
 		this.userId = userId;
 	}
 
-	public String getPrivateApp() {
+    public boolean isPrivateApp() {
 		return privateApp;
 	}
 
-	public void setPrivateApp(String privateApp) {
+    public void setPrivateApp(boolean privateApp) {
 		this.privateApp = privateApp;
 	}
 

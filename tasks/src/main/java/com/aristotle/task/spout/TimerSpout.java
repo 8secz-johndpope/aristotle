@@ -35,14 +35,6 @@ public class TimerSpout extends SpringAwareBaseSpout {
         sleepForMilliSeconds(durationMs - (currentTime - lastTime));
     }
 
-    private void sleepForMilliSeconds(long ms) {
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
     public long getDurationMs() {
         return durationMs;
     }
@@ -65,6 +57,19 @@ public class TimerSpout extends SpringAwareBaseSpout {
 
     public void setOutputStream(Stream outputStream) {
         this.outputStream = outputStream;
+    }
+
+    @Override
+    protected void onAck(Object msgId) {
+    }
+
+    @Override
+    protected void onFail(Object msgId) {
+    }
+
+    @Override
+    public void onLastFail(Object msgId) {
+
     }
 
 }

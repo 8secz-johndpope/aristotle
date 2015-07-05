@@ -1,5 +1,6 @@
 package com.aristotle.task.topology;
 
+import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -12,9 +13,11 @@ import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.IRichBolt;
 import backtype.storm.topology.OutputFieldsDeclarer;
+import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 
 import com.aristotle.task.spring.SpringContext;
+import com.aristotle.task.topology.beans.Stream;
 
 /**
  * All bolts should extend this class
@@ -69,6 +72,22 @@ public abstract class SpringAwareBaseBolt extends BaseComponent implements IRich
 
     @Override
     public final void declareOutputFields(OutputFieldsDeclarer declarer) {
+        try {
+            Field[] classFields = this.getClass().getDeclaredFields();
+            for (Field oneClassField : classFields) {
+                if (oneClassField.getType().isAssignableFrom(Stream.class)) {
+                    oneClassField.setAccessible(true);
+                    Fields fields = new Fields("default");
+                    Stream stream = (Stream) oneClassField.get(this);
+                    if (stream.getFields() != null && !stream.getFields().isEmpty()) {
+                        fields = new Fields(stream.getFields());
+                    }
+                    declarer.declareStream(stream.getStreamId(), fields);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     protected String[] getFields() {

@@ -8,6 +8,7 @@ public class MessageId<T> implements Serializable {
     private T data;
     private int retryCount = 0;
     private long startTime;
+    private String streamId;
 
     public MessageId() {
         startTime = System.currentTimeMillis();
@@ -42,6 +43,14 @@ public class MessageId<T> implements Serializable {
             return 0L;
         }
         return System.currentTimeMillis() - startTime;
+    }
+
+    public String getStreamId() {
+        return streamId;
+    }
+
+    public void setStreamId(String streamId) {
+        this.streamId = streamId;
     }
 
     @Override

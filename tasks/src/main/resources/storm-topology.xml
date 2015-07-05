@@ -22,40 +22,87 @@
 
 		<property name="spoutConfigs">
 			<list>
-				<ref bean="TestSpoutBean" />
+				<ref bean="ThirtySecondTimerSpoutBean" />
+				<ref bean="plannedTweetSpoutBean" />
+				<ref bean="SendTweetSpoutBean" />
+				
 			</list>
 		</property>
 		<property name="boltConfigs">
 			<list>
-				<ref bean="simpleBoltBean" />
+				<ref bean="twitterListenerBean" />
+				<ref bean="plannedTweetReaderBoltBean" />
+				<ref bean="plannedTweetProcessorBoltBean" />
+				<ref bean="TweetSendBoltBean" />
 			</list>
 		</property>
 	</bean>
 
-	<bean id="TestSpoutBean" class="com.aristotle.task.spout.TimerSpout">
-		<property name="componentId" value="TestSpout" />
+	<bean id="ThirtySecondTimerSpoutBean" class="com.aristotle.task.spout.TimerSpout">
+		<property name="componentId" value="ThirtySecondTimerSpout" />
 		<property name="onStart" value="true" />
 		<property name="durationMs" value="30000" />
 		
 		<property name="outputStream">
 			<bean class="com.aristotle.task.topology.beans.Stream">
-				<property name="streamId" value="TestStream" />
-				<property name="fields">
-					<list>
-						<value>TestField</value>
-					</list>
-				</property>
+				<property name="streamId" value="ThirtySecondTimerStream" />
 			</bean>
 		</property>
 	</bean>
-
-	<bean id="simpleBoltBean" class="com.aristotle.task.bolt.twitter.TwitterListener">
-		<property name="componentId" value="SimpleBolt" />
+	<bean id="plannedTweetSpoutBean" class="com.aristotle.task.spout.twitter.PlannedTweetSpout">
+        <property name="componentId" value="PlannedTweetSpout" />
+        <property name="outputStream">
+            <bean class="com.aristotle.task.topology.beans.Stream">
+                <property name="streamId" value="PlannedTweetStream" />
+            </bean>
+        </property>
+    </bean>
+    <bean id="SendTweetSpoutBean" class="com.aristotle.task.spout.twitter.SendTweetSpout">
+        <property name="componentId" value="SendTweetSpout" />
+        <property name="outputStream">
+            <bean class="com.aristotle.task.topology.beans.Stream">
+                <property name="streamId" value="TweetStream" />
+            </bean>
+        </property>
+    </bean>
+	
+	<bean id="twitterListenerBean" class="com.aristotle.task.bolt.twitter.TwitterListener">
+		<property name="componentId" value="TwitterListener" />
 		<property name="sourceComponentStreams">
 			<map>
-				<entry key="TestSpout" value="TestStream" />
+				<entry key="ThirtySecondTimerSpout" value="ThirtySecondTimerStream" />
 			</map>
 		</property>
 	</bean>
-
+	<bean id="plannedTweetReaderBoltBean" class="com.aristotle.task.bolt.twitter.PlannedTweetReaderBolt">
+        <property name="componentId" value="PlannedTweetReaderBolt" />
+        <property name="sourceComponentStreams">
+            <map>
+                <entry key="ThirtySecondTimerSpout" value="ThirtySecondTimerStream" />
+            </map>
+        </property>
+        <property name="outputStream">
+            <bean class="com.aristotle.task.topology.beans.Stream">
+                <property name="streamId" value="plannedTweetStream" />
+            </bean>
+        </property>
+        </bean>
+    
+	<bean id="plannedTweetProcessorBoltBean" class="com.aristotle.task.bolt.twitter.PlannedTweetProcessorBolt">
+        <property name="componentId" value="PlannedTweetProcessorBolt" />
+        <property name="sourceComponentStreams">
+            <map>
+                <entry key="PlannedTweetSpout" value="PlannedTweetStream" />
+            </map>
+        </property>
+    </bean>
+    
+	<bean id="TweetSendBoltBean" class="com.aristotle.task.bolt.twitter.TweetSendBolt">
+        <property name="componentId" value="TweetSendBolt" />
+        <property name="sourceComponentStreams">
+            <map>
+                <entry key="SendTweetSpout" value="TweetStream" />
+            </map>
+        </property>
+    </bean>
 </beans>

@@ -2,11 +2,11 @@ package com.aristotle.core.service;
 
 import java.util.List;
 
-import org.springframework.social.twitter.api.Tweet;
-
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.PlannedTweet;
+import com.aristotle.core.persistance.Tweet;
 import com.aristotle.core.persistance.TwitterAccount;
+import com.aristotle.core.persistance.TwitterTeam;
 
 /**
  * Created by Ravi Sharma on 02/07/2015.
@@ -15,8 +15,29 @@ public interface TwitterService {
 
     List<TwitterAccount> getAllSourceTwitterAccounts() throws AppException;
     
-    PlannedTweet planRetweet(Tweet tweet, TwitterAccount twitterAccount) throws AppException;
+    PlannedTweet planRetweet(org.springframework.social.twitter.api.Tweet tweet, TwitterAccount twitterAccount) throws AppException;
+
+    PlannedTweet getPlannedTweetById(Long id) throws AppException;
 
     List<PlannedTweet> getAllPlannedTweetReadyToProcess() throws AppException;
 
+    void updatePlannedTweetStatusToProcessing(Long plannedTweetId) throws AppException;
+
+    List<org.springframework.social.twitter.api.Tweet> processTweetsFromOneAccount(TwitterAccount twitterAccount) throws AppException;
+
+    void processPlannedTweet(Long plannedTweetId) throws AppException;
+
+    Tweet getNextPendingTweet() throws AppException;
+
+    void updateTweetStatusToProcessing(Long tweetId) throws AppException;
+
+    void updateTweetStatusToFailed(Long tweetId) throws AppException;
+
+    void updateTweetStatusToRetrying(Long tweetId) throws AppException;
+
+    void updateTweetStatusToDone(Long tweetId) throws AppException;
+
+    void tweetIt(Long tweetId) throws AppException;
+
+    TwitterTeam getTwitterTeamByUrl(String url) throws AppException;
 }

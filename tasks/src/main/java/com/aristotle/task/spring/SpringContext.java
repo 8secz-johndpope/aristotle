@@ -1,14 +1,15 @@
 package com.aristotle.task.spring;
 
-import com.aristotle.core.config.DatabaseConfig;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
+import com.aristotle.core.config.DatabaseConfig;
+
 @SpringBootApplication()
-@ComponentScan(basePackages = { "com.aristotle.core.service" })
+@ComponentScan(basePackages = { "com.aristotle.core.service", "com.aristotle.core.service.aws" })
 public class SpringContext implements CommandLineRunner
 {
     private static volatile ConfigurableApplicationContext context;

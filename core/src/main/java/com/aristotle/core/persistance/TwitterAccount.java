@@ -1,9 +1,14 @@
 package com.aristotle.core.persistance;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -29,6 +34,11 @@ public class TwitterAccount extends BaseEntity{
 	private String screenNameCap;
     @Column(name = "retweetable", columnDefinition = "BIT(1) DEFAULT 0")
     private boolean retweetable;
+    @Column(name = "last_tweet_sent_time")
+    protected Date lastTweetSentTime;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "tweeter_team_tweet_twitter", joinColumns = { @JoinColumn(name = "twitter_account_id") }, inverseJoinColumns = { @JoinColumn(name = "twitter_team_id") })
+    private List<TwitterTeam> twitterTeams;
 
 	public String getScreenNameCap() {
 		return screenNameCap;
@@ -84,6 +94,22 @@ public class TwitterAccount extends BaseEntity{
 
     public void setRetweetable(boolean retweetable) {
         this.retweetable = retweetable;
+    }
+
+    public List<TwitterTeam> getTwitterTeams() {
+        return twitterTeams;
+    }
+
+    public void setTwitterTeams(List<TwitterTeam> twitterTeams) {
+        this.twitterTeams = twitterTeams;
+    }
+
+    public Date getLastTweetSentTime() {
+        return lastTweetSentTime;
+    }
+
+    public void setLastTweetSentTime(Date lastTweetSentTime) {
+        this.lastTweetSentTime = lastTweetSentTime;
     }
 
 }

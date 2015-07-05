@@ -1,24 +1,33 @@
 package com.aristotle.core.persistance;
 
-import com.aristotle.core.enums.PlannedPostStatus;
-import com.aristotle.core.enums.PostLocationType;
-
-import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
-@Table(name = "tweeter_team")
+@Table(name = "twitter_team")
 public class TwitterTeam extends BaseEntity{
 
 	@Column(name = "name")
 	private String name;
 	
-	@Column(name = "description")
+    @Column(name = "url")
+    private String url;
+
+    @Column(name = "description")
 	private String description;
 
     @Column(name = "global")
-    private String global;
+    private boolean global;
 
 	@ManyToMany(cascade=CascadeType.ALL)
 	@JoinTable(name = "twitter_team_tweet_source",
@@ -38,7 +47,13 @@ public class TwitterTeam extends BaseEntity{
 			inverseJoinColumns = {
 					@JoinColumn(name="twitter_account_id")
 			})
-	private List<TwitterAccount> tweetTweeters;//Twitter accounts which which will retweet tweets from tweetSource accounts
+    private Set<TwitterAccount> tweetTweeters;// Twitter accounts which which will retweet tweets from tweetSource accounts
+
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
+    @JoinColumn(name = "twitter_app_id")
+    private TwitterApp twitterApp;
+    @Column(name = "twitter_app_id", insertable = false, updatable = false)
+    private Long twitterAppId;
 
     public String getName() {
         return name;
@@ -48,11 +63,11 @@ public class TwitterTeam extends BaseEntity{
         this.name = name;
     }
 
-    public List<TwitterAccount> getTweetTweeters() {
+    public Set<TwitterAccount> getTweetTweeters() {
         return tweetTweeters;
     }
 
-    public void setTweetTweeters(List<TwitterAccount> tweetTweeters) {
+    public void setTweetTweeters(Set<TwitterAccount> tweetTweeters) {
         this.tweetTweeters = tweetTweeters;
     }
 
@@ -64,11 +79,11 @@ public class TwitterTeam extends BaseEntity{
         this.description = description;
     }
 
-    public String getGlobal() {
+    public boolean isGlobal() {
         return global;
     }
 
-    public void setGlobal(String global) {
+    public void setGlobal(boolean global) {
         this.global = global;
     }
 
@@ -78,5 +93,29 @@ public class TwitterTeam extends BaseEntity{
 
     public void setTweetSource(List<TwitterAccount> tweetSource) {
         this.tweetSource = tweetSource;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public TwitterApp getTwitterApp() {
+        return twitterApp;
+    }
+
+    public void setTwitterApp(TwitterApp twitterApp) {
+        this.twitterApp = twitterApp;
+    }
+
+    public Long getTwitterAppId() {
+        return twitterAppId;
+    }
+
+    public void setTwitterAppId(Long twitterAppId) {
+        this.twitterAppId = twitterAppId;
     }
 }

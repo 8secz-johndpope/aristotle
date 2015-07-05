@@ -14,7 +14,7 @@ import com.aristotle.task.topology.SpringAwareBaseBolt;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-public class PlannedTweetProcessorBolt extends SpringAwareBaseBolt {
+public class TweetSendBolt extends SpringAwareBaseBolt {
     private static final long serialVersionUID = 1L;
     @Autowired(required = false)
     // required false as this will be injected later
@@ -33,8 +33,8 @@ public class PlannedTweetProcessorBolt extends SpringAwareBaseBolt {
         logInfo("Message Recieved " + messageRecived);
 
         JsonObject plannedTweetJsonObject = JsonParser.parse(messageRecived).getAsJsonObject();
-        Long plannedTweetId = plannedTweetJsonObject.get("id").getAsLong();
-        twitterService.processPlannedTweet(plannedTweetId);
+        Long tweetId = plannedTweetJsonObject.get("id").getAsLong();
+        twitterService.tweetIt(tweetId);
         return Result.Success;
     }
 }
