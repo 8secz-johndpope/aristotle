@@ -54,6 +54,7 @@ public class TwitterTeamPlugin extends AbstractDataPlugin {
                 boolean userPartOfTheTeam = twitterService.isUserPartOfTwitterTeam(user.getId(), twitterTeam.getId());
                 jsonObject.addProperty("userPartOfTheTeam", userPartOfTheTeam);
                 jsonObject.addProperty("teamLoginUrl", "/twitter/team/" + teamUrl);
+                jsonObject.addProperty("teamUrl", teamUrl);
             }
 
             context.add(name, jsonObject);
