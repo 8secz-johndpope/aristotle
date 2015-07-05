@@ -97,7 +97,7 @@ public class TwitterServiceImpl implements TwitterService {
 
     @Override
     public List<PlannedTweet> getAllPlannedTweetReadyToProcess() throws AppException {
-        return plannedTweetRepository.getPlannedTweetByLocationTypeAndLocationId();
+        return plannedTweetRepository.getPlannedTweetByLocationTypeAndLocationId(new Date());
     }
 
     @Override
