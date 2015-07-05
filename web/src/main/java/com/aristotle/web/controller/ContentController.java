@@ -158,9 +158,22 @@ public class ContentController {
             addConstitutionTitleDescription(pageObject, jsonContext);
             return;
         }
+        if (requestedUrl.startsWith("/organisation/minutes_of_meetings")) {
+            addMinutesOfMeetingTitleDescription(pageObject, jsonContext);
+            return;
+        }
 
     }
 
+    private void addMinutesOfMeetingTitleDescription(JsonObject pageObject, JsonObject jsonContext) {
+        try {
+            pageObject.addProperty("description", "We do things differently, we publish all minutes of each meeting| Swaraj Abhiyan Minutes Of Meeting");
+            pageObject.addProperty("title", "Swaraj Abhiyan Minutes Of meetings");
+        } catch (Exception ex) {
+            pageObject.addProperty("description", "We do things differently, we publish all minutes of each meeting| Swaraj Abhiyan Minutes Of Meeting");
+            pageObject.addProperty("title", "Swaraj Abhiyan Minutes Of meetings");
+        }
+    }
     private void addNationalWorkingCommiteeTitleDescription(JsonObject pageObject, JsonObject jsonContext) {
         try {
             pageObject.addProperty("description", "List of National Working Committee(NWC) Members | Swaraj Abhiyan Video");

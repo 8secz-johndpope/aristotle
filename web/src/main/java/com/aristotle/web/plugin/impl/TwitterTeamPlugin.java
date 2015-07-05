@@ -1,6 +1,7 @@
 package com.aristotle.web.plugin.impl;
 
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,10 +12,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.aristotle.core.persistance.TwitterAccount;
 import com.aristotle.core.persistance.TwitterTeam;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.service.TwitterService;
 import com.aristotle.web.parameters.HttpParameters;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 @Component
@@ -61,6 +64,10 @@ public class TwitterTeamPlugin extends AbstractDataPlugin {
                 jsonObject.addProperty("userPartOfTheTeam", userPartOfTheTeam);
                 jsonObject.addProperty("teamLoginUrl", "/twitter/team/" + teamUrl);
                 jsonObject.addProperty("teamUrl", teamUrl);
+                if (userPartOfTheTeam) {
+                    // add existing team users in context
+                    addTeamUsers(jsonObject, twitterTeam);
+                }
             }
 
             context.add(name, jsonObject);
@@ -68,6 +75,24 @@ public class TwitterTeamPlugin extends AbstractDataPlugin {
             ex.printStackTrace();
         }
     }
+
+    private void addTeamUsers(JsonObject jsonObject, TwitterTeam twitterTeam) {
+
+        Set<TwitterAccount> twitterAccounts = twitterTeam.getTweetTweeters();
+        if (twitterAccounts == null || twitterAccounts.isEmpty()) {
+            return;
+        }
+        JsonArray jsonArray = new JsonArray();
+        JsonObject oneTwitterAccountJsonObject;
+        for (TwitterAccount oneTwitterAccount : twitterAccounts) {
+            oneTwitterAccountJsonObject = new JsonObject();
+            oneTwitterAccountJsonObject.addProperty("imageUrl", oneTwitterAccount.getImageUrl());
+            oneTwitterAccountJsonObject.addProperty("screenName", oneTwitterAccount.getScreenName());
+            jsonArray.add(oneTwitterAccountJsonObject);
+        }
+        jsonObject.add("teamMembers", jsonArray);
+    }
+
 
     private String getTwitterTeamUrl(HttpServletRequest httpServletRequest) {
         Map<String, String> pathParams = (Map<String, String>) httpServletRequest.getAttribute(HttpParameters.PATH_PARAMETER_PARAM);
