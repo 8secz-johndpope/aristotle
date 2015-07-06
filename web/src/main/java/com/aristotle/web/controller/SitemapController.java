@@ -118,6 +118,7 @@ public class SitemapController {
         addOneUrlToSiteMap(sb, "http://www.swarajabhiyan.org/organisation/nwc", new Date(), "monthly", "0.9");
         addOneUrlToSiteMap(sb, "http://www.swarajabhiyan.org/organisation/nsc", new Date(), "monthly", "0.9");
         addOneUrlToSiteMap(sb, "http://www.swarajabhiyan.org/organisation/contactus", new Date(), "weekly", "0.9");
+        addOneUrlToSiteMap(sb, "http://www.swarajabhiyan.org/organisation/minutes_of_meetings", new Date(), "daily", "0.9");
         sb.append("</urlset>");
 
         return sb.toString();
