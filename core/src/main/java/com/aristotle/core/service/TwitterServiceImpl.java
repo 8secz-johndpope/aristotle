@@ -130,9 +130,12 @@ public class TwitterServiceImpl implements TwitterService {
     @Override
     public void processPlannedTweet(Long plannedTweetId) throws AppException {
         PlannedTweet plannedTweet = plannedTweetRepository.findOne(plannedTweetId);
+        /*
         if (!plannedTweet.getStatus().equals(PlannedPostStatus.PROCESSING)) {
+            logger.info("Status is not processing so Ignoring it");
             return;
         }
+        */
         TwitterAccount tweetOwnerAccount = plannedTweet.getTwitterAccount();
         List<TwitterTeam> twitterTeams = twitterTeamRepository.getTwitterTeamsOfSourceTwitterAccount(tweetOwnerAccount.getId());
         TwitterTeam globalTeam = getGlobalTeam(twitterTeams);
