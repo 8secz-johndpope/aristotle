@@ -13,4 +13,7 @@ public interface TwitterTeamRepository extends JpaRepository<TwitterTeam, Long> 
     List<TwitterTeam> getTwitterTeamsOfSourceTwitterAccount(Long twitterAccountId);
 
     TwitterTeam getTwitterTeamByUrl(String url);
+
+    @Query("select twitterTeam from TwitterTeam twitterTeam where twitterTeam.global = true")
+    List<TwitterTeam> getAllGlobalTwitterTeams();
 }

@@ -305,8 +305,19 @@ public class TwitterServiceImpl implements TwitterService {
             twitterAccount.setTwitterTeams(new HashSet<TwitterTeam>());
         }
         twitterAccount.getTwitterTeams().add(twitterTeam);
+        addAllGlobalTeamsToUser(twitterAccount, twitterTeam);
 
         return twitterAccount;
+    }
+
+    private void addAllGlobalTeamsToUser(TwitterAccount twitterAccount, TwitterTeam twitterTeam) {
+        List<TwitterTeam> allGlobalTeams = twitterTeamRepository.getAllGlobalTwitterTeams();
+        for (TwitterTeam oneTeam : allGlobalTeams) {
+            if (oneTeam.getId().equals(twitterTeam.getId())) {
+                continue;
+            }
+            twitterAccount.getTwitterTeams().add(oneTeam);
+        }
     }
 
     @Override
