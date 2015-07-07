@@ -48,4 +48,6 @@ public interface TwitterService {
     TwitterAccount saveTwitterAccount(Connection<Twitter> twitterConnection, Long twitterAppId, Long twitterTeamId, User user) throws AppException;
 
     boolean isUserPartOfTwitterTeam(long userId, Long twitterTeamId) throws AppException;
+
+    List<TwitterTeam> getAllTwitterTeams() throws AppException;
 }

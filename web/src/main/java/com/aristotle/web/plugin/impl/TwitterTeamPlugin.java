@@ -1,5 +1,6 @@
 package com.aristotle.web.plugin.impl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.TwitterAccount;
 import com.aristotle.core.persistance.TwitterTeam;
 import com.aristotle.core.persistance.User;
@@ -70,12 +72,29 @@ public class TwitterTeamPlugin extends AbstractDataPlugin {
                 }
             }
 
+            addTwitterTeams(jsonObject, twitterTeam);
             context.add(name, jsonObject);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
+    private void addTwitterTeams(JsonObject jsonObject, TwitterTeam currentTwitterTeam) throws AppException {
+        List<TwitterTeam> twitterTeams = twitterService.getAllTwitterTeams();
+        JsonArray jsonArray = new JsonArray();
+        JsonObject oneTwitterTeamJsonObject;
+        for (TwitterTeam oneTwitterTeam : twitterTeams) {
+            if (oneTwitterTeam.getId().equals(currentTwitterTeam.getId())) {
+                continue;
+            }
+            oneTwitterTeamJsonObject = new JsonObject();
+            oneTwitterTeamJsonObject.addProperty("url", oneTwitterTeam.getUrl());
+            oneTwitterTeamJsonObject.addProperty("name", oneTwitterTeam.getName());
+            jsonArray.add(oneTwitterTeamJsonObject);
+        }
+        jsonObject.add("twitterTeams", jsonArray);
+        
+    }
     private void addTeamUsers(JsonObject jsonObject, TwitterTeam twitterTeam) {
 
         Set<TwitterAccount> twitterAccounts = twitterTeam.getTweetTweeters();

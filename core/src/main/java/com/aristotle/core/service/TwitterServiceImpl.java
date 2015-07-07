@@ -322,4 +322,9 @@ public class TwitterServiceImpl implements TwitterService {
         }
         return true;
     }
+
+    @Override
+    public List<TwitterTeam> getAllTwitterTeams() throws AppException {
+        return twitterTeamRepository.findAll();
+    }
 }
