@@ -1,6 +1,5 @@
 package com.aristotle.core.persistance;
 
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -37,7 +36,7 @@ public class TwitterTeam extends BaseEntity{
 			inverseJoinColumns = {
 					@JoinColumn(name="twitter_account_id")
 			})
-	private List<TwitterAccount> tweetSource;//Twitter accounts which are source of this Team
+    private Set<TwitterAccount> tweetSource;// Twitter accounts which are source of this Team
 
 	@ManyToMany(cascade=CascadeType.ALL)
 	@JoinTable(name = "tweeter_team_tweet_twitter",
@@ -87,11 +86,11 @@ public class TwitterTeam extends BaseEntity{
         this.global = global;
     }
 
-    public List<TwitterAccount> getTweetSource() {
+    public Set<TwitterAccount> getTweetSource() {
         return tweetSource;
     }
 
-    public void setTweetSource(List<TwitterAccount> tweetSource) {
+    public void setTweetSource(Set<TwitterAccount> tweetSource) {
         this.tweetSource = tweetSource;
     }
 

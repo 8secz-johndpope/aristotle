@@ -66,12 +66,13 @@ public class TwitterTeamPlugin extends AbstractDataPlugin {
                 jsonObject.addProperty("userPartOfTheTeam", userPartOfTheTeam);
                 jsonObject.addProperty("teamLoginUrl", "/twitter/team/" + teamUrl);
                 jsonObject.addProperty("teamUrl", teamUrl);
+                jsonObject.addProperty("global", twitterTeam.isGlobal());
                 if (userPartOfTheTeam) {
                     // add existing team users in context
                     addTeamUsers(jsonObject, twitterTeam);
                 }
             }
-
+            addTwitterTeamSourceAccount(jsonObject, twitterTeam);
             addTwitterTeams(jsonObject, twitterTeam);
             context.add(name, jsonObject);
         } catch (Exception ex) {
@@ -79,6 +80,25 @@ public class TwitterTeamPlugin extends AbstractDataPlugin {
         }
     }
 
+    private void addTwitterTeamSourceAccount(JsonObject jsonObject, TwitterTeam currentTwitterTeam) throws AppException {
+        if (currentTwitterTeam.isGlobal()) {
+            return;
+        }
+        Set<TwitterAccount> twitterAccounts = currentTwitterTeam.getTweetSource();
+        if (twitterAccounts == null || twitterAccounts.isEmpty()) {
+            return;
+        }
+        JsonArray jsonArray = new JsonArray();
+        JsonObject oneTwitterAccountJsonObject;
+        for (TwitterAccount oneTwitterAccount : twitterAccounts) {
+            oneTwitterAccountJsonObject = new JsonObject();
+            oneTwitterAccountJsonObject.addProperty("imageUrl", oneTwitterAccount.getImageUrl());
+            oneTwitterAccountJsonObject.addProperty("screenName", oneTwitterAccount.getScreenName());
+            jsonArray.add(oneTwitterAccountJsonObject);
+        }
+        jsonObject.add("sourceMembers", jsonArray);
+
+    }
     private void addTwitterTeams(JsonObject jsonObject, TwitterTeam currentTwitterTeam) throws AppException {
         List<TwitterTeam> twitterTeams = twitterService.getAllTwitterTeams();
         JsonArray jsonArray = new JsonArray();
