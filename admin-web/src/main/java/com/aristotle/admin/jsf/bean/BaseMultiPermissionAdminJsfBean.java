@@ -3,9 +3,9 @@ package com.aristotle.admin.jsf.bean;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.aristotle.admin.service.AdminService;
-import com.aristotle.admin.service.AwsFileManager;
 import com.aristotle.core.enums.AppPermission;
 import com.aristotle.core.persistance.User;
+import com.aristotle.core.service.AwsFileManager;
 import com.aristotle.core.service.DataPluginService;
 
 

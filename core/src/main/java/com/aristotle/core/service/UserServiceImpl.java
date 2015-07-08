@@ -854,4 +854,10 @@ public class UserServiceImpl implements UserService {
         emailConfirmationRequestRepository.delete(emailConfirmationRequest);
     }
 
+    @Override
+    public void updateUserProfilePic(Long userid, String photo) throws AppException {
+        User user = userRepository.findOne(userid);
+        user.setProfilePic(photo);
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.aristotle.admin.service;
+package com.aristotle.core.service;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;

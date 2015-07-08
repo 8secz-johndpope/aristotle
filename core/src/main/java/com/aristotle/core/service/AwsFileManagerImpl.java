@@ -1,4 +1,4 @@
-package com.aristotle.admin.service;
+package com.aristotle.core.service;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
