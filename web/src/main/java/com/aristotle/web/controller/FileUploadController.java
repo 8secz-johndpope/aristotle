@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,23 +38,29 @@ public class FileUploadController {
     public @ResponseBody String handleFileUpload(HttpServletRequest httpServletRequest, ModelAndView mv, @RequestParam("file") MultipartFile file) {
         if (!file.isEmpty()) {
             try {
+                String bucketName = "static.swarajabhiyan.org";
                 User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
+                if (!StringUtils.isEmpty(user.getProfilePic())) {
+                    try {
+                        awsFileManager.deleteFileFromS3(awsKey, awsSecret, bucketName, user.getProfilePic());
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
                 System.out.println("Uploading File");
                 String subdDirectory = "";
                 System.out.println("subdDirectory = " + subdDirectory);
-                String remoteFileName = "profile/" + staticDataEnv + "/" + user.getId() + "/" + file.getName();
-                String bucketName = "static.swarajabhiyan.org";
-
+                String remoteFileName = "profile/" + staticDataEnv + "/" + user.getId() + "/" + System.currentTimeMillis() + ".jpg";
                 awsFileManager.uploadFileToS3(awsKey, awsSecret, bucketName, remoteFileName, file.getInputStream(), "image/jpeg");
                 userService.updateUserProfilePic(user.getId(), remoteFileName);
                 RedirectView rv = new RedirectView("/user/editprofile");
                 mv.setView(rv);
                 return "You successfully uploaded " + remoteFileName + "!";
             } catch (Exception e) {
-                return "Failed to upload photo " + file.getName() + " => " + e.getMessage();
+                return "Failed to upload photo " + file.getOriginalFilename() + " => " + e.getMessage();
             }
         } else {
-            return "You failed to upload " + file.getName() + " because the file was empty.";
+            return "You failed to upload " + file.getOriginalFilename() + " because the file was empty.";
         }
     }
 }
