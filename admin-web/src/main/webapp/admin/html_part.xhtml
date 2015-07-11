@@ -49,8 +49,8 @@
 						<p:commandButton value="Create News" actionListener="#{htmlPartAdminBean.createNews}" update=":adminHtmlPartForm:mainPanel">
 						</p:commandButton>
 						 -->
-						<p:dataTable id="listOfHtmlPart" var="oneHtmlPart" value="#{htmlPartAdminBean.newsList}" paginator="true" rows="25" paginatorPosition="bottom" paginatorAlwaysVisible="false"
-							emptyMessage="No News" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						<p:dataTable id="listOfHtmlPart" var="oneHtmlPart" value="#{htmlPartAdminBean.domainTemplateParts}" paginator="true" rows="25" paginatorPosition="bottom" paginatorAlwaysVisible="false"
+							emptyMessage="No Html parts" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							rowsPerPageTemplate="5,10,15">
 							<f:facet name="header">Html Parts</f:facet>
 							<p:column>

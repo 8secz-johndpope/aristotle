@@ -80,8 +80,8 @@ body {
 			</p:submenu>
 			<p:submenu label="Developer" rendered="#{menuBean.developerAllowed}">
 			<p:menuitem value="Url Mappings" actionListener="#{menuBean.goToUrlMappingPage}" rendered="#{menuBean.webDeveloperRoleAllowed}"></p:menuitem>
-                <p:menuitem value="Html templates" actionListener="#{menuBean.goToHtmlPartPage}" rendered="#{menuBean.webDeveloperRoleAllowed}"></p:menuitem>
-                <p:menuitem value="Html Parts" actionListener="#{menuBean.goToStaticDataPluginPage}" rendered="#{menuBean.webDeveloperRoleAllowed}"></p:menuitem>
+                <p:menuitem value="Html templates" actionListener="#{menuBean.goToHtmlTemplatePage}" rendered="#{menuBean.webDeveloperRoleAllowed}"></p:menuitem>
+                <p:menuitem value="Html Parts" actionListener="#{menuBean.goToHtmlPartPage}" rendered="#{menuBean.webDeveloperRoleAllowed}"></p:menuitem>
                 <p:menuitem value="Static Data Plugins" actionListener="#{menuBean.goToStaticDataPluginPage}" rendered="#{menuBean.webDeveloperRoleAllowed}"></p:menuitem>
             </p:submenu>
             <p:submenu label="Admin" rendered="#{menuBean.adminAllowed}">
