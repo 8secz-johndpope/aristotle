@@ -105,7 +105,7 @@
                                     <p:ajax event="change" update=":adminTemplateForm:formView" listener="#{templateAdminBean.handleUrlSelection}" />
                                 </p:selectOneMenu>
                                 <p:outputLabel value="Template"></p:outputLabel>
-                                <p:inputTextarea rows="6" cols="175" value="#{templateAdminBean.selectedTemplateUrl.htmlContentDraft}" />
+                                <p:inputTextarea rows="50" cols="175" value="#{templateAdminBean.selectedTemplateUrl.htmlContentDraft}" autoResize="false" />
                             </p:panelGrid>
                             <br></br>
                             <p:outputPanel id="buttonPanel">
