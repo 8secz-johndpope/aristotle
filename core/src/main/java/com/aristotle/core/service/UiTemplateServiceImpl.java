@@ -44,7 +44,7 @@ public class UiTemplateServiceImpl implements UiTemplateService {
 
     @Override
     public DomainTemplatePart saveDomainTemplatePart(DomainTemplatePart domainTemplatePart) throws AppException {
-        entityManager.merge(domainTemplatePart);
+        // entityManager.merge(domainTemplatePart);
         domainTemplatePart = domainTemplatePartRepository.save(domainTemplatePart);
         return domainTemplatePart;
     }
