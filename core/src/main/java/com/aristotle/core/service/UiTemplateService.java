@@ -15,4 +15,6 @@ public interface UiTemplateService {
 
     List<DomainTemplatePart> getDomainTemplatePartsByDomainTemplateId(Long domainTemplateId) throws AppException;
 
+    DomainTemplatePart saveDomainTemplatePart(DomainTemplatePart domainTemplatePart) throws AppException;
+
 }

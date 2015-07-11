@@ -2,6 +2,8 @@ package com.aristotle.core.service;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,8 @@ public class UiTemplateServiceImpl implements UiTemplateService {
     private DomainPageTemplateRepository domainPageTemplateRepository;
     @Autowired
     private DomainTemplatePartRepository domainTemplatePartRepository;
+    @Autowired
+    private EntityManager entityManager;
 
     @Override
     public List<Domain> getAllDomains() throws AppException {
@@ -36,6 +40,13 @@ public class UiTemplateServiceImpl implements UiTemplateService {
     @Override
     public List<DomainTemplatePart> getDomainTemplatePartsByDomainTemplateId(Long domainTemplateId) throws AppException {
         return domainTemplatePartRepository.getDomainTemplatePartsByDomainTemplateId(domainTemplateId);
+    }
+
+    @Override
+    public DomainTemplatePart saveDomainTemplatePart(DomainTemplatePart domainTemplatePart) throws AppException {
+        entityManager.merge(domainTemplatePart);
+        domainTemplatePart = domainTemplatePartRepository.save(domainTemplatePart);
+        return domainTemplatePart;
     }
 
 }

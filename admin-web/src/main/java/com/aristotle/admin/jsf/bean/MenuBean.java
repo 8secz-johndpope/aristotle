@@ -274,6 +274,14 @@ public class MenuBean extends BaseJsfBean {
         }
     }
 
+    public void goToHtmlPartPage() {
+        if (isWebDeveloperRoleAllowed()) {
+            buildAndRedirect("/admin/htmlpart");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
+
     public void goToUrlMappingPage() {
         if (isWebDeveloperRoleAllowed()) {
             buildAndRedirect("/admin/urls");

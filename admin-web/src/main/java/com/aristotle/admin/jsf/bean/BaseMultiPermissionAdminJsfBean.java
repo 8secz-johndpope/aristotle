@@ -7,6 +7,7 @@ import com.aristotle.core.enums.AppPermission;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.service.AwsFileManager;
 import com.aristotle.core.service.DataPluginService;
+import com.aristotle.core.service.UiTemplateService;
 
 
 public class BaseMultiPermissionAdminJsfBean extends BaseJsfBean{
@@ -23,6 +24,9 @@ public class BaseMultiPermissionAdminJsfBean extends BaseJsfBean{
 
     @Autowired
     protected AdminService adminService;
+
+    @Autowired
+    protected UiTemplateService uiTemplateService;
 
 	AppPermission[] appPermissions;
 	String url;
