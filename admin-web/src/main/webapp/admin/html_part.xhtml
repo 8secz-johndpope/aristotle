@@ -79,7 +79,7 @@
 					<p:outputPanel id="formView" rendered="#{!htmlPartAdminBean.showList}">
 						<p:panelGrid columns="2">
 							<p:outputLabel value="Name"></p:outputLabel>
-							<p:inputText value="#{htmlPartAdminBean.selectedDomainTemplatePart.name}" style="width:600px" disabled="#{!htmlPartAdminBean.editAllowed}">
+							<p:inputText value="#{htmlPartAdminBean.selectedDomainTemplatePart.name}" style="width:800px">
 								<p:ajax event="change" update=":adminHtmlPartForm" />
 							</p:inputText>
 							<p:outputLabel value="Template"></p:outputLabel>
