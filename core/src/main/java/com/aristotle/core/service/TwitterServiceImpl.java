@@ -108,7 +108,7 @@ public class TwitterServiceImpl implements TwitterService {
         Calendar now = Calendar.getInstance();
         now.add(Calendar.MINUTE, -5);
         for (org.springframework.social.twitter.api.Tweet oneTweet : tweets) {
-            logger.info("Tweet : " + oneTweet.getCreatedAt() + " : " + oneTweet.getText());
+            logger.info("Tweet : " + oneTweet.getId() + ", " + oneTweet.getCreatedAt() + " : " + oneTweet.getText());
             if (oneTweet.getCreatedAt().after(now.getTime())) {
                 try {
                     planRetweet(oneTweet, twitterAccount);
@@ -116,7 +116,7 @@ public class TwitterServiceImpl implements TwitterService {
                     e.printStackTrace();
                 }
             } else {
-                logger.info("Ignoring as not in last 5 minutes");
+                logger.info("Ignoring as not in last 5 minutes oneTweet.getCreatedAt()=" + oneTweet.getCreatedAt() + ", now.getTime()=" + now.getTime());
             }
         }
         return tweets;
