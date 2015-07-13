@@ -108,6 +108,10 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
 
     @Override
     public String getTemplate(HttpServletRequest httpServletRequest) {
+        boolean requestForDraft = isRequestForDraft(httpServletRequest);
+        if (requestForDraft) {
+            refresh();// refresh if draft is requested
+        }
         init();
         String domainName = httpServletRequest.getServerName();
         UrlMapping urlMapping = (UrlMapping) httpServletRequest.getAttribute(HttpParameters.URL_MAPPING);
@@ -120,10 +124,24 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
             System.out.println("No Domain page Template Found");
             return "No Template Defined";
         }
-        if (httpServletRequest.getParameter("draft") == null) {
-            return domainPageTemplate.getHtmlContent();
+        if (requestForDraft) {
+            return domainPageTemplate.getHtmlContentDraft();
         }
-        return domainPageTemplate.getHtmlContentDraft();
+        return domainPageTemplate.getHtmlContent();
+
+    }
+
+    private boolean isRequestForDraft(HttpServletRequest httpServletRequest) {
+        String draftParamValue = httpServletRequest.getParameter("draft");
+        if (draftParamValue == null) {
+            draftParamValue = (String) httpServletRequest.getSession().getAttribute("draft");
+        } else {
+            httpServletRequest.getSession().setAttribute("draft", draftParamValue);
+        }
+        if (draftParamValue == null || !draftParamValue.equals("1")) {
+            return false;
+        }
+        return true;
     }
 
     private DomainPageTemplate getDomainPageTemplate(String domain, Long urlMappingId) {
