@@ -58,7 +58,7 @@ public class ContentController {
             return "User not logged In";
         }
 
-        String stringTemplate = uiTemplateManager.getTemplate(httpServletRequest);
+        String stringTemplate = uiTemplateManager.getTemplate(httpServletRequest, httpServletResponse);
         modelAndView.getModel().put("template", stringTemplate);
 
         Handlebars handlebars = handleBarManager.getHandlebars();

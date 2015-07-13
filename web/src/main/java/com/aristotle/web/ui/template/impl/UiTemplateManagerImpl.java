@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,8 +109,8 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
     }
 
     @Override
-    public String getTemplate(HttpServletRequest httpServletRequest) {
-        boolean requestForDraft = isRequestForDraft(httpServletRequest);
+    public String getTemplate(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        boolean requestForDraft = isRequestForDraft(httpServletRequest, httpServletResponse);
         if (requestForDraft) {
             refresh();// refresh if draft is requested
         }
@@ -131,13 +133,23 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
 
     }
 
-    private boolean isRequestForDraft(HttpServletRequest httpServletRequest) {
+    private boolean isRequestForDraft(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         String draftParamValue = httpServletRequest.getParameter("draft");
         if (draftParamValue == null) {
-            draftParamValue = (String) httpServletRequest.getSession().getAttribute("draft");
+            Cookie[] cookies = httpServletRequest.getCookies();
+            if (cookies != null && cookies.length > 0) {
+                for (Cookie oneCookie : cookies) {
+                    if (oneCookie.getName().equals("draft")) {
+                        draftParamValue = oneCookie.getValue();
+                    }
+                }
+            }
         } else {
-            httpServletRequest.getSession().setAttribute("draft", draftParamValue);
+            Cookie cookie = new Cookie("draft", draftParamValue);
+            cookie.setPath("/");
+            httpServletResponse.addCookie(cookie);
         }
+        System.out.println("draftParamValue = " + draftParamValue);
         if (draftParamValue == null || !draftParamValue.equals("1")) {
             return false;
         }
