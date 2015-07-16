@@ -4,7 +4,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import com.aristotle.core.config.DatabaseConfig;
 
@@ -39,5 +42,16 @@ public class SpringContext implements CommandLineRunner
 
     @Override
     public void run(String... strings) throws Exception {
+    }
+
+    @Bean
+    public ThreadPoolTaskExecutor threadPoolTaskExecutorBean() {
+        return new ThreadPoolTaskExecutor();
+    }
+
+    @Bean
+    public ThreadPoolTaskScheduler threadPoolTaskSchedulerBean() {
+        ThreadPoolTaskScheduler tpts = new ThreadPoolTaskScheduler();
+        return tpts;
     }
 }

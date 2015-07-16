@@ -138,7 +138,7 @@ public abstract class SpringAwareBaseBolt extends BaseComponent implements IRich
 
     @Override
     public void cleanup() {
-        super.destroy();
+        // super.destroy();
     }
 
     @Override

@@ -39,6 +39,8 @@ public class TwitterAccount extends BaseEntity{
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "tweeter_team_tweet_twitter", joinColumns = { @JoinColumn(name = "twitter_account_id") }, inverseJoinColumns = { @JoinColumn(name = "twitter_team_id") })
     private Set<TwitterTeam> twitterTeams;
+    @Column(name = "follower_count")
+    private Integer followerCount;
 
 	public String getScreenNameCap() {
 		return screenNameCap;
@@ -110,6 +112,14 @@ public class TwitterAccount extends BaseEntity{
 
     public void setLastTweetSentTime(Date lastTweetSentTime) {
         this.lastTweetSentTime = lastTweetSentTime;
+    }
+
+    public Integer getFollowerCount() {
+        return followerCount;
+    }
+
+    public void setFollowerCount(Integer followerCount) {
+        this.followerCount = followerCount;
     }
 
 }

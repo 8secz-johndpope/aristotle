@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionData;
+import org.springframework.social.twitter.api.CursoredList;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.stereotype.Service;
@@ -90,6 +91,7 @@ public class TwitterServiceImpl implements TwitterService {
         plannedTweet.setPostingTime(new Date());
         plannedTweet.setFromTwitterUserId(tweet.getFromUserId());
         plannedTweet.setTwitterAccount(twitterAccount);
+        plannedTweet.setMessage(tweet.getUnmodifiedText());
         plannedTweet = plannedTweetRepository.save(plannedTweet);
         logger.info("Creating a planned Tweet Success");
         return plannedTweet;
@@ -337,5 +339,40 @@ public class TwitterServiceImpl implements TwitterService {
     @Override
     public List<TwitterTeam> getAllTwitterTeams() throws AppException {
         return twitterTeamRepository.findAll();
+    }
+
+    @Override
+    public void updateFollowerCounts() throws AppException {
+        List<TwitterAccount> allTwitterAccounts = twitterAccountRepository.findAll();
+        for (TwitterAccount oneTwitterAccount : allTwitterAccounts) {
+            try {
+                updateFollowerCount(oneTwitterAccount);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+        }
+    }
+
+    private void updateFollowerCount(TwitterAccount twitterAccount){
+        List<TwitterPermission> twitterPermissions = twitterPermissionRepository.getTwitterPermissionByTwitterAccountId(twitterAccount.getId());
+        if(twitterPermissions == null || twitterPermissions.isEmpty()){
+            return;
+        }
+        TwitterPermission twitterPermission = twitterPermissions.get(0);
+        Twitter twitter = new TwitterTemplate(twitterPermission.getTwitterApp().getConsumerKey(), twitterPermission.getTwitterApp().getConsumerSecret(), twitterPermission.getToken(),
+                twitterPermission.getTokenSecret());
+        long cursorId = -1;
+        int totalFollowers = 0;
+        while(true){
+            CursoredList<Long> followerIds = twitter.friendOperations().getFollowerIdsInCursor(cursorId);
+            totalFollowers = totalFollowers + followerIds.size();
+            cursorId = followerIds.getNextCursor();
+            if (followerIds.size() < 5000) {
+                break;
+            }
+        }
+        twitterAccount.setFollowerCount(totalFollowers);
+        
     }
 }

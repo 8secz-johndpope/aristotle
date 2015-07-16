@@ -13,6 +13,8 @@ public interface TweetRepository extends JpaRepository<Tweet, Long> {
 
     public Tweet getTweetByPlannedTweetIdAndTwitterAccountId(Long plannedTweetId, Long twitterAccountId);
 
+    public List<Tweet> getTweetsByPlannedTweetId(Long plannedTweetId);
+
     @Query("select tweet from Tweet tweet where tweet.status = 'Pending' and (tweet.twitterAccount.lastTweetSentTime <= ?1 or tweet.twitterAccount.lastTweetSentTime is null)")
     public List<Tweet> getNextPendingTweet(Date nextMinimumTweetSentDateTime, Pageable pageRequest);
 	

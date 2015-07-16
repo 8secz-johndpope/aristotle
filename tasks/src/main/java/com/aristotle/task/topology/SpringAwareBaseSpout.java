@@ -91,8 +91,13 @@ public abstract class SpringAwareBaseSpout extends BaseComponent implements IRic
     }
 
     @Override
-    public void close() {
-        super.destroy();
+    public final void close() {
+        // super.destroy();
+        onClose();
+    }
+
+    public void onClose() {
+        
     }
 
     @Override

@@ -26,6 +26,7 @@ public class TwitterListener extends SpringAwareBaseBolt {
         logInfo("Message Recieved " + new Date());
         List<TwitterAccount> twitterAccounts = twitterService.getAllSourceTwitterAccounts();
         for(TwitterAccount oneTwitterAccount : twitterAccounts){
+            logInfo("Getting Tweets From Account :  " + oneTwitterAccount.getScreenName());
             twitterService.processTweetsFromOneAccount(oneTwitterAccount);
         }
         return Result.Success;
