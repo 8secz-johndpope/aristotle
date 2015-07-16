@@ -54,7 +54,7 @@
 	</bean>
 	<bean id="TwitterReportScheduleSpoutBean" class="com.aristotle.task.spout.ScheduleSpout">
 		<property name="componentId" value="TwitterReportScheduleSpout" />
-		<property name="cronTime" value="0 0 6 * * ?" />
+		<property name="cronTime" value="0 20 20 * * ?" />
 
 		<property name="outputStream">
 			<bean class="com.aristotle.task.topology.beans.Stream">
