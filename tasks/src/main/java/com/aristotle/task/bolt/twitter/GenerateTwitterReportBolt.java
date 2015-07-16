@@ -39,7 +39,10 @@ public class GenerateTwitterReportBolt extends SpringAwareBaseBolt {
         calendar.set(Calendar.MONTH, Calendar.JULY);
         calendar.set(Calendar.YEAR, 2015);
         Date today = new Date();
+        logInfo("calendar : " + calendar.getTime());
+        logInfo("today : " + today);
         while (calendar.getTime().before(today)) {
+            logInfo("Sending Message For Date : " + calendar.getTime());
             writeToParticularStream(input, new Values(calendar.getTime()), outputStream.getStreamId());
             calendar.add(Calendar.DATE, 1);
         }
