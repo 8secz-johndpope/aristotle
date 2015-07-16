@@ -38,7 +38,6 @@
 				<ref bean="GenerateTwitterReportBoltBean" />
 				<ref bean="GenerateDailyTwitterReportBoltBean" />
 				<ref bean="RefreshTwitterUserFollowerCountBoltBean" />
-				<ref bean="GenerateTwitterReportBoltBean" />
 
 			</list>
 		</property>
