@@ -38,6 +38,7 @@ public class ScheduleSpout extends SpringAwareBaseSpout {
         queue = new LinkedBlockingQueue<>();
         ScheduleTask scheduleTask = new ScheduleTask();
         logInfo("cronTime = {}", cronTime);
+        threadPoolTaskScheduler.submit(scheduleTask);// TODO remove it
         scheduledFuture = threadPoolTaskScheduler.schedule(scheduleTask, new CronTrigger(cronTime));
         logInfo("scheduledFuture = {}", scheduledFuture);
     }
