@@ -21,6 +21,7 @@ import com.aristotle.task.topology.beans.Stream;
  */
 public class ScheduleSpout extends SpringAwareBaseSpout {
 
+    private static final long serialVersionUID = 1L;
     private Stream outputStream;
     private String cronTime;
 
@@ -38,6 +39,7 @@ public class ScheduleSpout extends SpringAwareBaseSpout {
         ScheduleTask scheduleTask = new ScheduleTask();
         logInfo("cronTime = {}", cronTime);
         scheduledFuture = threadPoolTaskScheduler.schedule(scheduleTask, new CronTrigger(cronTime));
+        logInfo("scheduledFuture = {}", scheduledFuture);
     }
 
     @Override
@@ -48,6 +50,7 @@ public class ScheduleSpout extends SpringAwareBaseSpout {
     @Override
     public void nextTuple() {
         try {
+            logInfo("Get Next Tuple");
             String tick = queue.poll(1000, TimeUnit.MILLISECONDS);
             if (tick != null && tick.equals("Tick")) {
                 emitTuple(outputStream.getStreamId(), new Values("default"));
@@ -90,6 +93,7 @@ public class ScheduleSpout extends SpringAwareBaseSpout {
 
         @Override
         public void run() {
+            logInfo("Ticking From task");
             queue.offer("Tick");
         }
     }
