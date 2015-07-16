@@ -26,7 +26,7 @@
 				<ref bean="plannedTweetSpoutBean" />
 				<ref bean="SendTweetSpoutBean" />
 				<ref bean="TwitterReportScheduleSpoutBean" />
-
+				<ref bean="TwitterAccountFollowerCountUpdateScheduleSpoutBean" />
 			</list>
 		</property>
 		<property name="boltConfigs">
@@ -37,6 +37,8 @@
 				<ref bean="TweetSendBoltBean" />
 				<ref bean="GenerateTwitterReportBoltBean" />
 				<ref bean="GenerateDailyTwitterReportBoltBean" />
+				<ref bean="RefreshTwitterUserFollowerCountBoltBean" />
+				<ref bean="GenerateTwitterReportBoltBean" />
 
 			</list>
 		</property>
@@ -63,6 +65,17 @@
 			</bean>
 		</property>
 	</bean>
+	<bean id="TwitterAccountFollowerCountUpdateScheduleSpoutBean" class="com.aristotle.task.spout.ScheduleSpout">
+        <property name="componentId" value="TwitterAccountFollowerCountUpdateScheduleSpout" />
+        <property name="cronTime" value="0 01 00 * * MON" />
+
+        <property name="outputStream">
+            <bean class="com.aristotle.task.topology.beans.Stream">
+                <property name="streamId" value="TwitterAccountFollowerCountScheduleStream" />
+            </bean>
+        </property>
+    </bean>
+	
 	<bean id="plannedTweetSpoutBean" class="com.aristotle.task.spout.twitter.PlannedTweetSpout">
 		<property name="componentId" value="PlannedTweetSpout" />
 		<property name="outputStream">
@@ -102,6 +115,15 @@
 		</property>
 	</bean>
 
+	<bean id="RefreshTwitterUserFollowerCountBoltBean" class="com.aristotle.task.bolt.twitter.RefreshTwitterUserFollowerCountBolt">
+        <property name="componentId" value="RefreshTwitterUserFollowerCountBolt" />
+        <property name="sourceComponentStreams">
+            <map>
+                <entry key="TwitterAccountFollowerCountUpdateScheduleSpout" value="TwitterAccountFollowerCountScheduleStream" />
+            </map>
+        </property>
+    </bean>
+    
 	<bean id="GenerateTwitterReportBoltBean" class="com.aristotle.task.bolt.twitter.GenerateTwitterReportBolt">
 		<property name="componentId" value="GenerateTwitterReportBolt" />
 		<property name="sourceComponentStreams">
