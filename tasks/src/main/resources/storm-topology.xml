@@ -36,6 +36,7 @@
 				<ref bean="plannedTweetProcessorBoltBean" />
 				<ref bean="TweetSendBoltBean" />
 				<ref bean="GenerateTwitterReportBoltBean" />
+				<ref bean="GenerateDailyTwitterReportBoltBean" />
 
 			</list>
 		</property>
