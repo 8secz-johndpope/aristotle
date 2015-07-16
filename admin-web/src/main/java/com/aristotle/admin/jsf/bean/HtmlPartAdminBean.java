@@ -41,7 +41,8 @@ public class HtmlPartAdminBean extends BaseMultiPermissionAdminJsfBean {
 
     public void saveDomainTemplatePart() {
         try {
-            uiTemplateService.saveDomainTemplatePart(selectedDomainTemplatePart);
+            selectedDomainTemplatePart = uiTemplateService.saveDomainTemplatePart(selectedDomainTemplatePart);
+            domainTemplateParts = uiTemplateService.getDomainTemplatePartsByDomainTemplateId(1L);
         } catch (AppException e) {
             sendErrorMessageToJsfScreen(e);
         }
