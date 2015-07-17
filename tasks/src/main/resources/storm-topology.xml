@@ -27,6 +27,7 @@
 				<ref bean="SendTweetSpoutBean" />
 				<ref bean="TwitterReportScheduleSpoutBean" />
 				<ref bean="TwitterAccountFollowerCountUpdateScheduleSpoutBean" />
+				<ref bean="PlannedTweetRetweetCountUpdateScheduleSpoutBean" />
 			</list>
 		</property>
 		<property name="boltConfigs">
