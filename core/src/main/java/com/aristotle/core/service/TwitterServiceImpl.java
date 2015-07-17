@@ -382,11 +382,23 @@ public class TwitterServiceImpl implements TwitterService {
         Calendar startDateTime = Calendar.getInstance();
         startDateTime.add(Calendar.DATE, -15);
         List<PlannedTweet> plannedTweets = plannedTweetRepository.getPlannedTweets(startDateTime.getTime(), endDateTime.getTime());
+        Random random = new Random(System.currentTimeMillis());
         Twitter twitter = new TwitterTemplate(consumerKey, consumerSecret);
         for (PlannedTweet onePlannedTweet : plannedTweets) {
             updatePlannedTweetRetweetCount(twitter, onePlannedTweet);
+            long waitTime = (2 + random.nextInt(5)) * 1000;
+            System.out.println("Sleeping for " + waitTime + "ms");
+            sleep(waitTime);
         }
 
+    }
+
+    private void sleep(long ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void updatePlannedTweetRetweetCount(Twitter twitter, PlannedTweet onePlannedTweet) {
@@ -395,6 +407,7 @@ public class TwitterServiceImpl implements TwitterService {
             onePlannedTweet.setTotalRetweets(tweet.getRetweetCount());
             onePlannedTweet.setMessage(tweet.getUnmodifiedText());
             onePlannedTweet = plannedTweetRepository.save(onePlannedTweet);
+            logger.info("Status " + onePlannedTweet.getTweetId() + " is done");
         } catch (Exception ex) {
             logger.error("unable to to process tweet " + onePlannedTweet.getTweetId(), ex);
         }

@@ -54,7 +54,6 @@ public class ScheduleSpout extends SpringAwareBaseSpout {
     @Override
     public void nextTuple() {
         try {
-            logInfo("Get Next Tuple");
             String tick = queue.poll(1000, TimeUnit.MILLISECONDS);
             if (tick != null && tick.equals("Tick")) {
                 emitTuple(outputStream.getStreamId(), new Values("default"));
