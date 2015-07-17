@@ -407,7 +407,7 @@ public class TwitterServiceImpl implements TwitterService {
             onePlannedTweet.setTotalRetweets(tweet.getRetweetCount());
             onePlannedTweet.setMessage(tweet.getUnmodifiedText());
             onePlannedTweet = plannedTweetRepository.save(onePlannedTweet);
-            logger.info("Status " + onePlannedTweet.getTweetId() + " is done");
+            logger.info("Status " + onePlannedTweet.getTweetId() + " is done with " + tweet.getRetweetCount() + " retweets");
         } catch (Exception ex) {
             logger.error("unable to to process tweet " + onePlannedTweet.getTweetId(), ex);
         }
