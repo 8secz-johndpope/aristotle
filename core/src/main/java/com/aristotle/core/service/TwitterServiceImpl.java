@@ -384,11 +384,19 @@ public class TwitterServiceImpl implements TwitterService {
         List<PlannedTweet> plannedTweets = plannedTweetRepository.getPlannedTweets(startDateTime.getTime(), endDateTime.getTime());
         Twitter twitter = new TwitterTemplate(consumerKey, consumerSecret);
         for (PlannedTweet onePlannedTweet : plannedTweets) {
+            updatePlannedTweetRetweetCount(twitter, onePlannedTweet);
+        }
+
+    }
+
+    private void updatePlannedTweetRetweetCount(Twitter twitter, PlannedTweet onePlannedTweet) {
+        try {
             org.springframework.social.twitter.api.Tweet tweet = twitter.timelineOperations().getStatus(onePlannedTweet.getTweetId());
             onePlannedTweet.setTotalRetweets(tweet.getRetweetCount());
             onePlannedTweet.setMessage(tweet.getUnmodifiedText());
             onePlannedTweet = plannedTweetRepository.save(onePlannedTweet);
+        } catch (Exception ex) {
+            logger.error("unable to to process tweet " + onePlannedTweet.getTweetId(), ex);
         }
-        
     }
 }
