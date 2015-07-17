@@ -10,4 +10,5 @@ public interface TwitterReportService {
 
     String getDailyTwitterReport(Date date) throws AppException;
 
+    String genrateDailyTwitterReportEmail(Date date) throws AppException;
 }

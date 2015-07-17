@@ -105,6 +105,11 @@ public class TwitterReportServiceImpl implements TwitterReportService {
             onePlannedJsonObject.addProperty("tweetType", onePlannedTweet.getTweetType());
             onePlannedJsonObject.addProperty("tweetPostingTime", onePlannedTweet.getPostingTime().toString());
             onePlannedJsonObject.addProperty("status", onePlannedTweet.getStatus().toString());
+            if (onePlannedTweet.getTotalRetweets() == null) {
+                onePlannedJsonObject.addProperty("totalRetweets", 0);
+            } else {
+                onePlannedJsonObject.addProperty("totalRetweets", onePlannedTweet.getTotalRetweets());
+            }
 
             List<Tweet> tweets = tweetRepository.getTweetsByPlannedTweetId(onePlannedTweet.getId());
             onePlannedJsonObject.addProperty("totalScheduled", tweets.size());
@@ -127,6 +132,18 @@ public class TwitterReportServiceImpl implements TwitterReportService {
             plannedTweetJsonArray.add(onePlannedJsonObject);
         }
         reportJsonObject.add("plannedTweets", plannedTweetJsonArray);
+    }
+
+    @Override
+    public String genrateDailyTwitterReportEmail(Date date) throws AppException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        String reportDateTimeId = dailyDateFormat.get().format(calendar.getTime());
+        Report currentReport = reportRepository.getReportByReportDateTimeIdAndReportType(reportDateTimeId, DAILY_TWITTER_REPORT);
+        calendar.add(Calendar.DATE, -1);
+        String reportPreviousDateTimeId = dailyDateFormat.get().format(calendar.getTime());
+        Report previousDayReport = reportRepository.getReportByReportDateTimeIdAndReportType(reportPreviousDateTimeId, DAILY_TWITTER_REPORT);
+        return null;
     }
 
 }
