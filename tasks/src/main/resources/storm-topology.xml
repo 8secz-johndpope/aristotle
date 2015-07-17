@@ -38,6 +38,8 @@
 				<ref bean="GenerateTwitterReportBoltBean" />
 				<ref bean="GenerateDailyTwitterReportBoltBean" />
 				<ref bean="RefreshTwitterUserFollowerCountBoltBean" />
+				<ref bean="RefreshPlannedTweetRetweetCountBoltBean" />
+				
 
 			</list>
 		</property>
@@ -66,7 +68,7 @@
 	</bean>
 	<bean id="TwitterAccountFollowerCountUpdateScheduleSpoutBean" class="com.aristotle.task.spout.ScheduleSpout">
         <property name="componentId" value="TwitterAccountFollowerCountUpdateScheduleSpout" />
-        <property name="cronTime" value="0 01 00 * * MON" />
+        <property name="cronTime" value="0 10 00 * * MON" />
 
         <property name="outputStream">
             <bean class="com.aristotle.task.topology.beans.Stream">
@@ -74,6 +76,19 @@
             </bean>
         </property>
     </bean>
+    
+	<bean id="PlannedTweetRetweetCountUpdateScheduleSpoutBean" class="com.aristotle.task.spout.ScheduleSpout">
+        <property name="componentId" value="PlannedTweetRetweetCountUpdateScheduleSpout" />
+        <property name="cronTime" value="0 01 00 * * ?" />
+        <property name="onStart" value="true" />
+
+        <property name="outputStream">
+            <bean class="com.aristotle.task.topology.beans.Stream">
+                <property name="streamId" value="PlannedTweetRetweetCountUpdateScheduleStream" />
+            </bean>
+        </property>
+    </bean>
+    
 	
 	<bean id="plannedTweetSpoutBean" class="com.aristotle.task.spout.twitter.PlannedTweetSpout">
 		<property name="componentId" value="PlannedTweetSpout" />
@@ -122,6 +137,17 @@
             </map>
         </property>
     </bean>
+    
+	<bean id="RefreshPlannedTweetRetweetCountBoltBean" class="com.aristotle.task.bolt.twitter.RefreshPlannedTweetRetweetCountBolt">
+        <property name="componentId" value="RefreshPlannedTweetRetweetCountBolt" />
+        <property name="sourceComponentStreams">
+            <map>
+                <entry key="PlannedTweetRetweetCountUpdateScheduleSpout" value="PlannedTweetRetweetCountUpdateScheduleStream" />
+            </map>
+        </property>
+    </bean>
+    
+	
     
 	<bean id="GenerateTwitterReportBoltBean" class="com.aristotle.task.bolt.twitter.GenerateTwitterReportBolt">
 		<property name="componentId" value="GenerateTwitterReportBolt" />

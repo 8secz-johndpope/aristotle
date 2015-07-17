@@ -52,4 +52,6 @@ public interface TwitterService {
     List<TwitterTeam> getAllTwitterTeams() throws AppException;
 
     void updateFollowerCounts() throws AppException;
+
+    void updatePlannedTweetRetweetCounts() throws AppException;
 }

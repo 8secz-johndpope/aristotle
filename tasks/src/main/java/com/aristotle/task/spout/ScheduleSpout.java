@@ -24,6 +24,7 @@ public class ScheduleSpout extends SpringAwareBaseSpout {
     private static final long serialVersionUID = 1L;
     private Stream outputStream;
     private String cronTime;
+    private boolean onStart;
 
     private transient LinkedBlockingQueue<String> queue;
     private transient ScheduledFuture<?> scheduledFuture;
@@ -38,7 +39,9 @@ public class ScheduleSpout extends SpringAwareBaseSpout {
         queue = new LinkedBlockingQueue<>();
         ScheduleTask scheduleTask = new ScheduleTask();
         logInfo("cronTime = {}", cronTime);
-        threadPoolTaskScheduler.submit(scheduleTask);// TODO remove it
+        if (onStart) {
+            threadPoolTaskScheduler.submit(scheduleTask);// TODO remove it
+        }
         scheduledFuture = threadPoolTaskScheduler.schedule(scheduleTask, new CronTrigger(cronTime));
         logInfo("scheduledFuture = {}", scheduledFuture);
     }
@@ -97,6 +100,14 @@ public class ScheduleSpout extends SpringAwareBaseSpout {
             logInfo("Ticking From task");
             queue.offer("Tick");
         }
+    }
+
+    public boolean isOnStart() {
+        return onStart;
+    }
+
+    public void setOnStart(boolean onStart) {
+        this.onStart = onStart;
     }
 
 }

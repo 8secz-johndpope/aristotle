@@ -375,4 +375,20 @@ public class TwitterServiceImpl implements TwitterService {
         twitterAccount.setFollowerCount(totalFollowers);
         
     }
+
+    @Override
+    public void updatePlannedTweetRetweetCounts() throws AppException {
+        Calendar endDateTime = Calendar.getInstance();
+        Calendar startDateTime = Calendar.getInstance();
+        startDateTime.add(Calendar.DATE, -15);
+        List<PlannedTweet> plannedTweets = plannedTweetRepository.getPlannedTweets(startDateTime.getTime(), endDateTime.getTime());
+        Twitter twitter = new TwitterTemplate(consumerKey, consumerSecret);
+        for (PlannedTweet onePlannedTweet : plannedTweets) {
+            org.springframework.social.twitter.api.Tweet tweet = twitter.timelineOperations().getStatus(onePlannedTweet.getTweetId());
+            onePlannedTweet.setTotalRetweets(tweet.getRetweetCount());
+            onePlannedTweet.setMessage(tweet.getUnmodifiedText());
+            onePlannedTweet = plannedTweetRepository.save(onePlannedTweet);
+        }
+        
+    }
 }

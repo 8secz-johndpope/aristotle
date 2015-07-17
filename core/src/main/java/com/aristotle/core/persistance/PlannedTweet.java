@@ -2,7 +2,14 @@ package com.aristotle.core.persistance;
 
 import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import com.aristotle.core.enums.PlannedPostStatus;
 import com.aristotle.core.enums.PostLocationType;
@@ -28,6 +35,10 @@ public class PlannedTweet extends BaseEntity{
 
     @Column(name = "total_required")
     private Integer totalRequired;
+
+    @Column(name = "total_retweets")
+    // Total ReTweets On Twitter
+    private Integer totalRetweets;
 
     @Column(name = "posting_time")
 	private Date postingTime;
@@ -237,7 +248,15 @@ public class PlannedTweet extends BaseEntity{
 	}
 
 
-	@Override
+    public Integer getTotalRetweets() {
+        return totalRetweets;
+    }
+
+    public void setTotalRetweets(Integer totalRetweets) {
+        this.totalRetweets = totalRetweets;
+    }
+
+    @Override
     public String toString() {
         return "PlannedTweet [id=" + id + ", ver=" + ver + ", dateCreated=" + dateCreated + ", dateModified=" + dateModified + ", creatorId=" + creatorId + ", modifierId=" + modifierId
                 + ", tweetType=" + tweetType + ", tweetId=" + tweetId + ", picture=" + picture + ", message=" + message + ", totalRequired=" + totalRequired + ", postingTime=" + postingTime
