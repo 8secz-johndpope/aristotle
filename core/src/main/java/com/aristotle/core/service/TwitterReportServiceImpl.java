@@ -1,5 +1,6 @@
 package com.aristotle.core.service;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -10,15 +11,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aristotle.core.exception.AppException;
+import com.aristotle.core.persistance.EmailTemplate;
 import com.aristotle.core.persistance.PlannedTweet;
 import com.aristotle.core.persistance.Report;
 import com.aristotle.core.persistance.Tweet;
+import com.aristotle.core.persistance.repo.EmailTemplateRepository;
 import com.aristotle.core.persistance.repo.PlannedTweetRepository;
 import com.aristotle.core.persistance.repo.ReportRepository;
 import com.aristotle.core.persistance.repo.TweetRepository;
 import com.aristotle.core.persistance.repo.TwitterAccountRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.jknack.handlebars.Context;
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.JsonNodeValueResolver;
+import com.github.jknack.handlebars.Template;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 @Service
 public class TwitterReportServiceImpl implements TwitterReportService {
@@ -31,6 +42,8 @@ public class TwitterReportServiceImpl implements TwitterReportService {
     private TwitterAccountRepository twitterAccountRepository;
     @Autowired
     private PlannedTweetRepository plannedTweetRepository;
+    @Autowired
+    private EmailTemplateRepository emailTemplateRepository;
 
     private static final String DAILY_TWITTER_REPORT = "DailyTwitterReport";
 
@@ -136,14 +149,43 @@ public class TwitterReportServiceImpl implements TwitterReportService {
 
     @Override
     public String genrateDailyTwitterReportEmail(Date date) throws AppException {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        String reportDateTimeId = dailyDateFormat.get().format(calendar.getTime());
-        Report currentReport = reportRepository.getReportByReportDateTimeIdAndReportType(reportDateTimeId, DAILY_TWITTER_REPORT);
-        calendar.add(Calendar.DATE, -1);
-        String reportPreviousDateTimeId = dailyDateFormat.get().format(calendar.getTime());
-        Report previousDayReport = reportRepository.getReportByReportDateTimeIdAndReportType(reportPreviousDateTimeId, DAILY_TWITTER_REPORT);
-        return null;
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            String reportDateTimeId = dailyDateFormat.get().format(calendar.getTime());
+            Report currentReport = reportRepository.getReportByReportDateTimeIdAndReportType(reportDateTimeId, DAILY_TWITTER_REPORT);
+            calendar.add(Calendar.DATE, -1);
+            String reportPreviousDateTimeId = dailyDateFormat.get().format(calendar.getTime());
+            Report previousDayReport = reportRepository.getReportByReportDateTimeIdAndReportType(reportPreviousDateTimeId, DAILY_TWITTER_REPORT);
+
+            JsonObject jsonContext = new JsonObject();
+            JsonParser jsonParser = new JsonParser();
+            jsonContext.add("current", jsonParser.parse(currentReport.getContent()).getAsJsonObject());
+            jsonContext.add("previous", jsonParser.parse(previousDayReport.getContent()).getAsJsonObject());
+
+            EmailTemplate emailTemplate = emailTemplateRepository.getEmailTemplateByName("TWITTER_REPORT_EMAIL");
+
+            Handlebars handlebars = new Handlebars();
+            Template template = handlebars.compileInline(emailTemplate.getContent());
+
+            JsonNode rootNode = convertDataToJackSon(jsonContext);
+            Context context = Context.newBuilder(rootNode).resolver(JsonNodeValueResolver.INSTANCE).build();
+
+            String result = template.apply(context);
+            return result;
+        } catch (Exception ex) {
+            throw new AppException(ex);
+        }
+        
+
+
+    }
+
+    private ObjectMapper mapper = new ObjectMapper();
+
+    private JsonNode convertDataToJackSon(JsonObject jsonObject) throws JsonProcessingException, IOException {
+        JsonNode rootNode = mapper.readTree(jsonObject.toString());
+        return rootNode;
     }
 
 }
