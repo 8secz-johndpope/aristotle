@@ -71,7 +71,7 @@
 	</bean>
 	<bean id="TwitterReportEmailScheduleSpoutBean" class="com.aristotle.task.spout.ScheduleSpout">
 		<property name="componentId" value="TwitterReportEmailScheduleSpout" />
-		<property name="cronTime" value="0 00 02 * * ?" />
+		<property name="cronTime" value="0 00 09 * * ?" />
         <property name="onStart" value="true" />
         
 		<property name="outputStream">
