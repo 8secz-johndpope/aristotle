@@ -180,7 +180,7 @@
 		<property name="componentId" value="GenerateDailyTwitterReportBolt" />
 		<property name="sourceComponentStreams">
 			<map>
-				<entry key="TwitterReportEmailScheduleSpout" value="TwitterReportEmailScheduleStream" />
+			    <entry key="GenerateTwitterReportBolt" value="GenerateTwitterDailyReportStream" />
 			</map>
 		</property>
 	</bean>
@@ -188,7 +188,7 @@
 		<property name="componentId" value="GenerateDailyTwitterReportEmailBolt" />
 		<property name="sourceComponentStreams">
 			<map>
-				<entry key="GenerateTwitterReportEmailBolt" value="GenerateDailyTwitterReportEmailStream" />
+                <entry key="TwitterReportEmailScheduleSpout" value="TwitterReportEmailScheduleStream" />				
 			</map>
 		</property>
 	</bean>
