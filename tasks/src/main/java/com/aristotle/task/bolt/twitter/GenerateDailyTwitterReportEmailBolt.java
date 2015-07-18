@@ -9,6 +9,7 @@ import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.tuple.Tuple;
 
+import com.aristotle.core.service.EmailManager;
 import com.aristotle.core.service.TwitterReportService;
 import com.aristotle.task.topology.Result;
 import com.aristotle.task.topology.SpringAwareBaseBolt;
@@ -20,6 +21,9 @@ public class GenerateDailyTwitterReportEmailBolt extends SpringAwareBaseBolt {
     // required false as this will be injected later
     private transient TwitterReportService twitterReportService;
 
+    @Autowired(required = false)
+    private transient EmailManager emailManager;
+
     @Override
     protected void onPrepare(Map stormConf, TopologyContext context, OutputCollector collector) {
     }
@@ -30,6 +34,7 @@ public class GenerateDailyTwitterReportEmailBolt extends SpringAwareBaseBolt {
         calendar.add(Calendar.DATE, -1);
         String email = twitterReportService.genrateDailyTwitterReportEmail(calendar.getTime());
         logInfo("****Email = " + email);
+        emailManager.sendEmail("ping2ravi@gmail.com", "Twitter Admin", "ping2ravi@gmail.com", "Twitter Report", email, email);
         return Result.Success;
     }
 
