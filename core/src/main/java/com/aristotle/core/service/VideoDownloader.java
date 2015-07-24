@@ -1,7 +1,6 @@
 package com.aristotle.core.service;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -89,13 +88,12 @@ public class VideoDownloader{
         return true;
     }
 
-    public boolean downloadAndSaveVideoNew(JsonArray allVideos, String channelId, boolean updateAll) throws ParseException {
+    public boolean downloadAndSaveVideoNew(JsonArray allVideos, String channelId, boolean updateAll) throws Exception {
         boolean newVideoAvailable = false;
         Video videoItem;
         Video existingVideo;
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
         for (int i = allVideos.size() - 1; i >= 0; i--) {
-            try {
                 JsonObject videoEntry = allVideos.get(i).getAsJsonObject();
                 if (!"youtube#video".equals(videoEntry.get("id").getAsJsonObject().get("kind").getAsString())) {
                     continue;
@@ -130,9 +128,6 @@ public class VideoDownloader{
                 videoItem.setWebUrl("http://www.youtube.com/watch?v=" + videoId);
                 logger.info("Saving Youtube Video : " + videoItem.getTitle() + ", Video Id = " + videoItem.getYoutubeVideoId());
                 videoItem = videoRepository.save(videoItem);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
         }
         return newVideoAvailable;
     }
