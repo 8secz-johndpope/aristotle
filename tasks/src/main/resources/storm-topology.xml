@@ -29,6 +29,8 @@
 				<ref bean="TwitterAccountFollowerCountUpdateScheduleSpoutBean" />
 				<ref bean="PlannedTweetRetweetCountUpdateScheduleSpoutBean" />
 				<ref bean="TwitterReportEmailScheduleSpoutBean" />
+				<ref bean="RefreshYoutubeVideoSpoutBean" />
+				
 			</list>
 		</property>
 		<property name="boltConfigs">
@@ -42,8 +44,7 @@
 				<ref bean="RefreshTwitterUserFollowerCountBoltBean" />
 				<ref bean="RefreshPlannedTweetRetweetCountBoltBean" />
 				<ref bean="GenerateDailyTwitterReportEmailBoltBean" />
-
-
+				<ref bean="RefreshYoutubeVideoBoltBean" />
 			</list>
 		</property>
 	</bean>
@@ -101,6 +102,16 @@
 			</bean>
 		</property>
 	</bean>
+	<bean id="RefreshYoutubeVideoSpoutBean" class="com.aristotle.task.spout.ScheduleSpout">
+        <property name="componentId" value="RefreshYoutubeVideoSpout" />
+        <property name="cronTime" value="0 10 * * * ?" />
+
+        <property name="outputStream">
+            <bean class="com.aristotle.task.topology.beans.Stream">
+                <property name="streamId" value="RefreshYoutubeVideoStream" />
+            </bean>
+        </property>
+    </bean>
 
 
 	<bean id="plannedTweetSpoutBean" class="com.aristotle.task.spout.twitter.PlannedTweetSpout">
@@ -212,4 +223,15 @@
 			</map>
 		</property>
 	</bean>
+	
+	<bean id="RefreshYoutubeVideoBoltBean" class="com.aristotle.task.bolt.video.RefreshYoutubeVideoBolt">
+        <property name="componentId" value="RefreshYoutubeVideoBolt" />
+        <property name="sourceComponentStreams">
+            <map>
+                <entry key="RefreshYoutubeVideoSpout" value="RefreshYoutubeVideoStream" />
+            </map>
+        </property>
+    </bean>
+	
+	
 </beans>
