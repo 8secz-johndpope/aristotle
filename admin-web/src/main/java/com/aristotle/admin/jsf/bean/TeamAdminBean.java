@@ -72,7 +72,7 @@ public class TeamAdminBean extends BaseMultiPermissionAdminJsfBean {
         return selectedTeam;
 	}
 
-    public void setSelectedNews(Team selectedTeam) {
+    public void setSelectedTeam(Team selectedTeam) {
         this.selectedTeam = selectedTeam;
 		showList = false;
         try {
@@ -138,10 +138,6 @@ public class TeamAdminBean extends BaseMultiPermissionAdminJsfBean {
 
     public void setTeamMembers(List<TeamMember> teamMembers) {
         this.teamMembers = teamMembers;
-    }
-
-    public void setSelectedTeam(Team selectedTeam) {
-        this.selectedTeam = selectedTeam;
     }
 
 }
