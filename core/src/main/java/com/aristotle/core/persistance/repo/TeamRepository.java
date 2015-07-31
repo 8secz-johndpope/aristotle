@@ -12,7 +12,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
 
     public Team getTeamByUrl(String url);
 
-    @Query("select team from News team where team.global=true order by dateCreated desc")
+    @Query("select team from Team team where team.global=true order by dateCreated desc")
     public List<Team> getGlobalTeams();
 
     @Query("select team from Team team join team.locations locations where locations.id in ?1 order by team.dateCreated desc")
