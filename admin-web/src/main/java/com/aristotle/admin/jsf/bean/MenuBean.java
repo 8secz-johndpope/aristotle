@@ -144,7 +144,11 @@ public class MenuBean extends BaseJsfBean {
     }
 
     public boolean isWebDeveloperRoleAllowed() {
-        return isAllowed(AppPermission.WEB_ADMIN, AppPermission.WEB_ADMIN_DRAFT);
+        return isAllowed(AppPermission.WEB_ADMIN_DRAFT);
+    }
+
+    public boolean isWebDeveloperAdminRoleAllowed() {
+        return isAllowed(AppPermission.WEB_ADMIN);
     }
 
     public boolean isAdminAllowed() {
@@ -161,6 +165,10 @@ public class MenuBean extends BaseJsfBean {
 
     public boolean isSearchVolunteerAllowed() {
         return isAllowed(AppPermission.SEARCH_MEMBER);
+    }
+
+    public boolean isEditTeamAllowed() {
+        return isAllowed(AppPermission.EDIT_TEAM);
     }
 
     public void goToVoiceOfAapAdminPageFb() {
@@ -267,7 +275,7 @@ public class MenuBean extends BaseJsfBean {
     }
     
     public void goToStaticDataPluginPage() {
-        if (isWebDeveloperRoleAllowed()) {
+        if (isWebDeveloperAdminRoleAllowed()) {
             buildAndRedirect("/admin/sdplugin");
         } else {
             buildAndRedirect("/admin/notallowed");
@@ -283,7 +291,7 @@ public class MenuBean extends BaseJsfBean {
     }
 
     public void goToUrlMappingPage() {
-        if (isWebDeveloperRoleAllowed()) {
+        if (isWebDeveloperAdminRoleAllowed()) {
             buildAndRedirect("/admin/urls");
         } else {
             buildAndRedirect("/admin/notallowed");
@@ -302,6 +310,14 @@ public class MenuBean extends BaseJsfBean {
     public void goToSearchVolunteerPage() {
         if (isSearchVolunteerAllowed()) {
             buildAndRedirect("/admin/search");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
+
+    public void goToTeamsPage() {
+        if (isEditTeamAllowed()) {
+            buildAndRedirect("/admin/teams");
         } else {
             buildAndRedirect("/admin/notallowed");
         }

@@ -119,7 +119,7 @@
 						<p:outputPanel id="filePanel">
 
 							<p:outputPanel rendered="#{newsAdminBean.showFileUpload}">
-							    <p:fileUpload fileUploadListener="#{newsAdminBean.handleFileUpload}" mode="advanced" fileLimit="100" multiple="true" update=":adminNewsForm:filePanel" allowTypes="/(\.|\/)(gif|jpe?g|png|pdf|doc)$/"/>
+							    <p:fileUpload fileUploadListener="#{newsAdminBean.handleFileUpload}" mode="advanced" fileLimit="100" multiple="true" update=":adminNewsForm:filePanel" allowTypes="/(\.|\/)(gif|jpe?g|png|pdf|doc|docx)$/"/>
 								<br></br>
 								<p:dataTable id="listOfFiles" var="oneFile" value="#{newsAdminBean.newsFilesList}" emptyMessage="No Files" >
 									<p:column>
