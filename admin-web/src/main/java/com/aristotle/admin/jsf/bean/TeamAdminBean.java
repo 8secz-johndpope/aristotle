@@ -133,7 +133,6 @@ public class TeamAdminBean extends BaseMultiPermissionAdminJsfBean {
                 teamService.saveTeamMember(email, post, selectedTeam.getId());
                 sendInfoMessageToJsfScreen("Team Member saved succesfully");
                 teamMembers = teamService.getTeamMembersByTeamId(selectedTeam.getId());
-                showList = true;
             }
 
         } catch (Exception ex) {
