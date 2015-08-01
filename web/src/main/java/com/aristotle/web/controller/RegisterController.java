@@ -1,5 +1,7 @@
 package com.aristotle.web.controller;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -334,4 +336,28 @@ public class RegisterController {
         return returnDt;
 
     }
+
+    int fakeMembershipNumberCount = 1000;
+    private SecureRandom random = new SecureRandom();
+    @RequestMapping(value = "/ivr/registeruser", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> saveIvrUser(HttpServletRequest httpServletRequest, @RequestBody UserRegisterBean user) {
+        JsonObject jsonObject = new JsonObject();
+        HttpStatus httpStatus;
+        httpStatus = HttpStatus.OK;
+        jsonObject.addProperty("mobile", user.getMobileNumber());
+        fakeMembershipNumberCount++;
+        jsonObject.addProperty("membership_no", "SA" + fakeMembershipNumberCount);
+        if (user.isMember()) {
+            jsonObject.addProperty("registration_status", "EXISTING");
+        } else {
+            jsonObject.addProperty("registration_status", "NEW");
+        }
+
+        String password = new BigInteger(60, random).toString(32);
+        jsonObject.addProperty("password", password);
+        ResponseEntity<String> returnDt = new ResponseEntity<String>(jsonObject.toString(), httpStatus);
+        return returnDt;
+    }
+
 }
