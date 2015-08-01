@@ -153,7 +153,7 @@ public class TeamAdminBean extends BaseMultiPermissionAdminJsfBean {
 	}
 	public void cancel(){
         selectedTeam = new Team();
-        showList = false;
+        showList = true;
 	}
 	public boolean isShowList() {
 		return showList;

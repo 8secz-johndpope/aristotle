@@ -37,7 +37,7 @@
 	<!-- menu ends -->
 	<div style="width: 1200px; margin: 0 auto;">
 		<div style="width: 1200px; margin: 0;">
-			<p:blockUI block="adminTeamForm" trigger=":adminTeamForm:saveTeam">
+			<p:blockUI block="adminTeamForm" trigger=":adminTeamForm:saveTeam,:adminTeamForm:addTeamMember">
 			Loading...<br />
 				<p:graphicImage width="80" value="http://static.eswaraj.com/admin/images/ajax-loader.gif" />
 			</p:blockUI>
@@ -141,7 +141,7 @@
 									<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/line-icons-set/128/1-04-48.png" height="20" />
 									<f:setPropertyActionListener value="#{oneTeamMember}" target="#{teamAdminBean.deleteTeamMember}" />
 								</p:commandLink>
-								<p:blockUI block="adminTeamForm" trigger=":deleteMember">
+								<p:blockUI block="adminTeamForm" trigger=":adminTeamForm:deleteMember">
             Deleting...<br />
 									<p:graphicImage width="80" value="http://static.eswaraj.com/admin/images/ajax-loader.gif" />
 								</p:blockUI>
