@@ -10,12 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aristotle.core.exception.AppException;
+import com.aristotle.core.persistance.Email;
 import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.Team;
 import com.aristotle.core.persistance.TeamMember;
+import com.aristotle.core.persistance.User;
+import com.aristotle.core.persistance.repo.EmailRepository;
 import com.aristotle.core.persistance.repo.LocationRepository;
 import com.aristotle.core.persistance.repo.TeamMemberRepository;
 import com.aristotle.core.persistance.repo.TeamRepository;
+import com.aristotle.core.persistance.repo.UserRepository;
 
 @Service
 @Transactional
@@ -27,6 +31,10 @@ public class TeamServiceImpl implements TeamService {
     private TeamMemberRepository teamMemberRepository;
     @Autowired
     private LocationRepository locationRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private EmailRepository emailRepository;
 
     @Override
     public Team saveTeam(Team team, Long locationId) throws AppException {
@@ -36,7 +44,17 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public TeamMember saveTeamMember(TeamMember teamMember) throws AppException {
+    public TeamMember saveTeamMember(String emailId, String post, Long teamId) throws AppException {
+        Email email = emailRepository.getEmailByEmailUp(emailId.toUpperCase());
+        if(email == null){
+            throw new AppException("No Registered user found with email ["+emailId+"]");
+        }
+        User user = email.getUser();
+        Team team = teamRepository.findOne(teamId);
+        TeamMember teamMember = new TeamMember();
+        teamMember.setPost(post);
+        teamMember.setTeam(team);
+        teamMember.setUser(user);
         teamMember = teamMemberRepository.save(teamMember);
         return teamMember;
     }
@@ -78,6 +96,12 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public List<Team> getLocationTeams(Set<Long> locationIds) throws AppException {
         return teamRepository.getLocationTeams(locationIds);
+    }
+
+    @Override
+    public void deleteTeamMember(Long teamMemberId) throws AppException {
+        teamMemberRepository.delete(teamMemberId);
+
     }
 
 }

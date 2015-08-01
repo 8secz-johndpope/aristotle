@@ -85,17 +85,63 @@
 							</p:inputText>
 							<p:outputLabel value="Description"></p:outputLabel>
 							<p:editor id="editor" value="#{teamAdminBean.selectedTeam.description}" width="600" height="500">
-                                </p:editor>
+							</p:editor>
 						</p:panelGrid>
 						<br></br>
-						<p:outputPanel id="tweetPanel">
-								<p:commandButton value="Cancel" update=":adminTeamForm:mainPanel" actionListener="#{teamAdminBean.cancel}" styleClass="ui-priority-primary">
-								</p:commandButton>
-								<p:commandButton id="saveTeam" value="Save Team" update=":adminTeamForm:mainPanel" actionListener="#{teamAdminBean.saveTeam}" styleClass="ui-priority-primary"
-									>
-								</p:commandButton>
+						<p:outputPanel id="buttonPanel">
+							<p:commandButton value="Cancel" update=":adminTeamForm:mainPanel" actionListener="#{teamAdminBean.cancel}" styleClass="ui-priority-primary">
+							</p:commandButton>
+							<p:commandButton id="saveTeam" value="Save Team" update=":adminTeamForm:mainPanel" actionListener="#{teamAdminBean.saveTeam}" styleClass="ui-priority-primary">
+							</p:commandButton>
 						</p:outputPanel>
 
+
+						<p:outputPanel id="newMemberPanel">
+							<p:outputLabel value="Email"></p:outputLabel>
+							<p:inputText value="#{teamAdminBean.email}"></p:inputText>
+							<p:outputLabel value="Post"></p:outputLabel>
+							<p:selectOneMenu id="post" value="#{teamAdminBean.post}" style="width:125px">
+								<f:selectItem itemLabel="Member" itemValue="Member" />
+								<f:selectItem itemLabel="Convenor" itemValue="Convenor" />
+								<f:selectItem itemLabel="Co-Convenor" itemValue="Co-Convenor" />
+								<f:selectItem itemLabel="POC" itemValue="POC" />
+							</p:selectOneMenu>
+							<p:commandButton id="addTeamMember" value="Add Team Member" update=":adminTeamForm:mainPanel" actionListener="#{teamAdminBean.saveTeamMember}" styleClass="ui-priority-primary">
+                            </p:commandButton>
+						</p:outputPanel>
+
+						<p:dataTable id="listOfTeam" var="oneTeamMember" value="#{teamAdminBean.teamMembers}" paginator="true" rows="100" paginatorPosition="bottom" paginatorAlwaysVisible="false"
+							emptyMessage="No Team" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15">
+							<f:facet name="header">Team Members</f:facet>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Id" />
+								</f:facet>
+								<h:outputText value="#{oneTeamMember.id}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Name" />
+								</f:facet>
+								<h:outputText value="#{oneTeamMember.user.name}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Name" />
+								</f:facet>
+								<h:outputText value="#{oneTeamMember.post}" />
+							</p:column>
+							<p:column style="width:100px;">
+								<f:facet name="header">
+									<h:outputText value="Update" />
+								</f:facet>
+								<p:commandLink update=":adminTeamForm:mainPanel" title="Update Team">
+									<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/tango-icon-library/48/edit-redo-48.png" height="20" />
+									<f:setPropertyActionListener value="#{oneTeam}" target="#{teamAdminBean.deleteTeamMember}" />
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
 					</p:outputPanel>
 				</p:outputPanel>
 				<br></br>

@@ -11,7 +11,7 @@ public interface TeamService {
 
     public Team saveTeam(Team team, Long locationId) throws AppException;
 
-    public TeamMember saveTeamMember(TeamMember teamMember) throws AppException;
+    public TeamMember saveTeamMember(String email, String post, Long teamId) throws AppException;
 
     public Team getTeamByUrl(String url) throws AppException;
 
@@ -22,4 +22,6 @@ public interface TeamService {
     public List<Team> getAllGlobalTeams() throws AppException;
 
     public List<Team> getLocationTeams(Set<Long> locationIds) throws AppException;
+
+    public void deleteTeamMember(Long teamMemberId) throws AppException;
 }

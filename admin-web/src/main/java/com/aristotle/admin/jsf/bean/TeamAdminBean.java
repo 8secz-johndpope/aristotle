@@ -39,6 +39,9 @@ public class TeamAdminBean extends BaseMultiPermissionAdminJsfBean {
 
     private List<TeamMember> teamMembers;
 
+    private String email;
+    private String post;
+
 	public TeamAdminBean(){
         super("/admin/teams", AppPermission.EDIT_TEAM);
         selectedTeam = new Team();
@@ -82,6 +85,14 @@ public class TeamAdminBean extends BaseMultiPermissionAdminJsfBean {
         }
 	}
 
+    public void setDeleteTeamMember(TeamMember selectedTeamMember) {
+        try {
+            teamService.deleteTeamMember(selectedTeamMember.getId());
+        } catch (AppException e) {
+            sendErrorMessageToJsfScreen(e);
+        }
+    }
+
     public void saveTeam() {
 		try{
             if (StringUtils.isEmpty(selectedTeam.getName())) {
@@ -108,6 +119,28 @@ public class TeamAdminBean extends BaseMultiPermissionAdminJsfBean {
 		}
 		
 	}
+
+    public void saveTeamMember() {
+        try {
+            if (StringUtils.isEmpty(email)) {
+                sendErrorMessageToJsfScreen("Please enter Registered User Email");
+            }
+            if (StringUtils.isEmpty(post)) {
+                sendErrorMessageToJsfScreen("Please Choose a Post");
+            }
+
+            if (isValidInput()) {
+                teamService.saveTeamMember(email, post, selectedTeam.getId());
+                sendInfoMessageToJsfScreen("Team Member saved succesfully");
+                teamMembers = teamService.getTeamMembersByTeamId(selectedTeam.getId());
+                showList = true;
+            }
+
+        } catch (Exception ex) {
+            sendErrorMessageToJsfScreen("Unable to save Post", ex);
+        }
+
+    }
 
     public void createTeam() {
         selectedTeam = new Team();
@@ -138,6 +171,22 @@ public class TeamAdminBean extends BaseMultiPermissionAdminJsfBean {
 
     public void setTeamMembers(List<TeamMember> teamMembers) {
         this.teamMembers = teamMembers;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPost() {
+        return post;
+    }
+
+    public void setPost(String post) {
+        this.post = post;
     }
 
 }
