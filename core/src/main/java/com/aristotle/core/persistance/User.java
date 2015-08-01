@@ -121,6 +121,9 @@ public class User extends BaseEntity {
 	@Column(name="voting_pc_id", insertable=false,updatable=false)
 	private Long parliamentConstituencyVotingId;
 	
+    @Column(name = "profile", columnDefinition = "LONGTEXT")
+    private String profile;
+
 	@OneToMany(mappedBy="user", fetch=FetchType.LAZY)
 	private Set<FacebookAccount> facebookAccounts;
 
@@ -753,6 +756,14 @@ public class User extends BaseEntity {
 
     public void setLocationRoles(Set<LocationRole> locationRoles) {
         this.locationRoles = locationRoles;
+    }
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
 
     @Override
