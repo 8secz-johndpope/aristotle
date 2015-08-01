@@ -141,7 +141,7 @@
 									<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/line-icons-set/128/1-04-48.png" height="20" />
 									<f:setPropertyActionListener value="#{oneTeamMember}" target="#{teamAdminBean.deleteTeamMember}" />
 								</p:commandLink>
-								<p:blockUI block="adminTeamForm" trigger=":adminTeamForm:deleteMember">
+								<p:blockUI block="adminTeamForm" trigger=":adminTeamForm:listOfTeamMembers:deleteMember">
             Deleting...<br />
 									<p:graphicImage width="80" value="http://static.eswaraj.com/admin/images/ajax-loader.gif" />
 								</p:blockUI>
