@@ -37,8 +37,11 @@
 								<p:inputTextarea rows="4" cols="50" value="#{adminEventBean.event.address}" />
 
 								<p:outputLabel value="Description"></p:outputLabel>
-								<p:inputTextarea rows="8" cols="50" value="#{adminEventBean.event.description}" />
-								<!-- 
+								<p:editor id="editor" value="#{adminEventBean.event.description}" width="300" height="400">
+                                </p:editor>
+								
+								<!--
+								<p:inputTextarea rows="8" cols="50" value="#{adminEventBean.event.description}" /> 
                         <p:editor id="editor" value="#{adminEventBean.event.description}">
                         </p:editor>
                          -->
