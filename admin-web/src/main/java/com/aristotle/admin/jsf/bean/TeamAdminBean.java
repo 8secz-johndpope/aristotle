@@ -78,16 +78,22 @@ public class TeamAdminBean extends BaseMultiPermissionAdminJsfBean {
     public void setSelectedTeam(Team selectedTeam) {
         this.selectedTeam = selectedTeam;
 		showList = false;
+        refreshTeamMember();
+
+    }
+
+    private void refreshTeamMember() {
         try {
             teamMembers = teamService.getTeamMembersByTeamId(selectedTeam.getId());
         } catch (AppException e) {
             sendErrorMessageToJsfScreen(e);
         }
-	}
+    }
 
     public void setDeleteTeamMember(TeamMember selectedTeamMember) {
         try {
             teamService.deleteTeamMember(selectedTeamMember.getId());
+            refreshTeamMember();
         } catch (AppException e) {
             sendErrorMessageToJsfScreen(e);
         }
@@ -132,7 +138,7 @@ public class TeamAdminBean extends BaseMultiPermissionAdminJsfBean {
             if (isValidInput()) {
                 teamService.saveTeamMember(email, post, selectedTeam.getId());
                 sendInfoMessageToJsfScreen("Team Member saved succesfully");
-                teamMembers = teamService.getTeamMembersByTeamId(selectedTeam.getId());
+                refreshTeamMember();
             }
 
         } catch (Exception ex) {

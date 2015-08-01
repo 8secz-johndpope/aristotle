@@ -106,13 +106,14 @@
 								<f:selectItem itemLabel="Co-Convenor" itemValue="Co-Convenor" />
 								<f:selectItem itemLabel="POC" itemValue="POC" />
 							</p:selectOneMenu>
-							<p:commandButton id="addTeamMember" value="Add Team Member" update=":adminTeamForm:mainPanel" actionListener="#{teamAdminBean.saveTeamMember}" styleClass="ui-priority-primary">
-                            </p:commandButton>
+							<p:commandButton id="addTeamMember" value="Add Team Member" update=":adminTeamForm:mainPanel" actionListener="#{teamAdminBean.saveTeamMember}"
+								styleClass="ui-priority-primary">
+							</p:commandButton>
 						</p:outputPanel>
 
-						<p:dataTable id="listOfTeamMembers" var="oneTeamMember" value="#{teamAdminBean.teamMembers}" paginator="true" rows="100" paginatorPosition="bottom" paginatorAlwaysVisible="false"
-							emptyMessage="No Team" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-							rowsPerPageTemplate="5,10,15">
+						<p:dataTable id="listOfTeamMembers" var="oneTeamMember" value="#{teamAdminBean.teamMembers}" paginator="true" rows="100" paginatorPosition="bottom"
+							paginatorAlwaysVisible="false" emptyMessage="No Team"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
 							<f:facet name="header">Team Members</f:facet>
 							<p:column>
 								<f:facet name="header">
@@ -136,10 +137,14 @@
 								<f:facet name="header">
 									<h:outputText value="Delete" />
 								</f:facet>
-								<p:commandLink update=":adminTeamForm:mainPanel" title="Delete Member">
+								<p:commandLink update=":adminTeamForm:mainPanel" title="Delete Member" id="deleteMember">
 									<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/line-icons-set/128/1-04-48.png" height="20" />
 									<f:setPropertyActionListener value="#{oneTeamMember}" target="#{teamAdminBean.deleteTeamMember}" />
 								</p:commandLink>
+								<p:blockUI block="adminTeamForm" trigger=":deleteMember">
+            Deleting...<br />
+									<p:graphicImage width="80" value="http://static.eswaraj.com/admin/images/ajax-loader.gif" />
+								</p:blockUI>
 							</p:column>
 						</p:dataTable>
 					</p:outputPanel>
