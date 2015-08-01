@@ -110,7 +110,7 @@
                             </p:commandButton>
 						</p:outputPanel>
 
-						<p:dataTable id="listOfTeam" var="oneTeamMember" value="#{teamAdminBean.teamMembers}" paginator="true" rows="100" paginatorPosition="bottom" paginatorAlwaysVisible="false"
+						<p:dataTable id="listOfTeamMembers" var="oneTeamMember" value="#{teamAdminBean.teamMembers}" paginator="true" rows="100" paginatorPosition="bottom" paginatorAlwaysVisible="false"
 							emptyMessage="No Team" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							rowsPerPageTemplate="5,10,15">
 							<f:facet name="header">Team Members</f:facet>
