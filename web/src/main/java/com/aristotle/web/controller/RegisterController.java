@@ -347,9 +347,14 @@ public class RegisterController {
         HttpStatus httpStatus;
         httpStatus = HttpStatus.OK;
         jsonObject.addProperty("mobile", user.getMobileNumber());
-        fakeMembershipNumberCount++;
-        jsonObject.addProperty("membership_no", "SA" + fakeMembershipNumberCount);
-        jsonObject.addProperty("registration_status", "NEW");
+        if (StringUtils.isEmpty(user.getMembershipNumber())) {
+            fakeMembershipNumberCount++;
+            jsonObject.addProperty("membershipNumber", "SA" + fakeMembershipNumberCount);
+            jsonObject.addProperty("registrationStatus", "NEW");
+        } else {
+            jsonObject.addProperty("membershipNumber", "SA" + user.getMembershipNumber());
+            jsonObject.addProperty("registrationStatus", "EXISTING");
+        }
 
         String password = new BigInteger(60, random).toString(32);
         jsonObject.addProperty("password", password);
