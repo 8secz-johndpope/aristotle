@@ -2,9 +2,6 @@ package com.aristotle.admin.jsf.bean;
 
 import java.util.List;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-
 import org.primefaces.event.map.MarkerDragEvent;
 import org.primefaces.event.map.StateChangeEvent;
 import org.primefaces.model.map.DefaultMapModel;
@@ -12,6 +9,9 @@ import org.primefaces.model.map.LatLng;
 import org.primefaces.model.map.MapModel;
 import org.primefaces.model.map.Marker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
 
 import com.aristotle.core.enums.AppPermission;
 import com.aristotle.core.exception.AppException;
@@ -21,8 +21,8 @@ import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
-@ManagedBean
-@ViewScoped
+@Component
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "view")
 @URLMapping(id = "adminEditOfficeDetailBean", beanName = "adminEditOfficeDetailBean", pattern = "/admin/office", viewId = "/admin/admin_office.xhtml")
 @URLBeanName("adminEditOfficeDetailBean")
 public class AdminEditOfficeDetailBean extends BaseMultiPermissionAdminJsfBean {
