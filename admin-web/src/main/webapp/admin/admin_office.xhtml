@@ -87,7 +87,7 @@
 					<p:outputPanel id="formView" rendered="#{!adminEditOfficeDetailBean.showList}">
 						<p:panelGrid columns="2">
 							<p:outputLabel value="Location"></p:outputLabel>
-							<p:outputLabel value="#{menuBean.locationType} - #{menuBean.currentLocationName}" />
+							<p:outputLabel value="#{menuBean.selectedLocation}/>
 							<p:outputLabel value="Address"></p:outputLabel>
 							<p:inputTextarea value="#{adminEditOfficeDetailBean.selectedOffice.address}" rows="6" cols="33" />
 
