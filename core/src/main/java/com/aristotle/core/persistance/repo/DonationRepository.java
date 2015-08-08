@@ -8,6 +8,7 @@ import com.aristotle.core.persistance.Donation;
 
 public interface DonationRepository extends JpaRepository<Donation, Long> {
 
+    /*
 	public abstract List<Donation> getDonationsByUserId(Long userId);
 	
 	public abstract Donation getDonationByDonorId(String donorId);
@@ -17,6 +18,6 @@ public interface DonationRepository extends JpaRepository<Donation, Long> {
 	public abstract Double getTotalDonationAmountByLcid(String lcid);
 	
 	public abstract Integer getTotalDonationCountByLcid(String lcid);
-
+*/
 
 }
