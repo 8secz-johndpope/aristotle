@@ -4,72 +4,41 @@ import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Version;
 
 @Entity
-@Table(name="donations")
-public class Donation {
+@Table(name = "donations")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "donation")
+public class Donation extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
-	@Version
-	@Column(name="ver")
-	private int ver;
-	
-	@Column(name="date_created")
-	private Date dateCreated;
-	@Column(name="date_modified")
-	private Date dateModified;
-	@Column(name="creator_id")
-	private Long creatorId;
-	@Column(name="modifier_id")
-	private Long modifierId;
-	
-	@Column(name = "donor_id")
-	private String donorId;
-	@Column(name = "merchant_reference_number")
-	private String merchantReferenceNumber;
-	@Column(name = "transaction_id")
-	private String transactionId;
-	@Column(name = "payment_gateway")
-	private String paymentGateway;
-	@Column(name = "payment_gateway_trn_type")
-	private String transactionType;
-	@Column(name = "donation_date")
-	private Date donationDate;
-	@Column(name = "donor_ip")
-	private String donorIp;
-	@Column(name = "amount")
-	private Double amount;
-	@Column(name = "utm_source")
-	private String utmSource;
-	@Column(name = "utm_medium")
-	private String utmMedium;
-	@Column(name = "utm_term")
-	private String utmTerm;
-	@Column(name = "utm_content")
-	private String utmContent;
-	@Column(name = "utm_campaign")
-	private String utmCampaign;
-	@Column(name = "pg_error_msg")
-	private String pgErrorMessage;
-	@Column(name = "cid")
-	private String cid;
-	@Column(name = "lcid")
-	private String lcid;
-	@Column(name = "pg_error_detail")
-	private String pgErrorDetail;
-	@Column(name = "remark", columnDefinition="LONGTEXT")
-	private String remark;
-	
+    @Column(name = "donor_ip")
+    private String donorIp;
+    @Column(name = "donation_date")
+    private Date donationDate;
+    @Column(name = "amount")
+    private Double amount;
+    @Column(name = "transaction_id")
+    private String transactionId;
+    @Column(name = "utm_source")
+    private String utmSource;
+    @Column(name = "utm_medium")
+    private String utmMedium;
+    @Column(name = "utm_term")
+    private String utmTerm;
+    @Column(name = "utm_content")
+    private String utmContent;
+    @Column(name = "utm_campaign")
+    private String utmCampaign;
+    @Column(name = "remark", columnDefinition = "LONGTEXT")
+    private String remark;
+
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="user_id")
     private User user;
@@ -105,65 +74,11 @@ public class Donation {
     private String donateToVidhansabha;
 
 	
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public int getVer() {
-		return ver;
-	}
-	public void setVer(int ver) {
-		this.ver = ver;
-	}
-	public Date getDateCreated() {
-		return dateCreated;
-	}
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-	public Date getDateModified() {
-		return dateModified;
-	}
-	public void setDateModified(Date dateModified) {
-		this.dateModified = dateModified;
-	}
-	public Long getCreatorId() {
-		return creatorId;
-	}
-	public void setCreatorId(Long creatorId) {
-		this.creatorId = creatorId;
-	}
-	public Long getModifierId() {
-		return modifierId;
-	}
-	public void setModifierId(Long modifierId) {
-		this.modifierId = modifierId;
-	}
-	public String getMerchantReferenceNumber() {
-		return merchantReferenceNumber;
-	}
-	public void setMerchantReferenceNumber(String merchantReferenceNumber) {
-		this.merchantReferenceNumber = merchantReferenceNumber;
-	}
 	public String getTransactionId() {
 		return transactionId;
 	}
 	public void setTransactionId(String transactionId) {
 		this.transactionId = transactionId;
-	}
-	public String getPaymentGateway() {
-		return paymentGateway;
-	}
-	public void setPaymentGateway(String paymentGateway) {
-		this.paymentGateway = paymentGateway;
-	}
-	public String getTransactionType() {
-		return transactionType;
-	}
-	public void setTransactionType(String transactionType) {
-		this.transactionType = transactionType;
 	}
 	public Date getDonationDate() {
 		return donationDate;
@@ -213,24 +128,6 @@ public class Donation {
 	public void setUtmCampaign(String utmCampaign) {
 		this.utmCampaign = utmCampaign;
 	}
-	public String getPgErrorMessage() {
-		return pgErrorMessage;
-	}
-	public void setPgErrorMessage(String pgErrorMessage) {
-		this.pgErrorMessage = pgErrorMessage;
-	}
-	public String getCid() {
-		return cid;
-	}
-	public void setCid(String cid) {
-		this.cid = cid;
-	}
-	public String getPgErrorDetail() {
-		return pgErrorDetail;
-	}
-	public void setPgErrorDetail(String pgErrorDetail) {
-		this.pgErrorDetail = pgErrorDetail;
-	}
 	public String getRemark() {
 		return remark;
 	}
@@ -248,12 +145,6 @@ public class Donation {
 	}
 	public void setUserId(Long userId) {
 		this.userId = userId;
-	}
-	public String getDonorId() {
-		return donorId;
-	}
-	public void setDonorId(String donorId) {
-		this.donorId = donorId;
 	}
 	public String getDonorName() {
 		return donorName;
@@ -308,12 +199,6 @@ public class Donation {
 	}
 	public void setDonorAddress(String donorAddress) {
 		this.donorAddress = donorAddress;
-	}
-	public String getLcid() {
-		return lcid;
-	}
-	public void setLcid(String lcid) {
-		this.lcid = lcid;
 	}
 	public String getDonateToState() {
 		return donateToState;
