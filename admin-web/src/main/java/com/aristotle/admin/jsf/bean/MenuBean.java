@@ -171,6 +171,10 @@ public class MenuBean extends BaseJsfBean {
         return isAllowed(AppPermission.EDIT_TEAM);
     }
 
+    public boolean isCallCampaignAllowed() {
+        return isAllowed(AppPermission.CALL_CAMPAIGN_ADMIN);
+    }
+
     public void goToVoiceOfAapAdminPageFb() {
         if (isVoiceOfAapFbAllowed()) {
             buildAndRedirect("/admin/voiceofaapfb");
@@ -318,6 +322,14 @@ public class MenuBean extends BaseJsfBean {
     public void goToTeamsPage() {
         if (isEditTeamAllowed()) {
             buildAndRedirect("/admin/teams");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
+
+    public void goToCallCampaignPage() {
+        if (isCallCampaignAllowed()) {
+            buildAndRedirect("/admin/call");
         } else {
             buildAndRedirect("/admin/notallowed");
         }

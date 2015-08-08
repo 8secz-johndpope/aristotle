@@ -30,7 +30,8 @@ public enum AppPermission {
     ADMIN_CANDIDATE_PC,
     WEB_ADMIN_DRAFT,
     WEB_ADMIN,
-    EDIT_TEAM
+    EDIT_TEAM,
+    CALL_CAMPAIGN_ADMIN
     ;
     
     private AppPermission() {

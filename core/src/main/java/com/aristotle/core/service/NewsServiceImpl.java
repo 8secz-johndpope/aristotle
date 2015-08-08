@@ -138,7 +138,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<UploadedFile> getNewsUploadedFiles(Long newsId) throws AppException {
         News news = newsRepository.findOne(newsId);
-        if (news.getFiles() == null) {
+        if (news == null || news.getFiles() == null) {
             return Collections.emptyList();
         }
         return new ArrayList<UploadedFile>(news.getFiles());

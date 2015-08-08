@@ -1,9 +1,14 @@
 package com.aristotle.core.persistance;
 
 import java.util.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 
@@ -11,11 +16,14 @@ import javax.persistence.Table;
 @Table(name = "call_campaign")
 public class CallCampaign extends BaseEntity {
 
+    @Column(name = "title")
+    private String title;
+
     @Column(name = "welcome_message", columnDefinition = "LONGTEXT")
     private String welcomeMessage;
 
     @Column(name = "call_script", columnDefinition = "LONGTEXT")
-    private String call_script;
+    private String callScript;
 
     @Column(name = "enabled")
     private boolean enabled;
@@ -25,6 +33,24 @@ public class CallCampaign extends BaseEntity {
 
     @Column(name = "end_date")
     private Date endDate;
+    
+    @ManyToMany(cascade=CascadeType.ALL)
+    @JoinTable(name = "call_campaign_uploaded_files",
+    joinColumns = {
+    @JoinColumn(name="call_campaign_id") 
+    },
+    inverseJoinColumns = {
+    @JoinColumn(name = "uploaded_file_id")
+    })
+    private Set<UploadedFile> files;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getWelcomeMessage() {
         return welcomeMessage;
@@ -34,12 +60,12 @@ public class CallCampaign extends BaseEntity {
         this.welcomeMessage = welcomeMessage;
     }
 
-    public String getCall_script() {
-        return call_script;
+    public String getCallScript() {
+        return callScript;
     }
 
-    public void setCall_script(String call_script) {
-        this.call_script = call_script;
+    public void setCallScript(String callScript) {
+        this.callScript = callScript;
     }
 
     public boolean isEnabled() {
@@ -66,5 +92,12 @@ public class CallCampaign extends BaseEntity {
         this.endDate = endDate;
     }
 
+    public Set<UploadedFile> getFiles() {
+        return files;
+    }
+
+    public void setFiles(Set<UploadedFile> files) {
+        this.files = files;
+    }
 
 }

@@ -66,6 +66,7 @@ body {
 				<p:menuitem value="Sms" actionListener="#{menuBean.goToSmsAdminPageTwitter}" rendered="#{menuBean.smsAllowed}"></p:menuitem>
 				<p:menuitem value="Global Donation Campaign" actionListener="#{menuBean.goToGlobalDonationcampaignAdminPage}" rendered="#{menuBean.globalDonationCampaignAllowed}"></p:menuitem>
 				<p:menuitem value="Candidates" actionListener="#{menuBean.goToCandidateAdminPage}" rendered="#{menuBean.candidateAllowed}"></p:menuitem>
+				<p:menuitem value="Call Campaigns" actionListener="#{menuBean.goToCallCampaignPage}" rendered="#{menuBean.callCampaignAllowed}"></p:menuitem>
 			</p:submenu>
 
 			<p:submenu label="Content" rendered="#{menuBean.contentAllowed}">
@@ -85,6 +86,7 @@ body {
                 <p:menuitem value="Edit Office Detail" actionListener="#{menuBean.goToEditOfficeDetailPage}" rendered="#{menuBean.editOfficeDetailAllowed}"></p:menuitem>
                 <p:menuitem value="Search Volunteer" actionListener="#{menuBean.goToSearchVolunteerPage}" rendered="#{menuBean.searchVolunteerAllowed}"></p:menuitem>
                 <p:menuitem value="Teams" actionListener="#{menuBean.goToTeamsPage}" rendered="#{menuBean.editTeamAllowed}"></p:menuitem>
+                
             </p:submenu>
 <!-- 
 			<p:submenu label="Members" rendered="#{menuBean.memberAllowed}">
