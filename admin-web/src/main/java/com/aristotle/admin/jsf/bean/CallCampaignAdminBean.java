@@ -71,7 +71,7 @@ public class CallCampaignAdminBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
     public boolean isDisableUrlTextBox() {
-        if (selectedCallCampaign.getId() == null || selectedCallCampaign.getUrl() == null) {
+        if (selectedCallCampaign.getId() == null) {
             return false;
         }
         return true;
