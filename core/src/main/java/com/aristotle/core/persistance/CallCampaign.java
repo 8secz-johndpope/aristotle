@@ -19,6 +19,9 @@ public class CallCampaign extends BaseEntity {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "url")
+    private String url;
+
     @Column(name = "welcome_message", columnDefinition = "LONGTEXT")
     private String welcomeMessage;
 
@@ -50,6 +53,14 @@ public class CallCampaign extends BaseEntity {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getWelcomeMessage() {

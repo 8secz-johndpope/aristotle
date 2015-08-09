@@ -70,6 +70,22 @@ public class CallCampaignAdminBean extends BaseMultiPermissionAdminJsfBean {
         }
 	}
 
+    public void updateUrl() {
+        if(selectedCallCampaign.getId() == null && selectedCallCampaign.getUrl() == null && !StringUtils.isEmpty(selectedCallCampaign.getTitle())){
+            char[] chars = selectedCallCampaign.getTitle().toLowerCase().toCharArray();
+            StringBuilder sb = new StringBuilder();
+            for(char oneChar : chars){
+                if ((oneChar >= 'a' && oneChar <= 'z') || (oneChar >= '0' && oneChar <= '9')) {
+                    sb.append(oneChar);
+                }
+                if (oneChar == ' ') {
+                    sb.append('-');
+                }
+            }
+            selectedCallCampaign.setUrl(sb.toString());
+        }
+
+    }
     public CallCampaign getSelectedCallCampaign() {
         return selectedCallCampaign;
     }
