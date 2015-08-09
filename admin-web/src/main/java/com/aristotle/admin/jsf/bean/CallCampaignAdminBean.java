@@ -76,6 +76,13 @@ public class CallCampaignAdminBean extends BaseMultiPermissionAdminJsfBean {
         }
         return true;
     }
+
+    public boolean isDisableUrlTextBox() {
+        if (selectedCallCampaign.getId() == null && selectedCallCampaign.getUrl() == null) {
+            return false;
+        }
+        return true;
+    }
     public void updateUrl() {
         if(selectedCallCampaign.getId() == null && selectedCallCampaign.getUrl() == null && !StringUtils.isEmpty(selectedCallCampaign.getTitle())){
             char[] chars = selectedCallCampaign.getTitle().toLowerCase().toCharArray();
