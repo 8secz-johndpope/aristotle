@@ -70,21 +70,17 @@ public class CallCampaignAdminBean extends BaseMultiPermissionAdminJsfBean {
         }
 	}
 
-    public boolean disableUrlTextBox() {
-        if (selectedCallCampaign.getId() == null && selectedCallCampaign.getUrl() == null) {
-            return false;
-        }
-        return true;
-    }
-
     public boolean isDisableUrlTextBox() {
-        if (selectedCallCampaign.getId() == null && selectedCallCampaign.getUrl() == null) {
+        if (selectedCallCampaign.getId() == null || selectedCallCampaign.getUrl() == null) {
             return false;
         }
         return true;
     }
     public void updateUrl() {
-        if(selectedCallCampaign.getId() == null && selectedCallCampaign.getUrl() == null && !StringUtils.isEmpty(selectedCallCampaign.getTitle())){
+        System.out
+                .println("selectedCallCampaign.getId() == null && selectedCallCampaign.getUrl() == null && !StringUtils.isEmpty(selectedCallCampaign.getTitle())=" + selectedCallCampaign.getId() == null
+                        && selectedCallCampaign.getUrl() == null && !StringUtils.isEmpty(selectedCallCampaign.getTitle()));
+        if ((selectedCallCampaign.getId() == null || selectedCallCampaign.getUrl() == null) && !StringUtils.isEmpty(selectedCallCampaign.getTitle())) {
             char[] chars = selectedCallCampaign.getTitle().toLowerCase().toCharArray();
             StringBuilder sb = new StringBuilder();
             for(char oneChar : chars){
