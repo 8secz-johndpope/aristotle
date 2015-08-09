@@ -92,8 +92,8 @@
 					<p:outputPanel id="formView" rendered="#{!callCampaignAdminBean.showList}">
 						<p:panelGrid columns="2">
 							<p:outputLabel value="Title"></p:outputLabel>
-							<p:inputText value="#{callCampaignAdminBean.selectedCallCampaign.title}" style="width:600px" listener="#{callCampaignAdminBean.updateUrl}" >
-							     <p:ajax event="blur" update="url" />
+							<p:inputText value="#{callCampaignAdminBean.selectedCallCampaign.title}" style="width:600px" >
+							     <p:ajax event="blur" update="url"  listener="#{callCampaignAdminBean.updateUrl}"/>
 							</p:inputText>
                             <p:outputLabel value="URL"></p:outputLabel>
                             <p:inputText id="url" value="#{callCampaignAdminBean.selectedCallCampaign.url}" style="width:600px" disabled="#{callCampaignAdminBean.disableUrlTextBox}" >
