@@ -288,20 +288,22 @@ public class UserServiceImpl implements UserService {
 
         }
         // create user login account
-        if (!StringUtils.isEmpty(userRegisterBean.getPassword())) {
-            LoginAccount loginAccount = new LoginAccount();
-            loginAccount.setUser(dbUser);
-            loginAccount.setPassword(passwordUtil.encryptPassword(userRegisterBean.getPassword()));
-
-            if (!StringUtils.isEmpty(userRegisterBean.getEmailId())) {
-                loginAccount.setEmail(userRegisterBean.getEmailId().toLowerCase());
-                loginAccount.setUserName(userRegisterBean.getEmailId().toLowerCase());
-            }
-            if (StringUtils.isEmpty(loginAccount.getUserName())) {
-                throw new AppException("Login User name/email must be provided");
-            }
-            loginAccount = loginAccountRepository.save(loginAccount);
+        if (StringUtils.isEmpty(userRegisterBean.getPassword())){
+            String password = generateRandompassword();
+            userRegisterBean.setPassword(password);
         }
+        LoginAccount loginAccount = new LoginAccount();
+        loginAccount.setUser(dbUser);
+        loginAccount.setPassword(passwordUtil.encryptPassword(userRegisterBean.getPassword()));
+
+        if (!StringUtils.isEmpty(userRegisterBean.getEmailId())) {
+            loginAccount.setEmail(userRegisterBean.getEmailId().toLowerCase());
+            loginAccount.setUserName(userRegisterBean.getEmailId().toLowerCase());
+        }
+        if (StringUtils.isEmpty(loginAccount.getUserName())) {
+            throw new AppException("Login User name/email must be provided");
+        }
+        loginAccount = loginAccountRepository.save(loginAccount);
         if (email != null) {
             sendEmailConfirmtionEmail(email.getEmail());
         }
