@@ -19,6 +19,8 @@ public class Tweet extends BaseEntity {
     private String errorMessage;
     @Column(name = "status")
     private String status;
+    @Column(name = "auto_retweeted")
+    private boolean autoRetweeted = true;
 	
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="twitter_account_id")
@@ -83,5 +85,13 @@ public class Tweet extends BaseEntity {
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
+    }
+
+    public boolean isAutoRetweeted() {
+        return autoRetweeted;
+    }
+
+    public void setAutoRetweeted(boolean autoRetweeted) {
+        this.autoRetweeted = autoRetweeted;
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionData;
 import org.springframework.social.twitter.api.CursoredList;
 import org.springframework.social.twitter.api.Twitter;
+import org.springframework.social.twitter.api.TwitterProfile;
 import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -133,11 +134,8 @@ public class TwitterServiceImpl implements TwitterService {
     public void processPlannedTweet(Long plannedTweetId) throws AppException {
         PlannedTweet plannedTweet = plannedTweetRepository.findOne(plannedTweetId);
         /*
-        if (!plannedTweet.getStatus().equals(PlannedPostStatus.PROCESSING)) {
-            logger.info("Status is not processing so Ignoring it");
-            return;
-        }
-        */
+         * if (!plannedTweet.getStatus().equals(PlannedPostStatus.PROCESSING)) { logger.info("Status is not processing so Ignoring it"); return; }
+         */
         TwitterAccount tweetOwnerAccount = plannedTweet.getTwitterAccount();
         List<TwitterTeam> twitterTeams = twitterTeamRepository.getTwitterTeamsOfSourceTwitterAccount(tweetOwnerAccount.getId());
         TwitterTeam globalTeam = getGlobalTeam(twitterTeams);
@@ -169,10 +167,12 @@ public class TwitterServiceImpl implements TwitterService {
             tweet.setPlannedTweet(plannedTweet);
             tweet.setStatus("Pending");
             tweet.setTwitterAccount(oneTwitterAccount);
+            tweet.setAutoRetweeted(true);
             tweet = tweetRepository.save(tweet);
         }
 
     }
+
     private TwitterTeam getGlobalTeam(List<TwitterTeam> twitterTeams) {
         for (TwitterTeam oneTwitterTeam : twitterTeams) {
             if (oneTwitterTeam.isGlobal()) {
@@ -191,6 +191,7 @@ public class TwitterServiceImpl implements TwitterService {
     }
 
     Random random = new Random(System.currentTimeMillis());
+
     @Override
     public Tweet getNextPendingTweet() throws AppException {
         int delayInSeconds = 60 + random.nextInt(16);// minimum 60 seconds max 75 seconds as per twitter rate limit
@@ -209,6 +210,7 @@ public class TwitterServiceImpl implements TwitterService {
         tweet.setStatus(status);
         tweet = tweetRepository.save(tweet);
     }
+
     @Override
     public void updateTweetStatusToProcessing(Long tweetId) throws AppException {
         updateTweetStatus(tweetId, "Processing");
@@ -271,7 +273,7 @@ public class TwitterServiceImpl implements TwitterService {
         TwitterApp twitterApp = twitterAppRepository.findOne(twitterAppId);
         TwitterTeam twitterTeam = twitterTeamRepository.findOne(twitterTeamId);
         ConnectionData twitterConnectionData = twitterConnection.createData();
-        
+
         TwitterAccount twitterAccount = twitterAccountRepository.getTwitterAccountByTwitterId(twitterConnectionData.getProviderUserId());
         if (twitterAccount == null) {
             twitterAccount = new TwitterAccount();
@@ -282,7 +284,7 @@ public class TwitterServiceImpl implements TwitterService {
             twitterAccount.setImageUrl(twitterConnectionData.getImageUrl());
             twitterAccount = twitterAccountRepository.save(twitterAccount);
         }
-        if(user != null){
+        if (user != null) {
             User dbUser = userRepository.findOne(user.getId());
             twitterAccount.setUser(dbUser);
         }
@@ -302,7 +304,7 @@ public class TwitterServiceImpl implements TwitterService {
 
         twitterPermission.setToken(twitterConnectionData.getAccessToken());
         twitterPermission.setTokenSecret(twitterConnectionData.getSecret());
-        
+
         if (twitterAccount.getTwitterTeams() == null) {
             twitterAccount.setTwitterTeams(new HashSet<TwitterTeam>());
         }
@@ -354,9 +356,9 @@ public class TwitterServiceImpl implements TwitterService {
         }
     }
 
-    private void updateFollowerCount(TwitterAccount twitterAccount){
+    private void updateFollowerCount(TwitterAccount twitterAccount) {
         List<TwitterPermission> twitterPermissions = twitterPermissionRepository.getTwitterPermissionByTwitterAccountId(twitterAccount.getId());
-        if(twitterPermissions == null || twitterPermissions.isEmpty()){
+        if (twitterPermissions == null || twitterPermissions.isEmpty()) {
             return;
         }
         TwitterPermission twitterPermission = twitterPermissions.get(0);
@@ -364,7 +366,7 @@ public class TwitterServiceImpl implements TwitterService {
                 twitterPermission.getTokenSecret());
         long cursorId = -1;
         int totalFollowers = 0;
-        while(true){
+        while (true) {
             CursoredList<Long> followerIds = twitter.friendOperations().getFollowerIdsInCursor(cursorId);
             totalFollowers = totalFollowers + followerIds.size();
             cursorId = followerIds.getNextCursor();
@@ -373,7 +375,7 @@ public class TwitterServiceImpl implements TwitterService {
             }
         }
         twitterAccount.setFollowerCount(totalFollowers);
-        
+
     }
 
     @Override
@@ -404,12 +406,43 @@ public class TwitterServiceImpl implements TwitterService {
     private void updatePlannedTweetRetweetCount(Twitter twitter, PlannedTweet onePlannedTweet) {
         try {
             org.springframework.social.twitter.api.Tweet tweet = twitter.timelineOperations().getStatus(onePlannedTweet.getTweetId());
-            onePlannedTweet.setTotalRetweets(tweet.getRetweetCount());
-            onePlannedTweet.setMessage(tweet.getUnmodifiedText());
+            List<org.springframework.social.twitter.api.Tweet> retweets = twitter.timelineOperations().getRetweets(onePlannedTweet.getTweetId());
+            if (!retweets.isEmpty()) {
+                onePlannedTweet.setTotalRetweets(retweets.size());
+                onePlannedTweet.setMessage(retweets.get(0).getUnmodifiedText());
+                for (org.springframework.social.twitter.api.Tweet oneReTweet : retweets) {
+                    TwitterAccount oneTwitterAccount = getTwitterAccount(oneReTweet.getUser());
+                    Tweet oneTweet = tweetRepository.getTweetByPlannedTweetIdAndTwitterAccountId(onePlannedTweet.getId(), oneTwitterAccount.getId());
+                    if(oneTweet == null){
+                        oneTweet = new Tweet();
+                        oneTweet.setPlannedTweet(onePlannedTweet);
+                        oneTweet.setStatus("Done");
+                        oneTweet.setTweetContent(oneReTweet.getUnmodifiedText());
+                        oneTweet.setTwitterAccount(oneTwitterAccount);
+                        oneTweet.setAutoRetweeted(false);
+                        oneTweet = tweetRepository.save(oneTweet);
+                    }
+                }
+            }
             onePlannedTweet = plannedTweetRepository.save(onePlannedTweet);
             logger.info("Status " + onePlannedTweet.getTweetId() + " is done with " + tweet.getRetweetCount() + " retweets");
         } catch (Exception ex) {
             logger.error("unable to to process tweet " + onePlannedTweet.getTweetId(), ex);
         }
+    }
+
+    private TwitterAccount getTwitterAccount(TwitterProfile twitterProfile) {
+        TwitterAccount twitterAccount = twitterAccountRepository.getTwitterAccountByTwitterId(String.valueOf(twitterProfile.getId()));
+        if (twitterAccount == null) {
+            twitterAccount = new TwitterAccount();
+            twitterAccount.setImageUrl(twitterProfile.getProfileImageUrl());
+            twitterAccount.setLastTweetSentTime(new Date());
+            twitterAccount.setRetweetable(false);
+            twitterAccount.setScreenName(twitterProfile.getScreenName());
+            twitterAccount.setScreenNameCap(twitterProfile.getScreenName().toUpperCase());
+            twitterAccount.setTwitterId(String.valueOf(twitterProfile.getId()));
+            twitterAccount = twitterAccountRepository.save(twitterAccount);
+        }
+        return twitterAccount;
     }
 }

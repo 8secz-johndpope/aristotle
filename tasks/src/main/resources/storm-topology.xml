@@ -95,6 +95,7 @@
 	<bean id="PlannedTweetRetweetCountUpdateScheduleSpoutBean" class="com.aristotle.task.spout.ScheduleSpout">
 		<property name="componentId" value="PlannedTweetRetweetCountUpdateScheduleSpout" />
 		<property name="cronTime" value="0 01 00 * * ?" />
+		<property name="onStart" value="true" />
 
 		<property name="outputStream">
 			<bean class="com.aristotle.task.topology.beans.Stream">
