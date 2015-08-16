@@ -388,7 +388,7 @@ public class TwitterServiceImpl implements TwitterService {
         Twitter twitter = new TwitterTemplate(consumerKey, consumerSecret);
         for (PlannedTweet onePlannedTweet : plannedTweets) {
             updatePlannedTweetRetweetCount(twitter, onePlannedTweet);
-            long waitTime = (2 + random.nextInt(5)) * 1000;
+            long waitTime = (2 + random.nextInt(10)) * 1000;
             System.out.println("Sleeping for " + waitTime + "ms");
             sleep(waitTime);
         }
@@ -405,15 +405,18 @@ public class TwitterServiceImpl implements TwitterService {
 
     private void updatePlannedTweetRetweetCount(Twitter twitter, PlannedTweet onePlannedTweet) {
         try {
-            org.springframework.social.twitter.api.Tweet tweet = twitter.timelineOperations().getStatus(onePlannedTweet.getTweetId());
+            // org.springframework.social.twitter.api.Tweet tweet = twitter.timelineOperations().getStatus(onePlannedTweet.getTweetId());
             List<org.springframework.social.twitter.api.Tweet> retweets = twitter.timelineOperations().getRetweets(onePlannedTweet.getTweetId());
             if (!retweets.isEmpty()) {
                 onePlannedTweet.setTotalRetweets(retweets.size());
                 onePlannedTweet.setMessage(retweets.get(0).getUnmodifiedText());
                 for (org.springframework.social.twitter.api.Tweet oneReTweet : retweets) {
+                    System.out.println("oneReTweet " + oneReTweet.getId() + ", " + oneReTweet);
                     TwitterAccount oneTwitterAccount = getTwitterAccount(oneReTweet.getUser());
                     Tweet oneTweet = tweetRepository.getTweetByPlannedTweetIdAndTwitterAccountId(onePlannedTweet.getId(), oneTwitterAccount.getId());
+                    System.out.println("oneTweet = " + oneTweet);
                     if(oneTweet == null){
+                        System.out.println("Creating new Tweet");
                         oneTweet = new Tweet();
                         oneTweet.setPlannedTweet(onePlannedTweet);
                         oneTweet.setStatus("Done");
@@ -423,15 +426,18 @@ public class TwitterServiceImpl implements TwitterService {
                         oneTweet = tweetRepository.save(oneTweet);
                     }
                 }
+            } else {
+                System.out.println("No Retweets found for tweet " + onePlannedTweet.getTweetId());
             }
             onePlannedTweet = plannedTweetRepository.save(onePlannedTweet);
-            logger.info("Status " + onePlannedTweet.getTweetId() + " is done with " + tweet.getRetweetCount() + " retweets");
+            logger.info("Status " + onePlannedTweet.getTweetId() + " is done with " + onePlannedTweet.getTotalRetweets() + " retweets");
         } catch (Exception ex) {
             logger.error("unable to to process tweet " + onePlannedTweet.getTweetId(), ex);
         }
     }
 
     private TwitterAccount getTwitterAccount(TwitterProfile twitterProfile) {
+        System.out.println("getTwitterAccount : " + String.valueOf(twitterProfile.getId()));
         TwitterAccount twitterAccount = twitterAccountRepository.getTwitterAccountByTwitterId(String.valueOf(twitterProfile.getId()));
         if (twitterAccount == null) {
             twitterAccount = new TwitterAccount();
