@@ -131,6 +131,8 @@ public class TwitterReportServiceImpl implements TwitterReportService {
             int totalReach = 0;
             int totalAuto = 0;
             int totalManual = 0;
+            int totalAutoReach = 0;
+            int totalManualReach = 0;
             for(Tweet oneTweet : tweets){
                 if(oneTweet.getStatus().equalsIgnoreCase("Done")){
                     totalSuccess++;
@@ -139,8 +141,10 @@ public class TwitterReportServiceImpl implements TwitterReportService {
                 }
                 if (oneTweet.isAutoRetweeted()) {
                     totalAuto++;
+                    totalAutoReach = totalAutoReach + oneTweet.getTwitterAccount().getFollowerCount();
                 } else {
                     totalManual++;
+                    totalManualReach = totalManualReach + oneTweet.getTwitterAccount().getFollowerCount();
                 }
                 if (oneTweet.getTwitterAccount().getFollowerCount() != null) {
                     totalReach = totalReach + oneTweet.getTwitterAccount().getFollowerCount();
@@ -151,6 +155,9 @@ public class TwitterReportServiceImpl implements TwitterReportService {
             onePlannedJsonObject.addProperty("totalReach", totalReach);
             onePlannedJsonObject.addProperty("totalAuto", totalAuto);
             onePlannedJsonObject.addProperty("totalManual", totalManual);
+            onePlannedJsonObject.addProperty("totalAutoReach", totalAutoReach);
+            onePlannedJsonObject.addProperty("totalManualReach", totalManualReach);
+
             plannedTweetJsonArray.add(onePlannedJsonObject);
         }
         reportJsonObject.add("plannedTweets", plannedTweetJsonArray);
