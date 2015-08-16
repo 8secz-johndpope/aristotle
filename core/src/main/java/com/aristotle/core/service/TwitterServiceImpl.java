@@ -388,7 +388,7 @@ public class TwitterServiceImpl implements TwitterService {
         Twitter twitter = new TwitterTemplate(consumerKey, consumerSecret);
         for (PlannedTweet onePlannedTweet : plannedTweets) {
             updatePlannedTweetRetweetCount(twitter, onePlannedTweet);
-            long waitTime = (2 + random.nextInt(10)) * 1000;
+            long waitTime = (15 + random.nextInt(3)) * 1000;
             System.out.println("Sleeping for " + waitTime + "ms");
             sleep(waitTime);
         }
