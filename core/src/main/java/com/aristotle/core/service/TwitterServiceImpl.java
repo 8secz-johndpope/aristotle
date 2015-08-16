@@ -424,7 +424,9 @@ public class TwitterServiceImpl implements TwitterService {
                         oneTweet.setTwitterAccount(oneTwitterAccount);
                         oneTweet.setAutoRetweeted(false);
                         oneTweet = tweetRepository.save(oneTweet);
+                        tweetRepository.flush();
                     }
+
                 }
             } else {
                 System.out.println("No Retweets found for tweet " + onePlannedTweet.getTweetId());
