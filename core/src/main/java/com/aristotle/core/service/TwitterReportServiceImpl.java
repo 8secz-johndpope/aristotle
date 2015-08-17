@@ -176,6 +176,9 @@ public class TwitterReportServiceImpl implements TwitterReportService {
 
             JsonObject jsonContext = new JsonObject();
             JsonParser jsonParser = new JsonParser();
+            if (currentReport == null) {
+                currentReport = previousDayReport;
+            }
             jsonContext.add("current", jsonParser.parse(currentReport.getContent()).getAsJsonObject());
             jsonContext.add("previous", jsonParser.parse(previousDayReport.getContent()).getAsJsonObject());
 
