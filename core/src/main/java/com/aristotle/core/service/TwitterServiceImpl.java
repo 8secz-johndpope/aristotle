@@ -382,14 +382,14 @@ public class TwitterServiceImpl implements TwitterService {
     public void updatePlannedTweetRetweetCounts() throws AppException {
         Calendar endDateTime = Calendar.getInstance();
         Calendar startDateTime = Calendar.getInstance();
-        startDateTime.add(Calendar.DATE, -15);
+        startDateTime.add(Calendar.DATE, -7);
         List<PlannedTweet> plannedTweets = plannedTweetRepository.getPlannedTweets(startDateTime.getTime(), endDateTime.getTime());
         Random random = new Random(System.currentTimeMillis());
         Twitter twitter = new TwitterTemplate(consumerKey, consumerSecret);
         for (PlannedTweet onePlannedTweet : plannedTweets) {
             updatePlannedTweetRetweetCount(twitter, onePlannedTweet);
             long waitTime = (15 + random.nextInt(3)) * 1000;
-            System.out.println("Sleeping for " + waitTime + "ms");
+            // System.out.println("Sleeping for " + waitTime + "ms");
             sleep(waitTime);
         }
 
@@ -411,10 +411,10 @@ public class TwitterServiceImpl implements TwitterService {
                 onePlannedTweet.setTotalRetweets(retweets.size());
                 onePlannedTweet.setMessage(retweets.get(0).getUnmodifiedText());
                 for (org.springframework.social.twitter.api.Tweet oneReTweet : retweets) {
-                    System.out.println("oneReTweet " + oneReTweet.getId() + ", " + oneReTweet);
+                    // System.out.println("oneReTweet " + oneReTweet.getId() + ", " + oneReTweet);
                     TwitterAccount oneTwitterAccount = getTwitterAccount(oneReTweet.getUser());
                     Tweet oneTweet = tweetRepository.getTweetByPlannedTweetIdAndTwitterAccountId(onePlannedTweet.getId(), oneTwitterAccount.getId());
-                    System.out.println("oneTweet = " + oneTweet);
+                    // System.out.println("oneTweet = " + oneTweet);
                     if(oneTweet == null){
                         System.out.println("Creating new Tweet");
                         oneTweet = new Tweet();
