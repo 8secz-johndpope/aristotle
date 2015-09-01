@@ -1,7 +1,5 @@
 package com.aristotle.web.controller;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -338,28 +336,40 @@ public class RegisterController {
 
     }
 
-    int fakeMembershipNumberCount = 1000;
-    private SecureRandom random = new SecureRandom();
     @RequestMapping(value = "/ivr/registeruser", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<String> saveIvrUser(HttpServletRequest httpServletRequest, @RequestBody IVrUserRegisterBean user) {
         JsonObject jsonObject = new JsonObject();
         HttpStatus httpStatus;
-        httpStatus = HttpStatus.OK;
-        jsonObject.addProperty("mobile", user.getMobileNumber());
-        if (StringUtils.isEmpty(user.getMembershipNumber())) {
-            fakeMembershipNumberCount++;
-            jsonObject.addProperty("membershipNumber", "SA" + fakeMembershipNumberCount);
-            jsonObject.addProperty("registrationStatus", "NEW");
-        } else {
-            jsonObject.addProperty("membershipNumber", "SA" + user.getMembershipNumber());
-            jsonObject.addProperty("registrationStatus", "EXISTING");
+        try {
+            String mobileNumber = getParam(httpServletRequest, "mobile", null);
+            String name = getParam(httpServletRequest, "name", null);
+            String gender = getParam(httpServletRequest, "gender", null);
+            String amount = getParam(httpServletRequest, "amount", null);
+            String paymentMode = getParam(httpServletRequest, "pm", null);
+            User savedUser = userService.registerIvrMember(mobileNumber, name, gender, amount, paymentMode);
+            jsonObject.addProperty("mobile", mobileNumber);
+            jsonObject.addProperty("name", name);
+            jsonObject.addProperty("gender", gender);
+            jsonObject.addProperty("amount", amount);
+            jsonObject.addProperty("pm", paymentMode);
+            jsonObject.addProperty("sa_id", savedUser.getId());
+            httpStatus = HttpStatus.OK;
+        } catch (Exception e) {
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            jsonObject.addProperty("error", e.getMessage());
+            e.printStackTrace();
         }
-
-        String password = new BigInteger(60, random).toString(32);
-        jsonObject.addProperty("password", password);
         ResponseEntity<String> returnDt = new ResponseEntity<String>(jsonObject.toString(), httpStatus);
         return returnDt;
+    }
+
+    private String getParam(HttpServletRequest httpServletRequest, String paramName, String defaultValue) {
+        String paramValue = httpServletRequest.getParameter(paramName);
+        if (paramValue == null) {
+            paramValue = defaultValue;
+        }
+        return paramValue;
     }
 
 }

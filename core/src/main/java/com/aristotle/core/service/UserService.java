@@ -51,4 +51,6 @@ public interface UserService {
     void confirmEmail(String email, String token) throws AppException;
 
     void updateUserProfilePic(Long userid, String photo) throws AppException;
+
+    User registerIvrMember(String mobileNumber, String name, String gender, String amount, String paymentMode) throws AppException;
 }

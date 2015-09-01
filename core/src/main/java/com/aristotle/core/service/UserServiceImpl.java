@@ -33,6 +33,7 @@ import com.aristotle.core.persistance.EmailConfirmationRequest;
 import com.aristotle.core.persistance.Interest;
 import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.LoginAccount;
+import com.aristotle.core.persistance.Membership;
 import com.aristotle.core.persistance.PasswordResetRequest;
 import com.aristotle.core.persistance.Phone;
 import com.aristotle.core.persistance.Phone.PhoneType;
@@ -44,6 +45,7 @@ import com.aristotle.core.persistance.repo.EmailRepository;
 import com.aristotle.core.persistance.repo.InterestRepository;
 import com.aristotle.core.persistance.repo.LocationRepository;
 import com.aristotle.core.persistance.repo.LoginAccountRepository;
+import com.aristotle.core.persistance.repo.MembershipRepository;
 import com.aristotle.core.persistance.repo.PasswordResetRequestRepository;
 import com.aristotle.core.persistance.repo.PhoneRepository;
 import com.aristotle.core.persistance.repo.UserLocationRepository;
@@ -78,6 +80,8 @@ public class UserServiceImpl implements UserService {
     private PasswordResetRequestRepository passwordResetRequestRepository;
     @Autowired
     private EmailConfirmationRequestRepository emailConfirmationRequestRepository;
+    @Autowired
+    private MembershipRepository membershipRepository;
 
     @Value("${registration_mail_id}")
     private String regsitrationEmailId;
@@ -860,6 +864,46 @@ public class UserServiceImpl implements UserService {
     public void updateUserProfilePic(Long userid, String photo) throws AppException {
         User user = userRepository.findOne(userid);
         user.setProfilePic(photo);
+    }
+
+    @Override
+    public User registerIvrMember(String mobileNumber, String name, String gender, String amount, String paymentMode) throws AppException {
+        String countryCode = "91";
+        Phone phone = phoneRepository.getPhoneByPhoneNumberAndCountryCode(mobileNumber, countryCode);
+        if (phone == null) {
+            phone = new Phone();
+            phone.setCountryCode(countryCode);
+            phone.setPhoneNumber(mobileNumber);
+            phone.setPhoneType(PhoneType.MOBILE);
+            phone = phoneRepository.save(phone);
+        }
+        User user = phone.getUser();
+        if (user == null) {
+            user = new User();
+            user.setName(name);
+            if ("M".equalsIgnoreCase(gender)) {
+                user.setGender("Male");
+            }
+            if ("F".equalsIgnoreCase(gender)) {
+                user.setGender("Female");
+            }
+            user.setCreationType(CreationType.IVR);
+            user.setMember(true);
+            user = userRepository.save(user);
+
+            phone.setUser(user);
+        }
+        // If user existed before just make him
+        Membership membership = new Membership();
+        Calendar calendar = Calendar.getInstance();
+        membership.setStartDate(new Date());
+        calendar.add(Calendar.YEAR, 1);
+        membership.setEndDate(calendar.getTime());
+        membership.setSource("IVR");
+        membership.setUser(user);
+        membership = membershipRepository.save(membership);
+        user.setMember(true);
+        return user;
     }
 
 }

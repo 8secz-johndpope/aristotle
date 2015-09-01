@@ -9,6 +9,7 @@ public class IVrUserRegisterBean {
 
     private String adminMobileNumber;
     private String adminCountryCode;
+    private String gender;
 
     private String name;
     private String state;
@@ -96,5 +97,12 @@ public class IVrUserRegisterBean {
         this.pc = pc;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
 
 }
