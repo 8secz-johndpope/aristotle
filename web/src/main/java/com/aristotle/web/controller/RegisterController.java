@@ -346,7 +346,10 @@ public class RegisterController {
             String gender = getParam(httpServletRequest, "gender", null);
             String amount = getParam(httpServletRequest, "amount", null);
             String paymentMode = getParam(httpServletRequest, "pm", null);
-            User savedUser = userService.registerIvrMember(mobileNumber, name, gender, amount, paymentMode);
+            String state = getParam(httpServletRequest, "state", null);
+            String district = getParam(httpServletRequest, "district", null);
+            String msg = getParam(httpServletRequest, "msg", null);
+            User savedUser = userService.registerIvrMember(mobileNumber, name, gender, amount, paymentMode, state, district, msg);
             jsonObject.addProperty("mobile", mobileNumber);
             jsonObject.addProperty("name", name);
             jsonObject.addProperty("gender", gender);

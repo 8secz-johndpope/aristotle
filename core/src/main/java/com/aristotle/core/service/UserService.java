@@ -52,5 +52,5 @@ public interface UserService {
 
     void updateUserProfilePic(Long userid, String photo) throws AppException;
 
-    User registerIvrMember(String mobileNumber, String name, String gender, String amount, String paymentMode) throws AppException;
+    User registerIvrMember(String mobileNumber, String name, String gender, String amount, String paymentMode, String state, String district, String msg) throws AppException;
 }

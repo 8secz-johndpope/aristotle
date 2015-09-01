@@ -22,7 +22,16 @@ import com.aristotle.core.enums.CreationType;
 @Table(name="users")
 public class User extends BaseEntity {
 	
-	@Column(name = "membership_no")
+    @Column(name = "ivr_state")
+    private String ivrState;
+
+    @Column(name = "ivr_district")
+    private String ivrDistrict;
+
+    @Column(name = "sms_msg")
+    private String smsMessage;
+
+    @Column(name = "membership_no")
 	private String membershipNumber;
 
 	@Column(name = "name", nullable = false, length=256)
@@ -753,6 +762,30 @@ public class User extends BaseEntity {
 
     public void setProfile(String profile) {
         this.profile = profile;
+    }
+
+    public String getIvrState() {
+        return ivrState;
+    }
+
+    public void setIvrState(String ivrState) {
+        this.ivrState = ivrState;
+    }
+
+    public String getIvrDistrict() {
+        return ivrDistrict;
+    }
+
+    public void setIvrDistrict(String ivrDistrict) {
+        this.ivrDistrict = ivrDistrict;
+    }
+
+    public String getSmsMessage() {
+        return smsMessage;
+    }
+
+    public void setSmsMessage(String smsMessage) {
+        this.smsMessage = smsMessage;
     }
 
     @Override

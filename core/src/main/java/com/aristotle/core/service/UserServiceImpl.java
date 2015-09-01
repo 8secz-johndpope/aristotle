@@ -867,7 +867,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User registerIvrMember(String mobileNumber, String name, String gender, String amount, String paymentMode) throws AppException {
+    public User registerIvrMember(String mobileNumber, String name, String gender, String amount, String paymentMode, String state, String district, String msg) throws AppException {
         String countryCode = "91";
         Phone phone = phoneRepository.getPhoneByPhoneNumberAndCountryCode(mobileNumber, countryCode);
         if (phone == null) {
@@ -892,6 +892,12 @@ public class UserServiceImpl implements UserService {
             user = userRepository.save(user);
 
             phone.setUser(user);
+        }
+        //
+        user.setIvrState(state);
+        user.setIvrDistrict(district);
+        if (StringUtils.isEmpty(user.getSmsMessage())) {
+            user.setSmsMessage(msg);
         }
         // If user existed before just make him
         Membership membership = new Membership();
