@@ -25,7 +25,6 @@ import com.aristotle.core.exception.FieldsAppException;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.UserLocation;
 import com.aristotle.core.service.UserService;
-import com.aristotle.core.service.dto.IVrUserRegisterBean;
 import com.aristotle.core.service.dto.ResetPasswordBean;
 import com.aristotle.core.service.dto.UserChangePasswordBean;
 import com.aristotle.core.service.dto.UserContactBean;
@@ -336,9 +335,9 @@ public class RegisterController {
 
     }
 
-    @RequestMapping(value = "/ivr/registeruser", method = RequestMethod.POST)
+    @RequestMapping(value = "/ivr/register", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<String> saveIvrUser(HttpServletRequest httpServletRequest, @RequestBody IVrUserRegisterBean user) {
+    public ResponseEntity<String> saveIvrUser(HttpServletRequest httpServletRequest) {
         JsonObject jsonObject = new JsonObject();
         HttpStatus httpStatus;
         try {
