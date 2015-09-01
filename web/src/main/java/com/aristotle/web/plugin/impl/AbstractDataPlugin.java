@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.aristotle.core.persistance.Blog;
+import com.aristotle.core.persistance.Donation;
 import com.aristotle.core.persistance.Event;
 import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.News;
@@ -38,6 +39,7 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
     private DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
     protected SimpleDateFormat ddMMMyyyyFormat = new SimpleDateFormat("dd-MMM-yyyy");
     protected SimpleDateFormat ddMMyyyyFormat = new SimpleDateFormat("dd-MM-yyyy");
+    protected SimpleDateFormat ddMMyyyyHHMMFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
     private Gson gson = new Gson();
 
     Map<String, String> settingMap = new LinkedHashMap<String, String>();
@@ -143,6 +145,15 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
         jsonObject.addProperty(fieldName, fmt.print(fieldValue.getTime()));
     }
 
+    protected JsonObject convertDonation(Donation donation) {
+        JsonObject donationJsonObject = new JsonObject();
+        donationJsonObject.addProperty("id", donation.getId());
+        donationJsonObject.addProperty("name", donation.getDonorName());
+        donationJsonObject.addProperty("amount", donation.getAmount());
+        donationJsonObject.addProperty("donationDate", ddMMyyyyHHMMFormat.format(donation.getDonationDate()));
+
+        return donationJsonObject;
+    }
     protected JsonObject convertNews(News news) {
         JsonObject newsJsonObject = new JsonObject();
         newsJsonObject.addProperty("id", news.getId());
@@ -173,6 +184,18 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
         }
         for (News oneNews : newsList) {
             JsonObject newsJsonObject = convertNews(oneNews);
+            jsonArray.add(newsJsonObject);
+        }
+        return jsonArray;
+    }
+
+    protected JsonArray convertDonationList(Collection<Donation> donationList) {
+        JsonArray jsonArray = new JsonArray();
+        if (donationList == null) {
+            return jsonArray;
+        }
+        for (Donation oneDonation : donationList) {
+            JsonObject newsJsonObject = convertDonation(oneDonation);
             jsonArray.add(newsJsonObject);
         }
         return jsonArray;
