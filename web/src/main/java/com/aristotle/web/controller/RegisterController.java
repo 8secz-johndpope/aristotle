@@ -22,8 +22,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.exception.FieldsAppException;
+import com.aristotle.core.persistance.Donation;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.UserLocation;
+import com.aristotle.core.service.DonationService;
 import com.aristotle.core.service.UserService;
 import com.aristotle.core.service.dto.ResetPasswordBean;
 import com.aristotle.core.service.dto.UserChangePasswordBean;
@@ -41,6 +43,8 @@ public class RegisterController {
     private UserService userService;
     @Autowired
     private HttpSessionUtil httpSessionUtil;
+    @Autowired
+    private DonationService donationService;
 
     @RequestMapping(value = "/registerquick", method = RequestMethod.POST)
     @ResponseBody
@@ -356,6 +360,39 @@ public class RegisterController {
             jsonObject.addProperty("amount", amount);
             jsonObject.addProperty("pm", paymentMode);
             jsonObject.addProperty("sa_id", savedUser.getId());
+            httpStatus = HttpStatus.OK;
+        } catch (Exception e) {
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            jsonObject.addProperty("error", e.getMessage());
+            e.printStackTrace();
+        }
+        ResponseEntity<String> returnDt = new ResponseEntity<String>(jsonObject.toString(), httpStatus);
+        return returnDt;
+    }
+
+    @RequestMapping(value = "/ivr/donation", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<String> saveIvrDonation(HttpServletRequest httpServletRequest) {
+        JsonObject jsonObject = new JsonObject();
+        HttpStatus httpStatus;
+        try {
+            String mobile = getParam(httpServletRequest, "mobile", null);
+            String name = getParam(httpServletRequest, "name", null);
+            String amount = getParam(httpServletRequest, "amount", null);
+            String paymentMode = getParam(httpServletRequest, "pm", null);
+            String msg = getParam(httpServletRequest, "msg", null);
+            String upid = getParam(httpServletRequest, "upid", null);
+            String adminUpid = getParam(httpServletRequest, "aupid", null);
+            String adminMobile = getParam(httpServletRequest, "amobile", null);
+            Donation donation = donationService.saveIvrDonation(mobile, name, amount, paymentMode, upid, adminUpid, adminMobile, msg);
+            jsonObject.addProperty("mobile", mobile);
+            jsonObject.addProperty("name", name);
+            jsonObject.addProperty("amount", amount);
+            jsonObject.addProperty("pm", paymentMode);
+            jsonObject.addProperty("upid", upid);
+            jsonObject.addProperty("aupid", adminUpid);
+            jsonObject.addProperty("amobile", adminMobile);
+            jsonObject.addProperty("sa_donation_id", donation.getId());
             httpStatus = HttpStatus.OK;
         } catch (Exception e) {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
