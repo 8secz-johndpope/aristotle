@@ -129,7 +129,7 @@ public class TeamAdminBean extends BaseMultiPermissionAdminJsfBean {
     public void saveTeamMember() {
         try {
             if (StringUtils.isEmpty(email)) {
-                sendErrorMessageToJsfScreen("Please enter Registered User Email");
+                sendErrorMessageToJsfScreen("Please enter Registered User Email or Mobile Number(10 digits)");
             }
             if (StringUtils.isEmpty(post)) {
                 sendErrorMessageToJsfScreen("Please Choose a Post");

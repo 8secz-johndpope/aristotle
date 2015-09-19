@@ -9,6 +9,8 @@ import com.aristotle.core.persistance.Phone;
 public interface PhoneRepository extends JpaRepository<Phone, Long> {
 
     public Phone getPhoneByPhoneNumberAndCountryCode(String phone, String countryCode);
+
+    public Phone getPhoneByPhoneNumber(String phone);
 	
     public List<Phone> getPhonesByUserId(Long userId);
 

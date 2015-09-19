@@ -12,11 +12,13 @@ import org.springframework.stereotype.Service;
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Email;
 import com.aristotle.core.persistance.Location;
+import com.aristotle.core.persistance.Phone;
 import com.aristotle.core.persistance.Team;
 import com.aristotle.core.persistance.TeamMember;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.repo.EmailRepository;
 import com.aristotle.core.persistance.repo.LocationRepository;
+import com.aristotle.core.persistance.repo.PhoneRepository;
 import com.aristotle.core.persistance.repo.TeamMemberRepository;
 import com.aristotle.core.persistance.repo.TeamRepository;
 import com.aristotle.core.persistance.repo.UserRepository;
@@ -35,6 +37,8 @@ public class TeamServiceImpl implements TeamService {
     private UserRepository userRepository;
     @Autowired
     private EmailRepository emailRepository;
+    @Autowired
+    private PhoneRepository phoneRepository;
 
     @Override
     public Team saveTeam(Team team, Long locationId) throws AppException {
@@ -44,12 +48,23 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public TeamMember saveTeamMember(String emailId, String post, Long teamId) throws AppException {
-        Email email = emailRepository.getEmailByEmailUp(emailId.toUpperCase());
+    public TeamMember saveTeamMember(String emailIdOrPhoneNumber, String post, Long teamId) throws AppException {
+        Email email = emailRepository.getEmailByEmailUp(emailIdOrPhoneNumber.toUpperCase());
+        User user = null;
         if(email == null){
-            throw new AppException("No Registered user found with email ["+emailId+"]");
+            Phone phone = phoneRepository.getPhoneByPhoneNumber(emailIdOrPhoneNumber);
+            if (phone != null) {
+                user = phone.getUser();
+            }
+        } else {
+            user = email.getUser();
         }
-        User user = email.getUser();
+
+        if (user == null) {
+            throw new AppException("No Registered user found with email/mobile [" + emailIdOrPhoneNumber + "]");
+        }
+
+
         Team team = teamRepository.findOne(teamId);
         TeamMember teamMember = new TeamMember();
         teamMember.setPost(post);
