@@ -150,7 +150,16 @@ public class TeamAdminBean extends BaseMultiPermissionAdminJsfBean {
     public void createTeam() {
         selectedTeam = new Team();
 		showList = false;
+        email = null;
+        teamMembers = null;
 	}
+
+    public boolean isShowMemberPanel() {
+        if (selectedTeam == null || selectedTeam.getId() == null || selectedTeam.getId() <= 0) {
+            return false;
+        }
+        return true;
+    }
 	public void cancel(){
         selectedTeam = new Team();
         showList = true;

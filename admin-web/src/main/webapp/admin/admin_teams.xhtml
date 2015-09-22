@@ -96,7 +96,8 @@
 						</p:outputPanel>
 
 
-						<p:outputPanel id="newMemberPanel">
+						<p:outputPanel id="newMemberPanel" rendered="#{teamAdminBean.showMemberPanel}">
+						<p:outputPanel id="newMemberPanelInner">
 							<p:outputLabel value="Email/Mobile Number"></p:outputLabel>
 							<p:inputText value="#{teamAdminBean.email}"></p:inputText>
 							<p:outputLabel value="Post"></p:outputLabel>
@@ -147,6 +148,7 @@
 								</p:blockUI>
 							</p:column>
 						</p:dataTable>
+						</p:outputPanel>
 					</p:outputPanel>
 				</p:outputPanel>
 				<br></br>
