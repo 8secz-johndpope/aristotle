@@ -274,6 +274,9 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
         if (selectedTemplateUrl == null) {
             return false;
         }
+        if (selectedTemplateUrl.getHtmlContent() == null && selectedTemplateUrl.getHtmlContentDraft() == null) {
+            return false;
+        }
         return ((selectedTemplateUrl.getHtmlContent() == null && selectedTemplateUrl.getHtmlContentDraft() != null) || !selectedTemplateUrl.getHtmlContent().equals(
                 selectedTemplateUrl.getHtmlContentDraft()));
     }
