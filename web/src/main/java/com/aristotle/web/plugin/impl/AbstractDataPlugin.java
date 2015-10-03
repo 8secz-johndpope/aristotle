@@ -375,6 +375,11 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
     protected JsonObject convertTeam(Team oneTeam) {
         JsonObject oneJsonTeam = new JsonObject();
         oneJsonTeam.addProperty("description", oneTeam.getDescription());
+        if (oneTeam.getDescription() != null) {
+            String contentWithOutHtml = oneTeam.getDescription().replaceAll("\\<[^>]*>", "");
+            oneJsonTeam.addProperty("descriptionWithOutHtml", contentWithOutHtml);
+        }
+
         oneJsonTeam.addProperty("name", oneTeam.getName());
         oneJsonTeam.addProperty("url", oneTeam.getUrl());
         return oneJsonTeam;
