@@ -118,9 +118,9 @@
                                         actionListener="#{templateAdminBean.saveTemplate}" styleClass="ui-priority-primary"
                                         oncomplete="window.open('#{templateAdminBean.draftUrl}');" rendered="#{!empty templateAdminBean.draftUrl}">
                                     </p:commandButton>
-                                    <p:commandButton id="saveTemplate" value="Save Template" update=":adminTemplateForm:mainPanel"
-                                        actionListener="#{templateAdminBean.saveTemplate}" styleClass="ui-priority-primary"
-                                        rendered="#{empty templateAdminBean.draftUrl}">
+                                    <p:commandButton id="saveTemplate" value="Make it Live" update=":adminTemplateForm:mainPanel"
+                                        actionListener="#{templateAdminBean.makeItLive}" styleClass="ui-priority-primary"
+                                        rendered="#{templateAdminBean.copyToProdAvailable}">
                                     </p:commandButton>
                                 </p:outputPanel>
 

@@ -182,6 +182,28 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
         }
     }
 
+    public void makeItLive() {
+        if (StringUtils.isEmpty(selectedTemplate.getName())) {
+            sendErrorMessageToJsfScreen("Please enter Name for this template");
+        }
+        if (isValidInput()) {
+            try {
+                selectedTemplate = dataPluginService.saveDomainTemplate(selectedTemplate);
+                if (selectedTemplateUrl != null) {
+                    selectedTemplateUrl.setDomainTemplate(selectedTemplate);
+                    selectedTemplateUrl.setDomainTemplateId(selectedTemplate.getId());
+                    selectedTemplateUrl.setHtmlContent(selectedTemplateUrl.getHtmlContentDraft());
+                    selectedTemplateUrl = dataPluginService.saveDomainPageTemplate(selectedTemplateUrl);
+                }
+                // templateCache.refreshCache();
+                refreshTemplateList();
+                // cancel();
+            } catch (Exception e) {
+                sendErrorMessageToJsfScreen(e);
+            }
+        }
+    }
+
 
     public String getSelectedUrl() {
         return selectedUrl;
@@ -247,5 +269,14 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
     public void setStaticDataEnv(String staticDataEnv) {
         this.staticDataEnv = staticDataEnv;
     }
+
+    public boolean isCopyToProdAvailable() {
+        if (selectedTemplateUrl == null) {
+            return false;
+        }
+        return ((selectedTemplateUrl.getHtmlContent() == null && selectedTemplateUrl.getHtmlContentDraft() != null) || !selectedTemplateUrl.getHtmlContent().equals(
+                selectedTemplateUrl.getHtmlContentDraft()));
+    }
+
 
 }
