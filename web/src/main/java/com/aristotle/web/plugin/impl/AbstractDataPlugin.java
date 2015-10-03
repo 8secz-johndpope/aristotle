@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.StringUtils;
 
 import com.aristotle.core.persistance.Blog;
 import com.aristotle.core.persistance.Donation;
@@ -356,7 +357,17 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
         JsonObject userJsonObject = new JsonObject();
         userJsonObject.addProperty("id", user.getId());
         userJsonObject.addProperty("name", user.getName());
-        userJsonObject.addProperty("profilePic", user.getProfilePic());
+        if (StringUtils.isEmpty(user.getProfile())) {
+            userJsonObject.addProperty("profilePic", "http://www.wpclipart.com/people/faces/anonymous/photo_not_available_large.jpg");
+        } else {
+            if (user.getProfilePic().contains("facebook.com")) {
+                userJsonObject.addProperty("profilePic", user.getProfilePic());
+            } else {
+                userJsonObject.addProperty("profilePic", "http://static.swarajabhiyan.org/" + user.getProfilePic());
+            }
+
+        }
+
         return userJsonObject;
     }
 
