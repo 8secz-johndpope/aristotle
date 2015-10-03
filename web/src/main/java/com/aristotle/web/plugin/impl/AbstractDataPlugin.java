@@ -23,6 +23,7 @@ import com.aristotle.core.persistance.Donation;
 import com.aristotle.core.persistance.Event;
 import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.News;
+import com.aristotle.core.persistance.Team;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.Video;
 import com.aristotle.web.parameters.HttpParameters;
@@ -357,6 +358,26 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
         userJsonObject.addProperty("name", user.getName());
         userJsonObject.addProperty("profilePic", user.getProfilePic());
         return userJsonObject;
+    }
+
+    protected JsonArray convertTeams(Collection<Team> teams) {
+        JsonArray teamArray = new JsonArray();
+        if (teams == null) {
+            return teamArray;
+        }
+        for (Team oneTeam : teams) {
+
+            teamArray.add(convertTeam(oneTeam));
+        }
+        return teamArray;
+    }
+
+    protected JsonObject convertTeam(Team oneTeam) {
+        JsonObject oneJsonTeam = new JsonObject();
+        oneJsonTeam.addProperty("description", oneTeam.getDescription());
+        oneJsonTeam.addProperty("name", oneTeam.getName());
+        oneJsonTeam.addProperty("url", oneTeam.getUrl());
+        return oneJsonTeam;
     }
 
 }

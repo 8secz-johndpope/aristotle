@@ -1,7 +1,6 @@
 package com.aristotle.web.plugin.impl;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +17,6 @@ import com.aristotle.core.persistance.TwitterAccount;
 import com.aristotle.core.persistance.TwitterTeam;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.service.TwitterService;
-import com.aristotle.web.parameters.HttpParameters;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -47,7 +45,7 @@ public class TwitterTeamPlugin extends AbstractDataPlugin {
             JsonObject context = (JsonObject) mv.getModel().get("context");
             User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
             System.out.println("user = " + user);
-            String teamUrl = getTwitterTeamUrl(httpServletRequest);
+            String teamUrl = getStringParameterFromPathOrParams(httpServletRequest, TEAM_URL_PARAMETER);
             System.out.println("teamUrl = " + teamUrl);
             if (teamUrl == null) {
                 context.addProperty(name, "{\"error\":\"No TeamUrl Specified\"}");
@@ -131,16 +129,4 @@ public class TwitterTeamPlugin extends AbstractDataPlugin {
         }
         jsonObject.add("teamMembers", jsonArray);
     }
-
-
-    private String getTwitterTeamUrl(HttpServletRequest httpServletRequest) {
-        Map<String, String> pathParams = (Map<String, String>) httpServletRequest.getAttribute(HttpParameters.PATH_PARAMETER_PARAM);
-        String teamUrl = pathParams.get(TEAM_URL_PARAMETER);
-        if (teamUrl == null) {
-            teamUrl = httpServletRequest.getParameter(TEAM_URL_PARAMETER);
-        }
-        return teamUrl;
-    }
-
-
 }
