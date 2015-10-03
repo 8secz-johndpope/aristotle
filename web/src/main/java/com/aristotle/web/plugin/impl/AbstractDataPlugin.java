@@ -357,7 +357,7 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
         JsonObject userJsonObject = new JsonObject();
         userJsonObject.addProperty("id", user.getId());
         userJsonObject.addProperty("name", user.getName());
-        if (StringUtils.isEmpty(user.getProfile())) {
+        if (StringUtils.isEmpty(user.getProfilePic())) {
             userJsonObject.addProperty("profilePic", "http://www.wpclipart.com/people/faces/anonymous/photo_not_available_large.jpg");
         } else {
             if (user.getProfilePic().contains("facebook.com")) {
