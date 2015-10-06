@@ -99,7 +99,7 @@ public class AdminSearchMemberBean extends BaseMultiPermissionAdminJsfBean {
 
 	
 	public AdminSearchMemberBean(){
-        super("/admin/search", AppPermission.ADD_MEMBER, AppPermission.VIEW_MEMBER, AppPermission.UPDATE_GLOBAL_MEMBER, AppPermission.UPDATE_MEMBER);
+        super("/admin/search", AppPermission.ADD_MEMBER, AppPermission.VIEW_MEMBER, AppPermission.UPDATE_GLOBAL_MEMBER, AppPermission.UPDATE_MEMBER, AppPermission.SEARCH_MEMBER);
 	}
 
 	@URLAction(onPostback = false)
