@@ -36,6 +36,9 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Query("select distinct user from User user, Volunteer vl join vl.interests interests where  interests.id in ?1 and vl.userId=user.id and user.nri=true")
     List<User> searchNriUserForVolunteerIntrest(List<Long> interestIds);
 
+    @Query("select user from User user where user.nri=true")
+    List<User> searchNriOnly();
+
     @Query("select distinct user from User user, Volunteer vl join vl.interests interests where  interests.id in ?1 and vl.userId=user.id")
     List<User> searchGlobalUserForVolunteerIntrest(List<Long> interestIds);
 
