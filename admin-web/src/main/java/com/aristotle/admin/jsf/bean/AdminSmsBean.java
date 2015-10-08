@@ -165,11 +165,11 @@ public class AdminSmsBean extends BaseMultiPermissionAdminJsfBean {
         if (StringUtils.isEmpty(selectedGroupName) || mobileGroupNameToMobileGroups.get(selectedGroupName) == null) {
             sendErrorMessageToJsfScreen("Please Select a Group");
         }
-        MobileGroup selectedMobileGroup = mobileGroupNameToMobileGroups.get(selectedGroupName);
-        GroupPlannedSms groupPlannedSms = (GroupPlannedSms) selectedPlannedSms;
-        groupPlannedSms.setMobileGroup(selectedMobileGroup);
 
         if (isValidInput()) {
+            MobileGroup selectedMobileGroup = mobileGroupNameToMobileGroups.get(selectedGroupName);
+            GroupPlannedSms groupPlannedSms = (GroupPlannedSms) selectedPlannedSms;
+            groupPlannedSms.setMobileGroup(selectedMobileGroup);
             selectedPlannedSms = smsService.saveGroupPlannedSms(groupPlannedSms);
             sendInfoMessageToJsfScreen("Group Sms saved succesfully");
             refreshSmsList();
