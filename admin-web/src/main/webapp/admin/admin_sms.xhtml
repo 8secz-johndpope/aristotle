@@ -109,7 +109,7 @@
                                     <f:selectItem itemLabel="Select SMS Target Audience" itemValue="" />
                                     <f:selectItem itemLabel="Team/commitee" itemValue="TeamSms" />
                                     <f:selectItem itemLabel="Location" itemValue="LocationSms" />
-                                    <f:selectItem itemLabel="Custome Group" itemValue="GroupSms" />
+                                    <f:selectItem itemLabel="Custom Group" itemValue="GroupSms" />
                                     <p:ajax event="change" update=":adminSmsForm:formView" listener="#{adminSmsBean.handleSmsTargetSelection}" />
                                 </p:selectOneMenu>
                                 <p:outputLabel value="Select Group" rendered="#{adminSmsBean.showGroupSelectionPanel}"></p:outputLabel>
@@ -120,7 +120,10 @@
                                 <p:outputLabel value="Select Location" rendered="#{adminSmsBean.showLocationSelectionPanel}"></p:outputLabel>
                                 <p:outputLabel value="Work in progress for Location" rendered="#{adminSmsBean.showLocationSelectionPanel}"></p:outputLabel>
                                 <p:outputLabel value="Select Team" rendered="#{adminSmsBean.showTeamSelectionPanel}"></p:outputLabel>
-                                <p:outputLabel value="Work in progress for Team" rendered="#{adminSmsBean.showTeamSelectionPanel}"></p:outputLabel>
+                                <p:selectOneMenu value="#{adminSmsBean.selectedTeamName}" rendered="#{adminSmsBean.showTeamSelectionPanel}">
+                                    <f:selectItem itemLabel="Select Team" itemValue="" />
+                                    <f:selectItems value="#{adminSmsBean.teams}" />
+                                </p:selectOneMenu>
 							</p:panelGrid>
 						</p:panelGrid>
 						<p:commandButton value="Cancel" update=":adminSmsForm:mainPanel" actionListener="#{adminSmsBean.cancel}" styleClass="ui-priority-primary">

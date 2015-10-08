@@ -19,8 +19,10 @@ import com.aristotle.core.persistance.GroupPlannedSms;
 import com.aristotle.core.persistance.LocationPlannedSms;
 import com.aristotle.core.persistance.MobileGroup;
 import com.aristotle.core.persistance.PlannedSms;
+import com.aristotle.core.persistance.Team;
 import com.aristotle.core.persistance.TeamPlannedSms;
 import com.aristotle.core.service.SmsService;
+import com.aristotle.core.service.TeamService;
 import com.google.gdata.util.common.base.StringUtil;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
@@ -43,8 +45,12 @@ public class AdminSmsBean extends BaseMultiPermissionAdminJsfBean {
     private List<PlannedSms> plannedSmss;
     private Map<String, MobileGroup> mobileGroupNameToMobileGroups;
     private Map<String, String> mobileGroups;
-    private String selectedTargetType;
     private String selectedGroupName;
+    private String selectedTargetType;
+
+    private Map<String, Team> teamNameToTeam;
+    private Map<String, String> teams;
+    private String selectedTeamName;
 
     private boolean showGroupSelectionPanel;
     private boolean showTeamSelectionPanel;
@@ -52,6 +58,8 @@ public class AdminSmsBean extends BaseMultiPermissionAdminJsfBean {
 
     @Autowired
     private SmsService smsService;
+    @Autowired
+    private TeamService teamService;
 
 	public AdminSmsBean() {
         super("/admin/sms", AppPermission.ADMIN_SMS);
@@ -65,6 +73,7 @@ public class AdminSmsBean extends BaseMultiPermissionAdminJsfBean {
 		}
 		refreshSmsList();
         refreshGroupList();
+        refreshTeamList();
 	}
 	private void refreshSmsList(){
         // plannedSmss = smsService.getPlannedSmssForLocation(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId(), pageNumber, pageSize);
@@ -84,6 +93,21 @@ public class AdminSmsBean extends BaseMultiPermissionAdminJsfBean {
             for (MobileGroup oneMobileGroup : dbMobileGroups) {
                 mobileGroups.put(oneMobileGroup.getName(), oneMobileGroup.getName());
                 mobileGroupNameToMobileGroups.put(oneMobileGroup.getName(), oneMobileGroup);
+            }
+        } catch (AppException e) {
+            sendErrorMessageToJsfScreen(e);
+        }
+    }
+
+    private void refreshTeamList() {
+        // plannedSmss = smsService.getPlannedSmssForLocation(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId(), pageNumber, pageSize);
+        try {
+            List<Team> dbTeams = teamService.getAllGlobalTeams();
+            teams = new LinkedHashMap<String, String>();
+            teamNameToTeam = new HashMap<String, Team>();
+            for (Team oneTeam : dbTeams) {
+                teams.put(oneTeam.getName(), oneTeam.getName());
+                teamNameToTeam.put(oneTeam.getName(), oneTeam);
             }
         } catch (AppException e) {
             sendErrorMessageToJsfScreen(e);
@@ -118,7 +142,7 @@ public class AdminSmsBean extends BaseMultiPermissionAdminJsfBean {
 
             switch (selectedTargetType) {
             case "TeamSms":
-                sendErrorMessageToJsfScreen("Not Implemented yet");
+                saveTeamSms();
                 break;
             case "GroupSms":
                 saveGroupSms();
@@ -142,12 +166,29 @@ public class AdminSmsBean extends BaseMultiPermissionAdminJsfBean {
             sendErrorMessageToJsfScreen("Please Select a Group");
         }
         MobileGroup selectedMobileGroup = mobileGroupNameToMobileGroups.get(selectedGroupName);
-        GroupPlannedSms groupPlannedSms = (GroupPlannedSms) plannedSmss;
+        GroupPlannedSms groupPlannedSms = (GroupPlannedSms) selectedPlannedSms;
         groupPlannedSms.setMobileGroup(selectedMobileGroup);
 
         if (isValidInput()) {
             selectedPlannedSms = smsService.saveGroupPlannedSms(groupPlannedSms);
-            sendInfoMessageToJsfScreen("Sms saved succesfully");
+            sendInfoMessageToJsfScreen("Group Sms saved succesfully");
+            refreshSmsList();
+            showList = true;
+        }
+    }
+
+    private void saveTeamSms() throws AppException {
+        if (StringUtils.isEmpty(selectedTeamName) || teamNameToTeam.get(selectedTeamName) == null) {
+            sendErrorMessageToJsfScreen("Please Select a Team");
+        }
+
+        if (isValidInput()) {
+            Team selectedTeam = teamNameToTeam.get(selectedTeamName);
+            TeamPlannedSms teamPlannedSms = (TeamPlannedSms) selectedPlannedSms;
+            teamPlannedSms.setTeam(selectedTeam);
+
+            selectedPlannedSms = smsService.saveTeamPlannedSms(teamPlannedSms);
+            sendInfoMessageToJsfScreen("Team Sms saved succesfully");
             refreshSmsList();
             showList = true;
         }
@@ -284,6 +325,30 @@ public class AdminSmsBean extends BaseMultiPermissionAdminJsfBean {
 
     public void setSelectedGroupName(String selectedGroupName) {
         this.selectedGroupName = selectedGroupName;
+    }
+
+    public Map<String, Team> getTeamNameToTeam() {
+        return teamNameToTeam;
+    }
+
+    public void setTeamNameToTeam(Map<String, Team> teamNameToTeam) {
+        this.teamNameToTeam = teamNameToTeam;
+    }
+
+    public Map<String, String> getTeams() {
+        return teams;
+    }
+
+    public void setTeams(Map<String, String> teams) {
+        this.teams = teams;
+    }
+
+    public String getSelectedTeamName() {
+        return selectedTeamName;
+    }
+
+    public void setSelectedTeamName(String selectedTeamName) {
+        this.selectedTeamName = selectedTeamName;
     }
 
 }
