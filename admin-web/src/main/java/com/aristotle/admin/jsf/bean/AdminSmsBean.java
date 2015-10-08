@@ -28,7 +28,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
 @Component
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "view")
-@URLMapping(id = "adminSmsBean", beanName = "adminSmsBean", pattern = "/admin/sms", viewId = "/WEB-INF/jsf/admin_sms.xhtml")
+@URLMapping(id = "adminSmsBean", beanName = "adminSmsBean", pattern = "/admin/sms", viewId = "/admin/admin_sms.xhtml")
 @URLBeanName("adminSmsBean")
 public class AdminSmsBean extends BaseMultiPermissionAdminJsfBean {
 
