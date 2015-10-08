@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.aristotle.core.enums.AppPermission;
+import com.aristotle.core.enums.PlannedPostStatus;
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.GroupPlannedSms;
 import com.aristotle.core.persistance.LocationPlannedSms;
@@ -196,6 +197,7 @@ public class AdminSmsBean extends BaseMultiPermissionAdminJsfBean {
 
 	public void newPost() {
         selectedPlannedSms = new PlannedSms();
+        selectedPlannedSms.setStatus(PlannedPostStatus.PENDING);
 		showList = false;
 	}
 
