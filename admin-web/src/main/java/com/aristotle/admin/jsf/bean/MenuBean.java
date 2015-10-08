@@ -207,6 +207,14 @@ public class MenuBean extends BaseJsfBean {
         }
     }
 
+    public void goToMobileGroupPage() {
+        if (isSmsAllowed()) {
+            buildAndRedirect("/admin/sms");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
+
     public void goToGlobalDonationcampaignAdminPage() {
         if (isGlobalDonationCampaignAllowed()) {
             buildAndRedirect("/admin/globalcampaign");

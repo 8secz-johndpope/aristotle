@@ -64,6 +64,7 @@ body {
 				<p:menuitem value="Twitter" actionListener="#{menuBean.goToVoiceOfAapAdminPageTwitter}" rendered="#{menuBean.voiceOfAapTwitterAllowed}"></p:menuitem>
 				<p:menuitem value="Email" actionListener="#{menuBean.goToEmailAdminPageTwitter}" rendered="#{menuBean.emailAllowed}"></p:menuitem>
 				<p:menuitem value="Sms" actionListener="#{menuBean.goToSmsAdminPageTwitter}" rendered="#{menuBean.smsAllowed}"></p:menuitem>
+				<p:menuitem value="Mobile Groups" actionListener="#{menuBean.goToMobileGroupPage}" rendered="#{menuBean.smsAllowed}"></p:menuitem>
 				<p:menuitem value="Global Donation Campaign" actionListener="#{menuBean.goToGlobalDonationcampaignAdminPage}" rendered="#{menuBean.globalDonationCampaignAllowed}"></p:menuitem>
 				<p:menuitem value="Candidates" actionListener="#{menuBean.goToCandidateAdminPage}" rendered="#{menuBean.candidateAllowed}"></p:menuitem>
 				<p:menuitem value="Call Campaigns" actionListener="#{menuBean.goToCallCampaignPage}" rendered="#{menuBean.callCampaignAllowed}"></p:menuitem>

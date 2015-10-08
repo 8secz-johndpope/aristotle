@@ -3,6 +3,7 @@ package com.aristotle.core.persistance;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -17,7 +18,7 @@ public class MobileGroupMobile extends BaseEntity {
     @Column(name = "mobile_group_id", insertable = false, updatable = false)
     private Long mobileGroupId;
 
-    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
     @JoinColumn(name = "phone_id")
     private Phone phone;
     @Column(name = "phone_id", insertable = false, updatable = false)

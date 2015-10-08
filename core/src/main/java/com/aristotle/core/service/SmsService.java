@@ -6,6 +6,7 @@ import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.GroupPlannedSms;
 import com.aristotle.core.persistance.LocationPlannedSms;
 import com.aristotle.core.persistance.MobileGroup;
+import com.aristotle.core.persistance.MobileGroupMobile;
 import com.aristotle.core.persistance.PlannedSms;
 import com.aristotle.core.persistance.TeamPlannedSms;
 
@@ -20,4 +21,12 @@ public interface SmsService {
     List<PlannedSms> getAllPlannedSms() throws AppException;
 
     List<MobileGroup> getAllMobileGroups() throws AppException;
+
+    MobileGroup saveMobileGroup(MobileGroup mobileGroup) throws Exception;
+
+    void addMemberToMobileGroup(MobileGroup mobileGroup, String emailPhone) throws Exception;
+
+    void removeMemberFromMobileGroup(MobileGroupMobile mobileGroupMobile) throws Exception;
+
+    List<MobileGroupMobile> getMembersOfMobileGroup(Long mobileGroupId) throws Exception;
 }
