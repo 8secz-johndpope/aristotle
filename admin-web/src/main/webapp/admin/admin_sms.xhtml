@@ -102,8 +102,6 @@
 									<br></br>
 									<h:outputText id="counter" />
 								</p:outputPanel>
-								<p:outputLabel value="Post Time"></p:outputLabel>
-								<p:calendar value="#{adminSmsBean.selectedPlannedSms.postingTime}" pattern="MM/dd/yyyy HH:mm" />
 								<p:outputLabel value="Send To"></p:outputLabel>
                                 <p:selectOneMenu value="#{adminSmsBean.selectedTargetType}">
                                     <f:selectItem itemLabel="Select SMS Target Audience" itemValue="" />
@@ -124,6 +122,8 @@
                                     <f:selectItem itemLabel="Select Team" itemValue="" />
                                     <f:selectItems value="#{adminSmsBean.teams}" />
                                 </p:selectOneMenu>
+                                <p:outputLabel value="Post Time"></p:outputLabel>
+                                <p:calendar value="#{adminSmsBean.selectedPlannedSms.postingTime}" pattern="dd/MMM/yyyy HH:mm" />
 							</p:panelGrid>
 						</p:panelGrid>
 						<p:commandButton value="Cancel" update=":adminSmsForm:mainPanel" actionListener="#{adminSmsBean.cancel}" styleClass="ui-priority-primary">
