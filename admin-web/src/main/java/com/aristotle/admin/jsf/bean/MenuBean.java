@@ -209,7 +209,7 @@ public class MenuBean extends BaseJsfBean {
 
     public void goToMobileGroupPage() {
         if (isSmsAllowed()) {
-            buildAndRedirect("/admin/sms");
+            buildAndRedirect("/admin/mobilegroup");
         } else {
             buildAndRedirect("/admin/notallowed");
         }
