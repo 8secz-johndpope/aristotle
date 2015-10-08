@@ -19,8 +19,8 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
 @Component
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "view")
-@URLMapping(id = "adminMobileGroup", beanName = "adminMobileGroup", pattern = "/admin/mobilegroup", viewId = "/admin/admin_mobile_group.xhtml")
-@URLBeanName("adminMobileGroup")
+@URLMapping(id = "adminMobileGroupBean", beanName = "adminMobileGroupBean", pattern = "/admin/mobilegroup", viewId = "/admin/admin_mobile_group.xhtml")
+@URLBeanName("adminMobileGroupBean")
 public class AdminMobileGroupBean extends BaseMultiPermissionAdminJsfBean {
 
 	private static final long serialVersionUID = 1L;

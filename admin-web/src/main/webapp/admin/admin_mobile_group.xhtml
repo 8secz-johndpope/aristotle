@@ -37,18 +37,18 @@
 	<!-- menu ends -->
 	<div style="width: 1200px; margin: 0 auto;">
 		<div style="width: 1200px; margin: 0;">
-			<p:blockUI block="adminMobileGroupForm" trigger=":adminMobileGroupForm:saveMobileGroup,:adminMobileGroupForm:addMobileGroup">
+			<p:blockUI block="adminMobileGroupBeanForm" trigger=":adminMobileGroupBeanForm:saveMobileGroup,:adminMobileGroupBeanForm:addMobileGroup">
 			Loading...<br />
 				<p:graphicImage width="80" value="http://static.eswaraj.com/admin/images/ajax-loader.gif" />
 			</p:blockUI>
-			<h:form id="adminMobileGroupForm">
+			<h:form id="adminMobileGroupBeanForm">
 				<p:messages id="messages" autoUpdate="true" closable="true" />
 				<p:outputPanel id="mainPanel">
-					<p:outputPanel id="listView" rendered="#{adminMobileGroup.showList}">
+					<p:outputPanel id="listView" rendered="#{adminMobileGroupBean.showList}">
 
-						<p:commandButton value="Create Team" actionListener="#{adminMobileGroup.createMobileGroup}" update=":adminMobileGroupForm:mainPanel">
+						<p:commandButton value="Create Team" actionListener="#{adminMobileGroupBean.createMobileGroup}" update=":adminMobileGroupBeanForm:mainPanel">
 						</p:commandButton>
-						<p:dataTable id="listOfTeam" var="oneTeam" value="#{adminMobileGroup.mobileGroups}" paginator="true" rows="25" paginatorPosition="bottom" paginatorAlwaysVisible="false"
+						<p:dataTable id="listOfTeam" var="oneTeam" value="#{adminMobileGroupBean.mobileGroups}" paginator="true" rows="25" paginatorPosition="bottom" paginatorAlwaysVisible="false"
 							emptyMessage="No Team" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							rowsPerPageTemplate="5,10,15">
 							<f:facet name="header">Team</f:facet>
@@ -68,42 +68,42 @@
 								<f:facet name="header">
 									<h:outputText value="Update" />
 								</f:facet>
-								<p:commandLink update=":adminMobileGroupForm:mainPanel" title="Update Team">
+								<p:commandLink update=":adminMobileGroupBeanForm:mainPanel" title="Update Team">
 									<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/tango-icon-library/48/edit-redo-48.png" height="20" />
-									<f:setPropertyActionListener value="#{oneTeam}" target="#{adminMobileGroup.selectedMobileGroup}" />
+									<f:setPropertyActionListener value="#{oneTeam}" target="#{adminMobileGroupBean.selectedMobileGroup}" />
 								</p:commandLink>
 							</p:column>
 						</p:dataTable>
 					</p:outputPanel>
-					<p:outputPanel id="formView" rendered="#{!adminMobileGroup.showList}">
+					<p:outputPanel id="formView" rendered="#{!adminMobileGroupBean.showList}">
 						<p:panelGrid columns="2">
 							<p:outputLabel value="Name"></p:outputLabel>
-							<p:inputText value="#{adminMobileGroup.selectedMobileGroup.name}" style="width:600px">
+							<p:inputText value="#{adminMobileGroupBean.selectedMobileGroup.name}" style="width:600px">
 							</p:inputText>
 							<p:outputLabel value="Description"></p:outputLabel>
-							<p:editor id="editor" value="#{adminMobileGroup.selectedMobileGroup.description}" width="600" height="500">
+							<p:editor id="editor" value="#{adminMobileGroupBean.selectedMobileGroup.description}" width="600" height="500">
 							</p:editor>
 						</p:panelGrid>
 						<br></br>
 						<p:outputPanel id="buttonPanel">
-							<p:commandButton value="Cancel" update=":adminMobileGroupForm:mainPanel" actionListener="#{adminMobileGroup.cancel}" styleClass="ui-priority-primary">
+							<p:commandButton value="Cancel" update=":adminMobileGroupBeanForm:mainPanel" actionListener="#{adminMobileGroupBean.cancel}" styleClass="ui-priority-primary">
 							</p:commandButton>
-							<p:commandButton id="saveMobileGroup" value="Save Team" update=":adminMobileGroupForm:mainPanel" actionListener="#{adminMobileGroup.saveMobileGroup}" styleClass="ui-priority-primary">
+							<p:commandButton id="saveMobileGroup" value="Save Team" update=":adminMobileGroupBeanForm:mainPanel" actionListener="#{adminMobileGroupBean.saveMobileGroup}" styleClass="ui-priority-primary">
 							</p:commandButton>
 						</p:outputPanel>
 
 
-						<p:outputPanel id="newMemberPanel" rendered="#{adminMobileGroup.showMemberPanel}">
+						<p:outputPanel id="newMemberPanel" rendered="#{adminMobileGroupBean.showMemberPanel}">
 						<p:outputPanel id="newMemberPanelInner">
 							<p:outputLabel value="Email/Mobile Number(10 digits without country code)"></p:outputLabel>
-							<p:inputText value="#{adminMobileGroup.emailMobile}"></p:inputText>
+							<p:inputText value="#{adminMobileGroupBean.emailMobile}"></p:inputText>
 							
-							<p:commandButton id="addMobileGroup" value="Add Group Member" update=":adminMobileGroupForm:mainPanel" actionListener="#{adminMobileGroup.saveMobileGroupMember}"
+							<p:commandButton id="addMobileGroup" value="Add Group Member" update=":adminMobileGroupBeanForm:mainPanel" actionListener="#{adminMobileGroupBean.saveMobileGroupMember}"
 								styleClass="ui-priority-primary">
 							</p:commandButton>
 						</p:outputPanel>
 
-						<p:dataTable id="listOfTeamMembers" var="oneMobileGroupMember" value="#{adminMobileGroup.mobileGroupMembers}" paginator="true" rows="100" paginatorPosition="bottom"
+						<p:dataTable id="listOfTeamMembers" var="oneMobileGroupMember" value="#{adminMobileGroupBean.mobileGroupMembers}" paginator="true" rows="100" paginatorPosition="bottom"
 							paginatorAlwaysVisible="false" emptyMessage="No Team"
 							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
 							<f:facet name="header">Mobile Group Members</f:facet>
@@ -123,11 +123,11 @@
 								<f:facet name="header">
 									<h:outputText value="Delete" />
 								</f:facet>
-								<p:commandLink update=":adminMobileGroupForm:mainPanel" title="Delete Member" id="deleteMember">
+								<p:commandLink update=":adminMobileGroupBeanForm:mainPanel" title="Delete Member" id="deleteMember">
 									<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/line-icons-set/128/1-04-48.png" height="20" />
-									<f:setPropertyActionListener value="#{oneMobileGroupMember}" target="#{adminMobileGroup.deleteMobileGroupMember}" />
+									<f:setPropertyActionListener value="#{oneMobileGroupMember}" target="#{adminMobileGroupBean.deleteMobileGroupMember}" />
 								</p:commandLink>
-								<p:blockUI block="adminMobileGroupForm" trigger=":adminMobileGroupForm:listOfTeamMembers:deleteMember">
+								<p:blockUI block="adminMobileGroupBeanForm" trigger=":adminMobileGroupBeanForm:listOfTeamMembers:deleteMember">
             Deleting...<br />
 									<p:graphicImage width="80" value="http://static.eswaraj.com/admin/images/ajax-loader.gif" />
 								</p:blockUI>
