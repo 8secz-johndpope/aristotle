@@ -87,4 +87,9 @@ public class Team extends BaseEntity{
         this.global = global;
     }
 
+    @Override
+    public String toString() {
+        return "Team [name=" + name + ", url=" + url + ", description=" + description + ", displayOrder=" + displayOrder + ", global=" + global + ", id=" + id + "]";
+    }
+
 }

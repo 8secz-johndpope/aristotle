@@ -1,0 +1,23 @@
+package com.aristotle.core.service;
+
+import java.util.List;
+
+import com.aristotle.core.exception.AppException;
+import com.aristotle.core.persistance.GroupPlannedSms;
+import com.aristotle.core.persistance.LocationPlannedSms;
+import com.aristotle.core.persistance.MobileGroup;
+import com.aristotle.core.persistance.PlannedSms;
+import com.aristotle.core.persistance.TeamPlannedSms;
+
+public interface SmsService {
+
+    GroupPlannedSms saveGroupPlannedSms(GroupPlannedSms groupPlannedSms) throws AppException;
+
+    TeamPlannedSms saveTeamPlannedSms(TeamPlannedSms teamPlannedSms) throws AppException;
+
+    LocationPlannedSms saveLocationPlannedSms(LocationPlannedSms locationPlannedSms) throws AppException;
+
+    List<PlannedSms> getAllPlannedSms() throws AppException;
+
+    List<MobileGroup> getAllMobileGroups() throws AppException;
+}
