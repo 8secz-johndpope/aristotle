@@ -36,6 +36,7 @@
 		<property name="boltConfigs">
 			<list>
 				<ref bean="twitterListenerBean" />
+				<ref bean="smsListenerBean" />
 				<ref bean="plannedTweetReaderBoltBean" />
 				<ref bean="plannedTweetProcessorBoltBean" />
 				<ref bean="TweetSendBoltBean" />
