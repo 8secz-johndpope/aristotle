@@ -2,21 +2,14 @@ package com.aristotle.core.persistance;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "planned_sms")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "target_type")
+@Table(name = "sms")
 public class Sms extends BaseEntity {
-
-
 
     @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinColumn(name = "planned_sms_id")
