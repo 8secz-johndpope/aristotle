@@ -29,4 +29,6 @@ public interface SmsService {
     void removeMemberFromMobileGroup(MobileGroupMobile mobileGroupMobile) throws Exception;
 
     List<MobileGroupMobile> getMembersOfMobileGroup(Long mobileGroupId) throws Exception;
+
+    boolean processNextSms() throws AppException;
 }

@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.aristotle.core.enums.PlannedPostStatus;
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Email;
 import com.aristotle.core.persistance.GroupPlannedSms;
@@ -16,7 +17,9 @@ import com.aristotle.core.persistance.MobileGroupMobile;
 import com.aristotle.core.persistance.Phone;
 import com.aristotle.core.persistance.Phone.PhoneType;
 import com.aristotle.core.persistance.PlannedSms;
+import com.aristotle.core.persistance.Sms;
 import com.aristotle.core.persistance.Team;
+import com.aristotle.core.persistance.TeamMember;
 import com.aristotle.core.persistance.TeamPlannedSms;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.repo.EmailRepository;
@@ -26,6 +29,8 @@ import com.aristotle.core.persistance.repo.MobileGroupMobileRepository;
 import com.aristotle.core.persistance.repo.MobileGroupRepository;
 import com.aristotle.core.persistance.repo.PhoneRepository;
 import com.aristotle.core.persistance.repo.PlannedSmsRepository;
+import com.aristotle.core.persistance.repo.SmsRepository;
+import com.aristotle.core.persistance.repo.TeamMemberRepository;
 import com.aristotle.core.persistance.repo.TeamPlannedSmsRepository;
 import com.aristotle.core.persistance.repo.TeamRepository;
 
@@ -51,6 +56,10 @@ public class SmsServiceImpl implements SmsService {
     private PhoneRepository phoneRepository;
     @Autowired
     private MobileGroupMobileRepository mobileGroupMobileRepository;
+    @Autowired
+    private TeamMemberRepository teamMemberRepository;
+    @Autowired
+    private SmsRepository smsRepository;
 
 
     @Override
@@ -122,10 +131,8 @@ public class SmsServiceImpl implements SmsService {
                 throw new AppException("Either Invalid Mobile Number or This Email doesnot exists in our system");
             }
             User user = email.getUser();
-            List<Phone> phoneList = phoneRepository.getPhonesByUserId(user.getId());
-            if (phoneList != null && !phoneList.isEmpty()) {
-                phone = phoneList.get(0);
-            } else {
+            phone = getUserPhone(user.getId());
+            if (phone == null) {
                 throw new AppException("No mobile number exists for this user");
             }
         }
@@ -141,6 +148,15 @@ public class SmsServiceImpl implements SmsService {
         mobileGroupMobile.setMobileGroup(mobileGroup);
         
         mobileGroupMobile = mobileGroupMobileRepository.save(mobileGroupMobile);
+
+    }
+
+    private Phone getUserPhone(Long userId) {
+        List<Phone> phoneList = phoneRepository.getPhonesByUserId(userId);
+        if (phoneList != null && !phoneList.isEmpty()) {
+            return phoneList.get(0);
+        }
+        return null;
 
     }
 
@@ -163,6 +179,87 @@ public class SmsServiceImpl implements SmsService {
     @Override
     public List<MobileGroupMobile> getMembersOfMobileGroup(Long mobileGroupId) throws Exception {
         return mobileGroupMobileRepository.getMobileGroupMobileByMobileGroupId(mobileGroupId);
+    }
+
+    @Override
+    public boolean processNextSms() throws AppException {
+        List<PlannedSms> plannedSms = plannedSmsRepository.getAllPendingPlannedSms();
+        if (plannedSms == null || plannedSms.isEmpty()) {
+            return false;
+        }
+        PlannedSms onePlannedSms = plannedSms.get(0);
+        switch (onePlannedSms.getTargetType()) {
+        case "TeamSms":
+            processTeamSms(onePlannedSms);
+            break;
+        case "GroupSms":
+            processMobileGroupSms(onePlannedSms);
+            break;
+        case "LocationSms":
+            System.out.println("Not implemented yet");
+            break;
+
+        default:
+            System.out.println("Invalid SMS Type");
+            break;
+        }
+        onePlannedSms.setStatus(PlannedPostStatus.PROCESSING);
+        onePlannedSms = plannedSmsRepository.save(onePlannedSms);
+        return true;
+    }
+
+    private void processTeamSms(PlannedSms plannedSms) {
+        TeamPlannedSms teamPlannedSms = (TeamPlannedSms) plannedSms;
+        Team team = teamPlannedSms.getTeam();
+        List<TeamMember> teamMembers = teamMemberRepository.getTeamMembersByTeamId(team.getId());
+        if (teamMembers == null || teamMembers.isEmpty()) {
+            plannedSms.setTotalMembers(0);
+            plannedSms.setTotalScheduled(0);
+            plannedSms.setTotalSuccess(0);
+        }
+        Phone phone;
+        plannedSms.setTotalMembers(teamMembers.size());
+        int totalSchedule = 0;
+        for (TeamMember oneTeamMember : teamMembers) {
+            phone = getUserPhone(oneTeamMember.getUser().getId());
+            if (phone == null) {
+                System.out.println("User " + oneTeamMember.getUser().getName() + " do not have any phone");
+                continue;
+            }
+            Sms sms = new Sms();
+            sms.setPlannedSms(teamPlannedSms);
+            sms.setUser(oneTeamMember.getUser());
+            sms.setPhone(phone);
+            sms.setStatus("PENDING");
+            sms = smsRepository.save(sms);
+            totalSchedule++;
+        }
+        plannedSms.setTotalScheduled(totalSchedule);
+    }
+
+    private void processMobileGroupSms(PlannedSms plannedSms) {
+        GroupPlannedSms groupPlannedSms = (GroupPlannedSms) plannedSms;
+        MobileGroup mobileGroup = groupPlannedSms.getMobileGroup();
+        List<MobileGroupMobile> teamMembers = mobileGroupMobileRepository.getMobileGroupMobileByMobileGroupId(mobileGroup.getId());
+        if (teamMembers == null || teamMembers.isEmpty()) {
+            plannedSms.setTotalMembers(0);
+            plannedSms.setTotalScheduled(0);
+            plannedSms.setTotalSuccess(0);
+        }
+        Phone phone;
+        plannedSms.setTotalMembers(teamMembers.size());
+        int totalSchedule = 0;
+        for (MobileGroupMobile oneTeamMember : teamMembers) {
+            phone = oneTeamMember.getPhone();
+            Sms sms = new Sms();
+            sms.setPlannedSms(groupPlannedSms);
+            sms.setUser(phone.getUser());
+            sms.setPhone(phone);
+            sms.setStatus("PENDING");
+            sms = smsRepository.save(sms);
+            totalSchedule++;
+        }
+        plannedSms.setTotalScheduled(totalSchedule);
     }
 
 }

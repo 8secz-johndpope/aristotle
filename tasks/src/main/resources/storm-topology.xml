@@ -140,6 +140,14 @@
 			</map>
 		</property>
 	</bean>
+	<bean id="smsListenerBean" class="com.aristotle.task.bolt.sms.SmsListener">
+        <property name="componentId" value="SmsListener" />
+        <property name="sourceComponentStreams">
+            <map>
+                <entry key="ThirtySecondTimerSpout" value="ThirtySecondTimerStream" />
+            </map>
+        </property>
+    </bean>
 	<bean id="plannedTweetReaderBoltBean" class="com.aristotle.task.bolt.twitter.PlannedTweetReaderBolt">
 		<property name="componentId" value="PlannedTweetReaderBolt" />
 		<property name="sourceComponentStreams">

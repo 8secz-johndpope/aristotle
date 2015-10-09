@@ -45,7 +45,16 @@ public class PlannedSms extends BaseEntity {
 	@Column(name = "error_message")
 	private String errorMessage;
 
-	public String getMessage() {
+    @Column(name = "total_members")
+    private Integer totalMembers = 0;
+
+    @Column(name = "total_schedules")
+    private Integer totalScheduled = 0;
+
+    @Column(name = "total_success")
+    private Integer totalSuccess = 0;
+
+    public String getMessage() {
 		return message;
 	}
 
@@ -99,6 +108,30 @@ public class PlannedSms extends BaseEntity {
 
     public void setTargetType(String targetType) {
         this.targetType = targetType;
+    }
+
+    public Integer getTotalMembers() {
+        return totalMembers;
+    }
+
+    public void setTotalMembers(Integer totalMembers) {
+        this.totalMembers = totalMembers;
+    }
+
+    public Integer getTotalScheduled() {
+        return totalScheduled;
+    }
+
+    public void setTotalScheduled(Integer totalScheduled) {
+        this.totalScheduled = totalScheduled;
+    }
+
+    public Integer getTotalSuccess() {
+        return totalSuccess;
+    }
+
+    public void setTotalSuccess(Integer totalSuccess) {
+        this.totalSuccess = totalSuccess;
     }
 	
 
