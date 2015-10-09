@@ -16,7 +16,7 @@ public interface PlannedSmsRepository extends JpaRepository<PlannedSms, Long> {
     @Query("select plannedSms from PlannedSms plannedSms order by postingTime desc")
     public abstract List<PlannedSms> getAllPlannedSms();
 
-    @Query("select plannedSms from PlannedSms plannedSms where current_date < postingTime and status='PENDING' order by postingTime desc")
+    @Query("select plannedSms from PlannedSms plannedSms where current_date > postingTime and status='PENDING' order by postingTime desc")
     public abstract List<PlannedSms> getAllPendingPlannedSms();
 
 }
