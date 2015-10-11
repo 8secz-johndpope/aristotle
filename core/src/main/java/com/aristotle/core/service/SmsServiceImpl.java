@@ -4,7 +4,12 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.aristotle.core.enums.PlannedPostStatus;
@@ -18,6 +23,7 @@ import com.aristotle.core.persistance.Phone;
 import com.aristotle.core.persistance.Phone.PhoneType;
 import com.aristotle.core.persistance.PlannedSms;
 import com.aristotle.core.persistance.Sms;
+import com.aristotle.core.persistance.SmsTemplate;
 import com.aristotle.core.persistance.Team;
 import com.aristotle.core.persistance.TeamMember;
 import com.aristotle.core.persistance.TeamPlannedSms;
@@ -30,6 +36,7 @@ import com.aristotle.core.persistance.repo.MobileGroupRepository;
 import com.aristotle.core.persistance.repo.PhoneRepository;
 import com.aristotle.core.persistance.repo.PlannedSmsRepository;
 import com.aristotle.core.persistance.repo.SmsRepository;
+import com.aristotle.core.persistance.repo.SmsTemplateRepository;
 import com.aristotle.core.persistance.repo.TeamMemberRepository;
 import com.aristotle.core.persistance.repo.TeamPlannedSmsRepository;
 import com.aristotle.core.persistance.repo.TeamRepository;
@@ -38,6 +45,7 @@ import com.aristotle.core.persistance.repo.TeamRepository;
 @Transactional
 public class SmsServiceImpl implements SmsService {
 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private GroupPlannedSmsRepository groupPlannedSmsRepository;
     @Autowired
@@ -60,7 +68,13 @@ public class SmsServiceImpl implements SmsService {
     private TeamMemberRepository teamMemberRepository;
     @Autowired
     private SmsRepository smsRepository;
+    @Autowired
+    private SmsTemplateRepository smsTemplateRepository;
 
+    @Value("${smsTransactionalUrlTemplate}")
+    private String smsTransactionalUrlTemplate;
+    @Value("${smsPromotionalUrlTemplate}")
+    private String smsPromotionalUrlTemplate;
 
     @Override
     public GroupPlannedSms saveGroupPlannedSms(GroupPlannedSms groupPlannedSms) throws AppException {
@@ -226,7 +240,11 @@ public class SmsServiceImpl implements SmsService {
                 System.out.println("User " + oneTeamMember.getUser().getName() + " do not have any phone");
                 continue;
             }
-            Sms sms = new Sms();
+            Sms sms = smsRepository.getSmsByPlannedSmsIdAndPhoneId(teamPlannedSms.getId(), phone.getId());
+            if (sms != null) {
+                continue;
+            }
+            sms = new Sms();
             sms.setPlannedSms(teamPlannedSms);
             sms.setUser(oneTeamMember.getUser());
             sms.setPhone(phone);
@@ -251,7 +269,11 @@ public class SmsServiceImpl implements SmsService {
         int totalSchedule = 0;
         for (MobileGroupMobile oneTeamMember : teamMembers) {
             phone = oneTeamMember.getPhone();
-            Sms sms = new Sms();
+            Sms sms = smsRepository.getSmsByPlannedSmsIdAndPhoneId(groupPlannedSms.getId(), phone.getId());
+            if (sms != null) {
+                continue;
+            }
+            sms = new Sms();
             sms.setPlannedSms(groupPlannedSms);
             sms.setUser(phone.getUser());
             sms.setPhone(phone);
@@ -260,6 +282,58 @@ public class SmsServiceImpl implements SmsService {
             totalSchedule++;
         }
         plannedSms.setTotalScheduled(totalSchedule);
+    }
+
+    @Override
+    public boolean sendNextSms() throws AppException {
+        Pageable pageable = new PageRequest(0, 1);
+        Sms sms = smsRepository.getPendingSms(pageable);
+        if (sms == null) {
+            return false;
+        }
+        if (sms.isPromotional()) {
+            sendPromotionalSms(sms);
+        } else {
+            sendTransactionalSms(sms);
+        }
+        return false;
+    }
+
+    private void sendPromotionalSms(Sms sms) {
+        sendSms(smsPromotionalUrlTemplate, sms);
+    }
+
+    private void sendTransactionalSms(Sms sms) {
+        sendSms(smsTransactionalUrlTemplate, sms);
+    }
+    private void sendSms(String url, Sms sms) {
+        url = url.replace("{toMobileNumber}", sms.getPhone().getCountryCode() + sms.getPhone().getPhoneNumber());
+        url = url.replace("{message}", sms.getMessage());
+    }
+
+    @Override
+    public List<SmsTemplate> getAllSmsTemplates() throws Exception {
+        return smsTemplateRepository.getAllSmsTemplate();
+    }
+
+    @Override
+    public void sendUsernamePasswordSms(Phone phone, String userName, String password) throws Exception {
+        String templateSystemName = "UserNamePasswordTemplate";
+        SmsTemplate smsTemplate = smsTemplateRepository.getSmsTemplateBySystemName(templateSystemName);
+        if(smsTemplate == null){
+            logger.error("No SMS Template found for System Name {}", templateSystemName);
+        }
+        String message = smsTemplate.getMessage();
+        message = message.replace("##ID##", userName);
+        message = message.replace("##password##", password);
+
+        Sms sms = new Sms();
+        sms.setMessage(message);
+        sms.setPhone(phone);
+        sms.setPromotional(false);
+        sms.setStatus("PENDING");
+        sms.setUser(phone.getUser());
+        sms = smsRepository.save(sms);
     }
 
 }

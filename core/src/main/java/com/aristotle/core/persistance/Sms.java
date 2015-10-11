@@ -32,8 +32,14 @@ public class Sms extends BaseEntity {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "error_message")
+    @Column(name = "message", length = 1024)
+    private String message;
+
+    @Column(name = "error_message", length = 1024)
     private String errorMessage;
+
+    @Column(name = "promotional")
+    private boolean promotional;
 
     public PlannedSms getPlannedSms() {
         return plannedSms;
@@ -97,6 +103,22 @@ public class Sms extends BaseEntity {
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
+    }
+
+    public boolean isPromotional() {
+        return promotional;
+    }
+
+    public void setPromotional(boolean promotional) {
+        this.promotional = promotional;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
 }

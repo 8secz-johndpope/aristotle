@@ -40,7 +40,13 @@ public class Email extends BaseEntity {
 	@Column(name="user_id", insertable=false,updatable=false)
 	private Long userId;
 
-	public enum ConfirmationType{
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinColumn(name = "phone_id")
+    private Phone phone;
+    @Column(name = "phone_id", insertable = false, updatable = false)
+    private Long phoneId;
+
+    public enum ConfirmationType {
 		CONFIRMED_FACEBOOK_ACCOUNT,
 		CONFIRMED_GOOGLE_ACCOUNT,
 		RECEIVED_EMAIL_FROM_ACCOUNT,
@@ -112,6 +118,22 @@ public class Email extends BaseEntity {
 
     public void setConfirmationDate(Date confirmationDate) {
         this.confirmationDate = confirmationDate;
+    }
+
+    public Phone getPhone() {
+        return phone;
+    }
+
+    public void setPhone(Phone phone) {
+        this.phone = phone;
+    }
+
+    public Long getPhoneId() {
+        return phoneId;
+    }
+
+    public void setPhoneId(Long phoneId) {
+        this.phoneId = phoneId;
     }
 
 }

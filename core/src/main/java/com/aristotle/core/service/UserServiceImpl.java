@@ -219,17 +219,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public void registerUserQuick(UserContactBean userContactBean) throws AppException {
         // Just save email and phone
+        Email email = null;
+        Phone phone = null;
         try{
-        getOrCreateEmail(userContactBean.getEmail());
+            email = getOrCreateEmail(userContactBean.getEmail());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         try {
-            getOrCreateMobile(userContactBean.getMobile(), userContactBean.getCountryCode(), "mobile");
+            phone = getOrCreateMobile(userContactBean.getMobile(), userContactBean.getCountryCode(), "mobile");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
+        if (email != null && phone != null) {
+            email.setPhone(phone);
+        }
 
     }
 
