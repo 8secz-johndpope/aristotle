@@ -72,9 +72,9 @@ public class SmsServiceImpl implements SmsService {
     @Autowired
     private SmsTemplateRepository smsTemplateRepository;
 
-    @Value("${smsTransactionalUrlTemplate}")
+    @Value("${smsTransactionalUrlTemplate:NONE}")
     private String smsTransactionalUrlTemplate;
-    @Value("${smsPromotionalUrlTemplate}")
+    @Value("${smsPromotionalUrlTemplate:NONE}")
     private String smsPromotionalUrlTemplate;
 
     @Override
