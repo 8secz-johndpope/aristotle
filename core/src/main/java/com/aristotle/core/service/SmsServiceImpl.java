@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -287,10 +288,11 @@ public class SmsServiceImpl implements SmsService {
     @Override
     public boolean sendNextSms() throws AppException {
         Pageable pageable = new PageRequest(0, 1);
-        Sms sms = smsRepository.getPendingSms(pageable);
-        if (sms == null) {
+        Page<Sms> smses = smsRepository.getPendingSms(pageable);
+        if (smses == null || smses.getSize() <= 0) {
             return false;
         }
+        Sms sms = smses.getContent().get(0);
         if (sms.isPromotional()) {
             sendPromotionalSms(sms);
         } else {
