@@ -15,7 +15,7 @@ public interface SmsRepository extends JpaRepository<Sms, Long> {
     @Query("select sms from Sms sms where status='PENDING'")
     public abstract List<Sms> getAllPendingSms();
 
-    @Query("select sms from Sms sms where plannedSmsId=?1 and phoneId =?")
+    @Query("select sms from Sms sms where plannedSmsId=?1 and phoneId =?2")
     public abstract Sms getSmsByPlannedSmsIdAndPhoneId(long plannedSmsId, long phoneId);
 
     @Query("select sms from Sms sms where status='PENDING'")
