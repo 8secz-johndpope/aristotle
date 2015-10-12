@@ -39,7 +39,7 @@ public class BlogListPlugin extends LocationAwareDataPlugin {
             int pageNumber = getIntPramater(httpServletRequest, HttpParameters.PAGE_NUMBER_PARAM, HttpParameters.PAGE_NUMBER_DEFAULT_VALUE);
             int pageSize = getIntSettingPramater("blog.size", 6);
             System.out.println("Getting blog for " + locations + ", page number = " + pageNumber + ", pageSize=" + pageSize);
-            List<Blog> blogList = blogService.getAllLocationPublishedBlog(locations, pageNumber, pageSize);
+            List<Blog> blogList = blogService.getAllLocationPublishedBlog(locations, pageNumber - 1, pageSize);
             JsonArray jsonArray = convertBlogList(blogList);
             context.add(name, jsonArray);
         } catch (Exception ex) {
