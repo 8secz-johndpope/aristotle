@@ -69,9 +69,7 @@
 								
 
 								<h:outputLabel for="to" value="To*" />
-								<p:inputMask id="to" value="#{adminEventBean.event.endDate}" mask="99/99/9999 99:99">
-									<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-								</p:inputMask>
+								<p:calendar id="to" value="#{adminEventBean.event.endDate}" locale="in" navigator="true" pattern="dd-MMM-yyyy HH:mm" />
 
 								<h:outputLabel for="allDay" value="All Day:" />
 								<h:selectBooleanCheckbox id="allDay" value="#{adminEventBean.event.allDay}" />
