@@ -46,7 +46,7 @@ public class BlogAdminBean extends BaseMultiPermissionAdminJsfBean {
 	
     private List<Blog> blogList;
 	public BlogAdminBean(){
-        super("/admin/blog", AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS, AppPermission.DELETE_NEWS, AppPermission.APPROVE_NEWS);
+        super("/admin/blog", AppPermission.CREATE_BLOG, AppPermission.UPDATE_BLOG, AppPermission.DELETE_BLOG, AppPermission.APPROVE_BLOG);
 		showEditor = true;
         selectedTweet = new ContentTweet();
 	}
