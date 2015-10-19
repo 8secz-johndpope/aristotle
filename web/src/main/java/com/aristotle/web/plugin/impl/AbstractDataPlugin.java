@@ -299,10 +299,18 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
         eventJsonObject.addProperty("date", calendar.get(Calendar.DATE));
         eventJsonObject.addProperty("year", calendar.get(Calendar.YEAR));
         StringBuilder sb = new StringBuilder();
-        sb.append(calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE) + " " + calendar.getDisplayName(Calendar.AM_PM, Calendar.SHORT, Locale.UK).toLowerCase());
+        String minute = "00";
+        if (calendar.get(Calendar.MINUTE) > 0) {
+            minute = calendar.get(Calendar.MINUTE) + "";
+        }
+        sb.append(calendar.get(Calendar.HOUR) + ":" + minute + " " + calendar.getDisplayName(Calendar.AM_PM, Calendar.SHORT, Locale.UK).toLowerCase());
         sb.append(" - ");
         calendar.setTime(event.getEndDate());
-        sb.append(calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE) + " " + calendar.getDisplayName(Calendar.AM_PM, Calendar.SHORT, Locale.UK).toLowerCase());
+        minute = "00";
+        if (calendar.get(Calendar.MINUTE) > 0) {
+            minute = calendar.get(Calendar.MINUTE) + "";
+        }
+        sb.append(calendar.get(Calendar.HOUR) + ":" + minute + " " + calendar.getDisplayName(Calendar.AM_PM, Calendar.SHORT, Locale.UK).toLowerCase());
         addDateField(eventJsonObject, "startDate", event.getStartDate());
         addDateField(eventJsonObject, "endDate", event.getEndDate());
         eventJsonObject.addProperty("time", sb.toString());
