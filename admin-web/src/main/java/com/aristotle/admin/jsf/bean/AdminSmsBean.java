@@ -20,6 +20,7 @@ import com.aristotle.core.persistance.GroupPlannedSms;
 import com.aristotle.core.persistance.LocationPlannedSms;
 import com.aristotle.core.persistance.MobileGroup;
 import com.aristotle.core.persistance.PlannedSms;
+import com.aristotle.core.persistance.SmsTemplate;
 import com.aristotle.core.persistance.Team;
 import com.aristotle.core.persistance.TeamPlannedSms;
 import com.aristotle.core.service.SmsService;
@@ -53,6 +54,11 @@ public class AdminSmsBean extends BaseMultiPermissionAdminJsfBean {
     private Map<String, String> teams;
     private String selectedTeamName;
 
+    private Map<String, SmsTemplate> smsTemplateNameToSmsTemplate;
+    private Map<String, String> smsTemplates;
+    private String selectedSmsTemplate;
+    private boolean editSmsAllowed;
+
     private boolean showGroupSelectionPanel;
     private boolean showTeamSelectionPanel;
     private boolean showLocationSelectionPanel;
@@ -75,6 +81,7 @@ public class AdminSmsBean extends BaseMultiPermissionAdminJsfBean {
 		refreshSmsList();
         refreshGroupList();
         refreshTeamList();
+        refreshSmsTemplateList();
 	}
 	private void refreshSmsList(){
         // plannedSmss = smsService.getPlannedSmssForLocation(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId(), pageNumber, pageSize);
@@ -84,6 +91,30 @@ public class AdminSmsBean extends BaseMultiPermissionAdminJsfBean {
             sendErrorMessageToJsfScreen(e);
         }
 	}
+
+    private void refreshSmsTemplateList() {
+        // plannedSmss = smsService.getPlannedSmssForLocation(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId(), pageNumber, pageSize);
+        try {
+            List<SmsTemplate> dbSmsTemplates = smsService.getAllSmsTemplates();
+            smsTemplates = new LinkedHashMap<>();
+            for (SmsTemplate oneSmsTemplate : dbSmsTemplates) {
+                smsTemplates.put(oneSmsTemplate.getName(), oneSmsTemplate.getSystemName());
+                smsTemplateNameToSmsTemplate.put(oneSmsTemplate.getSystemName(), oneSmsTemplate);
+            }
+            // Add Custom template
+            SmsTemplate customTemplate = new SmsTemplate();
+            customTemplate.setMessage("");
+            customTemplate.setName("Custom");
+            customTemplate.setStatus("Approved");
+            customTemplate.setSystemName("Custom");
+            customTemplate.setId(-1L);
+            smsTemplates.put(customTemplate.getName(), customTemplate.getSystemName());
+            smsTemplateNameToSmsTemplate.put(customTemplate.getSystemName(), customTemplate);
+
+        } catch (Exception e) {
+            sendErrorMessageToJsfScreen(e);
+        }
+    }
 
     private void refreshGroupList() {
         // plannedSmss = smsService.getPlannedSmssForLocation(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId(), pageNumber, pageSize);
@@ -122,6 +153,9 @@ public class AdminSmsBean extends BaseMultiPermissionAdminJsfBean {
                 selectedPlannedSms.setLocationId(menuBean.getSelectedLocation().getId());
             }
 
+            if (StringUtils.isEmpty(selectedSmsTemplate)) {
+                sendErrorMessageToJsfScreen("Please select SMS template");
+            }
 			if (StringUtil.isEmpty(selectedPlannedSms.getMessage())) {
 				sendErrorMessageToJsfScreen("Please enter a Message");
 			}
@@ -140,6 +174,7 @@ public class AdminSmsBean extends BaseMultiPermissionAdminJsfBean {
 					sendErrorMessageToJsfScreen("Please enter posting time in future");
 				}
 			}
+            selectedPlannedSms.setSmsTemplate(smsTemplateNameToSmsTemplate.get(selectedSmsTemplate));
 
             switch (selectedTargetType) {
             case "TeamSms":
@@ -233,6 +268,23 @@ public class AdminSmsBean extends BaseMultiPermissionAdminJsfBean {
         default:
             selectedPlannedSms = copyPlannedSms(new PlannedSms());
             break;
+        }
+    }
+
+    public void handleSmsTemplateSelection() {
+        switch (selectedSmsTemplate) {
+        case "Custom":
+            editSmsAllowed = true;
+            break;
+        default:
+            editSmsAllowed = false;
+            break;
+        }
+        SmsTemplate smsTemplate = smsTemplateNameToSmsTemplate.get(selectedSmsTemplate);
+        if (smsTemplate == null) {
+            selectedPlannedSms.setMessage("");
+        } else {
+            selectedPlannedSms.setMessage(smsTemplate.getMessage());
         }
     }
 
@@ -351,6 +403,30 @@ public class AdminSmsBean extends BaseMultiPermissionAdminJsfBean {
 
     public void setSelectedTeamName(String selectedTeamName) {
         this.selectedTeamName = selectedTeamName;
+    }
+
+    public Map<String, String> getSmsTemplates() {
+        return smsTemplates;
+    }
+
+    public void setSmsTemplates(Map<String, String> smsTemplates) {
+        this.smsTemplates = smsTemplates;
+    }
+
+    public String getSelectedSmsTemplate() {
+        return selectedSmsTemplate;
+    }
+
+    public void setSelectedSmsTemplate(String selectedSmsTemplate) {
+        this.selectedSmsTemplate = selectedSmsTemplate;
+    }
+
+    public boolean isEditSmsAllowed() {
+        return editSmsAllowed;
+    }
+
+    public void setEditSmsAllowed(boolean editSmsAllowed) {
+        this.editSmsAllowed = editSmsAllowed;
     }
 
 }

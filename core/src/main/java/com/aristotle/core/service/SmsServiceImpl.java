@@ -77,6 +77,13 @@ public class SmsServiceImpl implements SmsService {
     @Value("${smsPromotionalUrlTemplate:NONE}")
     private String smsPromotionalUrlTemplate;
 
+    private void addSmsTemplate(PlannedSms plannedSms){
+        if(plannedSms.getSmsTemplate() != null){
+            SmsTemplate smsTemplate = smsTemplateRepository.findOne(plannedSms.getSmsTemplate().getId());
+            plannedSms.setSmsTemplate(smsTemplate);
+        }
+        
+    }
     @Override
     public GroupPlannedSms saveGroupPlannedSms(GroupPlannedSms groupPlannedSms) throws AppException {
         if (groupPlannedSms.getMobileGroup() == null) {
@@ -86,6 +93,7 @@ public class SmsServiceImpl implements SmsService {
         if (mobileGroup == null) {
             throw new AppException("Please select a Group");
         }
+        addSmsTemplate(groupPlannedSms);
         groupPlannedSms.setMobileGroup(mobileGroup);
         groupPlannedSms = groupPlannedSmsRepository.save(groupPlannedSms);
         return groupPlannedSms;
@@ -100,6 +108,7 @@ public class SmsServiceImpl implements SmsService {
         if (team == null) {
             throw new AppException("Please select a team");
         }
+        addSmsTemplate(teamPlannedSms);
         teamPlannedSms.setTeam(team);
         teamPlannedSms = teamPlannedSmsRepository.save(teamPlannedSms);
         return teamPlannedSms;
@@ -107,6 +116,7 @@ public class SmsServiceImpl implements SmsService {
 
     @Override
     public LocationPlannedSms saveLocationPlannedSms(LocationPlannedSms locationPlannedSms) throws AppException {
+        addSmsTemplate(locationPlannedSms);
         locationPlannedSms = locationPlannedSmsRepository.save(locationPlannedSms);
         return locationPlannedSms;
     }
@@ -314,7 +324,7 @@ public class SmsServiceImpl implements SmsService {
     }
 
     @Override
-    public List<SmsTemplate> getAllSmsTemplates() throws Exception {
+    public List<SmsTemplate> getAllSmsTemplates() throws AppException {
         return smsTemplateRepository.getAllSmsTemplate();
     }
 

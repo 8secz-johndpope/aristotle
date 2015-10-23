@@ -36,7 +36,7 @@ public interface SmsService {
 
     boolean sendNextSms() throws AppException;
 
-    List<SmsTemplate> getAllSmsTemplates() throws Exception;
+    List<SmsTemplate> getAllSmsTemplates() throws AppException;
 
     void sendUsernamePasswordSms(Phone phone, String userName, String password) throws Exception;
 }

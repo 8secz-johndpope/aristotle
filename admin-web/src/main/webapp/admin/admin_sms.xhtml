@@ -93,10 +93,16 @@
 					<p:outputPanel id="formView" rendered="#{!adminSmsBean.showList}">
 						<p:panelGrid columns="2" styleClass="topAlignPanelColumns">
 							<p:panelGrid columns="2">
+							    <p:outputLabel value="Message Template"></p:outputLabel>
+                                <p:selectOneMenu value="#{adminSmsBean.selectedSmsTemplate}">
+                                    <f:selectItem itemLabel="Select Template" itemValue="" />
+                                    <f:selectItems value="#{adminSmsBean.smsTemplates}" />
+                                    <p:ajax event="change" update=":adminSmsForm:formView" listener="#{adminSmsBean.handleSmsTemplateSelection}" />
+                                </p:selectOneMenu>
 								<p:outputLabel value="Message"></p:outputLabel>
 								<p:outputPanel >
 									<p:inputTextarea rows="5" cols="50" counter="counter" maxlength="140" counterTemplate="{0} characters remaining."
-										value="#{adminSmsBean.selectedPlannedSms.message}">
+										value="#{adminSmsBean.selectedPlannedSms.message}" disabled="#{!adminSmsBean.editSmsAllowed}">
 										<p:ajax event="change" update=":adminSmsForm" />
 									</p:inputTextarea>
 									<br></br>

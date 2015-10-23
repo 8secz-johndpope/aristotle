@@ -2,6 +2,7 @@ package com.aristotle.core.persistance;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
@@ -9,6 +10,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.aristotle.core.enums.PlannedPostStatus;
@@ -24,6 +27,12 @@ public class PlannedSms extends BaseEntity {
 
 	@Column(name = "message", length = 140)
 	private String message;
+
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinColumn(name = "sms_template_id")
+    private SmsTemplate smsTemplate;
+    @Column(name = "sms_template_id", insertable = false, updatable = false)
+    private Long smsTemplateId;
 
 	@Column(name = "posting_time")
 	private Date postingTime;
@@ -132,6 +141,22 @@ public class PlannedSms extends BaseEntity {
 
     public void setTotalSuccess(Integer totalSuccess) {
         this.totalSuccess = totalSuccess;
+    }
+
+    public SmsTemplate getSmsTemplate() {
+        return smsTemplate;
+    }
+
+    public void setSmsTemplate(SmsTemplate smsTemplate) {
+        this.smsTemplate = smsTemplate;
+    }
+
+    public Long getSmsTemplateId() {
+        return smsTemplateId;
+    }
+
+    public void setSmsTemplateId(Long smsTemplateId) {
+        this.smsTemplateId = smsTemplateId;
     }
 	
 
