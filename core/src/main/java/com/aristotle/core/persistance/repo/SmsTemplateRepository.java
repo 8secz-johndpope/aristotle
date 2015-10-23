@@ -10,7 +10,7 @@ import com.aristotle.core.persistance.SmsTemplate;
 
 public interface SmsTemplateRepository extends JpaRepository<SmsTemplate, Long> {
 
-    @Query("select smsTemplate from SmsTemplate smsTemplate order by name desc")
+    @Query("select smsTemplate from SmsTemplate smsTemplate where automated=false order by name desc")
     public abstract List<SmsTemplate> getAllSmsTemplate();
 
     public abstract SmsTemplate getSmsTemplateBySystemName(String systemName);

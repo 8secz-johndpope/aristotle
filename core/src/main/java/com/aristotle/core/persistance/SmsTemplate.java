@@ -14,6 +14,9 @@ public class SmsTemplate extends BaseEntity {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "automated")
+    private boolean automated;
+
     @Column(name = "system_name", unique = true)
     private String systemName;
 
@@ -50,6 +53,14 @@ public class SmsTemplate extends BaseEntity {
 
     public void setSystemName(String systemName) {
         this.systemName = systemName;
+    }
+
+    public boolean isAutomated() {
+        return automated;
+    }
+
+    public void setAutomated(boolean automated) {
+        this.automated = automated;
     }
 
 }
