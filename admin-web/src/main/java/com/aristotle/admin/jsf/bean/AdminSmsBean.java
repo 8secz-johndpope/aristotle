@@ -161,7 +161,7 @@ public class AdminSmsBean extends BaseMultiPermissionAdminJsfBean {
 				sendErrorMessageToJsfScreen("Please enter a Message");
 			}
 			if (selectedPlannedSms.getMessage().length() > 140) {
-                sendErrorMessageToJsfScreen("Please enter a message equal or less then 140 Characters");
+                // sendErrorMessageToJsfScreen("Please enter a message equal or less then 140 Characters");
 			}
             if (StringUtils.isEmpty(selectedTargetType)) {
                 sendErrorMessageToJsfScreen("Please select target SMS type");
