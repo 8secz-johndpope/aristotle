@@ -97,6 +97,7 @@ public class AdminSmsBean extends BaseMultiPermissionAdminJsfBean {
         try {
             List<SmsTemplate> dbSmsTemplates = smsService.getAllSmsTemplates();
             smsTemplates = new LinkedHashMap<>();
+            smsTemplateNameToSmsTemplate = new HashMap<>();
             for (SmsTemplate oneSmsTemplate : dbSmsTemplates) {
                 smsTemplates.put(oneSmsTemplate.getName(), oneSmsTemplate.getSystemName());
                 smsTemplateNameToSmsTemplate.put(oneSmsTemplate.getSystemName(), oneSmsTemplate);
