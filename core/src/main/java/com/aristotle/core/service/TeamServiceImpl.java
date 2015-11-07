@@ -1,5 +1,7 @@
 package com.aristotle.core.service;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -81,7 +83,51 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public List<TeamMember> getTeamMembersByTeamId(Long teamId) throws AppException {
-        return teamMemberRepository.getTeamMembersByTeamId(teamId);
+        List<TeamMember> memebrs = teamMemberRepository.getTeamMembersByTeamId(teamId);
+        Collections.sort(memebrs, new Comparator<TeamMember>() {
+
+            @Override
+            public int compare(TeamMember o1, TeamMember o2) {
+                try {
+                    int o1Priority = getPostPriority(o1.getPost());
+                    int o2Priority = getPostPriority(o2.getPost());
+                    return o1Priority - o2Priority;
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                return 0;
+            }
+
+            private int getPostPriority(String post) {
+                int priority = -1;
+                switch (post) {
+                case "Convenor":
+                    priority = 100;
+                    break;
+                case "Co-Convenor":
+                    priority = 90;
+                    break;
+                case "Secretary":
+                    priority = 80;
+                    break;
+                case "Joint Secretary":
+                    priority = 70;
+                    break;
+                case "Treasurer":
+                    priority = 80;
+                    break;
+                case "POC":
+                    priority = 70;
+                    break;
+                case "Member":
+                    priority = 10;
+                    break;
+
+                }
+                return priority;
+            }
+        });
+        return memebrs;
     }
 
     @Override
