@@ -36,7 +36,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
 @Component
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "view")
-@URLMapping(id = "adminEditUserBean", beanName = "adminEditUserBean", pattern = "/admin/roles", viewId = "/admin/admin_edituser.xhtml")
+@URLMapping(id = "adminEditUserBean", beanName = "adminEditUserBean", pattern = "/admin/edituser", viewId = "/admin/admin_edituser.xhtml")
 @URLBeanName("adminEditUserBean")
 public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 
@@ -116,7 +116,7 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 		showResult = false;
 		showSearchPanel = true;
 
-        User loggedInAdminUser = getLoggedInUser(true, buildLoginUrl("/admin/roles"));
+        User loggedInAdminUser = getLoggedInUser(true, buildLoginUrl("/admin/edituser"));
 		if (stateList == null || stateList.isEmpty()) {
             livingStateList = stateList = locationService.getAllStates();
 		}
