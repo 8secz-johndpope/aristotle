@@ -152,7 +152,7 @@ public class MenuBean extends BaseJsfBean {
     }
 
     public boolean isAdminAllowed() {
-        return isManageUserRoleAllowed() || isEditOfficeDetailAllowed() || isSearchVolunteerAllowed() || isEditTeamAllowed();
+        return isManageUserRoleAllowed() || isEditOfficeDetailAllowed() || isSearchVolunteerAllowed() || isEditTeamAllowed() || isEditUserAllowed();
     }
 
     public boolean isManageUserRoleAllowed() {
@@ -169,6 +169,10 @@ public class MenuBean extends BaseJsfBean {
 
     public boolean isEditTeamAllowed() {
         return isAllowed(AppPermission.EDIT_TEAM);
+    }
+
+    public boolean isEditUserAllowed() {
+        return isAllowed(AppPermission.ADD_MEMBER, AppPermission.UPDATE_MEMBER, AppPermission.UPDATE_GLOBAL_MEMBER);
     }
 
     public boolean isCallCampaignAllowed() {
@@ -330,6 +334,14 @@ public class MenuBean extends BaseJsfBean {
     public void goToTeamsPage() {
         if (isEditTeamAllowed()) {
             buildAndRedirect("/admin/teams");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
+
+    public void goToManagerUserPage() {
+        if (isEditUserAllowed()) {
+            buildAndRedirect("/admin/edituser");
         } else {
             buildAndRedirect("/admin/notallowed");
         }
