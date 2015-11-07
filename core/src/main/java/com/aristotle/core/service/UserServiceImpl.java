@@ -136,6 +136,19 @@ public class UserServiceImpl implements UserService {
         return email;
     }
 
+    private Phone searchUserForPhone(List<UserSearchResult> userSearchResults, String mobile) throws AppException {
+        if (StringUtils.isEmpty(mobile)) {
+            return null;
+        }
+        Phone phone = phoneRepository.getPhoneByPhoneNumber(mobile);
+        if (phone != null && phone.getUser() != null) {
+            UserSearchResult userSearchResult = convertUserToResult(phone.getUser());
+            userSearchResult.setMobileNumber(mobile);
+            userSearchResults.add(userSearchResult);
+        }
+        return phone;
+    }
+
     private UserSearchResult convertUserToResult(User user) {
         UserSearchResult userSearchResult = convertUser(user);
 
@@ -428,6 +441,13 @@ public class UserServiceImpl implements UserService {
     public List<UserSearchResult> searchUserByEmail(String emailId) throws AppException {
         List<UserSearchResult> list = new ArrayList<UserSearchResult>();
         searchUserForEmail(list, emailId);
+        return list;
+    }
+
+    @Override
+    public List<UserSearchResult> searchUserByMobile(String mobile) throws AppException {
+        List<UserSearchResult> list = new ArrayList<UserSearchResult>();
+        searchUserForPhone(list, mobile);
         return list;
     }
 

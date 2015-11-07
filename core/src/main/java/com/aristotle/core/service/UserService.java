@@ -28,6 +28,8 @@ public interface UserService {
 
     List<UserSearchResult> searchUserByEmail(String emailId) throws AppException;
 
+    List<UserSearchResult> searchUserByMobile(String mobile) throws AppException;
+
     List<UserSearchResult> searchNriUserForVolunteerIntrest(List<Long> intrests) throws AppException;
 
     List<UserSearchResult> searchGlobalUserForVolunteerIntrest(List<Long> intrests) throws AppException;

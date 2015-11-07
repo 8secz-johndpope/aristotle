@@ -51,12 +51,19 @@
                         Search By Email
                         <p:inputText id="email" value="#{adminSearchMemberBean.emailText}" style="width:400px;" rendered="#{adminSearchMemberBean.emailSearch}" />
 					</h:panelGrid>
+                    <h:panelGrid columns="3" styleClass="topAlignPanelColumns" id="mobilePanel">
+                        <p:selectBooleanCheckbox id="mobileCheckBox" value="#{adminSearchMemberBean.mobileSearch}">
+                            <p:ajax update="@form" listener="#{adminSearchMemberBean.mobileSearchSelectionHandler}" />
+                        </p:selectBooleanCheckbox>
+                        Search By Mobile
+                        <p:inputText id="email" value="#{adminSearchMemberBean.phoneText}" style="width:400px;" rendered="#{adminSearchMemberBean.mobileSearch}" />
+                    </h:panelGrid>
 					<h:panelGrid columns="3" styleClass="topAlignPanelColumns" id="locationTypePanel">
 
 						<p:selectBooleanCheckbox id="locationCheckBox" value="#{adminSearchMemberBean.locationSearch}">
 							<p:ajax update="@form" listener="#{adminSearchMemberBean.locationSearchSelectionHandler}" />
 						</p:selectBooleanCheckbox>
-						Search By Location
+						Search By Location/Interests
 						<p:outputPanel rendered="#{adminSearchMemberBean.locationSearch}">
 							<p:selectOneMenu id="locationType" value="#{adminSearchMemberBean.selectedLocationType}" effect="fold" editable="false" converter="#{jsfLocationTypeConvertor}">
 								<f:selectItems value="#{adminSearchMemberBean.locationTypes}" var="oneLocationType" itemLabel="#{oneLocationType.name}" itemValue="#{oneLocationType}" />

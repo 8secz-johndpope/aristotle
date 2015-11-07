@@ -40,6 +40,7 @@ public class AdminSearchMemberBean extends BaseMultiPermissionAdminJsfBean {
     private boolean showExporter;
     private boolean locationSearch;
     private boolean emailSearch;
+    private boolean mobileSearch;
     private boolean showLocationSearchPanel;
     private boolean showStateLocationSelectionOption;
     private boolean showDistrictLocationSelectionOption;
@@ -70,6 +71,7 @@ public class AdminSearchMemberBean extends BaseMultiPermissionAdminJsfBean {
     private List<UserSearchResult> userSearchResults;
 
     private String emailText;
+    private String phoneText;
 
     @Autowired
     private LocationService locationService;
@@ -133,6 +135,8 @@ public class AdminSearchMemberBean extends BaseMultiPermissionAdminJsfBean {
         try {
             if (emailSearch) {
                 searchUserByEmail();
+            } else if (mobileSearch) {
+                searchUserByMobile();
             } else {
                 searchVolunteerByLocation();
             }
@@ -146,6 +150,10 @@ public class AdminSearchMemberBean extends BaseMultiPermissionAdminJsfBean {
 
     private void searchUserByEmail() throws AppException {
         userSearchResults = userService.searchUserByEmail(emailText);
+    }
+
+    private void searchUserByMobile() throws AppException {
+        userSearchResults = userService.searchUserByMobile(phoneText);
     }
 
     private void toggleShowExporter() {
@@ -272,6 +280,7 @@ public class AdminSearchMemberBean extends BaseMultiPermissionAdminJsfBean {
         System.out.println("Location Search Select : " + locationSearch);
         if (locationSearch) {
             emailSearch = false;
+            mobileSearch = false;
             showLocationSearchPanel = false;
         }
 	}
@@ -280,9 +289,18 @@ public class AdminSearchMemberBean extends BaseMultiPermissionAdminJsfBean {
         System.out.println("Email Search Select : " + emailSearch);
         if (emailSearch) {
             locationSearch = false;
+            mobileSearch = false;
         }
-
     }
+
+    public void mobileSearchSelectionHandler() {
+        System.out.println("Email Search Select : " + emailSearch);
+        if (mobileSearch) {
+            locationSearch = false;
+            emailSearch = false;
+        }
+    }
+
 
     public void handleLocationTypeSelection() {
         try {
@@ -749,5 +767,21 @@ public class AdminSearchMemberBean extends BaseMultiPermissionAdminJsfBean {
 
     public void setShowExporter(boolean showExporter) {
         this.showExporter = showExporter;
+    }
+
+    public boolean isMobileSearch() {
+        return mobileSearch;
+    }
+
+    public void setMobileSearch(boolean mobileSearch) {
+        this.mobileSearch = mobileSearch;
+    }
+
+    public String getPhoneText() {
+        return phoneText;
+    }
+
+    public void setPhoneText(String phoneText) {
+        this.phoneText = phoneText;
     }
 }
