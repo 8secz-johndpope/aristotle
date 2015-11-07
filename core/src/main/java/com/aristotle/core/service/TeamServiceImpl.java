@@ -91,7 +91,7 @@ public class TeamServiceImpl implements TeamService {
                 try {
                     int o1Priority = getPostPriority(o1.getPost());
                     int o2Priority = getPostPriority(o2.getPost());
-                    return o1Priority - o2Priority;
+                    return o2Priority - o1Priority;
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
