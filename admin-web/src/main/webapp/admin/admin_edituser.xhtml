@@ -147,72 +147,37 @@
 									<f:facet name="header">
 										<h:outputText value="Name" />
 									</f:facet>
-									<h:outputText value="#{oneUser.name}" />
+									<h:outputText value="#{oneUser.user.name}" />
 								</p:column>
 								<p:column>
 									<f:facet name="header">
 										<h:outputText value="Address" />
 									</f:facet>
-									<h:outputText value="#{oneUser.address}" />
+									<h:outputText value="#{oneUser.user.address}" />
 								</p:column>
 								<p:column>
 									<f:facet name="header">
 										<h:outputText value="Phone(s)" />
 									</f:facet>
-									<h:outputText value="#{oneUser.mobileNumber}" />
+									<h:outputText value="#{oneUser.phone.phoneNumber}" />
 								</p:column>
 								<p:column>
 									<f:facet name="header">
 										<h:outputText value="Email" />
 									</f:facet>
-									<h:outputText value="#{oneUser.email}" />
+									<h:outputText value="#{oneUser.email.email}" />
 								</p:column>
 								<p:column>
 									<f:facet name="header">
 										<h:outputText value="Update" />
 									</f:facet>
 									<!-- <p:commandButton update=":userProfileForm" value="Update Roles" disabled="#{!adminEditUserBean.isMemberUpdateAllowed(oneUser)}"> -->
-									<p:commandButton update=":userProfileForm:userProfileFormMainPanel" value="Update Roles" disabled="#{!adminEditUserBean.isMemberUpdateAllowed(oneUser)}">
+									<p:commandButton update=":userProfileForm:userProfileFormMainPanel" value="Edit" disabled="#{!adminEditUserBean.isMemberUpdateAllowed(oneUser)}">
 										<f:setPropertyActionListener value="#{oneUser}" target="#{adminEditUserBean.selectedUserForEditing}" />
 									</p:commandButton>
 									<br/>
 									<h:outputText value="You can not update your own permissions" rendered="#{!adminEditUserBean.isMemberUpdateAllowed(oneUser)}" />
 								</p:column>
-
-
-								<p:rowExpansion>
-									<h:panelGrid id="display" columns="4" cellpadding="4">
-
-										<f:facet name="header">
-											
-										</f:facet>
-
-                                        <h:outputText value="Id" />
-                                        <h:outputText value="#{oneUser.id}" />
-
-										<h:outputText value="Name" />
-										<h:outputText value="#{oneUser.name}" />
-
-										<h:outputText value="Gender" />
-										<h:outputText value="#{oneUser.gender}" />
-
-										<h:outputText value="Date Of Birth" />
-										<h:outputText value="#{oneUser.dateOfBirth}">
-											<f:convertDateTime pattern="dd-MMM-yyyy" />
-										</h:outputText>
-
-										<h:outputText value="Phone" />
-										<h:outputText value="#{oneUser.mobileNumber}" />
-
-									</h:panelGrid>
-									<p:outputLabel value="You can not edit this member"
-										rendered="#{!adminEditUserBean.isMemberUpdateAllowed(oneUser)}"></p:outputLabel>
-									<p:commandButton id="editMemberButton" update=":userProfileForm:userProfileFormMainPanel" value="Update Roles"
-										rendered="#{adminEditUserBean.isMemberUpdateAllowed(oneUser)}">
-										<f:setPropertyActionListener value="#{oneUser}" target="#{adminEditUserBean.selectedUserForEditing}" />
-									</p:commandButton>
-
-								</p:rowExpansion>
 							</p:dataTable>
 							<br></br>
 						</p:outputPanel>
@@ -222,19 +187,47 @@
 							<p:panelGrid columns="4">
 								<f:facet name="header">User Detail</f:facet>
 								<h:outputText value="Name" />
-								<h:outputText value="#{adminEditUserBean.selectedUserForEditing.name}" />
+								<h:inputText value="#{adminEditUserBean.selectedUserForEditing.user.name}" />
 
 								<h:outputText value="Gender" />
-								<h:outputText value="#{adminEditUserBean.selectedUserForEditing.gender}" />
+								<p:selectOneMenu id="gender" value="#{adminEditUserBean.selectedUserForEditing.user.gender}" >
+                                        <f:selectItem itemLabel="Select Gender" itemValue="Other" />
+                                        <f:selectItem itemLabel="Male" itemValue="Male" />
+                                        <f:selectItem itemLabel="Female" itemValue="Female" />
+                                        <f:selectItem itemLabel="Other" itemValue="Other" />
+                                    </p:selectOneMenu>
+								<h:inputText value="" />
 
 								<h:outputText value="Date Of Birth" />
-								<h:outputText value="#{adminEditUserBean.selectedUserForEditing.dateOfBirth}">
-									<f:convertDateTime pattern="dd-MMM-yyyy" />
-								</h:outputText>
+								<p:calendar id="dateOfBirth" yearRange="1900:2015" pattern="dd-MMM-yyyy" readonlyInput="true"
+                                value="#{adminEditUserBean.selectedUserForEditing.user.dateOfBirth}" navigator="true" effect="slideDown" />
+                                
+								<h:outputText value="Address" />
+								<p:inputText value="#{adminEditUserBean.selectedUserForEditing.user.address}" />
 
-								<h:outputText value="Phone" />
-								<h:outputText value="#{adminEditUserBean.selectedUserForEditing.mobileNumber}" />
+                                <h:outputText value="NRI" />
+                                <p:selectBooleanCheckbox value="#{adminEditUserBean.selectedUserForEditing.user.nri}" />
+                                
+                                <h:outputText value="Profile" />
+                                <p:editor id="editor" widgetVar="editorWidget" value="#{adminEditUserBean.selectedUserForEditing.user.profile}" width="600" />
 
+                                <h:outputText value="Member" />
+                                <p:selectBooleanCheckbox value="#{adminEditUserBean.selectedUserForEditing.user.member}" disabled="true"/>
+
+                                <h:outputText value="Donor" />
+                                <p:selectBooleanCheckbox value="#{adminEditUserBean.selectedUserForEditing.user.donor}" disabled="true"/>
+                                
+                                <h:outputText value="Volunteer" />
+                                <p:selectBooleanCheckbox value="#{adminEditUserBean.selectedUserForEditing.user.volunteer}" disabled="true"/>
+
+                                <h:outputText value="Membership Status" />
+                                <h:ouputText value="#{adminEditUserBean.selectedUserForEditing.user.membershipStatus}" />
+                                
+                                <h:outputText value="Membership Number" />
+                                <h:ouputText value="#{adminEditUserBean.selectedUserForEditing.user.membershipNumber}" />
+
+
+    
 							</p:panelGrid>
 
 							<br></br>

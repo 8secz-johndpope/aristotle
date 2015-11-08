@@ -30,6 +30,7 @@ import com.aristotle.core.service.LocationService;
 import com.aristotle.core.service.UserService;
 import com.aristotle.core.service.dto.SearchUser;
 import com.aristotle.core.service.dto.UserSearchResult;
+import com.aristotle.core.service.dto.UserSearchResultForEdting;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
@@ -49,10 +50,10 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
     @Autowired
     private LocationConvertor locationConvertor;
 
-    private UserSearchResult selectedUserForEditing;
+    private UserSearchResultForEdting selectedUserForEditing;
     private SearchUser searchedUser;
 
-    private List<UserSearchResult> userSearchResults;
+    private List<UserSearchResultForEdting> userSearchResults;
 
     private List<Location> stateList;
     private List<Location> districtList;
@@ -112,7 +113,7 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 		}
         memberLocationList = new ArrayList<SelectItem>();
 
-        userSearchResults = new ArrayList<UserSearchResult>();
+        userSearchResults = new ArrayList<UserSearchResultForEdting>();
 		showResult = false;
 		showSearchPanel = true;
 
@@ -140,7 +141,7 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
         // searchedUser.setDateOfBirth(cal.getTime());
 
 		// Copy Logged In user to selectedUserForEditing
-        selectedUserForEditing = new UserSearchResult();
+        selectedUserForEditing = new UserSearchResultForEdting();
         // searchedUser.setDateOfBirth(cal.getTime());
 
 		if (searchedUser.getStateVotingId() != null) {
@@ -236,19 +237,19 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
     public boolean isMemberUpdateAllowed(UserSearchResult user) {
+        /*
         User loggedInUser = getLoggedInUser();
         System.out.println("loggedInUser.getId()=" + loggedInUser.getId() + ",user.getId()=" + user.getId());
         return !loggedInUser.getId().equals(user.getId());
+        */
+        return true;
 	}
 
-    public void saveUserRoles(ActionEvent event) {
+    public void saveUser(ActionEvent event) {
 		if (isValidInput()) {
             try {
-                System.out.println("editingUserLocationRoles=" + editingUserLocationRoles);
-                adminService.addRolesToUserAtLocation(editingUserLocationRoles, selectedUserForEditing.getId(), selectedLocationForRole);
-                showSearchPanel = true;
-                selectedLocationForRole = null;
-            } catch (AppException e) {
+
+            } catch (Exception e) {
                 sendErrorMessageToJsfScreen(e);
             }
 
@@ -275,7 +276,7 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 
 	public void searchMember() {
         try {
-            userSearchResults = userService.searchUsers(searchedUser);
+            userSearchResults = userService.searchUserForEditing(searchedUser);
             showResult = true;
         } catch (AppException e) {
             sendErrorMessageToJsfScreen(e);
@@ -319,52 +320,6 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	public void handleLocationClick() {
-		if (location.indexOf("Global-") == 0) {
-			// User choose his/her location
-            User loggedInUser = getLoggedInUser();
-            loadLocationRoles(null, null, loggedInUser.isSuperAdmin());
-		} else {
-			selectedPostLocationType = null;
-			selectedPostLocationId = null;
-			showRolesPanel = false;
-			selectedAcIdForRoles =  null;
-			selectedDistrictIdForRoles = null;
-			selectedPcIdForRoles = null;
-			selectedStateIdForRoles = null;
-			disableSaveMemberRoleButton = true;
-			// loadLocationRoles(menuBean.getLocationType(), 0L, false);
-		}
-	}
-
-	private void loadLocationRoles(PostLocationType selectedLocationType, Long selectedLocationId, boolean getAllRolesOfLocation) {
-        try {
-            selectedPostLocationType = selectedLocationType;
-            selectedPostLocationId = selectedLocationId;
-            if ((selectedPostLocationType != null && selectedPostLocationType != PostLocationType.Global) && (selectedLocationId == null || selectedLocationId <= 0)) {
-                showRolesPanel = false;
-                disableSaveMemberRoleButton = true;
-                return;
-            }
-            showRolesPanel = true;
-            disableSaveMemberRoleButton = false;
-            // get Roles of LoggedInUserId in this location
-            User loggedInuser = getLoggedInUser();
-            if (getAllRolesOfLocation) {
-                userLocationRoles = new RoleModel(adminService.getLocationRoles(menuBean.getSelectedLocation()));
-            } else {
-                userLocationRoles = new RoleModel(adminService.getUserRoles(loggedInuser.getId(), menuBean.getSelectedLocation()));
-            }
-
-            // get Roles of editing User
-            editingUserLocationRoles = adminService.getUserRoles(selectedUserForEditing.getId(), menuBean.getSelectedLocation());
-            // and merge them to present to screen
-        } catch (Exception ex) {
-            sendErrorMessageToJsfScreen(ex);
-        }
-
 	}
 
 	public void handleLivingStateChange(AjaxBehaviorEvent event) {
@@ -528,64 +483,6 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 
 	public boolean isShowMemberPanel() {
 		return true;//StringUtil.isEmpty(selectedUserForEditing.getMembershipNumber());
-	}
-
-    public void handleRoleLocationChange(AjaxBehaviorEvent event) {
-        try {
-            Long locationId = null;
-            if (selectedLocationForRole != null && selectedLocationForRole.getId() > 0) {
-                locationId = selectedLocationForRole.getId();
-            }
-            loadLocationRoles(null, locationId, true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-	public void handleRoleStateChange(AjaxBehaviorEvent event) {
-		try {
-			loadLocationRoles(PostLocationType.STATE, selectedStateIdForRoles, true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	public void handleRoleCountryChange(AjaxBehaviorEvent event) {
-		try {
-			loadLocationRoles(PostLocationType.COUNTRY, selectedCountryIdForRoles, true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	public void handleRoleCountryRegionChange(AjaxBehaviorEvent event) {
-		try {
-			loadLocationRoles(PostLocationType.REGION, selectedCountryRegionIdForRoles, true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void handleRoleDistrictChange(AjaxBehaviorEvent event) {
-		try {
-			loadLocationRoles(PostLocationType.DISTRICT, selectedDistrictIdForRoles, true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void handleRoleAcChange(AjaxBehaviorEvent event) {
-		try {
-			loadLocationRoles(PostLocationType.AC, selectedAcIdForRoles, true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void handleRolePcChange(AjaxBehaviorEvent event) {
-		try {
-			loadLocationRoles(PostLocationType.PC, selectedPcIdForRoles, true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void onClickNri() {
@@ -853,20 +750,20 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
         this.editingUserLocationRoles = editingUserLocationRoles;
     }
 
-    public List<UserSearchResult> getUserSearchResults() {
+    public List<UserSearchResultForEdting> getUserSearchResults() {
         return userSearchResults;
     }
 
-    public void setUserSearchResults(List<UserSearchResult> userSearchResults) {
+    public void setUserSearchResults(List<UserSearchResultForEdting> userSearchResults) {
         this.userSearchResults = userSearchResults;
     }
 
-    public void setSelectedUserForEditing(UserSearchResult selectedUserForEditing) {
+    public void setSelectedUserForEditing(UserSearchResultForEdting selectedUserForEditing) {
         this.selectedUserForEditing = selectedUserForEditing;
         showSearchPanel = false;
     }
 
-    public UserSearchResult getSelectedUserForEditing() {
+    public UserSearchResultForEdting getSelectedUserForEditing() {
         return selectedUserForEditing;
     }
 

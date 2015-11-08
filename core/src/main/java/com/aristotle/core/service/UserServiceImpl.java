@@ -56,6 +56,7 @@ import com.aristotle.core.service.dto.UserContactBean;
 import com.aristotle.core.service.dto.UserPersonalDetailBean;
 import com.aristotle.core.service.dto.UserRegisterBean;
 import com.aristotle.core.service.dto.UserSearchResult;
+import com.aristotle.core.service.dto.UserSearchResultForEdting;
 import com.aristotle.core.service.dto.UserVolunteerBean;
 
 @Service
@@ -107,6 +108,44 @@ public class UserServiceImpl implements UserService {
         searchUserForMobile(userSearchResults, searchUser.getMobileNumber(), searchUser.getCountryCode());
         return userSearchResults;
     }
+
+    @Override
+    public List<UserSearchResultForEdting> searchUserForEditing(SearchUser searchUser) throws AppException {
+        List<UserSearchResultForEdting> userSearchResults = new ArrayList<UserSearchResultForEdting>();
+
+        if (!StringUtils.isEmpty(searchUser.getEmail())) {
+            Email email = emailRepository.getEmailByEmailUp(searchUser.getEmail().toUpperCase());
+            if (email != null && email.getUser() != null) {
+                UserSearchResultForEdting userSearchResultForEdting = new UserSearchResultForEdting();
+                userSearchResultForEdting.setEmail(email);
+                userSearchResultForEdting.setUser(email.getUser());
+                List<Phone> phones = phoneRepository.getPhonesByUserId(email.getUser().getId());
+                if (phones != null && phones.size() > 0) {
+                    userSearchResultForEdting.setPhone(phones.get(0));
+                }
+                userSearchResults.add(userSearchResultForEdting);
+            }
+        }
+
+        if (!StringUtils.isEmpty(searchUser.getMobileNumber())) {
+            Phone mobile = phoneRepository.getPhoneByPhoneNumberAndCountryCode(searchUser.getMobileNumber(), searchUser.getCountryCode());
+            if (mobile != null && mobile.getUser() != null) {
+                UserSearchResultForEdting userSearchResultForEdting = new UserSearchResultForEdting();
+                userSearchResultForEdting.setPhone(mobile);
+                userSearchResultForEdting.setUser(mobile.getUser());
+                List<Email> emails = emailRepository.getEmailsByUserId(mobile.getUser().getId());
+                if (emails != null && emails.size() > 0) {
+                    userSearchResultForEdting.setEmail(emails.get(0));
+                }
+                userSearchResults.add(userSearchResultForEdting);
+
+            }
+        }
+
+
+        return userSearchResults;
+    }
+
 
     private List<UserSearchResult> convertUsers(List<User> users) {
         List<UserSearchResult> userSearchResults = new ArrayList<UserSearchResult>(users.size() + 1);
@@ -934,5 +973,6 @@ public class UserServiceImpl implements UserService {
         user.setMember(true);
         return user;
     }
+
 
 }

@@ -10,6 +10,7 @@ import com.aristotle.core.service.dto.UserContactBean;
 import com.aristotle.core.service.dto.UserPersonalDetailBean;
 import com.aristotle.core.service.dto.UserRegisterBean;
 import com.aristotle.core.service.dto.UserSearchResult;
+import com.aristotle.core.service.dto.UserSearchResultForEdting;
 import com.aristotle.core.service.dto.UserVolunteerBean;
 
 public interface UserService {
@@ -19,6 +20,8 @@ public interface UserService {
     void registerUser(UserRegisterBean userRegisterBean) throws AppException;
 
     List<UserSearchResult> searchUsers(SearchUser searchUser) throws AppException;
+
+    List<UserSearchResultForEdting> searchUserForEditing(SearchUser searchUser) throws AppException;
 
     User login(String userName, String password) throws AppException;
 
