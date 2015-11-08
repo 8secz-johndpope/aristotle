@@ -24,6 +24,8 @@ public interface UserService {
 
     List<UserSearchResultForEdting> searchUserForEditing(SearchUser searchUser) throws AppException;
 
+    UserSearchResultForEdting saveUserFromAdminPanel(UserSearchResultForEdting userSearchResultForEdting) throws AppException;
+
     User login(String userName, String password) throws AppException;
 
     User getUserById(Long userId) throws AppException;

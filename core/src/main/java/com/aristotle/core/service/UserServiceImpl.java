@@ -1013,4 +1013,11 @@ public class UserServiceImpl implements UserService {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
+    @Override
+    public UserSearchResultForEdting saveUserFromAdminPanel(UserSearchResultForEdting userSearchResultForEdting) throws AppException {
+        User user = userRepository.save(userSearchResultForEdting.getUser());
+        userSearchResultForEdting.setUser(user);
+        return userSearchResultForEdting;
+    }
+
 }

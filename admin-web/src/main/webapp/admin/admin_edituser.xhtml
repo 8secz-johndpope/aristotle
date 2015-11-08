@@ -215,6 +215,8 @@
 								    </p:panelGrid>
 								</p:outputPanel>
 							</p:panelGrid>
+							<p:commandButton id="saveMember" update=":userProfileForm:userProfileFormMainPanel" value="Save" actionListener="#{adminEditUserBean.saveUser}" />
+							<p:commandButton id="cancel" update=":userProfileForm:userProfileFormMainPanel" value="Cancel" actionListener="#{adminEditUserBean.cancel}" />
 
 						</p:outputPanel>
 					</p:outputPanel>

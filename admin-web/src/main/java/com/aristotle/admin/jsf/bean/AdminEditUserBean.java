@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 
 import com.aristotle.admin.jsf.convertors.LocationConvertor;
 import com.aristotle.core.enums.AppPermission;
-import com.aristotle.core.enums.PostLocationType;
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.User;
@@ -54,9 +53,9 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
     private List<Location> districtList;
     private List<Location> assemblyConstituencyList;
     private List<Location> parliamentConstituencyList;
-	private boolean enableDistrictCombo = false;
-	private boolean enableAssemblyConstituencyCombo = false;
-	private boolean enableParliamentConstituencyCombo = false;
+    private boolean enableDistrictCombo = false;
+    private boolean enableAssemblyConstituencyCombo = false;
+    private boolean enableParliamentConstituencyCombo = false;
 
     private List<Location> livingStateList;
     private List<Location> livingDistrictList;
@@ -71,18 +70,6 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 	private boolean showResult;
 	private boolean showSearchPanel;
     private List<Location> countries;
-	private String location;
-
-	private Long selectedStateIdForRoles;
-	private Long selectedDistrictIdForRoles;
-	private Long selectedAcIdForRoles;
-	private Long selectedPcIdForRoles;
-	private Long selectedCountryIdForRoles;
-	private Long selectedCountryRegionIdForRoles;
-	private Long selectedCountryRegionAreaIdForRoles;
-
-	PostLocationType selectedPostLocationType;
-	Long selectedPostLocationId;
 
 	public AdminEditUserBean() {
         super("/admin/edituser", AppPermission.UPDATE_MEMBER, AppPermission.ADD_MEMBER, AppPermission.UPDATE_GLOBAL_MEMBER);
@@ -191,9 +178,8 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
         return stateSelectItems;
     }
 
-    public void cancelSave() {
+    public void cancel() {
 		showSearchPanel = true;
-		resetRolePanel();
 	}
 
     public void handleFileUpload(FileUploadEvent event) {
@@ -218,27 +204,16 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
     public void saveUser(ActionEvent event) {
 		if (isValidInput()) {
             try {
-
+                selectedUserForEditing = userService.saveUserFromAdminPanel(selectedUserForEditing);
+                showSearchPanel = true;
+                sendInfoMessageToJsfScreen("User updated succesfully");
+                searchMember();
             } catch (Exception e) {
                 sendErrorMessageToJsfScreen(e);
             }
-
-			resetRolePanel();
-			sendInfoMessageToJsfScreen("Roles updated succesfully");
 		}
 	}
 	
-	public void resetRolePanel(){
-
-		selectedPostLocationType = null;
-		selectedPostLocationId = null;
-		selectedAcIdForRoles = null;
-		selectedDistrictIdForRoles = null;
-		selectedPcIdForRoles = null;
-		selectedStateIdForRoles = null;
-		location = null;
-	}
-
 	public void searchMember() {
         try {
             userSearchResults = userService.searchUserForEditing(searchedUser);
@@ -386,70 +361,6 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 		}
 	}
     */
-	public boolean isDisableStateComobForRoles() {
-		boolean returnValue = !"State".equals(location);
-		return returnValue;
-	}
-
-	public boolean isRenderStateComboForRoles() {
-        boolean returnValue = true;// (PostLocationType.Global == menuBean.getLocationType());
-		return returnValue;
-	}
-
-	public boolean isDisableDistrictComobForRoles() {
-		boolean returnValue = !"District".equals(location);
-		return returnValue;
-	}
-
-	public boolean isRenderDistrictComboForRoles() {
-        boolean returnValue = true;// (PostLocationType.STATE == menuBean.getLocationType());
-		return returnValue;
-	}
-	
-	public boolean isDisableCountryComobForRoles() {
-		boolean returnValue = !"Country".equals(location);
-		return returnValue;
-	}
-
-	public boolean isRenderCountryComboForRoles() {
-        boolean returnValue = true;// (PostLocationType.Global == menuBean.getLocationType());
-		return returnValue;
-	}
-
-	public boolean isDisableCountryRegionComobForRoles() {
-		boolean returnValue = !"CountryRegion".equals(location);
-		return returnValue;
-	}
-
-	public boolean isRenderCountryRegionComboForRoles() {
-        boolean returnValue = true;// (PostLocationType.COUNTRY == menuBean.getLocationType());
-		return returnValue;
-	}
-
-	public boolean isDisableAcComobForRoles() {
-		boolean returnValue = !"Ac".equals(location);
-		return returnValue;
-	}
-
-	public boolean isRenderAcComboForRoles() {
-        boolean returnValue = true;// (PostLocationType.DISTRICT == menuBean.getLocationType());
-		return returnValue;
-	}
-
-	public boolean isDisablePcComobForRoles() {
-		boolean returnValue = !"Pc".equals(location);
-		return returnValue;
-	}
-
-	public boolean isRenderPcComboForRoles() {
-        boolean returnValue = true;// (PostLocationType.STATE == menuBean.getLocationType());
-		return returnValue;
-	}
-
-	public boolean isShowMemberPanel() {
-		return true;//StringUtil.isEmpty(selectedUserForEditing.getMembershipNumber());
-	}
-
 	public void onClickNri() {
 	}
 
@@ -529,70 +440,6 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 
 	public void setShowSearchPanel(boolean showSearchPanel) {
 		this.showSearchPanel = showSearchPanel;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	public Long getSelectedStateIdForRoles() {
-		return selectedStateIdForRoles;
-	}
-
-	public void setSelectedStateIdForRoles(Long selectedStateIdForRoles) {
-		this.selectedStateIdForRoles = selectedStateIdForRoles;
-	}
-
-	public Long getSelectedDistrictIdForRoles() {
-		return selectedDistrictIdForRoles;
-	}
-
-	public void setSelectedDistrictIdForRoles(Long selectedDistrictIdForRoles) {
-		this.selectedDistrictIdForRoles = selectedDistrictIdForRoles;
-	}
-
-	public Long getSelectedAcIdForRoles() {
-		return selectedAcIdForRoles;
-	}
-
-	public void setSelectedAcIdForRoles(Long selectedAcIdForRoles) {
-		this.selectedAcIdForRoles = selectedAcIdForRoles;
-	}
-
-	public Long getSelectedPcIdForRoles() {
-		return selectedPcIdForRoles;
-	}
-
-	public void setSelectedPcIdForRoles(Long selectedPcIdForRoles) {
-		this.selectedPcIdForRoles = selectedPcIdForRoles;
-	}
-
-	public Long getSelectedCountryIdForRoles() {
-		return selectedCountryIdForRoles;
-	}
-
-	public void setSelectedCountryIdForRoles(Long selectedCountryIdForRoles) {
-		this.selectedCountryIdForRoles = selectedCountryIdForRoles;
-	}
-
-	public Long getSelectedCountryRegionIdForRoles() {
-		return selectedCountryRegionIdForRoles;
-	}
-
-	public void setSelectedCountryRegionIdForRoles(Long selectedCountryRegionIdForRoles) {
-		this.selectedCountryRegionIdForRoles = selectedCountryRegionIdForRoles;
-	}
-
-	public Long getSelectedCountryRegionAreaIdForRoles() {
-		return selectedCountryRegionAreaIdForRoles;
-	}
-
-	public void setSelectedCountryRegionAreaIdForRoles(Long selectedCountryRegionAreaIdForRoles) {
-		this.selectedCountryRegionAreaIdForRoles = selectedCountryRegionAreaIdForRoles;
 	}
 
     public List<Location> getStateList() {
