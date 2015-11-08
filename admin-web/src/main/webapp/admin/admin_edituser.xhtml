@@ -207,8 +207,8 @@
 								</p:outputPanel>
 								<p:outputPanel id="ImagePanel">
 								    <p:panelGrid columns="1">
-	                                    <p:graphicImage value="http://static.swarajabhiyan.org/#{adminEditUserBean.selectedUserForEditing.user.profilePic}" />
-	                                    <h:outputText value="#{adminEditUserBean.selectedUserForEditing.user.profilePic}" />
+	                                    <p:graphicImage value="http://static.swarajabhiyan.org/#{adminEditUserBean.selectedUserForEditing.user.profilePic}" style="max-width:400px;max-height:400px"/>
+	                                    <h:outputText value="http://static.swarajabhiyan.org/#{adminEditUserBean.selectedUserForEditing.user.profilePic}" />
 	                                    <p:fileUpload fileUploadListener="#{adminEditUserBean.handleFileUpload}" mode="advanced"
                                         update="messages, @form:ImagePanel" auto="true" sizeLimit="1000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
                                         <h:outputText value="Maximum size 1 MB" />
