@@ -93,37 +93,8 @@
                                 mask="9999999999" maxlength="10">
                             </p:inputText>
                             <p:outputPanel></p:outputPanel>
-    <!-- 
-							<h:outputLabel for="name" value="Name*" />
-							<p:inputText id="name" value="#{adminEditUserBean.searchedUser.name}" label="Name">
-							</p:inputText>
-							<h:outputLabel for="identityNumber" value="Identity Number" />
-							<p:inputText id="identityNumber" value="#{adminEditUserBean.searchedUser.identityNumber}"
-								label="Identity Number">
-							</p:inputText>
-
-
-							<h:outputText value="Date of Birth*" />
-							<p:calendar id="cal" yearRange="1900:2004" pattern="dd-MMM-yyyy" readonlyInput="true"
-								value="#{adminEditUserBean.searchedUser.dateOfBirth}" navigator="true" effect="slideDown" />
-
-
-
-
-							<h:outputLabel for="passportNumber" value="Passport Number" />
-							<p:inputText id="passportNumber" value="#{adminEditUserBean.searchedUser.passportNumber}"
-								label="Passport Number">
-							</p:inputText>
-
-							<h:outputLabel for="membershipNumber" value="Membership Number" />
-							<p:inputText id="membershipNumber" value="#{adminEditUserBean.searchedUser.membershipNumber}"
-								label="Membership Number">
-							</p:inputText>
- -->
-						</h:panelGrid>
+   					</h:panelGrid>
 						<p:watermark for="mobile" value="XXXXXXXXXX" />
-
-
 						<br></br>
 
 
@@ -196,7 +167,6 @@
                                         <f:selectItem itemLabel="Female" itemValue="Female" />
                                         <f:selectItem itemLabel="Other" itemValue="Other" />
                                     </p:selectOneMenu>
-								<h:inputText value="" />
 
 								<h:outputText value="Date Of Birth" />
 								<p:calendar id="dateOfBirth" yearRange="1900:2015" pattern="dd-MMM-yyyy" readonlyInput="true"
@@ -205,12 +175,15 @@
 								<h:outputText value="Address" />
 								<p:inputText value="#{adminEditUserBean.selectedUserForEditing.user.address}" />
 
+                                <h:outputText value="Mother Name" />
+                                <p:inputText value="#{adminEditUserBean.selectedUserForEditing.user.motherName}" />
+
+                                <h:outputText value="Father name" />
+                                <p:inputText value="#{adminEditUserBean.selectedUserForEditing.user.fatherName}" />
+
                                 <h:outputText value="NRI" />
                                 <p:selectBooleanCheckbox value="#{adminEditUserBean.selectedUserForEditing.user.nri}" />
                                 
-                                <h:outputText value="Profile" />
-                                <p:editor id="editor" widgetVar="editorWidget" value="#{adminEditUserBean.selectedUserForEditing.user.profile}" width="600" />
-
                                 <h:outputText value="Member" />
                                 <p:selectBooleanCheckbox value="#{adminEditUserBean.selectedUserForEditing.user.member}" disabled="true"/>
 
@@ -226,129 +199,18 @@
                                 <h:outputText value="Membership Number" />
                                 <h:outputText value="#{adminEditUserBean.selectedUserForEditing.user.membershipNumber}" />
 
+                                <h:outputText value="Mobile Number" />
+                                <h:outputText value="#{adminEditUserBean.selectedUserForEditing.phone.phoneNumber}" />
 
-    
+                                <h:outputText value="Email" />
+                                <h:outputText value="#{adminEditUserBean.selectedUserForEditing.email.email}" />
+
 							</p:panelGrid>
-
+                                <h:outputText value="Profile" />
+                                <p:editor id="editor" widgetVar="editorWidget" value="#{adminEditUserBean.selectedUserForEditing.user.profile}" width="600" />
 							<br></br>
-							<p:outputPanel id="customPanel">
-							<!--
-								<p:selectOneRadio id="locationSelectionRadio" layout="custom" value="#{adminEditUserBean.location}">
-									<f:selectItem itemLabel="Global" itemValue="Global-#{adminEditUserBean.currentLocationType}" />
-									<f:selectItem itemLabel="State" itemValue="State" />
-									<f:selectItem itemLabel="District" itemValue="District" />
-									<f:selectItem itemLabel="Assembly Constituency" itemValue="Ac" />
-									<f:selectItem itemLabel="Parliament Constituency" itemValue="Pc" />
-									<f:selectItem itemLabel="Country" itemValue="Country" />
-									<f:selectItem itemLabel="CountryRegion" itemValue="CountryRegion" />
-									<p:ajax process="@this" event="change" update=":userProfileForm:GlobalAdminPanel"
-										listener="#{adminEditUserBean.handleLocationClick}" />
-								</p:selectOneRadio>
-  -->
-								<h:panelGrid columns="3">
-									<p:outputLabel for="car" value="Location :" />
-									<p:selectOneMenu id="car" value="#{adminEditUserBean.selectedLocationForRole}" converter="#{adminEditUserBean.locationConvertor}" 
-									>
-										<f:selectItem itemLabel="Select Location" itemValue="" />
-										<f:selectItems value="#{adminEditUserBean.memberLocationList}" />
-										<p:ajax event="change" listener="#{adminEditUserBean.handleRoleLocationChange}" update=":userProfileForm:GlobalAdminPanel" />
-									</p:selectOneMenu>
-									<!-- 
-							
-								<p:radioButton id="opt1" for="locationSelectionRadio" itemIndex="0" rendered="true" />
-								<h:outputLabel for="opt2" value="#{adminEditUserBean.currentLocationType}" rendered="true" />
-								<h:outputLabel for="opt2" value="#{adminEditUserBean.currentLocationName}" rendered="true" />
-
-
-								<p:radioButton id="opt2" for="locationSelectionRadio" itemIndex="1" rendered="#{adminEditUserBean.renderStateComboForRoles}" />
-								<h:outputLabel for="opt2" value="State" rendered="#{adminEditUserBean.renderStateComboForRoles}" />
-								<p:selectOneMenu id="memberState" disabled="#{adminEditUserBean.disableStateComobForRoles}" rendered="#{adminEditUserBean.renderStateComboForRoles}"
-									value="#{adminEditUserBean.selectedStateIdForRoles}" effect="fold" editable="false">
-									<f:selectItem itemLabel="Select State" itemValue="0" />
-									<f:selectItems value="#{adminEditUserBean.livingStateList}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
-
-									<p:ajax event="change" listener="#{adminEditUserBean.handleRoleStateChange}" update=":userProfileForm:GlobalAdminPanel" />
-								</p:selectOneMenu>
-
-
-								<p:radioButton id="opt3" for="locationSelectionRadio" itemIndex="2" rendered="#{adminEditUserBean.renderDistrictComboForRoles}" />
-								<h:outputLabel for="opt3" value="District" rendered="#{adminEditUserBean.renderDistrictComboForRoles}" />
-								<p:selectOneMenu id="memberDistrict" disabled="#{adminEditUserBean.disableDistrictComobForRoles}" rendered="#{adminEditUserBean.renderDistrictComboForRoles}"
-									value="#{adminEditUserBean.selectedDistrictIdForRoles}" effect="fold" editable="false">
-									<f:selectItem itemLabel="Select District" itemValue="0" />
-									<f:selectItems value="#{adminEditUserBean.memberDistrictList}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict.id}" />
-
-									<p:ajax event="change" listener="#{adminEditUserBean.handleRoleDistrictChange}" update=":userProfileForm:GlobalAdminPanel" />
-								</p:selectOneMenu>
-
-
-								<p:radioButton id="opt4" for="locationSelectionRadio" itemIndex="3" rendered="#{adminEditUserBean.renderAcComboForRoles}" />
-								<h:outputLabel for="opt4" value="Assembly Constituency" rendered="#{adminEditUserBean.renderAcComboForRoles}" />
-								<p:selectOneMenu id="memberAssemblyConstituency" disabled="#{adminEditUserBean.disableAcComobForRoles}" rendered="#{adminEditUserBean.renderAcComboForRoles}"
-									value="#{adminEditUserBean.selectedAcIdForRoles}" effect="fold" editable="false">
-									<f:selectItem itemLabel="Select Assembly Constituency" itemValue="0" />
-									<f:selectItems value="#{adminEditUserBean.memberAssemblyConstituencyList}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
-										itemValue="#{oneAssemblyConstituency.id}" />
-									<p:ajax event="change" listener="#{adminEditUserBean.handleRoleAcChange}" update=":userProfileForm:GlobalAdminPanel" />
-								</p:selectOneMenu>
-
-								<p:radioButton id="opt5" for="locationSelectionRadio" itemIndex="4" rendered="#{adminEditUserBean.renderPcComboForRoles}" />
-								<h:outputLabel for="opt5" value="Parliament Constituency" rendered="#{adminEditUserBean.renderPcComboForRoles}" />
-								<p:selectOneMenu id="memberParliamentConstituency" disabled="#{adminEditUserBean.disablePcComobForRoles}" rendered="#{adminEditUserBean.renderPcComboForRoles}"
-									value="#{adminEditUserBean.selectedPcIdForRoles}" effect="fold" editable="false">
-									<f:selectItem itemLabel="Select Parliament Constituency" itemValue="0" />
-									<f:selectItems value="#{adminEditUserBean.memberParliamentConstituencyList}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}"
-										itemValue="#{oneParliamentConstituency.id}" />
-
-									<p:ajax event="change" listener="#{adminEditUserBean.handleRolePcChange}" update=":userProfileForm:GlobalAdminPanel" />
-								</p:selectOneMenu>
-								
-								<p:radioButton id="opt6" for="locationSelectionRadio" itemIndex="5" rendered="#{adminEditUserBean.renderCountryComboForRoles}" />
-								<h:outputLabel for="opt6" value="Country" rendered="#{adminEditUserBean.renderCountryComboForRoles}" />
-								<p:selectOneMenu id="memberCountry" disabled="#{adminEditUserBean.disableCountryComobForRoles}" rendered="#{adminEditUserBean.renderCountryComboForRoles}"
-									value="#{adminEditUserBean.selectedCountryIdForRoles}" effect="fold" editable="false">
-									<f:selectItem itemLabel="Select Country" itemValue="0" />
-									<f:selectItems value="#{adminEditUserBean.memberCountryList}" var="oneCountry" itemLabel="#{oneCountry.name}" itemValue="#{oneCountry.id}" />
-
-									<p:ajax event="change" listener="#{adminEditUserBean.handleRoleCountryChange}" update=":userProfileForm:GlobalAdminPanel" />
-								</p:selectOneMenu>
-								
-								<p:radioButton id="opt7" for="locationSelectionRadio" itemIndex="5" rendered="#{adminEditUserBean.renderCountryRegionComboForRoles}" />
-								<h:outputLabel for="opt7" value="CountryRegion" rendered="#{adminEditUserBean.renderCountryRegionComboForRoles}" />
-								<p:selectOneMenu id="memberCountryRegion" disabled="#{adminEditUserBean.disableCountryRegionComobForRoles}" rendered="#{adminEditUserBean.renderCountryRegionComboForRoles}"
-									value="#{adminEditUserBean.selectedCountryRegionIdForRoles}" effect="fold" editable="false">
-									<f:selectItem itemLabel="Select Region/State" itemValue="0" />
-									<f:selectItems value="#{adminEditUserBean.memberCountryRegionList}" var="oneCountryRegion" itemLabel="#{oneCountryRegion.name}" itemValue="#{oneCountryRegion.id}" />
-
-									<p:ajax event="change" listener="#{adminEditUserBean.handleRoleCountryRegionChange}" update=":userProfileForm:GlobalAdminPanel" />
-								</p:selectOneMenu>
-                                 -->
-								</h:panelGrid>
-
-								<p:dataTable id="roles" rendered="#{adminEditUserBean.showRolesPanel}" var="oneRole" rowKey="#{oneRole.id}"
-									value="#{adminEditUserBean.userLocationRoles}" paginator="true" rows="50"
-									selection="#{adminEditUserBean.editingUserLocationRoles}">
-
-									<f:facet name="header"> Assign Roles </f:facet>
-
-									<p:column selectionMode="multiple" style="width:5%" />
-
-									<p:column headerText="Name" style="width:23%">  #{oneRole.name}</p:column>
-
-									<p:column headerText="Description" style="width:75%">#{oneRole.description}</p:column>
-								</p:dataTable>
-							</p:outputPanel>
-							<p:commandButton id="saveUserRoles" update=":userProfileForm:userProfileFormMainPanel" value="Save user Roles"
-								actionListener="#{adminEditUserBean.saveUserRoles}"
-								disabled="#{adminEditUserBean.disableSaveMemberRoleButton}" />
-							<p:commandButton id="cancel" update=":userProfileForm" value="Cancel"
-								actionListener="#{adminEditUserBean.cancelSaveMemberRole}" />
 						</p:outputPanel>
-
-
-
 					</p:outputPanel>
-
 				</p:outputPanel>
 
 			</h:form>

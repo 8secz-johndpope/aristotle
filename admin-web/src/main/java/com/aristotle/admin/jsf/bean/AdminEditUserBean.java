@@ -3,10 +3,7 @@ package com.aristotle.admin.jsf.bean;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -18,13 +15,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
-import com.aristotle.admin.jsf.bean.model.RoleModel;
 import com.aristotle.admin.jsf.convertors.LocationConvertor;
 import com.aristotle.core.enums.AppPermission;
 import com.aristotle.core.enums.PostLocationType;
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Location;
-import com.aristotle.core.persistance.Role;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.service.LocationService;
 import com.aristotle.core.service.UserService;
@@ -85,17 +80,8 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 	private Long selectedCountryRegionIdForRoles;
 	private Long selectedCountryRegionAreaIdForRoles;
 
-    private List<SelectItem> memberLocationList;
-
-	private boolean showRolesPanel;
-	private boolean disableSaveMemberRoleButton = true;
-
-    private RoleModel userLocationRoles;
-    private List<Role> editingUserLocationRoles;
-
 	PostLocationType selectedPostLocationType;
 	Long selectedPostLocationId;
-    private Location selectedLocationForRole;
 
 	public AdminEditUserBean() {
         super("/admin/edituser", AppPermission.UPDATE_MEMBER, AppPermission.ADD_MEMBER, AppPermission.UPDATE_GLOBAL_MEMBER);
@@ -110,8 +96,6 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 		if (countries == null || countries.isEmpty()) {
             countries = locationService.getAllCountries();
 		}
-        memberLocationList = new ArrayList<SelectItem>();
-
         userSearchResults = new ArrayList<UserSearchResultForEdting>();
 		showResult = false;
 		showSearchPanel = true;
@@ -192,32 +176,7 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
             countriesGroup.setSelectItems(countrySelectItems);
 
 
-            memberLocationList.clear();
-            memberLocationList.add(globalGroup);
-            memberLocationList.add(stateGroup);
-            memberLocationList.add(countriesGroup);
         } else {
-            List<Location> childLocations = locationService.getAllChildLocations(menuBean.getSelectedLocation().getId());
-            Map<String, List<Location>> locationMap = new HashMap<String, List<Location>>();
-            for (Location oneLocation : childLocations) {
-                List<Location> locations = locationMap.get(oneLocation.getLocationType().getName());
-                if (locations == null) {
-                    locations = new ArrayList<Location>();
-                    locationMap.put(oneLocation.getLocationType().getName(), locations);
-                }
-                allLocations.add(oneLocation);
-                locations.add(oneLocation);
-            }
-
-            memberLocationList.clear();
-
-            for (Entry<String, List<Location>> oneEntry : locationMap.entrySet()) {
-                SelectItemGroup oneGroup = new SelectItemGroup(oneEntry.getKey());
-                SelectItem[] stateSelectItems = convertToSelectItems(oneEntry.getValue());
-                oneGroup.setSelectItems(stateSelectItems);
-                memberLocationList.add(oneGroup);
-            }
-
         }
         locationConvertor.setLocations(allLocations);
 	}
@@ -230,7 +189,8 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
         }
         return stateSelectItems;
     }
-	public void cancelSaveMemberRole() {
+
+    public void cancelSave() {
 		showSearchPanel = true;
 		resetRolePanel();
 	}
@@ -258,10 +218,6 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 	}
 	
 	public void resetRolePanel(){
-		showRolesPanel = false;
-
-		userLocationRoles = null;
-		editingUserLocationRoles = null;
 
 		selectedPostLocationType = null;
 		selectedPostLocationId = null;
@@ -270,7 +226,6 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 		selectedPcIdForRoles = null;
 		selectedStateIdForRoles = null;
 		location = null;
-		disableSaveMemberRoleButton = true;
 	}
 
 	public void searchMember() {
@@ -605,30 +560,6 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 		this.selectedPcIdForRoles = selectedPcIdForRoles;
 	}
 
-	public boolean isShowRolesPanel() {
-		return showRolesPanel;
-	}
-
-	public void setShowRolesPanel(boolean showRolesPanel) {
-		this.showRolesPanel = showRolesPanel;
-	}
-
-	public RoleModel getUserLocationRoles() {
-		return userLocationRoles;
-	}
-
-	public void setUserLocationRoles(RoleModel userLocationRoles) {
-		this.userLocationRoles = userLocationRoles;
-	}
-
-	public boolean isDisableSaveMemberRoleButton() {
-		return disableSaveMemberRoleButton;
-	}
-
-	public void setDisableSaveMemberRoleButton(boolean disableSaveMemberRoleButton) {
-		this.disableSaveMemberRoleButton = disableSaveMemberRoleButton;
-	}
-
 	public Long getSelectedCountryIdForRoles() {
 		return selectedCountryIdForRoles;
 	}
@@ -733,22 +664,6 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
         this.countries = countries;
     }
 
-    public List<SelectItem> getMemberLocationList() {
-        return memberLocationList;
-    }
-
-    public void setMemberLocationList(List<SelectItem> memberLocationList) {
-        this.memberLocationList = memberLocationList;
-    }
-
-    public List<Role> getEditingUserLocationRoles() {
-        return editingUserLocationRoles;
-    }
-
-    public void setEditingUserLocationRoles(List<Role> editingUserLocationRoles) {
-        this.editingUserLocationRoles = editingUserLocationRoles;
-    }
-
     public List<UserSearchResultForEdting> getUserSearchResults() {
         return userSearchResults;
     }
@@ -764,14 +679,6 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 
     public UserSearchResultForEdting getSelectedUserForEditing() {
         return selectedUserForEditing;
-    }
-
-    public Location getSelectedLocationForRole() {
-        return selectedLocationForRole;
-    }
-
-    public void setSelectedLocationForRole(Location selectedLocationForRole) {
-        this.selectedLocationForRole = selectedLocationForRole;
     }
 
     public LocationConvertor getLocationConvertor() {
