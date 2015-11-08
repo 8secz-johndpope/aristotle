@@ -29,7 +29,6 @@ import com.aristotle.core.persistance.User;
 import com.aristotle.core.service.LocationService;
 import com.aristotle.core.service.UserService;
 import com.aristotle.core.service.dto.SearchUser;
-import com.aristotle.core.service.dto.UserSearchResult;
 import com.aristotle.core.service.dto.UserSearchResultForEdting;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
@@ -236,7 +235,7 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 		resetRolePanel();
 	}
 
-    public boolean isMemberUpdateAllowed(UserSearchResult user) {
+    public boolean isMemberUpdateAllowed(UserSearchResultForEdting user) {
         /*
         User loggedInUser = getLoggedInUser();
         System.out.println("loggedInUser.getId()=" + loggedInUser.getId() + ",user.getId()=" + user.getId());
