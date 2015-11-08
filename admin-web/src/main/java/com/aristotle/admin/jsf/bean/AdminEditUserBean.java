@@ -10,6 +10,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.faces.model.SelectItemGroup;
 
+import org.primefaces.event.FileUploadEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -194,6 +195,16 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 		showSearchPanel = true;
 		resetRolePanel();
 	}
+
+    public void handleFileUpload(FileUploadEvent event) {
+        System.out.println("Uploading File " + event.getFile().getFileName());
+        try {
+            userService.uploadUserProfilePic(event.getFile().getInputstream(), selectedUserForEditing.getUser(), event.getFile().getFileName());
+        } catch (Exception ex) {
+            logger.error("Unable to upload File", ex);
+            sendErrorMessageToJsfScreen("Failed", event.getFile().getFileName() + " is failed to uploaded.");
+        }
+    }
 
     public boolean isMemberUpdateAllowed(UserSearchResultForEdting user) {
         /*

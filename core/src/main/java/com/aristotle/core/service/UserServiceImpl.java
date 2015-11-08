@@ -1,5 +1,6 @@
 package com.aristotle.core.service;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -83,6 +84,16 @@ public class UserServiceImpl implements UserService {
     private EmailConfirmationRequestRepository emailConfirmationRequestRepository;
     @Autowired
     private MembershipRepository membershipRepository;
+    @Autowired
+    private AwsFileManager awsFileManager;
+
+    @Value("${aws_access_key}")
+    private String awsKey;
+    @Value("${aws_access_secret}")
+    private String awsSecret;
+
+    @Value("${static_data_env:dev}")
+    private String staticDataEnv;
 
     @Value("${registration_mail_id}")
     private String regsitrationEmailId;
@@ -974,5 +985,32 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Override
+    public void uploadUserProfilePic(InputStream fileInputStream, User user, String fileName) throws AppException {
+        try {
+            String bucketName = "static.swarajabhiyan.org";
+
+            if (!StringUtils.isEmpty(user.getProfilePic())) {
+                try {
+                    awsFileManager.deleteFileFromS3(awsKey, awsSecret, bucketName, user.getProfilePic());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+            System.out.println("Uploading File");
+            String subdDirectory = "";
+            System.out.println("subdDirectory = " + subdDirectory);
+            String remoteFileName = "profile/" + staticDataEnv + "/" + user.getId() + "/" + System.currentTimeMillis() + getFileType(fileName);
+            awsFileManager.uploadFileToS3(awsKey, awsSecret, bucketName, remoteFileName, fileInputStream, "image/jpeg");
+            updateUserProfilePic(user.getId(), remoteFileName);
+        } catch (Exception e) {
+            throw new AppException("Failed to upload photo ");
+        }
+
+    }
+
+    private String getFileType(String fileName) {
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
+    }
 
 }

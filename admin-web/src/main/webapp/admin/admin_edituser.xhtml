@@ -1,8 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:head>
 	<title>Edit User Roles</title>
 	<style>
@@ -63,53 +62,47 @@
 			 -->
 			<p:blockUI block="userProfileForm" trigger=":userProfileForm:searchMember">
             Loading...<br />
-                <p:graphicImage width="80" value="http://static.eswaraj.com/admin/images/ajax-loader.gif" />
+				<p:graphicImage width="80" value="http://static.eswaraj.com/admin/images/ajax-loader.gif" />
 			</p:blockUI>
 
 			<h:form id="userProfileForm">
 				<p:messages id="messages" autoUpdate="true" closable="true" />
 				<p:outputPanel id="userProfileFormMainPanel">
 					<p:outputPanel rendered="#{adminEditUserBean.showSearchPanel}">
-						
-						<h:panelGrid columns="4" cellpadding="5">
-                            <h:outputLabel for="email" value="Email*" />
 
-                            <p:inputText id="email" value="#{adminEditUserBean.searchedUser.email}" label="Email"
-                                validatorMessage="Email is not in correct format ,i.e. guest@aap.org">
-                                <!-- 
+						<h:panelGrid columns="4" cellpadding="5">
+							<h:outputLabel for="email" value="Email*" />
+
+							<p:inputText id="email" value="#{adminEditUserBean.searchedUser.email}" label="Email" validatorMessage="Email is not in correct format ,i.e. guest@aap.org">
+								<!-- 
                                 <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
                                  -->
-                            </p:inputText>
-                            <p:outputPanel></p:outputPanel>
-                            <p:outputPanel></p:outputPanel>
+							</p:inputText>
+							<p:outputPanel></p:outputPanel>
+							<p:outputPanel></p:outputPanel>
 
-                            <h:outputLabel for="mobile" value="Mobile*" />
-                            <p:selectOneMenu value="#{adminEditUserBean.searchedUser.countryCode}">
-                                <f:selectItem itemLabel="India - 91" itemValue="91" />
-                                <f:selectItems value="#{adminEditUserBean.countries}" var="oneCountry"
-                                    itemLabel="#{oneCountry.name} - #{oneCountry.isdCode}" itemValue="#{oneCountry.isdCode}" />
-                            </p:selectOneMenu>
-                            <p:inputText id="mobile" value="#{adminEditUserBean.searchedUser.mobileNumber}" label="Mobile"
-                                mask="9999999999" maxlength="10">
-                            </p:inputText>
-                            <p:outputPanel></p:outputPanel>
-   					</h:panelGrid>
+							<h:outputLabel for="mobile" value="Mobile*" />
+							<p:selectOneMenu value="#{adminEditUserBean.searchedUser.countryCode}">
+								<f:selectItem itemLabel="India - 91" itemValue="91" />
+								<f:selectItems value="#{adminEditUserBean.countries}" var="oneCountry" itemLabel="#{oneCountry.name} - #{oneCountry.isdCode}" itemValue="#{oneCountry.isdCode}" />
+							</p:selectOneMenu>
+							<p:inputText id="mobile" value="#{adminEditUserBean.searchedUser.mobileNumber}" label="Mobile" mask="9999999999" maxlength="10">
+							</p:inputText>
+							<p:outputPanel></p:outputPanel>
+						</h:panelGrid>
 						<p:watermark for="mobile" value="XXXXXXXXXX" />
 						<br></br>
 
 
 
-						<p:commandButton id="searchMember" update=":userProfileForm:userProfileFormMainPanel" value="Search Member"
-							actionListener="#{adminEditUserBean.searchMember}" />
+						<p:commandButton id="searchMember" update=":userProfileForm:userProfileFormMainPanel" value="Search Member" actionListener="#{adminEditUserBean.searchMember}" />
 						<p:tooltip for="searchMember">Search Member/User/Volunteer</p:tooltip>
 						<br></br>
 						<p:outputPanel id="userResultPanelStart"></p:outputPanel>
 						<p:outputPanel rendered="#{adminEditUserBean.showResult}">
-							<p:dataTable id="listOfUsers" var="oneUser" value="#{adminEditUserBean.userSearchResults}" paginator="true"
-								rows="25" paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Member Found"
-								style="width:100%;"
-								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-								rowsPerPageTemplate="5,10,15">
+							<p:dataTable id="listOfUsers" var="oneUser" value="#{adminEditUserBean.userSearchResults}" paginator="true" rows="25" paginatorPosition="bottom"
+								paginatorAlwaysVisible="false" emptyMessage="No Member Found" style="width:100%;"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
 								<f:facet name="header">Users</f:facet>
 								<p:column style="width:5%">
 									<p:rowToggler />
@@ -146,7 +139,7 @@
 									<p:commandButton update=":userProfileForm:userProfileFormMainPanel" value="Edit" disabled="#{!adminEditUserBean.isMemberUpdateAllowed(oneUser)}">
 										<f:setPropertyActionListener value="#{oneUser}" target="#{adminEditUserBean.selectedUserForEditing}" />
 									</p:commandButton>
-									<br/>
+									<br />
 									<h:outputText value="You can not update your own permissions" rendered="#{!adminEditUserBean.isMemberUpdateAllowed(oneUser)}" />
 								</p:column>
 							</p:dataTable>
@@ -155,60 +148,73 @@
 					</p:outputPanel>
 					<p:outputPanel rendered="#{!adminEditUserBean.showSearchPanel}">
 						<p:outputPanel id="GlobalAdminPanel">
-							<p:panelGrid columns="4">
-								<f:facet name="header">User Detail</f:facet>
-								<h:outputText value="Name" />
-								<h:inputText value="#{adminEditUserBean.selectedUserForEditing.user.name}" />
+							<p:panelGrid columns="2">
+								<p:outputPanel id="UserPanel">
+									<p:panelGrid columns="4">
+										<f:facet name="header">User Detail</f:facet>
+										<h:outputText value="Name" />
+										<h:inputText value="#{adminEditUserBean.selectedUserForEditing.user.name}" />
 
-								<h:outputText value="Gender" />
-								<p:selectOneMenu id="gender" value="#{adminEditUserBean.selectedUserForEditing.user.gender}" >
-                                        <f:selectItem itemLabel="Select Gender" itemValue="Other" />
-                                        <f:selectItem itemLabel="Male" itemValue="Male" />
-                                        <f:selectItem itemLabel="Female" itemValue="Female" />
-                                        <f:selectItem itemLabel="Other" itemValue="Other" />
-                                    </p:selectOneMenu>
+										<h:outputText value="Gender" />
+										<p:selectOneMenu id="gender" value="#{adminEditUserBean.selectedUserForEditing.user.gender}">
+											<f:selectItem itemLabel="Select Gender" itemValue="Other" />
+											<f:selectItem itemLabel="Male" itemValue="Male" />
+											<f:selectItem itemLabel="Female" itemValue="Female" />
+											<f:selectItem itemLabel="Other" itemValue="Other" />
+										</p:selectOneMenu>
 
-								<h:outputText value="Date Of Birth" />
-								<p:calendar id="dateOfBirth" yearRange="1900:2015" pattern="dd-MMM-yyyy" readonlyInput="true"
-                                value="#{adminEditUserBean.selectedUserForEditing.user.dateOfBirth}" navigator="true" effect="slideDown" />
-                                
-								<h:outputText value="Address" />
-								<p:inputText value="#{adminEditUserBean.selectedUserForEditing.user.address}" />
+										<h:outputText value="Date Of Birth" />
+										<p:calendar id="dateOfBirth" yearRange="1900:2015" pattern="dd-MMM-yyyy" readonlyInput="true" value="#{adminEditUserBean.selectedUserForEditing.user.dateOfBirth}"
+											navigator="true" effect="slideDown" />
 
-                                <h:outputText value="Mother Name" />
-                                <p:inputText value="#{adminEditUserBean.selectedUserForEditing.user.motherName}" />
+										<h:outputText value="Address" />
+										<p:inputText value="#{adminEditUserBean.selectedUserForEditing.user.address}" />
 
-                                <h:outputText value="Father name" />
-                                <p:inputText value="#{adminEditUserBean.selectedUserForEditing.user.fatherName}" />
+										<h:outputText value="Mother Name" />
+										<p:inputText value="#{adminEditUserBean.selectedUserForEditing.user.motherName}" />
 
-                                <h:outputText value="NRI" />
-                                <p:selectBooleanCheckbox value="#{adminEditUserBean.selectedUserForEditing.user.nri}" />
-                                
-                                <h:outputText value="Member" />
-                                <p:selectBooleanCheckbox value="#{adminEditUserBean.selectedUserForEditing.user.member}" disabled="true"/>
+										<h:outputText value="Father name" />
+										<p:inputText value="#{adminEditUserBean.selectedUserForEditing.user.fatherName}" />
 
-                                <h:outputText value="Donor" />
-                                <p:selectBooleanCheckbox value="#{adminEditUserBean.selectedUserForEditing.user.donor}" disabled="true"/>
-                                
-                                <h:outputText value="Volunteer" />
-                                <p:selectBooleanCheckbox value="#{adminEditUserBean.selectedUserForEditing.user.volunteer}" disabled="true"/>
+										<h:outputText value="NRI" />
+										<p:selectBooleanCheckbox value="#{adminEditUserBean.selectedUserForEditing.user.nri}" />
 
-                                <h:outputText value="Membership Status" />
-                                <h:outputText value="#{adminEditUserBean.selectedUserForEditing.user.membershipStatus}" />
-                                
-                                <h:outputText value="Membership Number" />
-                                <h:outputText value="#{adminEditUserBean.selectedUserForEditing.user.membershipNumber}" />
+										<h:outputText value="Member" />
+										<p:selectBooleanCheckbox value="#{adminEditUserBean.selectedUserForEditing.user.member}" disabled="true" />
 
-                                <h:outputText value="Mobile Number" />
-                                <h:outputText value="#{adminEditUserBean.selectedUserForEditing.phone.phoneNumber}" />
+										<h:outputText value="Donor" />
+										<p:selectBooleanCheckbox value="#{adminEditUserBean.selectedUserForEditing.user.donor}" disabled="true" />
 
-                                <h:outputText value="Email" />
-                                <h:outputText value="#{adminEditUserBean.selectedUserForEditing.email.email}" />
+										<h:outputText value="Volunteer" />
+										<p:selectBooleanCheckbox value="#{adminEditUserBean.selectedUserForEditing.user.volunteer}" disabled="true" />
 
+										<h:outputText value="Membership Status" />
+										<h:outputText value="#{adminEditUserBean.selectedUserForEditing.user.membershipStatus}" />
+
+										<h:outputText value="Membership Number" />
+										<h:outputText value="#{adminEditUserBean.selectedUserForEditing.user.membershipNumber}" />
+
+										<h:outputText value="Mobile Number" />
+										<h:outputText value="#{adminEditUserBean.selectedUserForEditing.phone.phoneNumber}" />
+
+										<h:outputText value="Email" />
+										<h:outputText value="#{adminEditUserBean.selectedUserForEditing.email.email}" />
+
+									</p:panelGrid>
+									<h:outputText value="Profile" />
+									<p:editor id="editor" widgetVar="editorWidget" value="#{adminEditUserBean.selectedUserForEditing.user.profile}" width="600" />
+									<br></br>
+								</p:outputPanel>
+								<p:outputPanel id="ImagePanel">
+								    <p:panelGrid columns="1">
+	                                    <p:graphicImage value="#{adminEditUserBean.selectedUserForEditing.user.profilePic}" />
+	                                    <h:outputText value="#{adminEditUserBean.selectedUserForEditing.user.profilePic}" />
+	                                    <p:fileUpload fileUploadListener="#{fileUploadView.handleFileUpload}" mode="advanced"
+                                        update="messages" auto="true" sizeLimit="1000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+								    </p:panelGrid>
+								</p:outputPanel>
 							</p:panelGrid>
-                                <h:outputText value="Profile" />
-                                <p:editor id="editor" widgetVar="editorWidget" value="#{adminEditUserBean.selectedUserForEditing.user.profile}" width="600" />
-							<br></br>
+
 						</p:outputPanel>
 					</p:outputPanel>
 				</p:outputPanel>

@@ -1,5 +1,6 @@
 package com.aristotle.core.service;
 
+import java.io.InputStream;
 import java.util.List;
 
 import com.aristotle.core.exception.AppException;
@@ -58,4 +59,6 @@ public interface UserService {
     void updateUserProfilePic(Long userid, String photo) throws AppException;
 
     User registerIvrMember(String mobileNumber, String name, String gender, String amount, String paymentMode, String state, String district, String msg) throws AppException;
+
+    void uploadUserProfilePic(InputStream fileInputStream, User user, String fileName) throws AppException;
 }
