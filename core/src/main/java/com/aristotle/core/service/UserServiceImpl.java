@@ -1057,8 +1057,10 @@ public class UserServiceImpl implements UserService {
                     oneUserUploadDto.setUserIdForEmail(email.getUserId());
                 }
             }
+            System.out.println("checking Phone number [" + oneUserUploadDto.getPhone() + "]");
             if (!StringUtils.isEmpty(oneUserUploadDto.getPhone())) {
-                Phone phone = phoneRepository.getPhoneByPhoneNumberAndCountryCode(oneUserUploadDto.getPhone().toUpperCase(), "91");
+                System.out.println("Get Phone by Phone number [" + oneUserUploadDto.getPhone() + "] and countryCode [91]");
+                Phone phone = phoneRepository.getPhoneByPhoneNumberAndCountryCode(oneUserUploadDto.getPhone(), "91");
                 if (phone != null) {
                     oneUserUploadDto.setPhoneAlreadyExists(true);
                     oneUserUploadDto.setUserIdForPhone(phone.getUserId());
