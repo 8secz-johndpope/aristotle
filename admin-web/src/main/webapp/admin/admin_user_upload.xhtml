@@ -44,7 +44,7 @@
 			<h:form id="adminDataUploadForm">
 				<p:messages id="messages" autoUpdate="true" closable="true" />
 				<p:fileUpload id="csvFileUpload" fileUploadListener="#{adminDataUploadBean.handleFileUpload}" mode="advanced"
-                     update="messages" auto="true" sizeLimit="100000" allowTypes="/(\.|\/)(csv)$/" />
+                     update="messages,:adminDataUploadForm:mainPanel" auto="true" sizeLimit="100000" allowTypes="/(\.|\/)(csv)$/" />
                      
 
                <p:commandButton id="uploadDataButton" value="Upload Data" actionListener="#{adminDataUploadBean.uploadData}" update=":adminDataUploadForm:mainPanel">
