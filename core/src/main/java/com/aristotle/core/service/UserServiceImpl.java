@@ -17,13 +17,13 @@ import java.util.regex.Pattern;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import com.aristotle.core.enums.CreationType;
 import com.aristotle.core.exception.AppException;
@@ -125,7 +125,7 @@ public class UserServiceImpl implements UserService {
     public List<UserSearchResultForEdting> searchUserForEditing(SearchUser searchUser) throws AppException {
         List<UserSearchResultForEdting> userSearchResults = new ArrayList<UserSearchResultForEdting>();
 
-        if (!StringUtils.isEmpty(searchUser.getEmail())) {
+        if (!StringUtils.isBlank(searchUser.getEmail())) {
             Email email = emailRepository.getEmailByEmailUp(searchUser.getEmail().toUpperCase());
             if (email != null && email.getUser() != null) {
                 UserSearchResultForEdting userSearchResultForEdting = new UserSearchResultForEdting();
@@ -139,7 +139,7 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        if (!StringUtils.isEmpty(searchUser.getMobileNumber())) {
+        if (!StringUtils.isBlank(searchUser.getMobileNumber())) {
             Phone mobile = phoneRepository.getPhoneByPhoneNumberAndCountryCode(searchUser.getMobileNumber(), searchUser.getCountryCode());
             if (mobile != null && mobile.getUser() != null) {
                 UserSearchResultForEdting userSearchResultForEdting = new UserSearchResultForEdting();
@@ -175,7 +175,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private Email searchUserForEmail(List<UserSearchResult> userSearchResults, String emailId) throws AppException {
-        if (StringUtils.isEmpty(emailId)) {
+        if (StringUtils.isBlank(emailId)) {
             return null;
         }
         Email email = emailRepository.getEmailByEmailUp(emailId.toUpperCase());
@@ -188,7 +188,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private Phone searchUserForPhone(List<UserSearchResult> userSearchResults, String mobile) throws AppException {
-        if (StringUtils.isEmpty(mobile)) {
+        if (StringUtils.isBlank(mobile)) {
             return null;
         }
         Phone phone = phoneRepository.getPhoneByPhoneNumber(mobile);
@@ -268,7 +268,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private Phone searchUserForMobile(List<UserSearchResult> userSearchResults, String mobileNumber, String countryCode) throws AppException {
-        if (StringUtils.isEmpty(mobileNumber)) {
+        if (StringUtils.isBlank(mobileNumber)) {
             return null;
         }
         Phone mobile = phoneRepository.getPhoneByPhoneNumberAndCountryCode(mobileNumber, countryCode);
@@ -360,7 +360,7 @@ public class UserServiceImpl implements UserService {
 
         }
         // create user login account
-        if (StringUtils.isEmpty(userRegisterBean.getPassword())){
+        if (StringUtils.isBlank(userRegisterBean.getPassword())) {
             String password = generateRandompassword();
             userRegisterBean.setPassword(password);
         }
@@ -368,11 +368,11 @@ public class UserServiceImpl implements UserService {
         loginAccount.setUser(dbUser);
         loginAccount.setPassword(passwordUtil.encryptPassword(userRegisterBean.getPassword()));
 
-        if (!StringUtils.isEmpty(userRegisterBean.getEmailId())) {
+        if (!StringUtils.isBlank(userRegisterBean.getEmailId())) {
             loginAccount.setEmail(userRegisterBean.getEmailId().toLowerCase());
             loginAccount.setUserName(userRegisterBean.getEmailId().toLowerCase());
         }
-        if (StringUtils.isEmpty(loginAccount.getUserName())) {
+        if (StringUtils.isBlank(loginAccount.getUserName())) {
             throw new AppException("Login User name/email must be provided");
         }
         loginAccount = loginAccountRepository.save(loginAccount);
@@ -415,10 +415,10 @@ public class UserServiceImpl implements UserService {
     }
 
     private Phone getOrCreateMobile(String mobileNumber, String countryCode, String fieldName) throws AppException {
-        if (StringUtils.isEmpty(mobileNumber)) {
+        if (StringUtils.isBlank(mobileNumber)) {
             return null;
         }
-        if (StringUtils.isEmpty(countryCode)) {
+        if (StringUtils.isBlank(countryCode)) {
             throwFieldAppException(fieldName, "Country Code must be provided");
         }
         Phone mobile = phoneRepository.getPhoneByPhoneNumberAndCountryCode(mobileNumber, countryCode);
@@ -441,7 +441,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private Email getOrCreateEmail(String emailId) throws AppException {
-        if (StringUtils.isEmpty(emailId)) {
+        if (StringUtils.isBlank(emailId)) {
             return null;
         }
         Matcher matcher = pattern.matcher(emailId);
@@ -996,7 +996,7 @@ public class UserServiceImpl implements UserService {
         //
         user.setIvrState(state);
         user.setIvrDistrict(district);
-        if (StringUtils.isEmpty(user.getSmsMessage())) {
+        if (StringUtils.isBlank(user.getSmsMessage())) {
             user.setSmsMessage(msg);
         }
         // If user existed before just make him
@@ -1017,7 +1017,7 @@ public class UserServiceImpl implements UserService {
         try {
             String bucketName = "static.swarajabhiyan.org";
 
-            if (!StringUtils.isEmpty(user.getProfilePic())) {
+            if (!StringUtils.isBlank(user.getProfilePic())) {
                 try {
                     awsFileManager.deleteFileFromS3(awsKey, awsSecret, bucketName, user.getProfilePic());
                 } catch (Exception ex) {
@@ -1050,7 +1050,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void checkUserStatus(List<UserUploadDto> users) throws AppException {
         for(UserUploadDto oneUserUploadDto : users){
-            if (!StringUtils.isEmpty(oneUserUploadDto.getEmail())) {
+            if (!StringUtils.isBlank(oneUserUploadDto.getEmail())) {
                 Email email = emailRepository.getEmailByEmailUp(oneUserUploadDto.getEmail().toUpperCase());
                 if (email != null) {
                     oneUserUploadDto.setEmailAlreadyExists(true);
@@ -1058,7 +1058,7 @@ public class UserServiceImpl implements UserService {
                 }
             }
             System.out.println("checking Phone number [" + oneUserUploadDto.getPhone() + "]");
-            if (!StringUtils.isEmpty(oneUserUploadDto.getPhone().trim())) {
+            if (!StringUtils.isBlank(oneUserUploadDto.getPhone().trim())) {
                 System.out.println("Get Phone by Phone number [" + oneUserUploadDto.getPhone() + "] and countryCode [91]");
                 Phone phone = phoneRepository.getPhoneByPhoneNumberAndCountryCode(oneUserUploadDto.getPhone(), "91");
                 System.out.println("Found Phone " + phone);
