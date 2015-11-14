@@ -92,19 +92,25 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
             Reader in = new InputStreamReader(event.getFile().getInputstream());
             Iterable<CSVRecord> records = CSVFormat.DEFAULT.withHeader("name", "email", "phone").withDelimiter(',').parse(in);
             userBeingUploaded = new ArrayList<UserUploadDto>();
+            boolean header = true;
             for (CSVRecord record : records) {
-                String email = record.get("email");
-                String phone = record.get("phone");
-                String name = record.get("name");
-                if (StringUtils.isEmpty(phone)) {
-                    phone = record.get("mobile");
+                if (header) {
+                    header = false;
+                } else {
+                    String email = record.get("email");
+                    String phone = record.get("phone");
+                    String name = record.get("name");
+                    if (StringUtils.isEmpty(phone)) {
+                        phone = record.get("mobile");
+                    }
+
+                    UserUploadDto userUploadDto = new UserUploadDto();
+                    userUploadDto.setEmail(email);
+                    userUploadDto.setPhone(phone);
+                    userUploadDto.setName(name);
+                    userBeingUploaded.add(userUploadDto);
                 }
 
-                UserUploadDto userUploadDto = new UserUploadDto();
-                userUploadDto.setEmail(email);
-                userUploadDto.setPhone(phone);
-                userUploadDto.setName(name);
-                userBeingUploaded.add(userUploadDto);
             }
             userService.checkUserStatus(userBeingUploaded);
         } catch (Exception ex) {
