@@ -69,7 +69,7 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
 
         try {
             Reader in = new InputStreamReader(event.getFile().getInputstream());
-            Iterable<CSVRecord> records = CSVFormat.DEFAULT.withDelimiter(',').parse(in);
+            Iterable<CSVRecord> records = CSVFormat.DEFAULT.withHeader("name", "email", "phone").withDelimiter(',').parse(in);
             userBeingUploaded = new ArrayList<UserUploadDto>();
             for (CSVRecord record : records) {
                 String email = record.get("email");
