@@ -6,5 +6,6 @@ public enum CreationType {
     SelfServiceUser,
     OnlineUser,
     IVR,
-    SMS;
+    SMS,
+    Admin_Imported_Via_Csv;
 }

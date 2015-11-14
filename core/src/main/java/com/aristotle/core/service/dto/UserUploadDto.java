@@ -9,6 +9,8 @@ public class UserUploadDto {
     private boolean phoneAlreadyExists;
     private Long userIdForEmail;
     private Long userIdForPhone;
+    private boolean userCreated;
+    private String errorMessage;
 
     public String getEmail() {
         return email;
@@ -66,5 +68,20 @@ public class UserUploadDto {
         this.userIdForPhone = userIdForPhone;
     }
 
+    public boolean isUserCreated() {
+        return userCreated;
+    }
+
+    public void setUserCreated(boolean userCreated) {
+        this.userCreated = userCreated;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
 
 }

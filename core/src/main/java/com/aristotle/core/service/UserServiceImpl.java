@@ -707,8 +707,34 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new AppException("Login Account already Exists");
         }
+    }
 
+    @Override
+    public void generateUserLoginAccountForMobile(String mobile) throws AppException {
+        Phone phone = phoneRepository.getPhoneByPhoneNumber(mobile);
+        generateUserLoginAccountForMobile(phone);
+    }
 
+    private void generateUserLoginAccountForMobile(Phone phone) throws AppException {
+        if (phone == null) {
+            throw new AppException("Mobile Is not registered");
+        }
+        User user = phone.getUser();
+        if (user == null) {
+            throw new AppException("Phone(user) Is not registered");
+        }
+        LoginAccount loginAccount = loginAccountRepository.getLoginAccountByUserId(user.getId());
+        if (loginAccount == null) {
+            loginAccount = new LoginAccount();
+            String password = generateRandompassword();
+            loginAccount.setPassword(passwordUtil.encryptPassword(password));
+            loginAccount.setUser(user);
+            loginAccount.setUserName(phone.getPhoneNumber());
+            loginAccount = loginAccountRepository.save(loginAccount);
+            sendLoginAccountDetails(loginAccount, password);
+        } else {
+            throw new AppException("Login Account already Exists");
+        }
     }
 
 
@@ -1038,9 +1064,64 @@ public class UserServiceImpl implements UserService {
                     oneUserUploadDto.setUserIdForPhone(phone.getUserId());
                 }
             }
-
         }
 
     }
+
+    @Override
+    public void saveUsers(List<UserUploadDto> users) throws AppException {
+        for (UserUploadDto oneUserUploadDto : users) {
+            try {
+                saveUser(oneUserUploadDto);
+                oneUserUploadDto.setUserCreated(true);
+            } catch (Exception ex) {
+                oneUserUploadDto.setErrorMessage(ex.getMessage());
+                oneUserUploadDto.setUserCreated(false);
+            }
+        }
+    }
+
+    private void saveUser(UserUploadDto oneUserUploadDto) throws AppException {
+        Email email = null;
+        Phone phone = null;
+        try {
+            email = getOrCreateEmail(oneUserUploadDto.getEmail());
+            if(email != null && email.getUser() != null){
+                throw new AppException("User already exists for email " + oneUserUploadDto.getEmail());
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        try {
+            phone = getOrCreateMobile(oneUserUploadDto.getPhone(), "91", "mobile");
+            if (phone != null && phone.getUser() != null) {
+                throw new AppException("User already exists for phone " + oneUserUploadDto.getPhone());
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        if (email != null && phone != null) {
+            email.setPhone(phone);
+        }
+        if (email == null && phone == null) {
+            throw new AppException("either email or phone must be provided");
+        }
+        User dbUser = new User();
+        dbUser.setName(oneUserUploadDto.getName());
+        dbUser.setCreationType(CreationType.Admin_Imported_Via_Csv);
+        dbUser = userRepository.save(dbUser);
+
+        if (email != null) {
+            email.setUser(dbUser);
+            sendEmailConfirmtionEmail(email.getEmail());
+            generateUserLoginAccount(email.getEmail());
+        }
+        if (phone != null) {
+            phone.setUser(dbUser);
+            generateUserLoginAccountForMobile(phone);
+        }
+
+    }
+
 
 }

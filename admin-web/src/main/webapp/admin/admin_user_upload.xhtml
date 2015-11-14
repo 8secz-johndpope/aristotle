@@ -84,15 +84,12 @@
 							</p:column>
 						</p:dataTable>
 					</p:outputPanel>
-					<p:layout style="min-width:400px;min-height:50px;">
-                    <p:layoutUnit position="center">Center</p:layoutUnit>
-
-                    <p:layoutUnit position="east" resizable="false" size="300" minSize="300" maxSize="300">
+                        <p:commandButton id="cancelButton" value="Cancel" actionListener="#{adminDataUploadBean.cancel}" update=":adminDataUploadForm:mainPanel"
+                            rendered="#{adminDataUploadBean.showUploadButton}">
+                        </p:commandButton>
                         <p:commandButton id="uploadDataButton" value="Upload Data" actionListener="#{adminDataUploadBean.uploadData}" update=":adminDataUploadForm:mainPanel"
                             rendered="#{adminDataUploadBean.showUploadButton}">
                         </p:commandButton>
-                    </p:layoutUnit>
-                </p:layout>
 				</p:outputPanel>
 				
 				<br></br>

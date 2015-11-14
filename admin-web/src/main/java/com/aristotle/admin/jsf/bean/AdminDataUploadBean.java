@@ -55,12 +55,26 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
     public void uploadData() {
-
+        try {
+            userService.saveUsers(userBeingUploaded);
+            int totalSuccess = 0;
+            int totalFailed = 0;
+            for (UserUploadDto oneUserUploadDto : userBeingUploaded) {
+                if (oneUserUploadDto.isUserCreated()) {
+                    totalSuccess++;
+                } else {
+                    totalFailed++;
+                }
+            }
+            sendInfoMessageToJsfScreen("Total User created " + totalSuccess + ", total failed user " + totalFailed);
+        } catch (Exception ex) {
+            sendErrorMessageToJsfScreen(ex);
+        }
 
 	}
 
     public void cancel() {
-
+        userBeingUploaded = null;
     }
 
     public boolean isShowUploadButton() {

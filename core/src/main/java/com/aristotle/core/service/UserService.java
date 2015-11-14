@@ -51,6 +51,8 @@ public interface UserService {
 
     void generateUserLoginAccount(String email) throws AppException;
 
+    void generateUserLoginAccountForMobile(String phone) throws AppException;
+
     void sendPasswordResetEmail(String email) throws AppException;
 
     void updatePassword(String email, String newPassword, String token) throws AppException;
@@ -66,4 +68,6 @@ public interface UserService {
     void uploadUserProfilePic(InputStream fileInputStream, User user, String fileName) throws AppException;
 
     void checkUserStatus(List<UserUploadDto> users) throws AppException;
+
+    void saveUsers(List<UserUploadDto> users) throws AppException;
 }
