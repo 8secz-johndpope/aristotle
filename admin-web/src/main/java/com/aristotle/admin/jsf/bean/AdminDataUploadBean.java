@@ -63,6 +63,13 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
 
     }
 
+    public boolean isShowUploadButton() {
+        if (userBeingUploaded == null || userBeingUploaded.isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
 
     public void handleFileUpload(FileUploadEvent event) {
         System.out.println("Uploading File " + event.getFile().getFileName());
