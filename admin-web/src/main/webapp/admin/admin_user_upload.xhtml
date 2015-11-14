@@ -43,18 +43,14 @@
 			</p:blockUI>
 			<h:form id="adminDataUploadForm">
 				<p:messages id="messages" autoUpdate="true" closable="true" />
-				<p:fileUpload id="csvFileUpload" fileUploadListener="#{adminDataUploadBean.handleFileUpload}" mode="advanced"
-                     update="messages,:adminDataUploadForm:mainPanel" auto="true" sizeLimit="100000" allowTypes="/(\.|\/)(csv)$/" />
-                     
+				<p:fileUpload id="csvFileUpload" fileUploadListener="#{adminDataUploadBean.handleFileUpload}" mode="advanced" update="messages,:adminDataUploadForm:mainPanel" auto="true"
+					sizeLimit="100000" allowTypes="/(\.|\/)(csv)$/" />
 
-               <p:commandButton id="uploadDataButton" value="Upload Data" actionListener="#{adminDataUploadBean.uploadData}" update=":adminDataUploadForm:mainPanel">
-               </p:commandButton>
 
 				<p:outputPanel id="mainPanel">
 					<p:outputPanel id="listView">
 
-						<p:dataTable id="listOfBlog" var="oneUser" value="#{adminDataUploadBean.userBeingUploaded}" 
-							emptyMessage="Please upoada a csv file with email, mobile and name columns" >
+						<p:dataTable id="listOfBlog" var="oneUser" value="#{adminDataUploadBean.userBeingUploaded}" emptyMessage="Please upoada a csv file with email, mobile and name columns">
 							<f:facet name="header">Users</f:facet>
 							<p:column>
 								<f:facet name="header">
@@ -62,24 +58,24 @@
 								</f:facet>
 								<h:outputText value="#{oneUser.email}" />
 							</p:column>
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Email Exists" />
-                                </f:facet>
-                                <h:outputText value="#{oneUser.emailAlreadyExists}" />
-                            </p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Email Exists" />
+								</f:facet>
+								<h:outputText value="#{oneUser.emailAlreadyExists}" />
+							</p:column>
 							<p:column>
 								<f:facet name="header">
 									<h:outputText value="Mobile/Phone" />
 								</f:facet>
 								<h:outputText value="#{oneUser.phone}" />
 							</p:column>
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Mobile Exists" />
-                                </f:facet>
-                                <h:outputText value="#{oneUser.phoneAlreadyExists}" />
-                            </p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Mobile Exists" />
+								</f:facet>
+								<h:outputText value="#{oneUser.phoneAlreadyExists}" />
+							</p:column>
 							<p:column>
 								<f:facet name="header">
 									<h:outputText value="Name" />
@@ -89,6 +85,15 @@
 						</p:dataTable>
 					</p:outputPanel>
 				</p:outputPanel>
+				<p:layout style="min-width:400px;min-height:200px;">
+					<p:layoutUnit position="center">Center</p:layoutUnit>
+
+					<p:layoutUnit position="east" resizable="false" size="300" minSize="300" maxSize="300">
+						<p:commandButton id="uploadDataButton" value="Upload Data" actionListener="#{adminDataUploadBean.uploadData}" update=":adminDataUploadForm:mainPanel"
+							rendered="#{adminDataUploadBean.showUploadButton}">
+						</p:commandButton>
+					</p:layoutUnit>
+				</p:layout>
 				<br></br>
 				<br></br>
 				<br></br>
