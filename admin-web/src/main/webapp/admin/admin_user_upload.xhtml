@@ -50,7 +50,9 @@
 				<p:outputPanel id="mainPanel">
 					<p:outputPanel id="listView">
 
-						<p:dataTable id="userList" var="oneUser" value="#{adminDataUploadBean.userBeingUploaded}" emptyMessage="Please upoada a csv file with email, mobile and name columns">
+						<p:dataTable id="userList" var="oneUser" value="#{adminDataUploadBean.userBeingUploaded}" emptyMessage="Please upoada a csv file with email, mobile and name columns"
+						                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+						                 paginator="true" rows="50" >
 							<f:facet name="header">Users</f:facet>
 							<f:facet name="{Exporters}">
 								<h:commandLink>
