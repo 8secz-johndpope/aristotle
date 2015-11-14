@@ -1026,13 +1026,17 @@ public class UserServiceImpl implements UserService {
         for(UserUploadDto oneUserUploadDto : users){
             if (!StringUtils.isEmpty(oneUserUploadDto.getEmail())) {
                 Email email = emailRepository.getEmailByEmailUp(oneUserUploadDto.getEmail().toUpperCase());
-                oneUserUploadDto.setEmailAlreadyExists(true);
-                oneUserUploadDto.setUserIdForEmail(email.getUserId());
+                if (email != null) {
+                    oneUserUploadDto.setEmailAlreadyExists(true);
+                    oneUserUploadDto.setUserIdForEmail(email.getUserId());
+                }
             }
             if (!StringUtils.isEmpty(oneUserUploadDto.getPhone())) {
                 Phone phone = phoneRepository.getPhoneByPhoneNumberAndCountryCode(oneUserUploadDto.getPhone().toUpperCase(), "91");
-                oneUserUploadDto.setPhoneAlreadyExists(true);
-                oneUserUploadDto.setUserIdForPhone(phone.getUserId());
+                if (phone != null) {
+                    oneUserUploadDto.setPhoneAlreadyExists(true);
+                    oneUserUploadDto.setUserIdForPhone(phone.getUserId());
+                }
             }
 
         }
