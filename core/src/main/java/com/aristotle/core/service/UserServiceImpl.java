@@ -58,6 +58,7 @@ import com.aristotle.core.service.dto.UserPersonalDetailBean;
 import com.aristotle.core.service.dto.UserRegisterBean;
 import com.aristotle.core.service.dto.UserSearchResult;
 import com.aristotle.core.service.dto.UserSearchResultForEdting;
+import com.aristotle.core.service.dto.UserUploadDto;
 import com.aristotle.core.service.dto.UserVolunteerBean;
 
 @Service
@@ -1018,6 +1019,24 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.save(userSearchResultForEdting.getUser());
         userSearchResultForEdting.setUser(user);
         return userSearchResultForEdting;
+    }
+
+    @Override
+    public void checkUserStatus(List<UserUploadDto> users) throws AppException {
+        for(UserUploadDto oneUserUploadDto : users){
+            if (!StringUtils.isEmpty(oneUserUploadDto.getEmail())) {
+                Email email = emailRepository.getEmailByEmailUp(oneUserUploadDto.getEmail().toUpperCase());
+                oneUserUploadDto.setEmailAlreadyExists(true);
+                oneUserUploadDto.setUserIdForEmail(email.getUserId());
+            }
+            if (!StringUtils.isEmpty(oneUserUploadDto.getPhone())) {
+                Phone phone = phoneRepository.getPhoneByPhoneNumberAndCountryCode(oneUserUploadDto.getPhone().toUpperCase(), "91");
+                oneUserUploadDto.setPhoneAlreadyExists(true);
+                oneUserUploadDto.setUserIdForPhone(phone.getUserId());
+            }
+
+        }
+
     }
 
 }

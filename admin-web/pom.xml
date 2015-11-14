@@ -122,6 +122,17 @@
 			<artifactId>aws-java-sdk</artifactId>
 			<version>1.9.35</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.13</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+			<version>1.2</version>
+		</dependency>
+
 	</dependencies>
 	<repositories>
 		<repository>
@@ -149,14 +160,14 @@
 				</configuration>
 			</plugin>
 			<plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <arguments>
-                        <argument>--spring.profiles.active=prod</argument>
-                    </arguments>
-                </configuration>
-            </plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<arguments>
+						<argument>--spring.profiles.active=prod</argument>
+					</arguments>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>

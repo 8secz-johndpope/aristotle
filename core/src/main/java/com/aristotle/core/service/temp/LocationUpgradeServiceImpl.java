@@ -361,6 +361,8 @@ public class LocationUpgradeServiceImpl implements LocationUpgradeService {
         createRoleWithPermissions("Team Admin", "User of this role will be able to edit Various Teams", true, true, true, true, true, true, true, AppPermission.EDIT_TEAM);
         createRoleWithPermissions("Call Campaign Admin", "User of this role will be able to edit Various Call Campaigns", true, true, true, true, true, true, true, AppPermission.CALL_CAMPAIGN_ADMIN);
         logger.info("All Roles and permissions are created");
+        createRoleWithPermissions("User Data Upload Admin", "User of this role will be able to Upload various user data using CSV files", true, true, true, true, true, true, true,
+                AppPermission.USER_DATA_UPLOAD);
 
     }
 

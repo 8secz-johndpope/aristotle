@@ -31,7 +31,8 @@ public enum AppPermission {
     WEB_ADMIN_DRAFT,
     WEB_ADMIN,
     EDIT_TEAM,
-    CALL_CAMPAIGN_ADMIN
+    CALL_CAMPAIGN_ADMIN, 
+    USER_DATA_UPLOAD
     ;
     
     private AppPermission() {

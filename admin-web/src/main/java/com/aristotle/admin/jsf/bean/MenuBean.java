@@ -175,6 +175,10 @@ public class MenuBean extends BaseJsfBean {
         return isAllowed(AppPermission.ADD_MEMBER, AppPermission.UPDATE_MEMBER, AppPermission.UPDATE_GLOBAL_MEMBER);
     }
 
+    public boolean isUploadUserDataAllowed() {
+        return isAllowed(AppPermission.USER_DATA_UPLOAD);
+    }
+
     public boolean isCallCampaignAllowed() {
         return isAllowed(AppPermission.CALL_CAMPAIGN_ADMIN);
     }
@@ -342,6 +346,14 @@ public class MenuBean extends BaseJsfBean {
     public void goToManagerUserPage() {
         if (isEditUserAllowed()) {
             buildAndRedirect("/admin/edituser");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
+
+    public void goToUploadUserDataPage() {
+        if (isUploadUserDataAllowed()) {
+            buildAndRedirect("/admin/user-upload");
         } else {
             buildAndRedirect("/admin/notallowed");
         }

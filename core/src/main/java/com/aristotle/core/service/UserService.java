@@ -12,6 +12,7 @@ import com.aristotle.core.service.dto.UserPersonalDetailBean;
 import com.aristotle.core.service.dto.UserRegisterBean;
 import com.aristotle.core.service.dto.UserSearchResult;
 import com.aristotle.core.service.dto.UserSearchResultForEdting;
+import com.aristotle.core.service.dto.UserUploadDto;
 import com.aristotle.core.service.dto.UserVolunteerBean;
 
 public interface UserService {
@@ -63,4 +64,6 @@ public interface UserService {
     User registerIvrMember(String mobileNumber, String name, String gender, String amount, String paymentMode, String state, String district, String msg) throws AppException;
 
     void uploadUserProfilePic(InputStream fileInputStream, User user, String fileName) throws AppException;
+
+    void checkUserStatus(List<UserUploadDto> users) throws AppException;
 }
