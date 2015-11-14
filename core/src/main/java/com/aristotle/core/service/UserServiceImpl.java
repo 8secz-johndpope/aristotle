@@ -1058,9 +1058,10 @@ public class UserServiceImpl implements UserService {
                 }
             }
             System.out.println("checking Phone number [" + oneUserUploadDto.getPhone() + "]");
-            if (!StringUtils.isEmpty(oneUserUploadDto.getPhone())) {
+            if (!StringUtils.isEmpty(oneUserUploadDto.getPhone().trim())) {
                 System.out.println("Get Phone by Phone number [" + oneUserUploadDto.getPhone() + "] and countryCode [91]");
                 Phone phone = phoneRepository.getPhoneByPhoneNumberAndCountryCode(oneUserUploadDto.getPhone(), "91");
+                System.out.println("Found Phone " + phone);
                 if (phone != null) {
                     oneUserUploadDto.setPhoneAlreadyExists(true);
                     oneUserUploadDto.setUserIdForPhone(phone.getUserId());

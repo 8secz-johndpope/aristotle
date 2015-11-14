@@ -78,6 +78,11 @@ public class Phone extends BaseEntity {
         this.confirmed = confirmed;
     }
 
+    @Override
+    public String toString() {
+        return "Phone [phoneNumber=" + phoneNumber + ", countryCode=" + countryCode + ", phoneType=" + phoneType + ", confirmed=" + confirmed + ", userId=" + userId + ", id=" + id + "]";
+    }
+
 
 
 }
