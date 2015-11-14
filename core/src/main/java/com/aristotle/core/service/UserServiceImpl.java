@@ -1082,24 +1082,16 @@ public class UserServiceImpl implements UserService {
     }
 
     private void saveUser(UserUploadDto oneUserUploadDto) throws AppException {
-        Email email = null;
-        Phone phone = null;
-        try {
-            email = getOrCreateEmail(oneUserUploadDto.getEmail());
-            if(email != null && email.getUser() != null){
-                throw new AppException("User already exists for email " + oneUserUploadDto.getEmail());
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        Email email = getOrCreateEmail(oneUserUploadDto.getEmail());
+        if (email != null && email.getUser() != null) {
+            throw new AppException("User already exists for email " + oneUserUploadDto.getEmail());
         }
-        try {
-            phone = getOrCreateMobile(oneUserUploadDto.getPhone(), "91", "mobile");
-            if (phone != null && phone.getUser() != null) {
-                throw new AppException("User already exists for phone " + oneUserUploadDto.getPhone());
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+
+        Phone phone = getOrCreateMobile(oneUserUploadDto.getPhone(), "91", "mobile");
+        if (phone != null && phone.getUser() != null) {
+            throw new AppException("User already exists for phone " + oneUserUploadDto.getPhone());
         }
+
         if (email != null && phone != null) {
             email.setPhone(phone);
         }
