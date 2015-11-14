@@ -92,4 +92,12 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
         }
     }
 
+    public List<UserUploadDto> getUserBeingUploaded() {
+        return userBeingUploaded;
+    }
+
+    public void setUserBeingUploaded(List<UserUploadDto> userBeingUploaded) {
+        this.userBeingUploaded = userBeingUploaded;
+    }
+
 }
