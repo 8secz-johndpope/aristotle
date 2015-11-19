@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -108,6 +109,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+    @Cacheable("news")
     public List<News> getAllLocationPublishedNews(Set<Long> locationIds, int pageNumber, int pageSize) throws AppException {
         Pageable pageable = new PageRequest(pageNumber, pageSize);
         if (locationIds == null || locationIds.isEmpty()) {
@@ -145,6 +147,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+    @Cacheable("news")
     public long getAllLocationPublishedNewsCount(Set<Long> locationIds) throws AppException {
         if (locationIds == null || locationIds.isEmpty()) {
             return newsRepository.getGlobalPublishdNewsCount();
