@@ -37,7 +37,6 @@ public class VideoListPlugin extends LocationAwareDataPlugin {
             JsonObject context = (JsonObject) mv.getModel().get("context");
             int pageNumber = getIntPramater(httpServletRequest, HttpParameters.PAGE_NUMBER_PARAM, HttpParameters.PAGE_NUMBER_DEFAULT_VALUE);
             int pageSize = getIntSettingPramater("videos.size", 12);
-            System.out.println("Getting news for " + locations + ", page number = " + pageNumber + ", pageSize=" + pageSize);
             List<Video> videoList = videoService.getLocationVideos(locations, (pageNumber - 1), pageSize);
             long totalNews = videoService.getLocationVideosCount(locations);
             if (videoList == null || videoList.isEmpty()) {

@@ -27,7 +27,7 @@ public class VideoServiceImpl implements VideoService {
     @Override
     @Cacheable(value = "videos")
     public List<Video> getLocationVideos(Set<Long> locationIds, int pageNumber, int size) {
-        System.out.println("Getting Data From Database");
+        System.out.println("Getting Videos for " + locationIds + ", page number = " + pageNumber + ", pageSize=" + size);
         Pageable pageable = new PageRequest(pageNumber, size);
         if (locationIds == null || locationIds.isEmpty()) {
             return videoRepository.getGloablVideos(pageable);
@@ -41,6 +41,7 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Override
+    @Cacheable("videos")
     public long getLocationVideosCount(Set<Long> locationIds) {
         if (locationIds == null || locationIds.isEmpty()) {
             return videoRepository.getGloablVideoCount();

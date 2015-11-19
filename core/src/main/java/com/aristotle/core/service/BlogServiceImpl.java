@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -98,7 +99,9 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    @Cacheable("blogs")
     public List<Blog> getAllLocationPublishedBlog(Set<Long> locationIds, int pageNumber, int pageSize) throws AppException {
+        System.out.println("Getting blog for " + locationIds + ", page number = " + pageNumber + ", pageSize=" + pageSize);
         Pageable pageable = new PageRequest(pageNumber, pageSize);
         if (locationIds == null || locationIds.isEmpty()) {
             return blogRepository.getGlobalPublishdBlog(pageable);

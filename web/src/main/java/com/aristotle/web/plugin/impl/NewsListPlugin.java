@@ -40,7 +40,6 @@ public class NewsListPlugin extends LocationAwareDataPlugin {
             JsonObject context = (JsonObject) mv.getModel().get("context");
             int pageNumber = getIntPramater(httpServletRequest, HttpParameters.PAGE_NUMBER_PARAM, HttpParameters.PAGE_NUMBER_DEFAULT_VALUE);
             int pageSize = getIntSettingPramater("news.size", 6);
-            System.out.println("Getting news for " + locations + ", page number = " + pageNumber + ", pageSize=" + pageSize);
             List<News> newsList = newsService.getAllLocationPublishedNews(locations, (pageNumber - 1), pageSize);
             long totalNews = newsService.getAllLocationPublishedNewsCount(locations);
             if (newsList == null || newsList.isEmpty()) {

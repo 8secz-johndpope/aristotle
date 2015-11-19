@@ -111,6 +111,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     @Cacheable("news")
     public List<News> getAllLocationPublishedNews(Set<Long> locationIds, int pageNumber, int pageSize) throws AppException {
+        System.out.println("Getting news for " + locationIds + ", page number = " + pageNumber + ", pageSize=" + pageSize + " from DB");
         Pageable pageable = new PageRequest(pageNumber, pageSize);
         if (locationIds == null || locationIds.isEmpty()) {
             return newsRepository.getGlobalPublishdNews(pageable);
