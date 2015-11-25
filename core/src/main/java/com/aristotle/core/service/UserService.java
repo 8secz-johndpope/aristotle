@@ -65,7 +65,7 @@ public interface UserService {
 
     User registerIvrMember(String mobileNumber, String name, String gender, String amount, String paymentMode, String state, String district, String msg) throws AppException;
 
-    void uploadUserProfilePic(InputStream fileInputStream, User user, String fileName) throws AppException;
+    User uploadUserProfilePic(InputStream fileInputStream, User user, String fileName) throws AppException;
 
     void checkUserStatus(List<UserUploadDto> users) throws AppException;
 

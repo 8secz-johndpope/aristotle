@@ -962,8 +962,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserProfilePic(Long userid, String photo) throws AppException {
+        updateUserProfilePicPrivate(userid, photo);
+    }
+
+    public User updateUserProfilePicPrivate(Long userid, String photo) throws AppException {
         User user = userRepository.findOne(userid);
         user.setProfilePic(photo);
+        return user;
     }
 
     @Override
@@ -1013,7 +1018,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void uploadUserProfilePic(InputStream fileInputStream, User user, String fileName) throws AppException {
+    public User uploadUserProfilePic(InputStream fileInputStream, User user, String fileName) throws AppException {
         try {
             String bucketName = "static.swarajabhiyan.org";
 
@@ -1029,7 +1034,7 @@ public class UserServiceImpl implements UserService {
             System.out.println("subdDirectory = " + subdDirectory);
             String remoteFileName = "profile/" + staticDataEnv + "/" + user.getId() + "/" + System.currentTimeMillis() + getFileType(fileName);
             awsFileManager.uploadFileToS3(awsKey, awsSecret, bucketName, remoteFileName, fileInputStream, "image/jpeg");
-            updateUserProfilePic(user.getId(), remoteFileName);
+            return updateUserProfilePicPrivate(user.getId(), remoteFileName);
         } catch (Exception e) {
             throw new AppException("Failed to upload photo ");
         }

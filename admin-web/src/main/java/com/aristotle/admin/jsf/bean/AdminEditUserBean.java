@@ -185,7 +185,8 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
     public void handleFileUpload(FileUploadEvent event) {
         System.out.println("Uploading File " + event.getFile().getFileName());
         try {
-            userService.uploadUserProfilePic(event.getFile().getInputstream(), selectedUserForEditing.getUser(), event.getFile().getFileName());
+            User user = userService.uploadUserProfilePic(event.getFile().getInputstream(), selectedUserForEditing.getUser(), event.getFile().getFileName());
+            selectedUserForEditing.setUser(user);
         } catch (Exception ex) {
             logger.error("Unable to upload File", ex);
             sendErrorMessageToJsfScreen("Failed", event.getFile().getFileName() + " is failed to uploaded.");
