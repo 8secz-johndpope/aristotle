@@ -1051,7 +1051,7 @@ public class UserServiceImpl implements UserService {
         userSearchResultForEdting.setUser(user);
         if (!StringUtils.isEmpty(userSearchResultForEdting.getPhone().getPhoneNumber())) {
             Phone existingPhone = phoneRepository.getPhoneByPhoneNumber(userSearchResultForEdting.getPhone().getPhoneNumber());
-            if (!existingPhone.getUser().getId().equals(user.getId())) {
+            if (existingPhone != null && !existingPhone.getUser().getId().equals(user.getId())) {
                 throw new AppException("Phone Number already used by other member [" + existingPhone.getUser().getName() + "]");
             }
             Phone phone = userSearchResultForEdting.getPhone();
