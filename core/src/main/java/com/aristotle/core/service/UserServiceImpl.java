@@ -1049,6 +1049,16 @@ public class UserServiceImpl implements UserService {
     public UserSearchResultForEdting saveUserFromAdminPanel(UserSearchResultForEdting userSearchResultForEdting) throws AppException {
         User user = userRepository.save(userSearchResultForEdting.getUser());
         userSearchResultForEdting.setUser(user);
+        if (!StringUtils.isEmpty(userSearchResultForEdting.getPhone().getPhoneNumber())) {
+            Phone existingPhone = phoneRepository.getPhoneByPhoneNumber(userSearchResultForEdting.getPhone().getPhoneNumber());
+            if (!existingPhone.getUser().getId().equals(user.getId())) {
+                throw new AppException("Phone Number already used by other member [" + existingPhone.getUser().getName() + "]");
+            }
+            Phone phone = userSearchResultForEdting.getPhone();
+            phone.setUser(user);
+            phone = phoneRepository.save(phone);
+        }
+
         return userSearchResultForEdting;
     }
 

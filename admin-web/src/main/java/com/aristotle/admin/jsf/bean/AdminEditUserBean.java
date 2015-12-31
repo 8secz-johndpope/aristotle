@@ -20,6 +20,8 @@ import com.aristotle.admin.jsf.convertors.LocationConvertor;
 import com.aristotle.core.enums.AppPermission;
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Location;
+import com.aristotle.core.persistance.Phone;
+import com.aristotle.core.persistance.Phone.PhoneType;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.service.LocationService;
 import com.aristotle.core.service.UserService;
@@ -533,6 +535,13 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 
     public void setSelectedUserForEditing(UserSearchResultForEdting selectedUserForEditing) {
         this.selectedUserForEditing = selectedUserForEditing;
+        if (selectedUserForEditing.getPhone() == null) {
+            Phone phone = new Phone();
+            phone.setPhoneType(PhoneType.MOBILE);
+            phone.setUser(selectedUserForEditing.getUser());
+            phone.setCountryCode("91");
+            selectedUserForEditing.setPhone(phone);
+        }
         showSearchPanel = false;
     }
 
