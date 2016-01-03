@@ -91,4 +91,9 @@ public class LocationServiceImpl implements LocationService {
         }
     }
 
+    @Override
+    public Location findLocationById(Long locationId) throws AppException {
+        return locationRepository.findOne(locationId);
+    }
+
 }

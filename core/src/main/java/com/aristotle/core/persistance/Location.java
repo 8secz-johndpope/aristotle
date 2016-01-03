@@ -31,7 +31,7 @@ public class Location extends BaseEntity {
     @JoinColumn(name="parent_id")
     private Location parentLocation;
     @Column(name = "parent_id", insertable = false, updatable = false)
-    private Long parentId;
+    private Long parentLocationId;
     public String getName() {
         return name;
     }
@@ -66,13 +66,14 @@ public class Location extends BaseEntity {
     public void setParentLocation(Location parentLocation) {
         this.parentLocation = parentLocation;
     }
-    public Long getParentId() {
-        return parentId;
-    }
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
+
+    public Long getParentLocationId() {
+        return parentLocationId;
     }
 
+    public void setParentLocationId(Long parentLocationId) {
+        this.parentLocationId = parentLocationId;
+    }
     public String getIsdCode() {
         return isdCode;
     }
@@ -82,7 +83,8 @@ public class Location extends BaseEntity {
     }
     @Override
     public String toString() {
-        return "Location [name=" + name + ", nameUp=" + nameUp + ", isdCode=" + isdCode + ", locationTypeId=" + locationTypeId + ", parentLocation=" + parentLocation + ", parentId=" + parentId
+        return "Location [name=" + name + ", nameUp=" + nameUp + ", isdCode=" + isdCode + ", locationTypeId=" + locationTypeId + ", parentLocation=" + parentLocation + ", parentLocationId="
+                + parentLocationId
                 + ", id=" + id + ", ver=" + ver + ", dateCreated=" + dateCreated + ", dateModified=" + dateModified + ", creatorId=" + creatorId + ", modifierId=" + modifierId + "]";
     }
     

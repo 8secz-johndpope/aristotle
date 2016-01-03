@@ -29,4 +29,6 @@ public interface LocationService {
 
     List<Location> getAllChildLocations(Long locationId) throws AppException;
 
+    Location findLocationById(Long locationId) throws AppException;
+
 }
