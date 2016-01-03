@@ -487,6 +487,14 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
         this.districtLocationConvertor = districtLocationConvertor;
     }
 
+    public LocationConvertor getAcLocationConvertor() {
+        return acLocationConvertor;
+    }
+
+    public void setAcLocationConvertor(LocationConvertor acLocationConvertor) {
+        this.acLocationConvertor = acLocationConvertor;
+    }
+
     public LocationConvertor getPcLocationConvertor() {
         return pcLocationConvertor;
     }
