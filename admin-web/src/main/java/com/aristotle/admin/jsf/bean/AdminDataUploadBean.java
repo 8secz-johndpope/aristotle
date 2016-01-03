@@ -169,6 +169,11 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
 
     public void uploadData() {
         try {
+            validateLocationSelection();
+            if (!isValidInput()) {
+                return;
+            }
+            userNamePassword = false;
             userService.saveUsers(userBeingUploaded, userNamePassword);
             int totalSuccess = 0;
             int totalFailed = 0;
@@ -183,8 +188,42 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
         } catch (Exception ex) {
             sendErrorMessageToJsfScreen(ex);
         }
-
 	}
+
+    private void validateLocationSelection() {
+        if (selectedLocationType.getName().equalsIgnoreCase("state")) {
+            if (selectedState == null) {
+                sendErrorMessageToJsfScreen("Please select a state");
+            }
+        }
+        if (selectedLocationType.getName().equalsIgnoreCase("district")) {
+            if (selectedState == null) {
+                sendErrorMessageToJsfScreen("Please select a state");
+            }
+            if (selectedDistrict == null) {
+                sendErrorMessageToJsfScreen("Please select a district");
+            }
+        }
+        if (selectedLocationType.getName().equalsIgnoreCase("ParliamentConstituency")) {
+            if (selectedState == null) {
+                sendErrorMessageToJsfScreen("Please select a state");
+            }
+            if (selectedPc == null) {
+                sendErrorMessageToJsfScreen("Please select a Parliament Constituency");
+            }
+        }
+        if (selectedLocationType.getName().equalsIgnoreCase("AssemblyConstituency")) {
+            if (selectedState == null) {
+                sendErrorMessageToJsfScreen("Please select a state");
+            }
+            if (selectedDistrict == null) {
+                sendErrorMessageToJsfScreen("Please select a district");
+            }
+            if (selectedDistrict == null) {
+                sendErrorMessageToJsfScreen("Please select a Assembly Constituency");
+            }
+        }
+    }
 
     public void cancel() {
         userBeingUploaded = null;
