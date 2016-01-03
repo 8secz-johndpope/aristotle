@@ -105,8 +105,8 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
             locationTypes = locationService.getAllLocationTypes();
         } else {
             locationTypes = locationService.getAllLocationUnderLocationType(menuBean.getSelectedLocation().getLocationTypeId());
-            selectedLocationType = locationTypes.get(0);
         }
+        selectedLocationType = locationTypes.get(0);
         // if state type then get all states, select admin's state and disable it
         // if district type then get all states(district type's parent state type), select district's parent state, then get all district in that state and select district and disable it
         if (selectedLocationType.getName().equalsIgnoreCase("State") || selectedLocationType.getName().equalsIgnoreCase("District")
