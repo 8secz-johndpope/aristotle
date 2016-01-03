@@ -1087,10 +1087,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUsers(List<UserUploadDto> users, boolean createUserNamePassword) throws AppException {
+    public void saveUsers(List<UserUploadDto> users, boolean createUserNamePassword, Location state, Location district, Location pc, Location ac) throws AppException {
         for (UserUploadDto oneUserUploadDto : users) {
             try {
-                saveUser(oneUserUploadDto, createUserNamePassword);
+                saveUser(oneUserUploadDto, createUserNamePassword, state, district, pc, ac);
                 oneUserUploadDto.setUserCreated(true);
             } catch (Exception ex) {
                 oneUserUploadDto.setErrorMessage(ex.getMessage());
@@ -1099,7 +1099,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void saveUser(UserUploadDto oneUserUploadDto, boolean createUserNamePassword) throws AppException {
+    private void saveUser(UserUploadDto oneUserUploadDto, boolean createUserNamePassword, Location state, Location district, Location pc, Location ac) throws AppException {
         Email email = getOrCreateEmail(oneUserUploadDto.getEmail());
         if (email != null && email.getUser() != null) {
             throw new AppException("User already exists for email " + oneUserUploadDto.getEmail());
@@ -1119,6 +1119,7 @@ public class UserServiceImpl implements UserService {
         User dbUser = new User();
         dbUser.setName(oneUserUploadDto.getName());
         dbUser.setCreationType(CreationType.Admin_Imported_Via_Csv);
+
         dbUser = userRepository.save(dbUser);
 
         if (email != null) {
@@ -1135,6 +1136,27 @@ public class UserServiceImpl implements UserService {
             }
         }
 
+        addUserLocation(dbUser, state, "Living");
+        addUserLocation(dbUser, state, "Voting");
+        addUserLocation(dbUser, district, "Living");
+        addUserLocation(dbUser, district, "Voting");
+        addUserLocation(dbUser, ac, "Living");
+        addUserLocation(dbUser, ac, "Voting");
+        addUserLocation(dbUser, pc, "Living");
+        addUserLocation(dbUser, pc, "Voting");
+
+    }
+
+    private void addUserLocation(User dbuser, Location location, String userLocationType) {
+        if (location == null) {
+            return;
+        }
+        location = locationRepository.findOne(location.getId());
+        UserLocation userLocation = new UserLocation();
+        userLocation.setLocation(location);
+        userLocation.setUser(dbuser);
+        userLocation.setUserLocationType(userLocationType);
+        userLocation = userLocationRepository.save(userLocation);
     }
 
 

@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import com.aristotle.core.exception.AppException;
+import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.UserLocation;
 import com.aristotle.core.service.dto.SearchUser;
@@ -69,5 +70,5 @@ public interface UserService {
 
     void checkUserStatus(List<UserUploadDto> users) throws AppException;
 
-    void saveUsers(List<UserUploadDto> users, boolean createUserNamePassword) throws AppException;
+    void saveUsers(List<UserUploadDto> users, boolean createUserNamePassword, Location state, Location district, Location pc, Location ac) throws AppException;
 }

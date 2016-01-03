@@ -174,7 +174,7 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
                 return;
             }
             userNamePassword = false;
-            userService.saveUsers(userBeingUploaded, userNamePassword);
+            userService.saveUsers(userBeingUploaded, userNamePassword, selectedState, selectedDistrict, selectedPc, selectedAc);
             int totalSuccess = 0;
             int totalFailed = 0;
             for (UserUploadDto oneUserUploadDto : userBeingUploaded) {
@@ -342,6 +342,8 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
     public void handleStateChange() {
         System.out.println("Location Select : " + selectedState);
         try {
+            selectedDistrict = null;
+            selectedPc = null;
             if (isShowPcLocationSelectionOption()) {
                 pcs = locationService.getAllParliamentConstituenciesOfState(selectedState.getId());
                 pcLocationConvertor.setLocations(pcs);
@@ -359,6 +361,7 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
     public void handleDistrictChange() {
         System.out.println("Location Select : " + selectedDistrict);
         try {
+            selectedAc = null;
             if (isShowAcLocationSelectionOption()) {
                 acs = locationService.getAllAssemblyConstituenciesOfDistrict(selectedDistrict.getId());
                 acLocationConvertor.setLocations(acs);
