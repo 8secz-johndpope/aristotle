@@ -46,13 +46,13 @@ public class MenuBean extends BaseJsfBean {
     @Autowired
     private LocationService locationService;
     @Autowired
-    private LocationConvertor stateLocationConvertor = new LocationConvertor();
+    private LocationConvertor stateLocationConvertor;
     @Autowired
-    private LocationConvertor districtLocationConvertor = new LocationConvertor();
+    private LocationConvertor districtLocationConvertor;
     @Autowired
-    private LocationConvertor acLocationConvertor = new LocationConvertor();
+    private LocationConvertor acLocationConvertor;
     @Autowired
-    private LocationConvertor pcLocationConvertor = new LocationConvertor();
+    private LocationConvertor pcLocationConvertor;
     @PostConstruct
     public void init() {
         try {
@@ -75,6 +75,7 @@ public class MenuBean extends BaseJsfBean {
 
     private void loadStates() throws AppException {
         states = locationService.getAllStates();
+        stateLocationConvertor.setLocations(states);
     }
 
     public void handleStateChange(AjaxBehaviorEvent event) {
