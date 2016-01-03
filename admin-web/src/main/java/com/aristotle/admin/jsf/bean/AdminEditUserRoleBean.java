@@ -251,7 +251,7 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
     public boolean isMemberUpdateAllowed(UserSearchResult user) {
         User loggedInUser = getLoggedInUser();
         System.out.println("loggedInUser.getId()=" + loggedInUser.getId() + ",user.getId()=" + user.getId());
-        return !loggedInUser.getId().equals(user.getId());
+        return loggedInUser.isSuperAdmin() || !loggedInUser.getId().equals(user.getId());
 	}
 
     public void saveUserRoles(ActionEvent event) {
