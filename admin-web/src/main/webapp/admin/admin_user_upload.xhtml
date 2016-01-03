@@ -43,6 +43,65 @@
 			</p:blockUI>
 			<h:form id="adminDataUploadForm">
 				<p:messages id="messages" autoUpdate="true" closable="true" />
+				Add Users to Location
+					<p:selectOneMenu id="locationType" value="#{adminDataUploadBean.selectedLocationType}" effect="fold" editable="false" converter="#{jsfLocationTypeConvertor}">
+						<f:selectItems value="#{adminDataUploadBean.locationTypes}" var="oneLocationType" itemLabel="#{oneLocationType.name}" itemValue="#{oneLocationType}" />
+						<p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminDataUploadBean.handleLocationTypeSelection}" />
+					</p:selectOneMenu>
+					Create user Name/password and email/sms to individuals 
+					<p:selectBooleanCheckbox id="userNamePasswordCheckBox" value="#{adminDataUploadBean.userNamePassword}"></p:selectBooleanCheckbox>
+					<p:outputPanel id="locationSelectionPanel">
+                    <p:panel header="Location Selection" style="margin-bottom:20px">
+                        <h:panelGrid columns="4" styleClass="topAlignPanelColumns" id="locationPanel">
+                            <h:outputLabel for="state" value="State*" rendered="#{adminDataUploadBean.showStateLocationSelectionOption}" />
+                            <p:selectOneMenu id="state" effect="fold" editable="false" rendered="#{adminDataUploadBean.showStateLocationSelectionOption}"
+                                value="#{adminDataUploadBean.selectedState}" converter="#{adminDataUploadBean.stateLocationConvertor}">
+                                <f:selectItems value="#{adminDataUploadBean.states}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState}" />
+                                <p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminDataUploadBean.handleStateChange}" />
+                            </p:selectOneMenu>
+                            <h:outputLabel for="district" value="District*" rendered="#{adminDataUploadBean.showDistrictLocationSelectionOption}" />
+                            <p:selectOneMenu id="district" effect="fold" editable="false" rendered="#{adminDataUploadBean.showDistrictLocationSelectionOption}"
+                                value="#{adminDataUploadBean.selectedDistrict}" converter="#{adminDataUploadBean.districtLocationConvertor}">
+                                <f:selectItems value="#{adminDataUploadBean.districts}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict}" />
+                                <p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminDataUploadBean.handleDistrictChange}" />
+                            </p:selectOneMenu>
+                            <h:outputLabel for="ac" value="Assembly Constituency*" rendered="#{adminDataUploadBean.showAcLocationSelectionOption}" />
+                            <p:selectOneMenu id="ac" effect="fold" editable="false" rendered="#{adminDataUploadBean.showAcLocationSelectionOption}" value="#{adminDataUploadBean.selectedAc}"
+                                converter="#{adminDataUploadBean.acLocationConvertor}">
+                                <f:selectItems value="#{adminDataUploadBean.acs}" var="oneAc" itemLabel="#{oneAc.name}" itemValue="#{oneAc}" />
+                                <p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminDataUploadBean.handleAcChange}" />
+                            </p:selectOneMenu>
+                            <h:outputLabel for="pc" value="Parliament Constituency*" rendered="#{adminDataUploadBean.showPcLocationSelectionOption}" />
+                            <p:selectOneMenu id="pc" effect="fold" editable="false" rendered="#{adminDataUploadBean.showPcLocationSelectionOption}" value="#{adminDataUploadBean.selectedPc}"
+                                converter="#{adminDataUploadBean.pcLocationConvertor}">
+                                <f:selectItems value="#{adminDataUploadBean.pcs}" var="onePc" itemLabel="#{onePc.name}" itemValue="#{onePc}" />
+                                <p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminDataUploadBean.handlePcChange}" />
+                            </p:selectOneMenu>
+
+                            <h:outputLabel for="country" value="Country*" rendered="#{adminDataUploadBean.showCountryLocationSelectionOption}" />
+                            <p:selectOneMenu id="country" effect="fold" editable="false" rendered="#{adminDataUploadBean.showCountryLocationSelectionOption}"
+                                value="#{adminDataUploadBean.selectedCountry}" converter="#{adminDataUploadBean.countryLocationConvertor}">
+                                <f:selectItems value="#{adminDataUploadBean.countries}" var="oneCountry" itemLabel="#{oneCountry.name}" itemValue="#{oneCountry}" />
+                                <p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminDataUploadBean.handleCountryChange}" />
+                            </p:selectOneMenu>
+
+                            <h:outputLabel for="countryRegion" value="Country Region*" rendered="#{adminDataUploadBean.showCountryRegionLocationSelectionOption}" />
+                            <p:selectOneMenu id="countryRegion" effect="fold" editable="false" rendered="#{adminDataUploadBean.showCountryRegionLocationSelectionOption}"
+                                value="#{adminDataUploadBean.selectedCountryRegion}" converter="#{adminDataUploadBean.countryRegionLocationConvertor}">
+                                <f:selectItems value="#{adminDataUploadBean.countryRegions}" var="oneCountryRegion" itemLabel="#{oneCountryRegion.name}" itemValue="#{oneCountryRegion}" />
+                                <p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminDataUploadBean.handleCountryRegionChange}" />
+                            </p:selectOneMenu>
+
+                            <h:outputLabel for="countryRegionArea" value="Country Region Area*" rendered="#{adminDataUploadBean.showCountryRegionAreaLocationSelectionOption}" />
+                            <p:selectOneMenu id="countryRegionArea" effect="fold" editable="false" rendered="#{adminDataUploadBean.showCountryRegionAreaLocationSelectionOption}"
+                                value="#{adminDataUploadBean.selectedCountryRegionArea}" converter="#{adminDataUploadBean.countryRegionAreaLocationConvertor}">
+                                <f:selectItems value="#{adminDataUploadBean.countryRegionAreas}" var="oneCountryRegionArea" itemLabel="#{oneCountryRegionArea.name}" itemValue="#{oneCountryRegionArea}" />
+                                <p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminDataUploadBean.handleCountryRegionAreaChange}" />
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                    </p:panel>
+                </p:outputPanel>
+
 				<p:fileUpload id="csvFileUpload" fileUploadListener="#{adminDataUploadBean.handleFileUpload}" mode="advanced" update="messages,:adminDataUploadForm:mainPanel" auto="true"
 					sizeLimit="100000" allowTypes="/(\.|\/)(csv)$/" />
 
@@ -51,8 +110,7 @@
 					<p:outputPanel id="listView">
 
 						<p:dataTable id="userList" var="oneUser" value="#{adminDataUploadBean.userBeingUploaded}" emptyMessage="Please upoada a csv file with email, mobile and name columns"
-						                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-						                 paginator="true" rows="50" >
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}" paginator="true" rows="50">
 							<f:facet name="header">Users</f:facet>
 							<f:facet name="{Exporters}">
 								<h:commandLink>
