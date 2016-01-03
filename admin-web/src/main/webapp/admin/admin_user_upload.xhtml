@@ -59,25 +59,25 @@
                         <h:panelGrid columns="4" styleClass="topAlignPanelColumns" id="locationPanel">
                             <h:outputLabel for="state" value="State*" rendered="#{adminDataUploadBean.showStateLocationSelectionOption}" />
                             <p:selectOneMenu id="state" effect="fold" editable="false" rendered="#{adminDataUploadBean.showStateLocationSelectionOption}"
-                                value="#{adminDataUploadBean.selectedState}" converter="#{adminDataUploadBean.stateLocationConvertor}">
+                                value="#{adminDataUploadBean.selectedState}" converter="#{adminDataUploadBean.stateLocationConvertor}" disabled="#{adminDataUploadBean.disableStateSelector}">
                                 <f:selectItems value="#{adminDataUploadBean.states}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState}" />
                                 <p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminDataUploadBean.handleStateChange}" />
                             </p:selectOneMenu>
                             <h:outputLabel for="district" value="District*" rendered="#{adminDataUploadBean.showDistrictLocationSelectionOption}" />
                             <p:selectOneMenu id="district" effect="fold" editable="false" rendered="#{adminDataUploadBean.showDistrictLocationSelectionOption}"
-                                value="#{adminDataUploadBean.selectedDistrict}" converter="#{adminDataUploadBean.districtLocationConvertor}">
+                                value="#{adminDataUploadBean.selectedDistrict}" converter="#{adminDataUploadBean.districtLocationConvertor}" disabled="#{adminDataUploadBean.disableDistrictSelector}">
                                 <f:selectItems value="#{adminDataUploadBean.districts}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict}" />
                                 <p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminDataUploadBean.handleDistrictChange}" />
                             </p:selectOneMenu>
                             <h:outputLabel for="ac" value="Assembly Constituency*" rendered="#{adminDataUploadBean.showAcLocationSelectionOption}" />
                             <p:selectOneMenu id="ac" effect="fold" editable="false" rendered="#{adminDataUploadBean.showAcLocationSelectionOption}" value="#{adminDataUploadBean.selectedAc}"
-                                converter="#{adminDataUploadBean.acLocationConvertor}">
+                                converter="#{adminDataUploadBean.acLocationConvertor}" disabled="#{adminDataUploadBean.disableAcSelector}">
                                 <f:selectItems value="#{adminDataUploadBean.acs}" var="oneAc" itemLabel="#{oneAc.name}" itemValue="#{oneAc}" />
                                 <p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminDataUploadBean.handleAcChange}" />
                             </p:selectOneMenu>
                             <h:outputLabel for="pc" value="Parliament Constituency*" rendered="#{adminDataUploadBean.showPcLocationSelectionOption}" />
                             <p:selectOneMenu id="pc" effect="fold" editable="false" rendered="#{adminDataUploadBean.showPcLocationSelectionOption}" value="#{adminDataUploadBean.selectedPc}"
-                                converter="#{adminDataUploadBean.pcLocationConvertor}">
+                                converter="#{adminDataUploadBean.pcLocationConvertor}" disabled="#{adminDataUploadBean.disablePcSelector}">
                                 <f:selectItems value="#{adminDataUploadBean.pcs}" var="onePc" itemLabel="#{onePc.name}" itemValue="#{onePc}" />
                                 <p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminDataUploadBean.handlePcChange}" />
                             </p:selectOneMenu>

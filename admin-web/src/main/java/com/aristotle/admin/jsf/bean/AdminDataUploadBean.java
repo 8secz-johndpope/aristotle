@@ -63,6 +63,11 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
     private List<Location> countryRegionAreas;
     private boolean userNamePassword;
 
+    private boolean disableStateSelector;
+    private boolean disableDistrictSelector;
+    private boolean disableAcSelector;
+    private boolean disablePcSelector;
+
     @Autowired
     private UserService userService;
     @Autowired
@@ -101,60 +106,61 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
             return;
         }
 		System.out.println("Init");
-        if (loggedInAdminUser.isSuperAdmin() || menuBean.isGlobalAdmin()) {
+        if (menuBean.getSelectedLocation() == null && (loggedInAdminUser.isSuperAdmin() || menuBean.isGlobalAdmin())) {
             locationTypes = locationService.getAllLocationTypes();
         } else {
             locationTypes = locationService.getAllLocationUnderLocationType(menuBean.getSelectedLocation().getLocationTypeId());
         }
-        selectedLocationType = locationTypes.get(0);
-        // if state type then get all states, select admin's state and disable it
-        // if district type then get all states(district type's parent state type), select district's parent state, then get all district in that state and select district and disable it
-        if (selectedLocationType.getName().equalsIgnoreCase("State") || selectedLocationType.getName().equalsIgnoreCase("District")
-                || selectedLocationType.getName().equalsIgnoreCase("AssemblyConstituency") || selectedLocationType.getName().equalsIgnoreCase("ParliamentConstituency")) {
-            showStateLocationSelectionOption = true;
-        } else {
-            showStateLocationSelectionOption = false;
-        }
-        loadStates();
-        loadCountries();
         locationTypeConvertor.setLocationTypes(locationTypes);
+        selectedLocationType = locationTypes.get(0);
+        if (selectedLocationType.getName().equalsIgnoreCase("State")) {
+            loadStates(menuBean.getSelectedLocation());
+        }
+        if (selectedLocationType.getName().equalsIgnoreCase("District")) {
+            loadDistricts(menuBean.getSelectedLocation());
+        }
+        if (selectedLocationType.getName().equalsIgnoreCase("ParliamentConstituency")) {
+            loadPcs(menuBean.getSelectedLocation());
+        }
+        if (selectedLocationType.getName().equalsIgnoreCase("AssemblyConstituency")) {
+            loadAcs(menuBean.getSelectedLocation());
+        }
 	}
 
     private void loadAcs(Location location) throws AppException {
         acs = locationService.getAllLocationsOfType(location.getLocationTypeId(), location.getParentLocationId());
         selectedAc = location;
+        showAcLocationSelectionOption = true;
         Location district = locationService.findLocationById(location.getParentLocationId());
         loadDistricts(district);
+        disableAcSelector = true;
     }
 
     private void loadPcs(Location location) throws AppException {
         pcs = locationService.getAllLocationsOfType(location.getLocationTypeId(), location.getParentLocationId());
         selectedPc = location;
+        showPcLocationSelectionOption = true;
         Location state = locationService.findLocationById(location.getParentLocationId());
         loadStates(state);
+        disablePcSelector = true;
     }
 
     private void loadDistricts(Location location) throws AppException {
         districts = locationService.getAllLocationsOfType(location.getLocationTypeId(), location.getParentLocationId());
         selectedDistrict = location;
+        showDistrictLocationSelectionOption = true;
         Location state = locationService.findLocationById(location.getParentLocationId());
         loadStates(state);
+        disableDistrictSelector = true;
     }
 
     private void loadStates(Location location) throws AppException {
         states = locationService.getAllLocationsOfType(location.getLocationTypeId(), location.getParentLocationId());
         selectedState = location;
+        showStateLocationSelectionOption = true;
+        disableStateSelector = true;
     }
 
-    private void loadStates() throws AppException {
-        states = locationService.getAllStates();
-        stateLocationConvertor.setLocations(states);
-    }
-
-    private void loadCountries() throws AppException {
-        countries = locationService.getAllCountries();
-        countryLocationConvertor.setLocations(countries);
-    }
 
     public void uploadData() {
         try {
@@ -624,6 +630,38 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
 
     public void setUserNamePassword(boolean userNamePassword) {
         this.userNamePassword = userNamePassword;
+    }
+
+    public boolean isDisableStateSelector() {
+        return disableStateSelector;
+    }
+
+    public void setDisableStateSelector(boolean disableStateSelector) {
+        this.disableStateSelector = disableStateSelector;
+    }
+
+    public boolean isDisableDistrictSelector() {
+        return disableDistrictSelector;
+    }
+
+    public void setDisableDistrictSelector(boolean disableDistrictSelector) {
+        this.disableDistrictSelector = disableDistrictSelector;
+    }
+
+    public boolean isDisableAcSelector() {
+        return disableAcSelector;
+    }
+
+    public void setDisableAcSelector(boolean disableAcSelector) {
+        this.disableAcSelector = disableAcSelector;
+    }
+
+    public boolean isDisablePcSelector() {
+        return disablePcSelector;
+    }
+
+    public void setDisablePcSelector(boolean disablePcSelector) {
+        this.disablePcSelector = disablePcSelector;
     }
 
 }
