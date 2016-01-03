@@ -40,6 +40,9 @@ public class MenuBean extends BaseJsfBean {
     private Location selectedDistrict;
     private Location selectedAc;
     private Location selectedPc;
+    private Location selectedCountry;
+    private Location selectedCountryRegion;
+    private Location selectedCountryRegionArea;
 
     @Autowired
     private AdminService adminService;
@@ -53,6 +56,7 @@ public class MenuBean extends BaseJsfBean {
     private LocationConvertor acLocationConvertor;
     @Autowired
     private LocationConvertor pcLocationConvertor;
+
     @PostConstruct
     public void init() {
         try {
@@ -100,9 +104,31 @@ public class MenuBean extends BaseJsfBean {
         }
     }
 
+    public void selectCurrent(ActionEvent event) {
+        if (selectedAc != null){
+            selectedLocation = selectedAc;
+        } else if(selectedPc != null){
+            selectedLocation = selectedPc;
+        } else if(selectedDistrict != null){
+            selectedLocation = selectedDistrict;
+        } else if(selectedState != null){
+            selectedLocation = selectedState;
+        }
+
+        if (selectedLocation == null) {
+            sendErrorMessageToJsfScreen("Please select a location");
+        } else{
+            globalSelected = false;
+            System.out.println("globalSelected=" + globalSelected);
+            System.out.println("selectedLocation=" + selectedLocation);
+            buildAndRedirect("/admin/home");
+        }
+    }
+
     public List<Location> getStates() {
         return states;
     }
+
     public boolean isAllowed(AppPermission... appPermissions) {
         // If no location Selected then return false as we dont want to display any menu item
         if (isLocationNotSelected(this)) {
@@ -132,6 +158,7 @@ public class MenuBean extends BaseJsfBean {
     public boolean isAdmin() {
         return (user.isSuperAdmin() || !allPermissions.isEmpty() || !locationPermissions.isEmpty());
     }
+
     public boolean isVoiceOfAapFbAllowed() {
         return isAllowed(AppPermission.ADMIN_VOICE_OF_AAP_FB);
     }
@@ -299,12 +326,13 @@ public class MenuBean extends BaseJsfBean {
             buildAndRedirect("/admin/notallowed");
         }
     }
-    public void goToManageNewsPage() { 
-        if (isManageNewsAllowed()) { 
-            buildAndRedirect("/admin/news"); 
-            } else { 
-                buildAndRedirect("/admin/notallowed"); 
-        } 
+
+    public void goToManageNewsPage() {
+        if (isManageNewsAllowed()) {
+            buildAndRedirect("/admin/news");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
     }
 
     public void goToManageBlogPage() {
@@ -354,7 +382,7 @@ public class MenuBean extends BaseJsfBean {
             buildAndRedirect("/admin/notallowed");
         }
     }
-    
+
     public void goToStaticDataPluginPage() {
         if (isWebDeveloperAdminRoleAllowed()) {
             buildAndRedirect("/admin/sdplugin");
@@ -378,7 +406,6 @@ public class MenuBean extends BaseJsfBean {
             buildAndRedirect("/admin/notallowed");
         }
     }
-
 
     public void goToEditOfficeDetailPage() {
         if (isEditOfficeDetailAllowed()) {
@@ -427,7 +454,6 @@ public class MenuBean extends BaseJsfBean {
             buildAndRedirect("/admin/notallowed");
         }
     }
-
 
     public void goToManageUserRolePage() {
         if (isManageUserRoleAllowed()) {
@@ -796,5 +822,29 @@ public class MenuBean extends BaseJsfBean {
 
     public void setPcLocationConvertor(LocationConvertor pcLocationConvertor) {
         this.pcLocationConvertor = pcLocationConvertor;
+    }
+
+    public Location getSelectedCountry() {
+        return selectedCountry;
+    }
+
+    public void setSelectedCountry(Location selectedCountry) {
+        this.selectedCountry = selectedCountry;
+    }
+
+    public Location getSelectedCountryRegion() {
+        return selectedCountryRegion;
+    }
+
+    public void setSelectedCountryRegion(Location selectedCountryRegion) {
+        this.selectedCountryRegion = selectedCountryRegion;
+    }
+
+    public Location getSelectedCountryRegionArea() {
+        return selectedCountryRegionArea;
+    }
+
+    public void setSelectedCountryRegionArea(Location selectedCountryRegionArea) {
+        this.selectedCountryRegionArea = selectedCountryRegionArea;
     }
 }
