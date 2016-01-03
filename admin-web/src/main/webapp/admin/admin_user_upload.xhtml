@@ -43,13 +43,17 @@
 			</p:blockUI>
 			<h:form id="adminDataUploadForm">
 				<p:messages id="messages" autoUpdate="true" closable="true" />
+				<p:outputPanel>
 				Add Users to Location
 					<p:selectOneMenu id="locationType" value="#{adminDataUploadBean.selectedLocationType}" effect="fold" editable="false" converter="#{jsfLocationTypeConvertor}">
 						<f:selectItems value="#{adminDataUploadBean.locationTypes}" var="oneLocationType" itemLabel="#{oneLocationType.name}" itemValue="#{oneLocationType}" />
 						<p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminDataUploadBean.handleLocationTypeSelection}" />
 					</p:selectOneMenu>
+					</p:outputPanel>
+					<p:outputPanel>
 					Create user Name/password and email/sms to individuals 
 					<p:selectBooleanCheckbox id="userNamePasswordCheckBox" value="#{adminDataUploadBean.userNamePassword}"></p:selectBooleanCheckbox>
+					</p:outputPanel>
 					<p:outputPanel id="locationSelectionPanel">
                     <p:panel header="Location Selection" style="margin-bottom:20px">
                         <h:panelGrid columns="4" styleClass="topAlignPanelColumns" id="locationPanel">
@@ -101,7 +105,7 @@
                         </h:panelGrid>
                     </p:panel>
                 </p:outputPanel>
-
+                Select CSV file
 				<p:fileUpload id="csvFileUpload" fileUploadListener="#{adminDataUploadBean.handleFileUpload}" mode="advanced" update="messages,:adminDataUploadForm:mainPanel" auto="true"
 					sizeLimit="100000" allowTypes="/(\.|\/)(csv)$/" />
 
