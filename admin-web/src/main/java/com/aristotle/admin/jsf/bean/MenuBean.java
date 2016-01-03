@@ -763,4 +763,36 @@ public class MenuBean extends BaseJsfBean {
     public void setSelectedPc(Location selectedPc) {
         this.selectedPc = selectedPc;
     }
+
+    public LocationConvertor getStateLocationConvertor() {
+        return stateLocationConvertor;
+    }
+
+    public void setStateLocationConvertor(LocationConvertor stateLocationConvertor) {
+        this.stateLocationConvertor = stateLocationConvertor;
+    }
+
+    public LocationConvertor getDistrictLocationConvertor() {
+        return districtLocationConvertor;
+    }
+
+    public void setDistrictLocationConvertor(LocationConvertor districtLocationConvertor) {
+        this.districtLocationConvertor = districtLocationConvertor;
+    }
+
+    public LocationConvertor getAcLocationConvertor() {
+        return acLocationConvertor;
+    }
+
+    public void setAcLocationConvertor(LocationConvertor acLocationConvertor) {
+        this.acLocationConvertor = acLocationConvertor;
+    }
+
+    public LocationConvertor getPcLocationConvertor() {
+        return pcLocationConvertor;
+    }
+
+    public void setPcLocationConvertor(LocationConvertor pcLocationConvertor) {
+        this.pcLocationConvertor = pcLocationConvertor;
+    }
 }
