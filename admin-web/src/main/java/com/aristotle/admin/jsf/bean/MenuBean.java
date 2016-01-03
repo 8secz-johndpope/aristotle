@@ -45,13 +45,13 @@ public class MenuBean extends BaseJsfBean {
     @Autowired
     private LocationService locationService;
     @Autowired
-    private LocationConvertor stateLocationConvertor;
+    private LocationConvertor stateLocationConvertor = new LocationConvertor();
     @Autowired
-    private LocationConvertor districtLocationConvertor;
+    private LocationConvertor districtLocationConvertor = new LocationConvertor();
     @Autowired
-    private LocationConvertor acLocationConvertor;
+    private LocationConvertor acLocationConvertor = new LocationConvertor();
     @Autowired
-    private LocationConvertor pcLocationConvertor;
+    private LocationConvertor pcLocationConvertor = new LocationConvertor();
     @PostConstruct
     public void init() {
         try {
