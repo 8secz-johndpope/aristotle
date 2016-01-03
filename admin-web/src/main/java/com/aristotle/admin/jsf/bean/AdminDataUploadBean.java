@@ -128,7 +128,6 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
     private void loadAcs(Location location) throws AppException {
-        acs = locationService.getAllLocationsOfType(location.getLocationTypeId(), location.getParentLocationId());
         selectedAc = location;
         showAcLocationSelectionOption = true;
         Location district = locationService.findLocationById(location.getParentLocationId());
@@ -137,7 +136,6 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
     }
 
     private void loadPcs(Location location) throws AppException {
-        pcs = locationService.getAllLocationsOfType(location.getLocationTypeId(), location.getParentLocationId());
         selectedPc = location;
         showPcLocationSelectionOption = true;
         Location state = locationService.findLocationById(location.getParentLocationId());
@@ -146,7 +144,7 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
     }
 
     private void loadDistricts(Location location) throws AppException {
-        districts = locationService.getAllLocationsOfType(location.getLocationTypeId(), location.getParentLocationId());
+        acs = locationService.getAllAssemblyConstituenciesOfDistrict(location.getId());
         selectedDistrict = location;
         showDistrictLocationSelectionOption = true;
         Location state = locationService.findLocationById(location.getParentLocationId());
@@ -155,6 +153,9 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
     }
 
     private void loadStates(Location location) throws AppException {
+        districts = locationService.getAllDistrictOfState(location.getId());
+        pcs = locationService.getAllParliamentConstituenciesOfState(location.getId());
+
         states = locationService.getAllLocationsOfType(location.getLocationTypeId(), location.getParentLocationId());
         selectedState = location;
         showStateLocationSelectionOption = true;
