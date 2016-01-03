@@ -144,7 +144,6 @@ body {
 						 
 					<h:outputLabel for="state" value="State" />
 					<p:selectOneMenu id="state" value="#{menuBean.selectedState}" effect="fold" editable="false"  converter="#{menuBean.stateLocationConvertor}">
-						<f:selectItem itemLabel="Select State" itemValue="0" />
 						<f:selectItems value="#{menuBean.states}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState}"/>
 
 						<p:ajax event="change" update="@form:district,@form:parliamentConstituency" listener="#{menuBean.handleStateChange}" />
