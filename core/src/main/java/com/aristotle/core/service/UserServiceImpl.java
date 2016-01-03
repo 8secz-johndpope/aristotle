@@ -1087,10 +1087,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUsers(List<UserUploadDto> users) throws AppException {
+    public void saveUsers(List<UserUploadDto> users, boolean createUserNamePassword) throws AppException {
         for (UserUploadDto oneUserUploadDto : users) {
             try {
-                saveUser(oneUserUploadDto);
+                saveUser(oneUserUploadDto, createUserNamePassword);
                 oneUserUploadDto.setUserCreated(true);
             } catch (Exception ex) {
                 oneUserUploadDto.setErrorMessage(ex.getMessage());
@@ -1099,7 +1099,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void saveUser(UserUploadDto oneUserUploadDto) throws AppException {
+    private void saveUser(UserUploadDto oneUserUploadDto, boolean createUserNamePassword) throws AppException {
         Email email = getOrCreateEmail(oneUserUploadDto.getEmail());
         if (email != null && email.getUser() != null) {
             throw new AppException("User already exists for email " + oneUserUploadDto.getEmail());
@@ -1123,12 +1123,16 @@ public class UserServiceImpl implements UserService {
 
         if (email != null) {
             email.setUser(dbUser);
-            sendEmailConfirmtionEmail(email.getEmail());
-            generateUserLoginAccount(email.getEmail());
+            if (createUserNamePassword) {
+                sendEmailConfirmtionEmail(email.getEmail());
+                generateUserLoginAccount(email.getEmail());
+            }
         }
         if (phone != null) {
             phone.setUser(dbUser);
-            generateUserLoginAccountForMobile(phone);
+            if (createUserNamePassword) {
+                generateUserLoginAccountForMobile(phone);
+            }
         }
 
     }

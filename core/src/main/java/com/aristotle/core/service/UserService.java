@@ -69,5 +69,5 @@ public interface UserService {
 
     void checkUserStatus(List<UserUploadDto> users) throws AppException;
 
-    void saveUsers(List<UserUploadDto> users) throws AppException;
+    void saveUsers(List<UserUploadDto> users, boolean createUserNamePassword) throws AppException;
 }
