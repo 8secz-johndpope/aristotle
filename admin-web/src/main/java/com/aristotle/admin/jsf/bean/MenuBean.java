@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -76,8 +77,8 @@ public class MenuBean extends BaseJsfBean {
         states = locationService.getAllStates();
     }
 
-    public void handleStateChange() {
-        System.out.println("Location Select : " + selectedState);
+    public void handleStateChange(AjaxBehaviorEvent event) {
+        System.out.println("Location Select : " + selectedState + ", " + event);
         try {
             pcs = locationService.getAllParliamentConstituenciesOfState(selectedState.getId());
             pcLocationConvertor.setLocations(pcs);
