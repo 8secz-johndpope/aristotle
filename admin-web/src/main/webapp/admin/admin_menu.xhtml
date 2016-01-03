@@ -143,35 +143,35 @@ body {
 						</p:commandButton>
 						 
 					<h:outputLabel for="state" value="State" />
-					<p:selectOneMenu id="state" value="#{menuBean.selectedState}" effect="fold" editable="false">
+					<p:selectOneMenu id="state" value="#{menuBean.selectedState}" effect="fold" editable="false"  converter="#{menuBean.stateLocationConvertor}">
 						<f:selectItem itemLabel="Select State" itemValue="0" />
-						<f:selectItems value="#{menuBean.states}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState}" converter="#{menuBean.stateLocationConvertor}"/>
+						<f:selectItems value="#{menuBean.states}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState}"/>
 
 						<p:ajax event="change" update="@form:district,@form:parliamentConstituency" listener="#{menuBean.handleStateChange}" />
 					</p:selectOneMenu>
 					
 					<h:outputLabel for="district" value="District*" />
-					<p:selectOneMenu id="district" value="#{menuBean.selectedDistrict}" effect="fold" editable="false">
+					<p:selectOneMenu id="district" value="#{menuBean.selectedDistrict}" effect="fold" editable="false"  converter="#{menuBean.districtLocationConvertor}">
 						<f:selectItem itemLabel="Select District" itemValue="0" />
-						<f:selectItems value="#{menuBean.districts}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict}" converter="#{menuBean.districtLocationConvertor}"/>
+						<f:selectItems value="#{menuBean.districts}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict}"/>
 
 						<p:ajax event="change" update="@form:assemblyConstituency" listener="#{menuBean.handleDistrictChange}" />
 					</p:selectOneMenu>
  
 					<h:outputLabel for="parliamentConstituency" value="Parliament Constituency*" />
 
-					<p:selectOneMenu id="parliamentConstituency" value="#{menuBean.selectedPc}" effect="fold" editable="false">
+					<p:selectOneMenu id="parliamentConstituency" value="#{menuBean.selectedPc}" effect="fold" editable="false" converter="#{menuBean.pcLocationConvertor}">
 						<f:selectItem itemLabel="Select Parliament Constituency" itemValue="0" />
 						<f:selectItems value="#{menuBean.pcs}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}"
-							itemValue="#{oneParliamentConstituency}" converter="#{menuBean.pcLocationConvertor}"/>
+							itemValue="#{oneParliamentConstituency}"/>
 
 					</p:selectOneMenu>
 
 					<h:outputLabel for="assemblyConstituency" value="Assembly Constituency*" />
-					<p:selectOneMenu id="assemblyConstituency" value="#{menuBean.selectedAc}" effect="fold" editable="false">
+					<p:selectOneMenu id="assemblyConstituency" value="#{menuBean.selectedAc}" effect="fold" editable="false" converter="#{menuBean.acLocationConvertor}">
 						<f:selectItem itemLabel="Select Assembly Constituency" itemValue="0" />
 						<f:selectItems value="#{menuBean.acs}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
-							itemValue="#{oneAssemblyConstituency}" converter="#{menuBean.acLocationConvertor}"/>
+							itemValue="#{oneAssemblyConstituency}"/>
 
 					</p:selectOneMenu>
                 
