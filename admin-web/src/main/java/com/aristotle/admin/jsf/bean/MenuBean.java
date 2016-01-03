@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.faces.event.ActionEvent;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
+import com.aristotle.admin.jsf.convertors.LocationConvertor;
 import com.aristotle.admin.service.AdminService;
 import com.aristotle.core.enums.AppPermission;
+import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.User;
+import com.aristotle.core.service.LocationService;
 
 @Component
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "session")
@@ -27,9 +31,35 @@ public class MenuBean extends BaseJsfBean {
     private Map<Long, Set<AppPermission>> locationPermissions;
     private User user;
     private boolean globalSelected = false;
+    private List<Location> states;
+    private List<Location> districts;
+    private List<Location> acs;
+    private List<Location> pcs;
+    private Location selectedState;
+    private Location selectedDistrict;
+    private Location selectedAc;
+    private Location selectedPc;
 
     @Autowired
     private AdminService adminService;
+    @Autowired
+    private LocationService locationService;
+    @Autowired
+    private LocationConvertor stateLocationConvertor;
+    @Autowired
+    private LocationConvertor districtLocationConvertor;
+    @Autowired
+    private LocationConvertor acLocationConvertor;
+    @Autowired
+    private LocationConvertor pcLocationConvertor;
+    @PostConstruct
+    public void init() {
+        try {
+            loadStates();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public void refreshLoginRoles() {
         try {
@@ -37,10 +67,39 @@ public class MenuBean extends BaseJsfBean {
 
             allPermissions = adminService.getGlobalPermissionsOfUser(user.getId());
             locationPermissions = adminService.getLocationPermissionsOfUser(user.getId());
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void loadStates() throws AppException {
+        states = locationService.getAllStates();
+    }
+
+    public void handleStateChange() {
+        System.out.println("Location Select : " + selectedState);
+        try {
+            pcs = locationService.getAllParliamentConstituenciesOfState(selectedState.getId());
+            pcLocationConvertor.setLocations(pcs);
+            districts = locationService.getAllDistrictOfState(selectedState.getId());
+            districtLocationConvertor.setLocations(districts);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void handleDistrictChange() {
+        System.out.println("Location Select : " + selectedDistrict);
+        try {
+            acs = locationService.getAllAssemblyConstituenciesOfDistrict(selectedDistrict.getId());
+            acLocationConvertor.setLocations(acs);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public List<Location> getStates() {
+        return states;
     }
     public boolean isAllowed(AppPermission... appPermissions) {
         // If no location Selected then return false as we dont want to display any menu item
@@ -659,5 +718,49 @@ public class MenuBean extends BaseJsfBean {
 
     public void setGlobalSelected(boolean globalSelected) {
         this.globalSelected = globalSelected;
+    }
+
+    public List<Location> getDistricts() {
+        return districts;
+    }
+
+    public List<Location> getAcs() {
+        return acs;
+    }
+
+    public List<Location> getPcs() {
+        return pcs;
+    }
+
+    public Location getSelectedState() {
+        return selectedState;
+    }
+
+    public void setSelectedState(Location selectedState) {
+        this.selectedState = selectedState;
+    }
+
+    public Location getSelectedDistrict() {
+        return selectedDistrict;
+    }
+
+    public void setSelectedDistrict(Location selectedDistrict) {
+        this.selectedDistrict = selectedDistrict;
+    }
+
+    public Location getSelectedAc() {
+        return selectedAc;
+    }
+
+    public void setSelectedAc(Location selectedAc) {
+        this.selectedAc = selectedAc;
+    }
+
+    public Location getSelectedPc() {
+        return selectedPc;
+    }
+
+    public void setSelectedPc(Location selectedPc) {
+        this.selectedPc = selectedPc;
     }
 }

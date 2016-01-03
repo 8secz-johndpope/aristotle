@@ -141,39 +141,40 @@ body {
 					<p:outputLabel />
 					<p:commandButton value="Global" actionListener="#{menuBean.selectGlobal}" styleClass="ui-priority-primary">
 						</p:commandButton>
-						<!-- 
+						 
 					<h:outputLabel for="state" value="State" />
-					<p:selectOneMenu id="state" value="#{menuBean.selectedStateId}" effect="fold" editable="false">
+					<p:selectOneMenu id="state" value="#{menuBean.selectedState}" effect="fold" editable="false">
 						<f:selectItem itemLabel="Select State" itemValue="0" />
-						<f:selectItems value="#{menuBean.states}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
+						<f:selectItems value="#{menuBean.states}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState}" converter="#{menuBean.stateLocationConvertor}"/>
 
-						<p:ajax event="change" update=":adminForm:district,:adminForm:parliamentConstituency" listener="#{menuBean.handleStateChange}" />
+						<p:ajax event="change" update="@form:district,@form:parliamentConstituency" listener="#{menuBean.handleStateChange}" />
 					</p:selectOneMenu>
+					
 					<h:outputLabel for="district" value="District*" />
-					<p:selectOneMenu id="district" value="#{menuBean.selectedDistrictId}" effect="fold" editable="false">
+					<p:selectOneMenu id="district" value="#{menuBean.selectedDistrict}" effect="fold" editable="false">
 						<f:selectItem itemLabel="Select District" itemValue="0" />
-						<f:selectItems value="#{menuBean.districtOfState}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict.id}" />
+						<f:selectItems value="#{menuBean.districts}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict}" converter="#{menuBean.districtLocationConvertor}"/>
 
-						<p:ajax event="change" update=":adminForm:assemblyConstituency" listener="#{menuBean.handleDistrictChange}" />
+						<p:ajax event="change" update="@form:assemblyConstituency" listener="#{menuBean.handleDistrictChange}" />
 					</p:selectOneMenu>
-
+ 
 					<h:outputLabel for="parliamentConstituency" value="Parliament Constituency*" />
 
-					<p:selectOneMenu id="parliamentConstituency" value="#{menuBean.selectedPcId}" effect="fold" editable="false">
+					<p:selectOneMenu id="parliamentConstituency" value="#{menuBean.selectedPc}" effect="fold" editable="false">
 						<f:selectItem itemLabel="Select Parliament Constituency" itemValue="0" />
-						<f:selectItems value="#{menuBean.parliamentConstituencyOfState}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}"
-							itemValue="#{oneParliamentConstituency.id}" />
+						<f:selectItems value="#{menuBean.pcs}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}"
+							itemValue="#{oneParliamentConstituency}" converter="#{menuBean.pcLocationConvertor}"/>
 
 					</p:selectOneMenu>
 
 					<h:outputLabel for="assemblyConstituency" value="Assembly Constituency*" />
-					<p:selectOneMenu id="assemblyConstituency" value="#{menuBean.selectedAcId}" effect="fold" editable="false">
+					<p:selectOneMenu id="assemblyConstituency" value="#{menuBean.selectedAc}" effect="fold" editable="false">
 						<f:selectItem itemLabel="Select Assembly Constituency" itemValue="0" />
-						<f:selectItems value="#{menuBean.assemblyConstituencyOfDistrict}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
-							itemValue="#{oneAssemblyConstituency.id}" />
+						<f:selectItems value="#{menuBean.acs}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
+							itemValue="#{oneAssemblyConstituency}" converter="#{menuBean.acLocationConvertor}"/>
 
 					</p:selectOneMenu>
-                -->
+                
 			 	</p:panelGrid>
 				<p:commandButton value="Cancel" oncomplete="chooseLocation.hide()" styleClass="ui-priority-primary">
 				</p:commandButton>
