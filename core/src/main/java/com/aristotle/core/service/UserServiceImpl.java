@@ -516,10 +516,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserSearchResult> searchNriUserForVolunteerIntrest(List<Long> intrests) throws AppException {
         List<User> users;
+        Pageable pageable = new PageRequest(0, 1000);
         if (intrests == null || intrests.isEmpty()) {
-            users = userRepository.searchNriOnly();
+            users = userRepository.searchNriOnly(pageable).getContent();
         } else {
-            users = userRepository.searchNriUserForVolunteerIntrest(intrests);
+            users = userRepository.searchNriUserForVolunteerIntrest(intrests, pageable).getContent();
         }
         return convertUserList(users);
     }
@@ -527,11 +528,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserSearchResult> searchGlobalUserForVolunteerIntrest(List<Long> intrests) throws AppException {
         List<User> users;
+        Pageable pageable = new PageRequest(0, 2000);
         if(intrests == null || intrests.isEmpty()){
-            Pageable pageable = new PageRequest(0, 2000);
+
             users = userRepository.findAll(pageable).getContent();
         } else {
-            users = userRepository.searchGlobalUserForVolunteerIntrest(intrests);
+            users = userRepository.searchGlobalUserForVolunteerIntrest(intrests, pageable).getContent();
         }
         return convertUserList(users);
     }
@@ -539,10 +541,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserSearchResult> searchLocationUserForVolunteerIntrest(Long locationId, List<Long> intrests) throws AppException {
         List<User> users;
+        Pageable pageable = new PageRequest(0, 2000);
         if (intrests == null || intrests.isEmpty()) {
-            users = userRepository.searchLocationUser(locationId);
+            users = userRepository.searchLocationUser(locationId, pageable).getContent();
         } else {
-            users = userRepository.searchLocationUserForVolunteerIntrest(locationId, intrests);
+            users = userRepository.searchLocationUserForVolunteerIntrest(locationId, intrests, pageable).getContent();
         }
         return convertUserList(users);
     }

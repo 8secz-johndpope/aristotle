@@ -2,6 +2,8 @@ package com.aristotle.core.persistance.repo;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -34,19 +36,19 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 	public abstract User getUserByPassportNumber(String passportNumber);
 
     @Query("select distinct user from User user, Volunteer vl join vl.interests interests where  interests.id in ?1 and vl.userId=user.id and user.nri=true")
-    List<User> searchNriUserForVolunteerIntrest(List<Long> interestIds);
+    Page<User> searchNriUserForVolunteerIntrest(List<Long> interestIds, Pageable pageable);
 
     @Query("select user from User user where user.nri=true")
-    List<User> searchNriOnly();
+    Page<User> searchNriOnly(Pageable pageable);
 
     @Query("select distinct user from User user, Volunteer vl join vl.interests interests where  interests.id in ?1 and vl.userId=user.id")
-    List<User> searchGlobalUserForVolunteerIntrest(List<Long> interestIds);
+    Page<User> searchGlobalUserForVolunteerIntrest(List<Long> interestIds, Pageable pageable);
 
     @Query("select distinct user from User user, UserLocation ul, Volunteer vl join vl.interests interests where interests.id in ?2 and vl.userId=user.id and ul.userId=user.id and ul.locationId=?1")
-    List<User> searchLocationUserForVolunteerIntrest(Long locationId, List<Long> interestIds);
+    Page<User> searchLocationUserForVolunteerIntrest(Long locationId, List<Long> interestIds, Pageable pageable);
 
     @Query("select distinct user from User user, UserLocation ul where ul.locationId=?1 and ul.userId=user.id")
-    List<User> searchLocationUser(Long locationId);
+    Page<User> searchLocationUser(Long locationId, Pageable pageable);
 	/*
 	List<User> searchUserOfAssemblyConstituency(String name,Long livingAcId,Long votingAcId);
 	
