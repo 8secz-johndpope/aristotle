@@ -13,7 +13,7 @@ public class HelperSource {
                 return content.substring(0, trimLength);
             }
         }catch(Exception ex){
-            ex.printStackTrace()
+            ex.printStackTrace();
         }
         return content;
     }
