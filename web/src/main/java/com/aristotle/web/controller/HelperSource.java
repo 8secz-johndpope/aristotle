@@ -12,7 +12,7 @@ public class HelperSource {
             if (content.length() > trimLength) {
                 return content.substring(0, trimLength);
             }
-        }catch{Exception ex){
+        }catch(Exception ex){
             ex.printStackTrace()
         }
         return content;
