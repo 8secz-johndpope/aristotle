@@ -54,51 +54,13 @@ public class DonationController {
         String status = httpServletRequest.getParameter("status");
         PaymentGatewayDonation paymentGatewayDonation = processDonation(paymentId);
         if (paymentGatewayDonation == null) {
-            return "Donation was Succesfull";
+            return "Unable to read donation status, we will check it again and update our records";
         } else {
             return "Donation was Succesfull, Swaraj Abhiyan Donation id : " + paymentGatewayDonation.getId() + ", InstaMojo Donation id : " + paymentGatewayDonation.getMerchantReferenceNumber();
         }
 
     }
 
-    /*
-     * {
-    "success": true,
-    "payment": {
-        "payment_id": "MOJO6131000C45454727",
-        "quantity": 1,
-        "status": "Credit",
-        "link_slug": "donations-for-swaraj-abhiyan",
-        "link_title": "Swaraj Abhiyan Contribution",
-        "buyer_name": "Ravi Sharma",
-        "buyer_phone": "+447908024831",
-        "buyer_email": "ping2ravi@gmail.com",
-        "currency": "INR",
-        "unit_price": "9.00",
-        "amount": "9.00",
-        "fees": "0.17",
-        "shipping_address": null,
-        "shipping_city": null,
-        "shipping_state": null,
-        "shipping_zip": null,
-        "shipping_country": null,
-        "discount_code": null,
-        "discount_amount_off": null,
-        "variants": [],
-        "custom_fields": {
-            "Field_56745": {
-                "required": true,
-                "value": "Haryana",
-                "label": "State",
-                "type": "char"
-            }
-        },
-        "affiliate_id": null,
-        "affiliate_commission": "0",
-        "created_at": "2016-01-31T01:03:19.431Z"
-    }
-}
-     */
     RestTemplate restTemplate = new RestTemplate();
     JsonParser jsonParser = new JsonParser();
 
@@ -107,10 +69,15 @@ public class DonationController {
             HttpHeaders headers = new HttpHeaders();
             headers.add("api_key", apiKey);
             headers.add("auth_token", apiAuthToken);
+            System.out.println("api_key=" + apiKey);
+            System.out.println("auth_token=" + apiAuthToken);
             HttpEntity<String> requestEntity = new HttpEntity<String>("", headers);
             
             String url = "https://www.instamojo.com/api/1.1/payments/" + donationId + "/";
+            System.out.println("url=" + url);
+            System.out.println("requestEntity=" + requestEntity);
             ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
+            System.out.println("responseEntity=" + responseEntity.getBody());
             if (responseEntity.getStatusCode().is2xxSuccessful()) {
                 String responseBody = responseEntity.getBody();
                 JsonObject jsonObject = (JsonObject) jsonParser.parse(responseBody);
