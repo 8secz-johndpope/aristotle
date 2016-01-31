@@ -40,7 +40,8 @@ public class DonationController {
         return modelAndView;
     }
 
-    @RequestMapping(value = { "/private/complete" }, method = RequestMethod.POST)
+
+    @RequestMapping(value = { "/private/complete" }, method = RequestMethod.POST, consumes = "application/*")
     @ResponseBody
     public String instaMojoPostUpdates(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView, @RequestBody String data) throws IOException {
         // payment_id=MOJO6131000C45454677&status=success
