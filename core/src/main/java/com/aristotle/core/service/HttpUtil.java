@@ -54,6 +54,22 @@ public class HttpUtil {
 		String dayDonationString = byteArrayOutputStream.toString();
 		return dayDonationString;
 	}
+
+    public String getResponse(String url, String apiKey, String secret) throws ClientProtocolException, IOException {
+        logger.info("Hitting Url = {}", url);
+        HttpGet httpGet = new HttpGet(url);
+        httpGet.setHeader("api_key", apiKey);
+        httpGet.setHeader("auth_token", secret);
+        HttpResponse httpResponse = getHttpClient().execute(httpGet);
+        // System.out.println("Got Response= "+ httpResponse);
+        HttpEntity httpEntity = httpResponse.getEntity();
+        // System.out.println("Converting to String= "+ httpEntity);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        // System.out.println("IOUtils.copy(httpEntity.getContent(), byteArrayOutputStream);");
+        IOUtils.copy(httpEntity.getContent(), byteArrayOutputStream);
+        String dayDonationString = byteArrayOutputStream.toString();
+        return dayDonationString;
+    }
 	
 	public  String postSoapRequest(String url, String payLoad) throws ClientProtocolException, IOException{
 		logger.info("Hitting Url = {}", url);
