@@ -49,34 +49,8 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     @Query("select distinct user from User user, UserLocation ul where ul.locationId=?1 and ul.userId=user.id")
     Page<User> searchLocationUser(Long locationId, Pageable pageable);
-	/*
-	List<User> searchUserOfAssemblyConstituency(String name,Long livingAcId,Long votingAcId);
-	
-	
-	List<Long> getAllAdminUserForGlobalTreasur();
-	
-	List<Long> getAllAdminUserForStateTreasure(long stateId);
-	
-	List<Long> getAllAdminUserForDistrictTreasure(long districtId);
-	
-	List<Long> getAllAdminUserForAcTreasure(long acId);
-	
-	List<Long> getAllAdminUserForPcTreasure(long pcId);
-	
-	List<Long> getAdminUserForGlobalTreasur();
-	
-	List<Long> getAdminUserForStateTreasure(long stateId);
-	
-	List<Long> getAdminUserForDistrictTreasure(long districtId);
-	
-	List<Long> getAdminUserForAcTreasure(long acId);
-	
-	List<Long> getAdminUserForPcTreasure(long pcId);
-	
-	LegacyMembership getLegacyMembershipByEmail(String email);
-	
-	LegacyMembership getLegacyMembershipByMobile(String mobile);
 
-	LegacyMembership getLegacyMembershipsByMembershipNumbers(Long membershipNumber);
-	*/
+    @Query("select distinct user from User user where user.reindex")
+    Page<User> searchUserByReindex(Pageable pageable);
+
 }

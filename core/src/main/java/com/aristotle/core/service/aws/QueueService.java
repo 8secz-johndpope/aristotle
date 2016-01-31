@@ -14,4 +14,12 @@ public interface QueueService {
 
     void deletePlannedTweetMessage(Message message) throws ApplicationException;
 
+    void sendRefreshDonationMessage(String message) throws ApplicationException;
+
+    Message receiveRefreshDonationMessage() throws ApplicationException;
+
+    void sendRefreshUserMessage(String message) throws ApplicationException;
+
+    Message receiveRefreshUserMessage() throws ApplicationException;
+
 }

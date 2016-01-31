@@ -20,6 +20,9 @@ public class Donation extends BaseEntity {
 
     @Column(name = "donor_ip")
     private String donorIp;
+    @Column(name = "donation", updatable = false, insertable = false)
+    private String donationype;
+
     @Column(name = "donation_date")
     private Date donationDate;
     @Column(name = "amount")
@@ -225,6 +228,10 @@ public class Donation extends BaseEntity {
 
     public void setDonateToVidhansabha(String donateToVidhansabha) {
         this.donateToVidhansabha = donateToVidhansabha;
+    }
+
+    public String getDonationype() {
+        return donationype;
     }
 
 	

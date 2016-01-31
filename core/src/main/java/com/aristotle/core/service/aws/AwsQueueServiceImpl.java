@@ -14,6 +14,10 @@ public class AwsQueueServiceImpl implements QueueService {
     private AwsQueueManager awsQueueManager;
     @Value("${planned_tweet_queue}")
     private String plannedTweetQueue;
+    @Value("${refresh_donation_queue}")
+    private String refreshDonationQueue;
+    @Value("${refresh_user_queue}")
+    private String refreshUserQueue;
 
     private void sendMessage(String queueName, String message) {
         System.out.println("Sending message :" + message + " , to queue [" + queueName + "]");
@@ -45,6 +49,27 @@ public class AwsQueueServiceImpl implements QueueService {
     @Override
     public void deletePlannedTweetMessage(Message message) throws ApplicationException {
         awsQueueManager.deleteMessage(message, plannedTweetQueue);
+    }
+
+    @Override
+    public void sendRefreshDonationMessage(String message) throws ApplicationException {
+        sendMessage(refreshDonationQueue, message);
+
+    }
+
+    @Override
+    public void sendRefreshUserMessage(String message) throws ApplicationException {
+        sendMessage(refreshUserQueue, message);
+    }
+
+    @Override
+    public Message receiveRefreshDonationMessage() throws ApplicationException {
+        return awsQueueManager.receiveMessage(refreshDonationQueue);
+    }
+
+    @Override
+    public Message receiveRefreshUserMessage() throws ApplicationException {
+        return awsQueueManager.receiveMessage(refreshUserQueue);
     }
 
 }

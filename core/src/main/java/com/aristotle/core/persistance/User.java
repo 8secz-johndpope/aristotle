@@ -139,10 +139,10 @@ public class User extends BaseEntity {
 	@OneToMany(mappedBy="user", fetch=FetchType.LAZY)
 	private Set<Donation> donations;
 
-	@OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private Set<Email> emails;
 
-	@OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private Set<Phone> phones;
 
 	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
@@ -263,7 +263,10 @@ public class User extends BaseEntity {
 	@Column(name = "volunteer", nullable = false)
 	private boolean volunteer;
 
-	@Column(name = "membership_status")
+    @Column(name = "reindex", nullable = true)
+    private boolean reindex;
+
+    @Column(name = "membership_status")
 	private String membershipStatus;
 	
 	@Column(name = "passport_number")
@@ -786,6 +789,14 @@ public class User extends BaseEntity {
 
     public void setSmsMessage(String smsMessage) {
         this.smsMessage = smsMessage;
+    }
+
+    public boolean isReindex() {
+        return reindex;
+    }
+
+    public void setReindex(boolean reindex) {
+        this.reindex = reindex;
     }
 
     @Override

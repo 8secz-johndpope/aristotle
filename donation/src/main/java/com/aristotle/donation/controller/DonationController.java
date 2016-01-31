@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.omg.CORBA.portable.ApplicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.aristotle.core.persistance.PaymentGatewayDonation;
 import com.aristotle.core.service.DonationService;
+import com.aristotle.core.service.aws.QueueService;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -40,10 +42,18 @@ public class DonationController {
     @Value("${instamojoApiAuthToken}")
     private String apiAuthToken;
 
+    @Autowired
+    private QueueService queueService;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    RestTemplate restTemplate;
+    JsonParser jsonParser;
 
     @PostConstruct
     public void init() {
+        restTemplate = new RestTemplate();
+        jsonParser = new JsonParser();
         restTemplate.setInterceptors(Collections.singletonList(new XUserAgentInterceptor()));
 
     }
@@ -64,13 +74,17 @@ public class DonationController {
         if (paymentGatewayDonation == null) {
             return "Unable to read donation status, we will check it again and update our records";
         } else {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("donationId", paymentGatewayDonation.getId());
+            try {
+                queueService.sendRefreshDonationMessage(jsonObject.toString());
+            } catch (ApplicationException e) {
+                logger.error("Unabel to send Donation Refresh Message", e);
+            }
             return "Donation was Succesfull, Swaraj Abhiyan Donation id : " + paymentGatewayDonation.getId() + ", InstaMojo Donation id : " + paymentGatewayDonation.getMerchantReferenceNumber();
         }
 
     }
-
-    RestTemplate restTemplate = new RestTemplate();
-    JsonParser jsonParser = new JsonParser();
 
 
     private PaymentGatewayDonation processDonation(String donationId) {
@@ -78,16 +92,12 @@ public class DonationController {
             HttpHeaders headers = new HttpHeaders();
             headers.set("X-API-KEY", apiKey);
             headers.set("X-AUTH-TOKEN", apiAuthToken);
-            System.out.println("api_key=" + apiKey);
-            System.out.println("auth_token=" + apiAuthToken);
             HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
             String url = "https://www.instamojo.com/api/1.1/payments/" + donationId + "/";
-            System.out.println("url=" + url);
-            System.out.println("requestEntity=" + requestEntity);
             ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
 
-            System.out.println("responseEntity=" + responseEntity.getBody());
+            logger.info("responseEntity={}", responseEntity.getBody());
             if (responseEntity.getStatusCode().is2xxSuccessful()) {
                 String responseBody = responseEntity.getBody();
                 JsonObject jsonObject = (JsonObject) jsonParser.parse(responseBody);
@@ -116,7 +126,7 @@ public class DonationController {
     @ResponseBody
     public String instaMojoPostUpdates(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView, @RequestBody String data) throws IOException {
         try {
-            System.out.println("Request Body : " + data);
+            logger.info("Request Body : " + data);
             String buyerEmail = httpServletRequest.getParameter("buyer");
             String buyerName = httpServletRequest.getParameter("buyer_name");
             String customFields = httpServletRequest.getParameter("custom_fields");
