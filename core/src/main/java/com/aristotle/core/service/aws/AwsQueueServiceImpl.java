@@ -21,7 +21,7 @@ public class AwsQueueServiceImpl implements QueueService {
 
     private void sendMessage(String queueName, String message) {
         System.out.println("Sending message :" + message + " , to queue [" + queueName + "]");
-        awsQueueManager.sendMessage(plannedTweetQueue, message);
+        awsQueueManager.sendMessage(queueName, message);
     }
 
     private void deleteMessage(String messageId, String queueName) throws ApplicationException {
