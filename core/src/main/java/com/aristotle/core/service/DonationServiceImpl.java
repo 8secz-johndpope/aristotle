@@ -11,9 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Donation;
+import com.aristotle.core.persistance.Email;
 import com.aristotle.core.persistance.IvrDonation;
+import com.aristotle.core.persistance.PaymentGatewayDonation;
+import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.repo.DonationRepository;
+import com.aristotle.core.persistance.repo.EmailRepository;
 import com.aristotle.core.persistance.repo.IvrDonationRepository;
+import com.aristotle.core.persistance.repo.PaymentGatewayDonationRepository;
 
 @Service
 @Transactional
@@ -23,6 +28,10 @@ public class DonationServiceImpl implements DonationService {
     private IvrDonationRepository ivrDonationRepository;
     @Autowired
     private DonationRepository donationRepository;
+    @Autowired
+    private PaymentGatewayDonationRepository paymentGatewayDonationRepository;
+    @Autowired
+    private EmailRepository EmailRepository;
 
     @Override
     public Donation saveIvrDonation(String mobile, String name, String amount, String paymentMode, String upid, String adminUpid, String adminMobile, String msg) throws AppException {
@@ -44,6 +53,35 @@ public class DonationServiceImpl implements DonationService {
     public List<Donation> getDonations(int pageNumber, int pageSize) throws AppException {
         Pageable pageable = new PageRequest(pageNumber, pageSize);
         return donationRepository.getDonationsOrderByDonationDate(pageable);
+    }
+
+    @Override
+    public PaymentGatewayDonation saveOnlineDonationFromInstamojo(boolean success, String paymentId, String status, String buyerName, String buyerPhone, String buyerEmail, String amount, String fees)
+            throws AppException {
+        User user = null;
+        if (buyerEmail != null) {
+            Email email = EmailRepository.getEmailByEmailUp(buyerEmail.toUpperCase());
+            if (email != null) {
+                user = email.getUser();
+            }
+        }
+
+        PaymentGatewayDonation paymentGatewayDonation = paymentGatewayDonationRepository.findByMerchantReferenceNumber(paymentId);
+        if (paymentGatewayDonation == null) {
+            paymentGatewayDonation = new PaymentGatewayDonation();
+            paymentGatewayDonation.setMerchantReferenceNumber(paymentId);
+        }
+        paymentGatewayDonation.setAmount(Double.parseDouble(amount));
+        paymentGatewayDonation.setDonorName(buyerName);
+        paymentGatewayDonation.setPaymentGateway("Instamojo");
+        paymentGatewayDonation.setDonationDate(new Date());
+        paymentGatewayDonation.setDonorEmail(buyerEmail);
+        paymentGatewayDonation.setDonorMobile(buyerPhone);
+        paymentGatewayDonation.setUser(user);
+
+        paymentGatewayDonation = paymentGatewayDonationRepository.save(paymentGatewayDonation);
+
+        return paymentGatewayDonation;
     }
 
 }
