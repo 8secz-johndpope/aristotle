@@ -115,8 +115,18 @@ public class AwsCloudDonationSearchServiceImpl extends AwsCloudBaseSearchService
         amazonCloudSearchAddRequest.version = 1;
         amazonCloudSearchAddRequest.addField(NAME_FIELD, donation.getDonorName());
         amazonCloudSearchAddRequest.addField(ID_FIELD, donation.getId().toString());
-        amazonCloudSearchAddRequest.addField(EMAIL_FIELD, donation.getDonorEmail());
-        amazonCloudSearchAddRequest.addField(PHONE_FIELD, donation.getDonorMobile());
+        if (donation.getDonorEmail() != null) {
+            List<String> emailIds = new ArrayList<>(1);
+            emailIds.add(donation.getDonorEmail());
+            amazonCloudSearchAddRequest.addField(EMAIL_FIELD, emailIds);
+        }
+
+        if (donation.getDonorMobile() != null) {
+            List<String> phones = new ArrayList<>(1);
+            phones.add(donation.getDonorMobile());
+            amazonCloudSearchAddRequest.addField(PHONE_FIELD, phones);
+        }
+
         amazonCloudSearchAddRequest.addField(DONATION_TYPE_FIELD, donation.getDonationype());
         amazonCloudSearchAddRequest.addField(DONATION_DATE_FIELD, dateFormat.format(donation.getDonationDate()));
         amazonCloudSearchAddRequest.addField(AMOUNT_FIELD, amountFormat.format(donation.getAmount()));
