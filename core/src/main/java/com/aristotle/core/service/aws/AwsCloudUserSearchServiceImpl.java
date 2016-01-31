@@ -87,7 +87,7 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
     private MembershipRepository membershipRepository;
 
 
-
+    @Autowired
     public AwsCloudUserSearchServiceImpl(@Value("${user_search_end_point}") String searchEndpoint, @Value("${user_document_end_point}") String userDocumentEndpoint,
             @Value("${user_cloud_search_domain_name}") String userDomainName) {
         super(searchEndpoint, userDocumentEndpoint, userDomainName);

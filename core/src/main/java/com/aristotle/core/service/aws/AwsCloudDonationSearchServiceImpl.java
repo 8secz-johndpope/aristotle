@@ -50,6 +50,7 @@ public class AwsCloudDonationSearchServiceImpl extends AwsCloudBaseSearchService
 
     private DecimalFormat amountFormat = new DecimalFormat("##.##");
 
+    @Autowired
     public AwsCloudDonationSearchServiceImpl(@Value("${donation_search_end_point}") String searchEndpoint, @Value("${donation_document_end_point}") String userDocumentEndpoint,
             @Value("${donation_cloud_search_domain_name}") String userDomainName) {
         super(searchEndpoint, userDocumentEndpoint, userDomainName);
