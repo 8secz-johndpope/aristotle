@@ -1,7 +1,9 @@
 package com.aristotle.donation.controller;
 
 import java.io.IOException;
+import java.util.Collections;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -40,6 +42,11 @@ public class DonationController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @PostConstruct
+    public void init() {
+        restTemplate.setInterceptors(Collections.singletonList(new XUserAgentInterceptor()));
+
+    }
     @ExceptionHandler({ Exception.class })
     public String handleException(Exception ex) {
         ex.printStackTrace();
@@ -67,16 +74,17 @@ public class DonationController {
     private PaymentGatewayDonation processDonation(String donationId) {
         try {
             HttpHeaders headers = new HttpHeaders();
-            headers.add("api_key", apiKey);
-            headers.add("auth_token", apiAuthToken);
+            headers.set("api_key", apiKey);
+            headers.set("auth_token", apiAuthToken);
             System.out.println("api_key=" + apiKey);
             System.out.println("auth_token=" + apiAuthToken);
-            HttpEntity<String> requestEntity = new HttpEntity<String>("", headers);
+            HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
             
             String url = "https://www.instamojo.com/api/1.1/payments/" + donationId + "/";
             System.out.println("url=" + url);
             System.out.println("requestEntity=" + requestEntity);
             ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
+
             System.out.println("responseEntity=" + responseEntity.getBody());
             if (responseEntity.getStatusCode().is2xxSuccessful()) {
                 String responseBody = responseEntity.getBody();
