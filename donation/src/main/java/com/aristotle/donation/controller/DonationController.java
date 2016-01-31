@@ -26,7 +26,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.aristotle.core.persistance.PaymentGatewayDonation;
 import com.aristotle.core.service.DonationService;
-import com.aristotle.core.service.HttpUtil;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -73,39 +72,12 @@ public class DonationController {
     RestTemplate restTemplate = new RestTemplate();
     JsonParser jsonParser = new JsonParser();
 
+
     private PaymentGatewayDonation processDonation(String donationId) {
         try {
-            HttpUtil httpUtil = new HttpUtil();
-
-            String url = "https://www.instamojo.com/api/1.1/payments/" + donationId + "/";
-            System.out.println("url=" + url);
-            String response = httpUtil.getResponse(url, apiKey, apiAuthToken);
-            System.out.println("response=" + response);
-            JsonObject jsonObject = (JsonObject) jsonParser.parse(response);
-            boolean success = jsonObject.get("success").getAsBoolean();
-            JsonObject paymentJsonObject = jsonObject.get("payment").getAsJsonObject();
-
-            String paymentId = paymentJsonObject.get("payment_id").getAsString();
-            String status = paymentJsonObject.get("status").getAsString();
-            String buyerName = paymentJsonObject.get("buyer_name").getAsString();
-            String buyerPhone = paymentJsonObject.get("buyer_phone").getAsString();
-            String buyerEmail = paymentJsonObject.get("buyer_email").getAsString();
-            String amount = paymentJsonObject.get("amount").getAsString();
-            String fees = paymentJsonObject.get("fees").getAsString();
-
-            return donationService.saveOnlineDonationFromInstamojo(success, paymentId, status, buyerName, buyerPhone, buyerEmail, amount, fees);
-        } catch (Exception ex) {
-            logger.error("Unabel to process donation : " + donationId, ex);
-        }
-        return null;
-    }
-
-    private PaymentGatewayDonation processDonationOld(String donationId) {
-        try {
-            HttpUtil httpUtl = new HttpUtil();
             HttpHeaders headers = new HttpHeaders();
-            headers.set("api_key", apiKey);
-            headers.set("auth_token", apiAuthToken);
+            headers.set("X-API-KEY", apiKey);
+            headers.set("X-AUTH-TOKEN", apiAuthToken);
             System.out.println("api_key=" + apiKey);
             System.out.println("auth_token=" + apiAuthToken);
             HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
@@ -143,26 +115,29 @@ public class DonationController {
     @RequestMapping(value = { "/private/complete" }, method = RequestMethod.POST, consumes = "application/*")
     @ResponseBody
     public String instaMojoPostUpdates(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView, @RequestBody String data) throws IOException {
-        // payment_id=MOJO6131000C45454677&status=success
-        // buyer=ping2ravi%40gmail.com&buyer_name=Ravi+Sharma&custom_fields=%7B%22Field_56745%22%3A+%7B%22type%22%3A+%22char%22%2C+%22value%22%3A+%22Haryana%22%2C+%22label%22%3A+%22State%22%2C+%22required%22%3A+true%7D%7D&unit_price=9.00&buyer_phone=%2B447908024831&variants=%5B%5D&offer_title=Swaraj+Abhiyan+Contribution&currency=INR&offer_slug=donations-for-swaraj-abhiyan&payment_id=MOJO6131000C45454727&mac=b74079543d1e0aaebd4ab3011be9b1f1c4a2dc47&amount=9.00&fees=0.17&status=Credit&quantity=1
+        try {
+            System.out.println("Request Body : " + data);
+            String buyerEmail = httpServletRequest.getParameter("buyer");
+            String buyerName = httpServletRequest.getParameter("buyer_name");
+            String customFields = httpServletRequest.getParameter("custom_fields");
+            String unitPrice = httpServletRequest.getParameter("unit_price");
+            String buyerPhone = httpServletRequest.getParameter("buyer_phone");
+            String variants = httpServletRequest.getParameter("variants");
+            String offerTitle = httpServletRequest.getParameter("offer_title");
+            String currency = httpServletRequest.getParameter("currency");
+            String offerSlug = httpServletRequest.getParameter("offer_slug");
+            String paymentId = httpServletRequest.getParameter("payment_id");
+            String mac = httpServletRequest.getParameter("mac");
+            String amount = httpServletRequest.getParameter("amount");
+            String fees = httpServletRequest.getParameter("fees");
+            String status = httpServletRequest.getParameter("status");
+            String quantity = httpServletRequest.getParameter("quantity");
 
-        String buyerEmail = httpServletRequest.getParameter("buyer");
-        String buyerName = httpServletRequest.getParameter("buyer_name");
-        String customFields = httpServletRequest.getParameter("custom_fields");
-        String unitPrice = httpServletRequest.getParameter("unit_price");
-        String buyerPhone = httpServletRequest.getParameter("buyer_phone");
-        String variants = httpServletRequest.getParameter("variants");
-        String offerTitle = httpServletRequest.getParameter("offer_title");
-        String currency = httpServletRequest.getParameter("currency");
-        String offerSlug = httpServletRequest.getParameter("offer_slug");
-        String paymentId = httpServletRequest.getParameter("payment_id");
-        String mac = httpServletRequest.getParameter("mac");
-        String amount = httpServletRequest.getParameter("amount");
-        String fees = httpServletRequest.getParameter("fees");
-        String status = httpServletRequest.getParameter("status");
-        String quantity = httpServletRequest.getParameter("quantity");
+            // donationService.saveOnlineDonationFromInstamojo("Credit".equalsIgnoreCase(status), paymentId, status, buyerName, buyerPhone, buyerEmail, amount, fees);
 
-        System.out.println("Request Body : " + data);
+        } catch (Exception ex) {
+            logger.error("Failed", ex);
+        }
         return "Success";
     }
 
