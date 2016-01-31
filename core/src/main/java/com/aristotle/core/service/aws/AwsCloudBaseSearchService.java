@@ -63,7 +63,7 @@ public abstract class AwsCloudBaseSearchService {
     private void indexFields() {
 
         DescribeIndexFieldsRequest describeIndexFieldsRequest = new DescribeIndexFieldsRequest();
-        describeIndexFieldsRequest.setDomainName(getDomainName());
+        describeIndexFieldsRequest.setDomainName(domainName);
 
         DescribeIndexFieldsResult describeIndexFieldsResult = getAmazonCloudSearchClient().describeIndexFields(describeIndexFieldsRequest);
 
@@ -93,6 +93,7 @@ public abstract class AwsCloudBaseSearchService {
         textOptions.setHighlightEnabled(highlightEnabled);
         indexField.setTextOptions(textOptions);
         defineIndexFieldRequest.setIndexField(indexField);
+        defineIndexFieldRequest.setDomainName(domainName);
         amazonCloudSearchClient.defineIndexField(defineIndexFieldRequest);
 
     }
@@ -111,6 +112,7 @@ public abstract class AwsCloudBaseSearchService {
         textOptions.setHighlightEnabled(highlightEnabled);
         indexField.setTextOptions(textOptions);
         defineIndexFieldRequest.setIndexField(indexField);
+        defineIndexFieldRequest.setDomainName(domainName);
         amazonCloudSearchClient.defineIndexField(defineIndexFieldRequest);
 
     }
@@ -129,6 +131,7 @@ public abstract class AwsCloudBaseSearchService {
         textOptions.setHighlightEnabled(highlightEnabled);
         indexField.setTextArrayOptions(textOptions);
         defineIndexFieldRequest.setIndexField(indexField);
+        defineIndexFieldRequest.setDomainName(domainName);
         amazonCloudSearchClient.defineIndexField(defineIndexFieldRequest);
 
     }
@@ -147,12 +150,10 @@ public abstract class AwsCloudBaseSearchService {
         dateOptions.setFacetEnabled(facetEnabled);
         indexField.setDateOptions(dateOptions);
         defineIndexFieldRequest.setIndexField(indexField);
+        defineIndexFieldRequest.setDomainName(domainName);
         amazonCloudSearchClient.defineIndexField(defineIndexFieldRequest);
     }
 
-    public String getDomainName() {
-        return domainName;
-    }
 
     public AmazonCloudSearchClient getAmazonCloudSearchClient() {
         return amazonCloudSearchClient;
