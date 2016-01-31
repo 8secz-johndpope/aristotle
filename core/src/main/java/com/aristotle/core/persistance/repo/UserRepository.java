@@ -50,7 +50,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Query("select distinct user from User user, UserLocation ul where ul.locationId=?1 and ul.userId=user.id")
     Page<User> searchLocationUser(Long locationId, Pageable pageable);
 
-    @Query("select distinct user from User user where user.reindex")
+    @Query("select distinct user from User user where user.reindex=true")
     Page<User> searchUserByReindex(Pageable pageable);
 
 }
