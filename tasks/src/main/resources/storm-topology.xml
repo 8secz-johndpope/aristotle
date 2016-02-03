@@ -30,6 +30,7 @@
 				<ref bean="PlannedTweetRetweetCountUpdateScheduleSpoutBean" />
 				<ref bean="TwitterReportEmailScheduleSpoutBean" />
 				<ref bean="RefreshYoutubeVideoSpoutBean" />
+				<ref bean="DonationRefreshSpoutBean" />
 				
 			</list>
 		</property>
@@ -46,6 +47,7 @@
 				<ref bean="RefreshPlannedTweetRetweetCountBoltBean" />
 				<ref bean="GenerateDailyTwitterReportEmailBoltBean" />
 				<ref bean="RefreshYoutubeVideoBoltBean" />
+				<ref bean="DonationRefreshBoltBean" />
 			</list>
 		</property>
 	</bean>
