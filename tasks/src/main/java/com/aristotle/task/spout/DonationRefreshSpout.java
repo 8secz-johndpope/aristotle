@@ -27,10 +27,10 @@ public class DonationRefreshSpout extends SpringAwareBaseSpout {
     public void nextTuple() {
         try {
             Message message = queueService.receiveRefreshDonationMessage();
-            String messageBody = message.getBody();
-            if (messageBody == null) {
+            if (message == null) {
                 return;
             }
+            String messageBody = message.getBody();
             logInfo("Received Message {}", messageBody);
             emitTuple(outputStream.getStreamId(), new Values(messageBody));
         } catch (ApplicationException e) {
