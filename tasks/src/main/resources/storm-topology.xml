@@ -104,6 +104,15 @@
 			</bean>
 		</property>
 	</bean>
+	<bean id="DonationRefreshSpoutBean" class="com.aristotle.task.spout.DonationRefreshSpout">
+        <property name="componentId" value="DonationRefreshSpout" />
+        <property name="outputStream">
+            <bean class="com.aristotle.task.topology.beans.Stream">
+                <property name="streamId" value="DonationRefreshSpoutStream" />
+            </bean>
+        </property>
+    </bean>
+	
 	<bean id="RefreshYoutubeVideoSpoutBean" class="com.aristotle.task.spout.ScheduleSpout">
         <property name="componentId" value="RefreshYoutubeVideoSpout" />
         <property name="cronTime" value="0 10 * * * ?" />
@@ -234,6 +243,14 @@
 		</property>
 	</bean>
 	
+    <bean id="DonationRefreshBoltBean" class="com.aristotle.task.bolt.donation.DonationRefreshBolt">
+        <property name="componentId" value="DonationRefreshBolt" />
+        <property name="sourceComponentStreams">
+            <map>
+                <entry key="DonationRefreshSpout" value="DonationRefreshSpoutStream" />
+            </map>
+        </property>
+    </bean>
 	<bean id="RefreshYoutubeVideoBoltBean" class="com.aristotle.task.bolt.video.RefreshYoutubeVideoBolt">
         <property name="componentId" value="RefreshYoutubeVideoBolt" />
         <property name="sourceComponentStreams">
