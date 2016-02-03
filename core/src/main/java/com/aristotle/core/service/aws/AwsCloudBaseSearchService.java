@@ -57,6 +57,8 @@ public abstract class AwsCloudBaseSearchService {
 
         amazonCloudSearchClient = new AmazonCloudSearchClient(awsCredentials);
         amazonCloudSearchClient.setEndpoint("cloudsearch.us-west-2.amazonaws.com");// by defaults it goes to East
+        amazonCloudSearchClient.setDocumentEndpoint(documentEndpoint);
+        amazonCloudSearchClient.setSearchEndpoint(searchEndpoint);
         indexFields();
 
     }
