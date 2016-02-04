@@ -24,6 +24,7 @@ import com.aristotle.core.persistance.Donation;
 import com.aristotle.core.persistance.Event;
 import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.News;
+import com.aristotle.core.persistance.PaymentGatewayDonation;
 import com.aristotle.core.persistance.Team;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.Video;
@@ -152,6 +153,10 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
         donationJsonObject.addProperty("id", donation.getId());
         donationJsonObject.addProperty("name", donation.getDonorName());
         donationJsonObject.addProperty("amount", donation.getAmount());
+        if (donation instanceof PaymentGatewayDonation) {
+            donationJsonObject.addProperty("pgTransactionId", ((PaymentGatewayDonation) donation).getMerchantReferenceNumber());
+        }
+
         donationJsonObject.addProperty("donationDate", ddMMyyyyHHMMFormat.format(donation.getDonationDate()));
 
         return donationJsonObject;

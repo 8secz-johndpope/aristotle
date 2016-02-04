@@ -11,4 +11,6 @@ public class HttpParameters {
     public static final String URL_MAPPING = "URL_MAPPING";
 
     public static final String VIDEO_ID_PARAM = "videoId";
+
+    public static final String PAYMENT_GATEWAY_TRANSACTION_ID_PARAM = "pg_donation_id";
 }

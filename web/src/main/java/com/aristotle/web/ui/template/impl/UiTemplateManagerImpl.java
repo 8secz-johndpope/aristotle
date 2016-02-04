@@ -172,7 +172,7 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
     public Long getDomainLocation(HttpServletRequest httpServletRequest) {
         init();
         String domain = httpServletRequest.getServerName().toLowerCase();
-        System.out.println("Getting Domain location for " + domain);
+        // System.out.println("Getting Domain location for " + domain);
         return domainLocationMap.get(domain);
     }
 

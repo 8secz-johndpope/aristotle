@@ -56,7 +56,8 @@ public class DonationServiceImpl implements DonationService {
     }
 
     @Override
-    public PaymentGatewayDonation saveOnlineDonationFromInstamojo(boolean success, String paymentId, String status, String buyerName, String buyerPhone, String buyerEmail, String amount, String fees)
+    public PaymentGatewayDonation saveOnlineDonationFromInstamojo(boolean success, String paymentId, String status, String buyerName, String buyerPhone, String buyerEmail, String amount, String fees,
+            Date donationDate)
             throws AppException {
         User user = null;
         if (buyerEmail != null) {
@@ -78,10 +79,16 @@ public class DonationServiceImpl implements DonationService {
         paymentGatewayDonation.setDonorEmail(buyerEmail);
         paymentGatewayDonation.setDonorMobile(buyerPhone);
         paymentGatewayDonation.setUser(user);
+        paymentGatewayDonation.setDonationDate(donationDate);
 
         paymentGatewayDonation = paymentGatewayDonationRepository.save(paymentGatewayDonation);
 
         return paymentGatewayDonation;
+    }
+
+    @Override
+    public Donation getDonationByPgTransactionId(String pgTransactionId) throws AppException {
+        return paymentGatewayDonationRepository.findByMerchantReferenceNumber(pgTransactionId);
     }
 
 }
