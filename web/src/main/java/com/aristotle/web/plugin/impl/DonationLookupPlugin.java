@@ -34,7 +34,7 @@ public class DonationLookupPlugin extends AbstractDataPlugin {
     public void applyPlugin(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView mv) {
         try {
             JsonObject context = (JsonObject) mv.getModel().get("context");
-            String paymentGatewayDonationId = getStringSettingPramater(HttpParameters.PAYMENT_GATEWAY_TRANSACTION_ID_PARAM, null);
+            String paymentGatewayDonationId = getStringParameterFromPathOrParams(httpServletRequest, HttpParameters.PAYMENT_GATEWAY_TRANSACTION_ID_PARAM);
             System.out.println("paymentGatewayDonationId = " + paymentGatewayDonationId);
             Donation donation = donationService.getDonationByPgTransactionId(paymentGatewayDonationId);
             JsonObject jsonObject = convertDonation(donation);
