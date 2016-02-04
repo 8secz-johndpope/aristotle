@@ -1,7 +1,9 @@
 package com.aristotle.donation.controller;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.Collections;
+import java.util.Date;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -24,10 +26,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.aristotle.core.persistance.PaymentGatewayDonation;
 import com.aristotle.core.service.DonationService;
 import com.aristotle.core.service.aws.QueueService;
+import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -50,6 +54,8 @@ public class DonationController {
     RestTemplate restTemplate;
     JsonParser jsonParser;
 
+    private DateFormat dateFormat = new ISO8601DateFormat();
+
     @PostConstruct
     public void init() {
         restTemplate = new RestTemplate();
@@ -70,6 +76,7 @@ public class DonationController {
         // payment_id=MOJO6131000C45454677&status=success
         String paymentId = httpServletRequest.getParameter("payment_id");
         String status = httpServletRequest.getParameter("status");
+
         PaymentGatewayDonation paymentGatewayDonation = processDonation(paymentId);
         if (paymentGatewayDonation == null) {
             return "Unable to read donation status, we will check it again and update our records";
@@ -81,7 +88,10 @@ public class DonationController {
             } catch (ApplicationException e) {
                 logger.error("Unabel to send Donation Refresh Message", e);
             }
-            return "Donation was Succesfull, Swaraj Abhiyan Donation id : " + paymentGatewayDonation.getId() + ", InstaMojo Donation id : " + paymentGatewayDonation.getMerchantReferenceNumber();
+            RedirectView rv = new RedirectView("http://www.swarajabhiyan.org/api/donationsuccess?pg_donation_id=" + paymentGatewayDonation.getMerchantReferenceNumber());
+            modelAndView.setView(rv);
+            return "Donation was Succesfull, Swaraj Abhiyan Donation id : " + paymentGatewayDonation.getId() + ", InstaMojo Donation id : " + paymentGatewayDonation.getMerchantReferenceNumber()
+                    + ", redirecting......";
         }
 
     }
@@ -111,8 +121,10 @@ public class DonationController {
                 String buyerEmail = paymentJsonObject.get("buyer_email").getAsString();
                 String amount = paymentJsonObject.get("amount").getAsString();
                 String fees = paymentJsonObject.get("fees").getAsString();
+                // created_at": "2016-01-31T00:13:41.211Z"
+                Date donationTime = dateFormat.parse(paymentJsonObject.get("created_at").getAsString());
 
-                return donationService.saveOnlineDonationFromInstamojo(success, paymentId, status, buyerName, buyerPhone, buyerEmail, amount, fees);
+                return donationService.saveOnlineDonationFromInstamojo(success, paymentId, status, buyerName, buyerPhone, buyerEmail, amount, fees, donationTime);
             } else {
                 logger.error("Unable to process Donation : {}", donationId);
             }
