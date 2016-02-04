@@ -71,15 +71,15 @@ public class DonationController {
     }
 
     @RequestMapping(value = { "/donationcomplete" })
-    @ResponseBody
-    public String serverSideHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws IOException {
+    public ModelAndView serverSideHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws IOException {
         // payment_id=MOJO6131000C45454677&status=success
         String paymentId = httpServletRequest.getParameter("payment_id");
         String status = httpServletRequest.getParameter("status");
 
         PaymentGatewayDonation paymentGatewayDonation = processDonation(paymentId);
         if (paymentGatewayDonation == null) {
-            return "Unable to read donation status, we will check it again and update our records";
+            RedirectView rv = new RedirectView("http://www.swarajabhiyan.org/api/donationfail");
+            modelAndView.setView(rv);
         } else {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("donationId", paymentGatewayDonation.getId());
@@ -90,10 +90,8 @@ public class DonationController {
             }
             RedirectView rv = new RedirectView("http://www.swarajabhiyan.org/api/donationsuccess?pg_donation_id=" + paymentGatewayDonation.getMerchantReferenceNumber());
             modelAndView.setView(rv);
-            return "Donation was Succesfull, Swaraj Abhiyan Donation id : " + paymentGatewayDonation.getId() + ", InstaMojo Donation id : " + paymentGatewayDonation.getMerchantReferenceNumber()
-                    + ", redirecting......";
         }
-
+        return modelAndView;
     }
 
 
