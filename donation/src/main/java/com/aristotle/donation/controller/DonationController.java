@@ -78,7 +78,7 @@ public class DonationController {
 
         PaymentGatewayDonation paymentGatewayDonation = processDonation(paymentId);
         if (paymentGatewayDonation == null) {
-            RedirectView rv = new RedirectView("http://www.swarajabhiyan.org/api/donationfail");
+            RedirectView rv = new RedirectView("http://www.swarajabhiyan.org/donationfail");
             modelAndView.setView(rv);
         } else {
             JsonObject jsonObject = new JsonObject();
@@ -88,7 +88,7 @@ public class DonationController {
             } catch (ApplicationException e) {
                 logger.error("Unabel to send Donation Refresh Message", e);
             }
-            RedirectView rv = new RedirectView("http://www.swarajabhiyan.org/api/donationsuccess?pg_donation_id=" + paymentGatewayDonation.getMerchantReferenceNumber());
+            RedirectView rv = new RedirectView("http://www.swarajabhiyan.org/donationsuccess?pg_donation_id=" + paymentGatewayDonation.getMerchantReferenceNumber());
             modelAndView.setView(rv);
         }
         return modelAndView;
