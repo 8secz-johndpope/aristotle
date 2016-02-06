@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 public class HomeController {
@@ -22,10 +21,8 @@ public class HomeController {
     }
 
     @RequestMapping(value = { "/", "/index.html", "/**" })
-    public ModelAndView serverSideHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws IOException {
-        RedirectView rv = new RedirectView("https://www.instamojo.com/SwarajAbhiyan/donations-for-swaraj-abhiyan/?intent=buy");
-        modelAndView.setView(rv);
-        return modelAndView;
+    public String serverSideHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws IOException {
+        return "index";
     }
 
     @RequestMapping(value = { "/lb" })
