@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.aristotle.core.persistance.PaymentGatewayDonation;
 import com.aristotle.core.service.DonationService;
@@ -71,16 +70,17 @@ public class DonationController {
     }
 
     @RequestMapping(value = { "/donationcomplete" })
-    public ModelAndView serverSideHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws IOException {
+    public String serverSideHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws IOException {
         // payment_id=MOJO6131000C45454677&status=success
         String paymentId = httpServletRequest.getParameter("payment_id");
         String status = httpServletRequest.getParameter("status");
 
         PaymentGatewayDonation paymentGatewayDonation = processDonation(paymentId);
         if (paymentGatewayDonation == null) {
-            RedirectView rv = new RedirectView("http://www.swarajabhiyan.org/donationfail");
-            modelAndView.setView(rv);
+            modelAndView.getModel().put("success", false);
         } else {
+            modelAndView.getModel().put("true", false);
+            modelAndView.getModel().put("paymentGatewayDonation", paymentGatewayDonation);
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("donationId", paymentGatewayDonation.getId());
             try {
@@ -88,10 +88,8 @@ public class DonationController {
             } catch (ApplicationException e) {
                 logger.error("Unabel to send Donation Refresh Message", e);
             }
-            RedirectView rv = new RedirectView("http://www.swarajabhiyan.org/donationsuccess?pg_donation_id=" + paymentGatewayDonation.getMerchantReferenceNumber());
-            modelAndView.setView(rv);
         }
-        return modelAndView;
+        return "success";
     }
 
 

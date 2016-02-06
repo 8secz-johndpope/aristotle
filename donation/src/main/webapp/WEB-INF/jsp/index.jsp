@@ -123,7 +123,7 @@ function validateCheckBox() {
 				</div>
 				<div>
 					<center>
-						<img src="logo.png" alt="logo" width="20%" height="10%">
+						<img src="https://s3-us-west-2.amazonaws.com/static.swarajabhiyan.org/templates/prod/1/images/ds_logo.png" alt="logo" width="20%" height="10%">
 					</center>
 				</div>
 
