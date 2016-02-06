@@ -79,7 +79,7 @@ public class DonationController {
         if (paymentGatewayDonation == null) {
             modelAndView.getModel().put("success", false);
         } else {
-            modelAndView.getModel().put("true", false);
+            modelAndView.getModel().put("success", true);
             modelAndView.getModel().put("paymentGatewayDonation", paymentGatewayDonation);
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("donationId", paymentGatewayDonation.getId());
