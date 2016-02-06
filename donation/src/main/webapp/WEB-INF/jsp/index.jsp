@@ -13,26 +13,13 @@
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script>
 function validateCheckBox() {
-	if ($('#checkbox').prop('checked')) {
+	if ($('#declaration').prop('checked')) {
         return true;
     }else{
-        alert("Please accept declaration by selecting checkbox");
+        alert("Please accept declaration by selecting checkbox, id");
         return false;
     }
-    
-
 };
-
-
-$(".button").click(function() {
-	if ($('#checkbox').prop('checked')) {
-		window.location.href = "https://www.instamojo.com/SwarajAbhiyan/donations-for-swaraj-abhiyan/?intent=buy";
-		return true;
-    }else{
-        alert("Please accept declaration by selecting checkbox");
-        return false;
-    }
-});
 
 </script>
 
@@ -99,7 +86,7 @@ $(".button").click(function() {
 				<br> <br>
 
 				<div>
-					<input type="checkbox" name="Declare" value="i">&nbsp; <strong> I declare that I am a citizen of India, above 18 years of age and am making this contribution
+					<input type="checkbox" name="Declare" id="declaration">&nbsp; <strong> I declare that I am a citizen of India, above 18 years of age and am making this contribution
 						voluntarily from my own legally earned personal funds. I also permit Swaraj Abhiyan to communicate with me using my phone and/or email specified above. The particulars and
 						statements made above are correct to my knowledge and nothing material has been concealed or withheld therefrom.<strong><br>
 				</div>
