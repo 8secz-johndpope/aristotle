@@ -74,7 +74,7 @@ function validateCheckBox() {
 
 				<div>
 					<center>
-						<h1>ONLINE VOLUNTEER CONTRIBUTION</H1>
+						<h1>ONLINE VOLUNTARY CONTRIBUTION</H1>
 					</center>
 				</div>
 
