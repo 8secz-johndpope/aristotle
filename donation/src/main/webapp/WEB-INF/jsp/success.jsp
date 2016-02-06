@@ -38,7 +38,7 @@ ONLINE VOLUNTARY CONTRIBUTION - TRANSACTION FAILED
 <c:if test="${!empty paymentGatewayDonation}">
 Transactions ID &nbsp;&nbsp;:<c:out value="${paymentGatewayDonation.id}"/><br>
 Bank Correspondance ID : <c:out value="${paymentGatewayDonation.merchantReferenceNumber}"/><br>
-Transaction Amount     : <fmt:formatNumber value="${paymentGatewayDonation.amount}" type="currency"/> <br>
+Transaction Amount     : <fmt:formatNumber type="number" maxFractionDigits="2" value="${paymentGatewayDonation.amount}"/> <br>
 </c:if>
 </Address>
 </div>
