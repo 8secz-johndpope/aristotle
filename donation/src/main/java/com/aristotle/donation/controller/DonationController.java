@@ -70,7 +70,7 @@ public class DonationController {
     }
 
     @RequestMapping(value = { "/donationcomplete" })
-    public String serverSideHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws IOException {
+    public ModelAndView serverSideHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws IOException {
         // payment_id=MOJO6131000C45454677&status=success
         String paymentId = httpServletRequest.getParameter("payment_id");
         String status = httpServletRequest.getParameter("status");
@@ -89,7 +89,8 @@ public class DonationController {
                 logger.error("Unabel to send Donation Refresh Message", e);
             }
         }
-        return "success";
+        modelAndView.setViewName("success");
+        return modelAndView;
     }
 
 

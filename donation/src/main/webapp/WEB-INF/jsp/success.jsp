@@ -54,7 +54,10 @@ Transaction Amount     : <fmt:formatNumber value="${paymentGatewayDonation.amoun
 </div>
 
 
-<div><img src="https://s3-us-west-2.amazonaws.com/static.swarajabhiyan.org/templates/prod/1/images/pic_01.jpg" alt="HTML5 Icon" width="75%" height="50%"></div>
+<div>
+<center>
+<img src="https://s3-us-west-2.amazonaws.com/static.swarajabhiyan.org/templates/prod/1/images/pic_01.jpg" alt="HTML5 Icon" width="75%" height="50%"></div>
+</center>
 
 <br>
 <hr>
