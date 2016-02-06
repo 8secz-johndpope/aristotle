@@ -23,10 +23,10 @@
 
 
 <div><center><h1>
-<c:if test="${success}">
+<c:if test="${!empty paymentGatewayDonation}">
 ONLINE VOLUNTARY CONTRIBUTION - TRANSACTION SUCESSFUL
 </c:if>
-<c:if test="${!success}">
+<c:if test="${empty paymentGatewayDonation}">
 ONLINE VOLUNTARY CONTRIBUTION - TRANSACTION FAILED
 </c:if>
 
@@ -35,7 +35,7 @@ ONLINE VOLUNTARY CONTRIBUTION - TRANSACTION FAILED
 
 <div>
 <Address>
-<c:if test="${success}">
+<c:if test="${!empty paymentGatewayDonation}">
 Transactions ID &nbsp;&nbsp;:<c:out value="${paymentGatewayDonation.id}"/><br>
 Bank Correspondance ID : <c:out value="${paymentGatewayDonation.merchantReferenceNumber}"/><br>
 Transaction Amount     : <fmt:formatNumber value="${paymentGatewayDonation.amount}" type="currency"/> <br>
