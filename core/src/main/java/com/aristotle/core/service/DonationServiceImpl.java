@@ -91,4 +91,9 @@ public class DonationServiceImpl implements DonationService {
         return paymentGatewayDonationRepository.findByMerchantReferenceNumber(pgTransactionId);
     }
 
+    @Override
+    public Long getTotalDonation() throws AppException {
+        return donationRepository.count();
+    }
+
 }

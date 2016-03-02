@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Donation;
 import com.aristotle.core.service.DonationService;
 import com.aristotle.web.parameters.HttpParameters;
@@ -42,12 +43,38 @@ public class DonationListPlugin extends AbstractDataPlugin {
             System.out.println("Getting Donations page number = " + pageNumber + ", pageSize=" + pageSize);
             List<Donation> donationList = donationService.getDonations(pageNumber - 1, pageSize);
             JsonArray jsonArray = convertDonationList(donationList);
-            context.add(name, jsonArray);
-            // addPaginInformation(pageNumber, pageSize, totalNews, context);
+
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.add("list", jsonArray);
+            addPagingInformation(jsonObject, pageNumber, pageSize);
+
+            context.add(name, jsonObject);
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
+    }
+
+    private void addPagingInformation(JsonObject jsonObject, int pageNumber, int pageSize) throws AppException {
+        Long totalRecords = donationService.getTotalDonation();
+        Long totalPages = totalRecords / pageSize;
+        if (totalRecords % pageSize > 0) {
+            totalPages++;
+        }
+        jsonObject.addProperty("totalPages", totalPages);
+        if (pageNumber > 1) {
+            jsonObject.addProperty("previousAvailable", true);
+            jsonObject.addProperty("previousPage", (pageNumber - 1));
+        } else {
+            jsonObject.addProperty("previousAvailable", false);
+        }
+        if (pageNumber < totalPages) {
+            jsonObject.addProperty("nextAvailable", true);
+            jsonObject.addProperty("nextPage", (pageNumber + 1));
+        } else {
+            jsonObject.addProperty("nextAvailable", false);
+        }
     }
 
 

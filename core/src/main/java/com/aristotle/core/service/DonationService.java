@@ -18,4 +18,6 @@ public interface DonationService {
     List<Donation> getDonations(int pageNumber, int pageSize) throws AppException;
 
     Donation getDonationByPgTransactionId(String pdTransactionId) throws AppException;
+
+    Long getTotalDonation() throws AppException;
 }
