@@ -29,9 +29,8 @@
   <logger name="net.spy.memcached.MemcachedConnection" level="WARN"/>
   <logger name="org.springframework.data.neo4j.rest" level="DEBUG"/>
   <logger name="org.springframework.data.neo4j.repository" level="DEBUG"/>
-  <logger name="com.eswaraj.base.aspect" level="INFO"/>
   <logger name="org.springframework.web.servlet" level="INFO"/>
-  <logger name="com.next" level="INFO"/>
+  <logger name="com.aristotle" level="INFO"/>
   <logger name="org.springframework.web.client.RestTemplate" level="DEBUG"/>
   <logger name="org.springframework.data.neo4j.support.query" level="DEBUG"/>
   <logger name="com.eswaraj" level="INFO"/>
