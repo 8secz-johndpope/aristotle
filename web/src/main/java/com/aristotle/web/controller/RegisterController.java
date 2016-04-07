@@ -180,8 +180,10 @@ public class RegisterController {
         JsonObject jsonObject = new JsonObject();
         ResponseEntity<String> returnDt;
         HttpStatus httpStatus;
+        System.out.println("Login for "+userLoginBean.getUserName());
         try {
             User user = userService.login(userLoginBean.getUserName(), userLoginBean.getPassword());
+            System.out.println("user "+user);
             if (user != null) {
                 jsonObject.addProperty("message", "user logged in Succesfully");
                 httpStatus = HttpStatus.OK;
