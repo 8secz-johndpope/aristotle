@@ -23,12 +23,7 @@
       <MaxFileSize>50MB</MaxFileSize>
     </triggeringPolicy>
   </appender>
-  <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
-    <Target>System.out</Target>
-    <encoder>
-      <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</pattern>
-    </encoder>
-  </appender>
+  
   <logger name="org.springframework" level="WARN"/>
   <logger name="org.springframework.web.servlet.mvc.method.annotation" level="INFO"/>
   <logger name="net.spy.memcached.MemcachedConnection" level="WARN"/>
@@ -44,6 +39,5 @@
   
   <root level="ERROR">
     <appender-ref ref="rollingFile"/>
-    <appender-ref ref="stdout"/>
   </root>
 </configuration>
