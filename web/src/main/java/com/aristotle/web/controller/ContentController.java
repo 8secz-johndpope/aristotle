@@ -69,9 +69,14 @@ public class ContentController {
         Context context = Context.newBuilder(rootNode).resolver(JsonNodeValueResolver.INSTANCE).build();
 
         String result = template.apply(context);
-        if (httpServletRequest.getRequestURI().contains("content")) {
-            httpServletResponse.setHeader("Cache-Control", "max-age=300");
+        Integer cacheTimeInSeconds = uiTemplateManager.getCacheTime(httpServletRequest);
+        if (cacheTimeInSeconds == null && httpServletRequest.getRequestURI().contains("content")) {
+            cacheTimeInSeconds = 300;
         }
+        if (cacheTimeInSeconds != null) {
+            httpServletResponse.setHeader("Cache-Control", "max-age=" + cacheTimeInSeconds);
+        }
+
         return result;
     }
 

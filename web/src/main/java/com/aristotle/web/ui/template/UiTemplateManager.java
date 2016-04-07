@@ -10,4 +10,6 @@ public interface UiTemplateManager {
     void refresh();
 
     Long getDomainLocation(HttpServletRequest httpServletRequest);
+
+    Integer getCacheTime(HttpServletRequest httpServletRequest);
 }

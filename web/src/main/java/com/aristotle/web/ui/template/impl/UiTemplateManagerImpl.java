@@ -109,6 +109,16 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
     }
 
     @Override
+    public Integer getCacheTime(HttpServletRequest httpServletRequest) {
+        init();
+        UrlMapping urlMapping = (UrlMapping) httpServletRequest.getAttribute(HttpParameters.URL_MAPPING);
+        if (urlMapping == null) {
+            return 300;
+        }
+        return urlMapping.getCacheTimeSeconds();
+    }
+
+    @Override
     public String getTemplate(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         boolean requestForDraft = isRequestForDraft(httpServletRequest, httpServletResponse);
         if (requestForDraft) {

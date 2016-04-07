@@ -80,6 +80,13 @@
 								</f:facet>
 								<h:outputText value="#{oneUrlMapping.secured}" />
 							</p:column>
+							<p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="CacheTime(Seconds)" />
+                                </f:facet>
+                                <h:outputText value="#{oneUrlMapping.cacheTimeSeconds}" />
+                            </p:column>
+							
 							<p:column style="width:100px;">
 								<f:facet name="header">
 									<h:outputText value="Update" />
@@ -97,6 +104,10 @@
 							<p:outputLabel value="Url Pattern"></p:outputLabel>
 							<p:inputText value="#{urlMappingAdminBean.selectedUrlMapping.urlPattern}" style="width:600px">
 							</p:inputText>
+                            <p:outputLabel value="Cache Time In Seconds"></p:outputLabel>
+                            <p:inputText value="#{urlMappingAdminBean.selectedUrlMapping.cacheTimeSeconds}" >
+                            </p:inputText>
+							
 							<p:outputLabel value="Active"></p:outputLabel>
 							<p:selectBooleanCheckbox value="#{urlMappingAdminBean.selectedUrlMapping.active}" />
 							<p:outputLabel value="Secure"></p:outputLabel>

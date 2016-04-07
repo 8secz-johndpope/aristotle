@@ -24,6 +24,9 @@ public class UrlMapping extends BaseEntity {
     @Column(name = "secured")
     private boolean secured;
 
+    @Column(name = "cache_time_seconds")
+    private Integer cacheTimeSeconds;
+
     @OneToMany(mappedBy = "urlMapping", fetch = FetchType.LAZY)
     private List<UrlMappingPlugin> urlMappingPlugins;
 
@@ -65,6 +68,14 @@ public class UrlMapping extends BaseEntity {
 
     public void setAliases(String aliases) {
         this.aliases = aliases;
+    }
+
+    public Integer getCacheTimeSeconds() {
+        return cacheTimeSeconds;
+    }
+
+    public void setCacheTimeSeconds(Integer cacheTimeSeconds) {
+        this.cacheTimeSeconds = cacheTimeSeconds;
     }
 
     @Override
