@@ -38,8 +38,10 @@ public class LoggedInUserPlugin extends AbstractDataPlugin {
             JsonObject context = (JsonObject) mv.getModel().get("context");
             User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
             System.out.println("Logegd In User : " + user);
-            for (Cookie oneCookie : httpServletRequest.getCookies()) {
-                System.out.println("   Cookie : " + oneCookie.getName() + " = " + oneCookie.getValue() + ", " + oneCookie);
+            if (httpServletRequest.getCookies() != null) {
+                for (Cookie oneCookie : httpServletRequest.getCookies()) {
+                    System.out.println("   Cookie : " + oneCookie.getName() + " = " + oneCookie.getValue() + ", " + oneCookie);
+                }
             }
             JsonObject userJsonObject;
             if (user == null) {
