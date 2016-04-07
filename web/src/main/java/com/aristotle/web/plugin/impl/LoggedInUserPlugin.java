@@ -1,5 +1,6 @@
 package com.aristotle.web.plugin.impl;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,9 +33,14 @@ public class LoggedInUserPlugin extends AbstractDataPlugin {
     @Override
     public void applyPlugin(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView mv) {
         logger.info("Applying {} plugin", name);
+        System.out.println("Applying  plugin : " + name);
         try {
             JsonObject context = (JsonObject) mv.getModel().get("context");
             User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
+            System.out.println("Logegd In User : " + user);
+            for (Cookie oneCookie : httpServletRequest.getCookies()) {
+                System.out.println("   Cookie : " + oneCookie.getName() + " = " + oneCookie.getValue() + ", " + oneCookie);
+            }
             JsonObject userJsonObject;
             if (user == null) {
                 userJsonObject = new JsonObject();
