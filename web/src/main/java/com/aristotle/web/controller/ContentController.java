@@ -167,25 +167,61 @@ public class ContentController {
             addMinutesOfMeetingTitleDescription(pageObject, jsonContext);
             return;
         }
+        if (requestedUrl.startsWith("/content/hangouts")) {
+        	addHangoutTitleDescription(pageObject, jsonContext);
+            return;
+        }
+        if (requestedUrl.startsWith("/content/blogs")) {
+        	addBlogListTitleDescription(pageObject, jsonContext);
+            return;
+        }
 
     }
+    
+    private void addBlogListTitleDescription(JsonObject pageObject, JsonObject jsonContext) {
+        try {
+            pageObject.addProperty("title", "Swaraj Abhiyan Blogs");
+            String firstNewsDescription = jsonContext.get("BlogListPlugin").getAsJsonArray().get(0).getAsJsonObject().get("contentSummary").getAsString();
+            pageObject.addProperty("description", firstNewsDescription);
+            pageObject.addProperty("image", "http://static.swarajabhiyan.org/templates/prod/1/images/blog_01.jpg");
+        } catch (Exception ex) {
+        	pageObject.addProperty("description", "Swaraj Abhiyan Blogs");
+        	pageObject.addProperty("title", "Swaraj Abhiyan Blogs");
+            pageObject.addProperty("image", "http://static.swarajabhiyan.org/templates/prod/1/images/blog_01.jpg");
+        }
+    }
 
+    private void addHangoutTitleDescription(JsonObject pageObject, JsonObject jsonContext) {
+        try {
+            pageObject.addProperty("description", "Ask your questions by filling the below form");
+            pageObject.addProperty("title", "Swaraj Abhiyan Google Hangout");
+            pageObject.addProperty("image", "http://static.swarajabhiyan.org/templates/prod/1/images/google_hangout_01.jpg");
+        } catch (Exception ex) {
+        	pageObject.addProperty("description", "Ask your questions by filling the below form");
+            pageObject.addProperty("title", "Swaraj Abhiyan Google Hangout");
+            pageObject.addProperty("image", "http://static.swarajabhiyan.org/templates/prod/1/images/google_hangout_01.jpg");
+        }
+    }
     private void addMinutesOfMeetingTitleDescription(JsonObject pageObject, JsonObject jsonContext) {
         try {
             pageObject.addProperty("description", "We do things differently, we publish all minutes of each meeting| Swaraj Abhiyan Minutes Of Meeting");
             pageObject.addProperty("title", "Swaraj Abhiyan Minutes Of meetings");
+            pageObject.addProperty("image", "http://static.swarajabhiyan.org/templates/prod/1/images/minutes_01.jpg");
         } catch (Exception ex) {
             pageObject.addProperty("description", "We do things differently, we publish all minutes of each meeting| Swaraj Abhiyan Minutes Of Meeting");
             pageObject.addProperty("title", "Swaraj Abhiyan Minutes Of meetings");
+            pageObject.addProperty("image", "http://static.swarajabhiyan.org/templates/prod/1/images/minutes_01.jpg");
         }
     }
     private void addNationalWorkingCommiteeTitleDescription(JsonObject pageObject, JsonObject jsonContext) {
         try {
             pageObject.addProperty("description", "List of National Working Committee(NWC) Members | Swaraj Abhiyan Video");
             pageObject.addProperty("title", "List of National Working Committee(NWC) Members | Swaraj Abhiyan Video");
+            pageObject.addProperty("image", "http://static.swarajabhiyan.org/templates/prod/1/images/team_01.jpg");
         } catch (Exception ex) {
             pageObject.addProperty("description", "List of National Working Committee(NSC) Members | Swaraj Abhiyan Video");
             pageObject.addProperty("title", "List of National Working Committee(NSC) Members | Swaraj Abhiyan Video");
+            pageObject.addProperty("image", "http://static.swarajabhiyan.org/templates/prod/1/images/team_01.jpg");
         }
     }
 
@@ -212,9 +248,11 @@ public class ContentController {
         try {
             pageObject.addProperty("description", "List of National Steering Committee(NSC) Members | Swaraj Abhiyan Video");
             pageObject.addProperty("title", "List of National Steering Committee(NSC) Members | Swaraj Abhiyan Video");
+            pageObject.addProperty("image", "http://static.swarajabhiyan.org/templates/prod/1/images/team_01.jpg");
         } catch (Exception ex) {
             pageObject.addProperty("description", "List of National Steering Committee(NSC) Members | Swaraj Abhiyan Video");
             pageObject.addProperty("title", "List of National Steering Committee(NSC) Members | Swaraj Abhiyan Video");
+            pageObject.addProperty("image", "http://static.swarajabhiyan.org/templates/prod/1/images/team_01.jpg");
         }
     }
     private void addVideoItemTitleDescription(JsonObject pageObject, JsonObject jsonContext) {
@@ -260,9 +298,11 @@ public class ContentController {
             String title = jsonContext.get("SingleNewsPlugin").getAsJsonObject().get("title").getAsString();
             pageObject.addProperty("description", newsDescription);
             pageObject.addProperty("title", title + " | Swaraj Abhiyan News");
+            pageObject.addProperty("image", "http://static.swarajabhiyan.org/templates/prod/1/images/news_01.jpg");
         } catch (Exception ex) {
             pageObject.addProperty("description", "Swaraj Abhiyan News");
             pageObject.addProperty("title", "Swaraj Abhiyan News");
+            pageObject.addProperty("image", "http://static.swarajabhiyan.org/templates/prod/1/images/news_01.jpg");
         }
     }
     private void addNewsListDescription(JsonObject pageObject, JsonObject jsonContext){
@@ -270,8 +310,10 @@ public class ContentController {
             pageObject.addProperty("title", "Swaraj Abhiyan Latest News");
             String firstNewsDescription = jsonContext.get("NewsListPlugin").getAsJsonArray().get(0).getAsJsonObject().get("contentSummary").getAsString();
             pageObject.addProperty("description", firstNewsDescription);
+            pageObject.addProperty("image", "http://static.swarajabhiyan.org/templates/prod/1/images/news_01.jpg");
         } catch (Exception ex) {
             pageObject.addProperty("description", "All Latest Swaraj Abhiyan News");
+            pageObject.addProperty("image", "http://static.swarajabhiyan.org/templates/prod/1/images/news_01.jpg");
         }
     }
     
@@ -280,8 +322,10 @@ public class ContentController {
             pageObject.addProperty("title", "Swaraj Abhiyan Official Website");
             String firstNewsDescription = jsonContext.get("NewsListPlugin").getAsJsonArray().get(0).getAsJsonObject().get("contentSummary").getAsString();
             pageObject.addProperty("description", firstNewsDescription);
+            pageObject.addProperty("image", "http://static.swarajabhiyan.org/templates/prod/1/images/general_01.jpg");
         } catch (Exception ex) {
             pageObject.addProperty("description", "All Latest Swaraj Abhiyan News");
+            pageObject.addProperty("image", "http://static.swarajabhiyan.org/templates/prod/1/images/general_01.jpg");
         }
     }
 }
