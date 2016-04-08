@@ -193,7 +193,10 @@ public class ContentController {
         		images = new JsonArray();
         		webPageObject.add("images", images);
         	}
-        	images.add(new JsonPrimitive(image));
+        	JsonObject oneImage = new JsonObject();
+            oneImage.addProperty("image", image);
+
+            images.add(oneImage);
         	System.out.println(webPageObject.toString());
     	}catch(Exception ex){
     		ex.printStackTrace();
