@@ -194,8 +194,7 @@ public class ContentController {
         	JsonObject oneImage = new JsonObject();
             oneImage.addProperty("image", image);
             images.add(oneImage);
-        	System.out.println(webPageObject.toString());
-    	}catch(Exception ex){
+T    	}catch(Exception ex){
     		ex.printStackTrace();
     	}
     	
