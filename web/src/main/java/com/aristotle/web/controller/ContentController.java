@@ -149,11 +149,11 @@ public class ContentController {
             addVideoListDescription(pageObject, jsonContext);
             return;
         }
-        if (requestedUrl.startsWith("/organisation/nwc")) {
+        if (requestedUrl.startsWith("/organisation/nwc") || requestedUrl.startsWith("/organisation/team/national-working-committee")) {
             addNationalWorkingCommiteeTitleDescription(pageObject, jsonContext);
             return;
         }
-        if (requestedUrl.startsWith("/organisation/nsc")) {
+        if (requestedUrl.startsWith("/organisation/nsc") || requestedUrl.startsWith("/organisation/team/national-steering-commitee")) {
             addNationalSteeringCommiteeTitleDescription(pageObject, jsonContext);
             return;
         }
@@ -177,6 +177,10 @@ public class ContentController {
         	addBlogListTitleDescription(pageObject, jsonContext);
             return;
         }
+        if (requestedUrl.startsWith("/organisation/accounts")) {
+        	addAccountsTitleDescription(pageObject, jsonContext);
+            return;
+        }
 
     }
     private void addImage(JsonObject webPageObject, String image){
@@ -189,13 +193,18 @@ public class ContentController {
         	}
         	JsonObject oneImage = new JsonObject();
             oneImage.addProperty("image", image);
-
             images.add(oneImage);
         	System.out.println(webPageObject.toString());
     	}catch(Exception ex){
     		ex.printStackTrace();
     	}
     	
+    }
+    private void addAccountsTitleDescription(JsonObject pageObject, JsonObject jsonContext) {
+           pageObject.addProperty("title", "Swaraj Abhiyan Accounts - Donations and Expenses");
+            pageObject.addProperty("description", "Swaraj Abhiyan belives in true transparency and thats why we welcomes you to check our accounts. PLease visit this page regularly.");
+            addImage(pageObject, "http://static.swarajabhiyan.org/templates/prod/1/images/accounts_01.jpg");
+        
     }
     private void addBlogListTitleDescription(JsonObject pageObject, JsonObject jsonContext) {
         try {
