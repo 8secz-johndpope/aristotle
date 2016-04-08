@@ -183,15 +183,18 @@ public class ContentController {
     	try{
     		JsonObject webPageObject = (JsonObject)jsonContext.get("WebPage");
         	if(webPageObject == null || webPageObject.isJsonNull()){
+        		System.out.println("Creating WebPage Object");
         		webPageObject = new JsonObject();
         		jsonContext.add("WebPage", webPageObject);
         	}
         	JsonArray images = (JsonArray)webPageObject.get("images");
         	if(images == null || images.isJsonNull()){
+        		System.out.println("Creating Images array");
         		images = new JsonArray();
         		webPageObject.add("images", images);
         	}
         	images.add(new JsonPrimitive(image));
+        	System.out.println(webPageObject.toString());
     	}catch(Exception ex){
     		ex.printStackTrace();
     	}
