@@ -95,6 +95,7 @@ public class ContentController {
         modelAndView.getModel().put("context", context);
         try {
             pluginManager.applyAllPluginsForUrl(httpServletRequest, httpServletResponse, modelAndView, true, true);
+            addPageAttributes(httpServletRequest, httpServletResponse, modelAndView);
         } catch (NotLoggedInException e) {
             e.printStackTrace();
         }
