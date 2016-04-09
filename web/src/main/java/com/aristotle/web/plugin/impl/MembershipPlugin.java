@@ -59,8 +59,9 @@ public class MembershipPlugin extends AbstractDataPlugin {
                 calendar.add(Calendar.MONTH, 1);
                 boolean feeAllow = false;
                 System.out.println("membership = "+membership);
-                System.out.println("With iN mOnth expiry = "+calendar.getTime().after(membership.getEndDate()));
+                
                 if(membership == null || calendar.getTime().after(membership.getEndDate())){
+                	System.out.println("With iN mOnth expiry = "+calendar.getTime().after(membership.getEndDate()));
                 	feeAllow = true;
                 }
                 membershipJsonObject.addProperty("feeAllow", feeAllow);
