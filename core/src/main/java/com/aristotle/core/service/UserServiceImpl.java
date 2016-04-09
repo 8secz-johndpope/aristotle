@@ -35,6 +35,7 @@ import com.aristotle.core.persistance.Interest;
 import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.LoginAccount;
 import com.aristotle.core.persistance.Membership;
+import com.aristotle.core.persistance.MembershipTransaction;
 import com.aristotle.core.persistance.PasswordResetRequest;
 import com.aristotle.core.persistance.Phone;
 import com.aristotle.core.persistance.Phone.PhoneType;
@@ -47,6 +48,7 @@ import com.aristotle.core.persistance.repo.InterestRepository;
 import com.aristotle.core.persistance.repo.LocationRepository;
 import com.aristotle.core.persistance.repo.LoginAccountRepository;
 import com.aristotle.core.persistance.repo.MembershipRepository;
+import com.aristotle.core.persistance.repo.MembershipTransactionRepository;
 import com.aristotle.core.persistance.repo.PasswordResetRequestRepository;
 import com.aristotle.core.persistance.repo.PhoneRepository;
 import com.aristotle.core.persistance.repo.UserLocationRepository;
@@ -85,6 +87,8 @@ public class UserServiceImpl implements UserService {
     private EmailConfirmationRequestRepository emailConfirmationRequestRepository;
     @Autowired
     private MembershipRepository membershipRepository;
+    @Autowired
+    private MembershipTransactionRepository membershipTransactionRepository;
     @Autowired
     private AwsFileManager awsFileManager;
 
@@ -975,6 +979,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User registerOnlineMember(Long loggedInUserId, String mobileNumber, String name, String amount, String paymentMode, String transactionId, String fees) throws AppException {
+    	User user = userRepository.findOne(loggedInUserId);
+    	createUserMembership(user, "Online", transactionId, fees);
+    	return user;
+    }
+    @Override
     public User registerIvrMember(String mobileNumber, String name, String gender, String amount, String paymentMode, String state, String district, String msg) throws AppException {
         String countryCode = "91";
         Phone phone = phoneRepository.getPhoneByPhoneNumberAndCountryCode(mobileNumber, countryCode);
@@ -1018,6 +1028,41 @@ public class UserServiceImpl implements UserService {
         membership = membershipRepository.save(membership);
         user.setMember(true);
         return user;
+    }
+    
+    private Membership createUserMembership(User user, String source, String sourceTransactionId, String fees){
+    	MembershipTransaction membershipTransaction = membershipTransactionRepository.getMembershipTransactionBySourceTransactionId(sourceTransactionId);
+    	if(membershipTransaction != null){
+    		//means we have already processed it, no need to reprocess it
+    		return membershipTransaction.getMembership();
+    	}
+    	// If user existed before just make him
+    	Membership membership = membershipRepository.getCurrentMembershipByUserId(user.getId());
+        Calendar calendar = Calendar.getInstance();
+    	if(membership == null){
+    		membership = new Membership();
+    		membership.setStartDate(new Date());
+    		calendar.add(Calendar.YEAR, 1);
+            membership.setEndDate(calendar.getTime());
+    	}else{
+    		calendar.setTime(membership.getEndDate());
+    		calendar.add(Calendar.YEAR, 1);
+            membership.setEndDate(calendar.getTime());
+    	}
+        membership.setSource(source);
+        membership.setUser(user);
+        membership = membershipRepository.save(membership);
+        user.setMember(true);
+        
+        membershipTransaction = new MembershipTransaction();
+        membershipTransaction.setMembership(membership);
+        membershipTransaction.setSource(source);
+        membershipTransaction.setSourceTransactionId(sourceTransactionId);
+        membershipTransaction.setTransactionDate(new Date());
+        membershipTransaction.setAmount(fees);
+        
+        membershipTransaction = membershipTransactionRepository.save(membershipTransaction);
+        return membership;
     }
 
     @Override
@@ -1161,6 +1206,20 @@ public class UserServiceImpl implements UserService {
         userLocation.setUserLocationType(userLocationType);
         userLocation = userLocationRepository.save(userLocation);
     }
+
+	@Override
+	public List<MembershipTransaction> getUserMembershipTransactions(Long userId) throws AppException {
+		Membership membership = membershipRepository.getCurrentMembershipByUserId(userId);
+		if(membership == null){
+			return Collections.emptyList();
+		}
+		return membershipTransactionRepository.getAllTransactionByByMembershipId(membership.getId());
+	}
+
+	@Override
+	public Membership getUserMembership(Long userId) throws AppException {
+		return membershipRepository.getCurrentMembershipByUserId(userId);
+	}
 
 
 }

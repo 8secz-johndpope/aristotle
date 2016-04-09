@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -23,6 +24,8 @@ import com.aristotle.core.persistance.Blog;
 import com.aristotle.core.persistance.Donation;
 import com.aristotle.core.persistance.Event;
 import com.aristotle.core.persistance.Location;
+import com.aristotle.core.persistance.Membership;
+import com.aristotle.core.persistance.MembershipTransaction;
 import com.aristotle.core.persistance.News;
 import com.aristotle.core.persistance.PaymentGatewayDonation;
 import com.aristotle.core.persistance.Team;
@@ -407,6 +410,28 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
         oneJsonTeam.addProperty("name", oneTeam.getName());
         oneJsonTeam.addProperty("url", oneTeam.getUrl());
         return oneJsonTeam;
+    }
+    
+    protected JsonObject convertMembership(Membership membership) {
+        JsonObject oneJsonTeam = new JsonObject();
+        oneJsonTeam.addProperty("id", membership.getId());
+        oneJsonTeam.addProperty("startDate", ddMMMyyyyFormat.format(membership.getStartDate()));
+        oneJsonTeam.addProperty("endDate", ddMMMyyyyFormat.format(membership.getEndDate()));
+        return oneJsonTeam;
+    }
+    protected JsonObject convertMembershipTransaction(MembershipTransaction membershipTransaction) {
+        JsonObject oneJsonTeam = new JsonObject();
+        oneJsonTeam.addProperty("id", membershipTransaction.getId());
+        oneJsonTeam.addProperty("transactionDate", ddMMMyyyyFormat.format(membershipTransaction.getTransactionDate()));
+        oneJsonTeam.addProperty("amount", membershipTransaction.getAmount());
+        return oneJsonTeam;
+    }
+    protected JsonArray convertMembershipTransactions(List<MembershipTransaction> membershipTransactions) {
+    	JsonArray jsonArray = new JsonArray();
+    	for(MembershipTransaction oneMembershipTransaction : membershipTransactions){
+    		jsonArray.add(convertMembershipTransaction(oneMembershipTransaction));
+    	}
+        return jsonArray;
     }
 
 }

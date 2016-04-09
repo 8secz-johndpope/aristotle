@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Location;
+import com.aristotle.core.persistance.Membership;
+import com.aristotle.core.persistance.MembershipTransaction;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.UserLocation;
 import com.aristotle.core.service.dto.SearchUser;
@@ -66,9 +68,16 @@ public interface UserService {
 
     User registerIvrMember(String mobileNumber, String name, String gender, String amount, String paymentMode, String state, String district, String msg) throws AppException;
 
+    User registerOnlineMember(Long loggedInUserId, String mobileNumber, String name, String amount, String paymentMode, String transactionId,String fees) throws AppException;
+
     User uploadUserProfilePic(InputStream fileInputStream, User user, String fileName) throws AppException;
 
     void checkUserStatus(List<UserUploadDto> users) throws AppException;
 
     void saveUsers(List<UserUploadDto> users, boolean createUserNamePassword, Location state, Location district, Location pc, Location ac) throws AppException;
+    
+    List<MembershipTransaction> getUserMembershipTransactions(Long userId) throws AppException;
+    
+    Membership getUserMembership(Long userId) throws AppException;
+    
 }
