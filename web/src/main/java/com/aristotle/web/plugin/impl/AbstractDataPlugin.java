@@ -417,13 +417,6 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
         oneJsonTeam.addProperty("id", membership.getId());
         oneJsonTeam.addProperty("startDate", ddMMMyyyyFormat.format(membership.getStartDate()));
         oneJsonTeam.addProperty("endDate", ddMMMyyyyFormat.format(membership.getEndDate()));
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONDAY, 1);
-        if(calendar.getTime().after(membership.getEndDate())){
-        	oneJsonTeam.addProperty("feeAllow", true);
-        }else{
-        	oneJsonTeam.addProperty("feeAllow", false);
-        }
         return oneJsonTeam;
     }
     protected JsonObject convertMembershipTransaction(MembershipTransaction membershipTransaction) {

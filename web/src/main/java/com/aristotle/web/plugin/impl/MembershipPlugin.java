@@ -1,5 +1,6 @@
 package com.aristotle.web.plugin.impl;
 
+import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,6 +54,14 @@ public class MembershipPlugin extends AbstractDataPlugin {
                 if(txns != null && !txns.isEmpty()){
                 	 userJsonObject.add("membershipTransactions", convertMembershipTransactions(txns));
                 }
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.MONDAY, 1);
+                boolean feeAllow = false;
+                
+                if(membership == null || calendar.getTime().after(membership.getEndDate())){
+                	feeAllow = true;
+                }
+                userJsonObject.addProperty("feeAllow", feeAllow);
             } 
             
             context.add(name, userJsonObject);
