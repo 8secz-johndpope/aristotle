@@ -273,7 +273,7 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
     }
     
     private void addMembershipFields(User user, AmazonCloudSearchAddRequest amazonCloudSearchAddRequest) {
-        Membership membership = membershipRepository.getCurrentMembershipByUserId(user.getId());
+        Membership membership = membershipRepository.getMembershipByUserId(user.getId());
         if (membership == null) {
             amazonCloudSearchAddRequest.addField(MEMBER_FIELD, "no");
         } else {

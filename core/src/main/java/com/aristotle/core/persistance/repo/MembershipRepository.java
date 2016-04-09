@@ -9,6 +9,4 @@ public interface MembershipRepository extends JpaRepository<Membership, Long> {
 
     Membership getMembershipByUserId(Long userId);
 
-    @Query("select membership from Membership membership where membership.userId = ?1 and (CURRENT_DATE between membership.startDate and membership.endDate)")
-    Membership getCurrentMembershipByUserId(Long userId);
 }

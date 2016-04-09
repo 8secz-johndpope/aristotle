@@ -1037,7 +1037,7 @@ public class UserServiceImpl implements UserService {
     		return membershipTransaction.getMembership();
     	}
     	// If user existed before just make him
-    	Membership membership = membershipRepository.getCurrentMembershipByUserId(user.getId());
+    	Membership membership = membershipRepository.getMembershipByUserId(user.getId());
         Calendar calendar = Calendar.getInstance();
     	if(membership == null){
     		membership = new Membership();
@@ -1209,7 +1209,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<MembershipTransaction> getUserMembershipTransactions(Long userId) throws AppException {
-		Membership membership = membershipRepository.getCurrentMembershipByUserId(userId);
+		Membership membership = membershipRepository.getMembershipByUserId(userId);
 		if(membership == null){
 			return Collections.emptyList();
 		}
@@ -1218,7 +1218,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Membership getUserMembership(Long userId) throws AppException {
-		return membershipRepository.getCurrentMembershipByUserId(userId);
+		return membershipRepository.getMembershipByUserId(userId);
 	}
 
 

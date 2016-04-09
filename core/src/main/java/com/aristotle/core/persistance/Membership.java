@@ -68,6 +68,12 @@ public class Membership extends BaseEntity {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
+
+	@Override
+	public String toString() {
+		return "Membership [startDate=" + startDate + ", endDate=" + endDate + ", source=" + source + ", user=" + user
+				+ ", userId=" + userId + ", id=" + id + "]";
+	}
 	
 	
 	

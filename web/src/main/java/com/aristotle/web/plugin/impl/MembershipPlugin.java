@@ -47,8 +47,11 @@ public class MembershipPlugin extends AbstractDataPlugin {
             User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
             JsonObject membershipJsonObject = new JsonObject();
             if (user != null) {
-            	List<MembershipTransaction> txns = userService.getUserMembershipTransactions(user.getId());
+            	logger.info("Get Membership of user = "+user.getId()+", "+user.getName());
             	Membership membership = userService.getUserMembership(user.getId());
+
+            	List<MembershipTransaction> txns = userService.getUserMembershipTransactions(user.getId());
+            	logger.info("membership = "+membership);
             	if(membership != null){
             		membershipJsonObject.add("membership", convertMembership(membership));
             	}
