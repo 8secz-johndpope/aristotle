@@ -42,17 +42,18 @@ public class MembershipPlugin extends AbstractDataPlugin {
     @Override
     public void applyPlugin(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView mv) {
         try {
+        	logger.info("applying Plugin : "+ name);
             JsonObject context = (JsonObject) mv.getModel().get("context");
             User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
-            JsonObject userJsonObject = new JsonObject();
+            JsonObject membershipJsonObject = new JsonObject();
             if (user != null) {
             	List<MembershipTransaction> txns = userService.getUserMembershipTransactions(user.getId());
             	Membership membership = userService.getUserMembership(user.getId());
             	if(membership != null){
-            		userJsonObject.add("membership", convertMembership(membership));
+            		membershipJsonObject.add("membership", convertMembership(membership));
             	}
                 if(txns != null && !txns.isEmpty()){
-                	 userJsonObject.add("membershipTransactions", convertMembershipTransactions(txns));
+                	 membershipJsonObject.add("membershipTransactions", convertMembershipTransactions(txns));
                 }
                 Calendar calendar = Calendar.getInstance();
                 calendar.add(Calendar.MONTH, 1);
@@ -62,10 +63,12 @@ public class MembershipPlugin extends AbstractDataPlugin {
                 if(membership == null || calendar.getTime().after(membership.getEndDate())){
                 	feeAllow = true;
                 }
-                userJsonObject.addProperty("feeAllow", feeAllow);
+                membershipJsonObject.addProperty("feeAllow", feeAllow);
             } 
+            logger.info(membershipJsonObject.toString());
             
-            context.add(name, userJsonObject);
+            context.add(name, membershipJsonObject);
+            logger.info(context.toString());
 
         } catch (Exception ex) {
             ex.printStackTrace();
