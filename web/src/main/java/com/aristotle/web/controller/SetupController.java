@@ -43,7 +43,7 @@ public class SetupController {
         return ex.getMessage();
     }
 
-    @RequestMapping("/ui/refresh")
+    @RequestMapping("/sc/ui/refresh")
     @ResponseBody
     public String refreshTemplates(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) {
         uiTemplateManager.refresh();
@@ -51,14 +51,14 @@ public class SetupController {
         return "Success";
     }
 
-    @RequestMapping("/plugin/update")
+    @RequestMapping("/sc/plugin/update")
     @ResponseBody
     public String updatePlugins(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws AppException {
         pluginManager.updateDbWithAllPlugins();
         return "Success";
     }
 
-    @RequestMapping("/location/update")
+    @RequestMapping("/sc/location/update")
     @ResponseBody
     public String updateLocations(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws AppException {
         locationUpgradeService.copyCountries();
@@ -71,14 +71,14 @@ public class SetupController {
         return "Success";
     }
 
-    @RequestMapping("/permissions/update")
+    @RequestMapping("/sc/permissions/update")
     @ResponseBody
     public String updatePermissions(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
         locationUpgradeService.copyLocationTypeRoles();
         return "Success";
     }
 
-    @RequestMapping("/video/update")
+    @RequestMapping("/sc/video/update")
     @ResponseBody
     public String downloadVideos(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
         if(httpServletRequest.getParameter("updateall") == null){
@@ -90,21 +90,21 @@ public class SetupController {
         return "Success";
     }
 
-    @RequestMapping("/userroles/update")
+    @RequestMapping("/sc/userroles/update")
     @ResponseBody
     public String updateuserRoles(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
         locationUpgradeService.copyUserRoles();
         return "Success";
     }
 
-    @RequestMapping("/userlocations/update")
+    @RequestMapping("/sc/userlocations/update")
     @ResponseBody
     public String updateuserLocations(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
         locationUpgradeService.copyUserLocations();
         return "Success";
     }
 
-    @RequestMapping("/handlebar/test")
+    @RequestMapping("/sc/handlebar/test")
     @ResponseBody
     public String upsddateuserLocations(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
         Handlebars handlebars = new Handlebars();
@@ -116,7 +116,7 @@ public class SetupController {
 
     }
 
-    @RequestMapping("/admin/sendemail")
+    @RequestMapping("/sc/admin/sendemail")
     @ResponseBody
     public String sendUserAccountEmail(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
         String email = httpServletRequest.getParameter("email");
@@ -133,7 +133,7 @@ public class SetupController {
         return "done";
     }
 
-    @RequestMapping("/admin/sendverificationemail")
+    @RequestMapping("/sc/admin/sendverificationemail")
     @ResponseBody
     public String sendUserVerificationEmail(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
         String email = httpServletRequest.getParameter("email");

@@ -46,7 +46,7 @@ public class RegisterController {
     @Autowired
     private DonationService donationService;
 
-    @RequestMapping(value = "/registerquick", method = RequestMethod.POST)
+    @RequestMapping(value = {"/js/registerquick", "/registerquick"}, method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<String> registeruserQuickly(HttpServletRequest httpServletRequest, @RequestBody UserContactBean userContactBean) {
         System.out.println("userContactBean=" + userContactBean);
@@ -81,7 +81,7 @@ public class RegisterController {
     }
 
     boolean ignore = false;
-    @RequestMapping(value = "/registeruser", method = RequestMethod.POST)
+    @RequestMapping(value = {"/js/registeruser", "/registeruser"}, method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<String> saveUserProfile(HttpServletRequest httpServletRequest, @RequestBody UserRegisterBean user) {
         JsonObject jsonObject = new JsonObject();
