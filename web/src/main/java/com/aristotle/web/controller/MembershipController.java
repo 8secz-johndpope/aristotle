@@ -90,7 +90,7 @@ public class MembershipController {
             }
             */
         }
-        modelAndView.setView(new RedirectView("/user/editprofile"));
+        modelAndView.setView(new RedirectView("http://www.swarajabhiyan.org/user/editprofile"));
         return modelAndView;
     }
 
@@ -104,6 +104,7 @@ public class MembershipController {
             HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
             String url = "https://www.instamojo.com/api/1.1/payments/" + donationId + "/";
+            System.out.println("Hitting Url : "+ url);
             ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
 
             logger.info("responseEntity={}", responseEntity.getBody());
