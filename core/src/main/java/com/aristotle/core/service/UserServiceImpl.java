@@ -1213,7 +1213,7 @@ public class UserServiceImpl implements UserService {
 		if(membership == null){
 			return Collections.emptyList();
 		}
-		return membershipTransactionRepository.getAllTransactionByByMembershipId(membership.getId());
+		return membershipTransactionRepository.getMembershipTransactionByMembershipId(membership.getId());
 	}
 
 	@Override

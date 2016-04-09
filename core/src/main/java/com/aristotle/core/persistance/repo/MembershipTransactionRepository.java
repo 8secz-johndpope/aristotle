@@ -12,5 +12,5 @@ public interface MembershipTransactionRepository extends JpaRepository<Membershi
 
     MembershipTransaction getMembershipTransactionBySourceTransactionId(String sourceTransactionId);
 
-    List<MembershipTransaction> getAllTransactionByByMembershipId(Long membershipId);
+    List<MembershipTransaction> getMembershipTransactionByMembershipId(Long membershipId);
 }
