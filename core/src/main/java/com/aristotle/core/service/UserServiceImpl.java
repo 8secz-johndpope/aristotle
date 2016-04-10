@@ -981,7 +981,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User registerOnlineMember(Long loggedInUserId, String mobileNumber, String name, String amount, String paymentMode, String transactionId, String fees) throws AppException {
     	User user = userRepository.findOne(loggedInUserId);
-    	createUserMembership(user, "Online", transactionId, fees);
+    	createUserMembership(user, "Online", transactionId, amount);
     	return user;
     }
     @Override
