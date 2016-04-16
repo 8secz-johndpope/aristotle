@@ -338,15 +338,19 @@ public class SmsServiceImpl implements SmsService {
 				String errorCode = responseJson.get("ErrorCode").getAsString();
 				sms.setResponse(response);
 				if("000".equals(errorCode)){
-					sms.setStatus("Success");
+					sms.setStatus("SUCCESS");
 				}else{
-					sms.setStatus("Failed");
+					sms.setStatus("FAILED");
 					sms.setErrorMessage(responseJson.get("ErrorMessage").getAsString());
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				sms.setErrorMessage(e.getMessage());
-				sms.setStatus("Failed");
+				sms.setStatus("FAILED");
 				
+			} finally{
+				if(sms.getStatus().equalsIgnoreCase("Pending")){
+					sms.setStatus("UNKNOWN");
+				}
 			}
             
 	
