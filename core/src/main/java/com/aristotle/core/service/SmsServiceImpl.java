@@ -76,8 +76,8 @@ public class SmsServiceImpl implements SmsService {
     private SmsTemplateRepository smsTemplateRepository;
     @Autowired
     private HttpUtil httpUtil;
-    @Autowired
-    private JsonParser jsonParser;
+    
+    private JsonParser jsonParser = new JsonParser();
     
 
     @Value("${smsTransactionalUrlTemplate:NONE}")
