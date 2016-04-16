@@ -1,6 +1,8 @@
 package com.aristotle.core.service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -331,27 +333,35 @@ public class SmsServiceImpl implements SmsService {
     private void sendSms(String url, Sms sms) {
     	if(sms.getPhone().getCountryCode().equals("91")){
     		url = url.replace("{mobileNumber}", sms.getPhone().getCountryCode() + sms.getPhone().getPhoneNumber());
-            url = url.replace("{message}", sms.getMessage());
-            try {
-				String response = httpUtil.getResponse(url);
-				JsonObject responseJson = (JsonObject)jsonParser.parse(response);
-				String errorCode = responseJson.get("ErrorCode").getAsString();
-				sms.setResponse(response);
-				if("000".equals(errorCode)){
-					sms.setStatus("SUCCESS");
-				}else{
+    		String message = sms.getMessage();
+    		try {
+				message = URLEncoder.encode(message, "UTF-8");
+				url = url.replace("{message}", sms.getMessage());
+	            try {
+					String response = httpUtil.getResponse(url);
+					JsonObject responseJson = (JsonObject)jsonParser.parse(response);
+					String errorCode = responseJson.get("ErrorCode").getAsString();
+					sms.setResponse(response);
+					if("000".equals(errorCode)){
+						sms.setStatus("SUCCESS");
+					}else{
+						sms.setStatus("FAILED");
+						sms.setErrorMessage(responseJson.get("ErrorMessage").getAsString());
+					}
+				} catch (Exception e) {
+					sms.setErrorMessage(e.getMessage());
 					sms.setStatus("FAILED");
-					sms.setErrorMessage(responseJson.get("ErrorMessage").getAsString());
+					
+				} finally{
+					if(sms.getStatus().equalsIgnoreCase("Pending")){
+						sms.setStatus("UNKNOWN");
+					}
 				}
-			} catch (Exception e) {
-				sms.setErrorMessage(e.getMessage());
-				sms.setStatus("FAILED");
-				
-			} finally{
-				if(sms.getStatus().equalsIgnoreCase("Pending")){
-					sms.setStatus("UNKNOWN");
-				}
+			} catch (UnsupportedEncodingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
+            
             
 	
     	}

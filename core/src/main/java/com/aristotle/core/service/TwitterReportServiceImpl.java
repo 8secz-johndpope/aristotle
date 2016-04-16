@@ -179,9 +179,13 @@ public class TwitterReportServiceImpl implements TwitterReportService {
             if (currentReport == null) {
                 currentReport = previousDayReport;
             }
-            jsonContext.add("current", jsonParser.parse(currentReport.getContent()).getAsJsonObject());
-            jsonContext.add("previous", jsonParser.parse(previousDayReport.getContent()).getAsJsonObject());
-
+            if(currentReport != null){
+            	jsonContext.add("current", jsonParser.parse(currentReport.getContent()).getAsJsonObject());
+            }
+            if(previousDayReport != null){
+            	jsonContext.add("previous", jsonParser.parse(previousDayReport.getContent()).getAsJsonObject());
+            }
+            
             EmailTemplate emailTemplate = emailTemplateRepository.getEmailTemplateByName("TWITTER_REPORT_EMAIL");
 
             Handlebars handlebars = new Handlebars();
