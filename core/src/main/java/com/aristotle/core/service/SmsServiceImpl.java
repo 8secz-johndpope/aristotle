@@ -1,5 +1,6 @@
 package com.aristotle.core.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -41,6 +42,8 @@ import com.aristotle.core.persistance.repo.SmsTemplateRepository;
 import com.aristotle.core.persistance.repo.TeamMemberRepository;
 import com.aristotle.core.persistance.repo.TeamPlannedSmsRepository;
 import com.aristotle.core.persistance.repo.TeamRepository;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 @Service
 @Transactional
@@ -71,6 +74,11 @@ public class SmsServiceImpl implements SmsService {
     private SmsRepository smsRepository;
     @Autowired
     private SmsTemplateRepository smsTemplateRepository;
+    @Autowired
+    private HttpUtil httpUtil;
+    @Autowired
+    private JsonParser jsonParser;
+    
 
     @Value("${smsTransactionalUrlTemplate:NONE}")
     private String smsTransactionalUrlTemplate;
@@ -260,6 +268,7 @@ public class SmsServiceImpl implements SmsService {
             sms.setUser(oneTeamMember.getUser());
             sms.setPhone(phone);
             sms.setStatus("PENDING");
+            sms.setMessage(plannedSms.getMessage());
             sms = smsRepository.save(sms);
             totalSchedule++;
         }
@@ -289,6 +298,7 @@ public class SmsServiceImpl implements SmsService {
             sms.setUser(phone.getUser());
             sms.setPhone(phone);
             sms.setStatus("PENDING");
+            sms.setMessage(plannedSms.getMessage());
             sms = smsRepository.save(sms);
             totalSchedule++;
         }
@@ -319,8 +329,28 @@ public class SmsServiceImpl implements SmsService {
         sendSms(smsTransactionalUrlTemplate, sms);
     }
     private void sendSms(String url, Sms sms) {
-        url = url.replace("{toMobileNumber}", sms.getPhone().getCountryCode() + sms.getPhone().getPhoneNumber());
-        url = url.replace("{message}", sms.getMessage());
+    	if(sms.getPhone().getCountryCode().equals("91")){
+    		url = url.replace("{mobileNumber}", sms.getPhone().getCountryCode() + sms.getPhone().getPhoneNumber());
+            url = url.replace("{message}", sms.getMessage());
+            try {
+				String response = httpUtil.getResponse(url);
+				JsonObject responseJson = (JsonObject)jsonParser.parse(response);
+				String errorCode = responseJson.get("ErrorCode").getAsString();
+				sms.setResponse(response);
+				if("000".equals(errorCode)){
+					sms.setStatus("Success");
+				}else{
+					sms.setStatus("Failed");
+					sms.setErrorMessage(responseJson.get("ErrorMessage").getAsString());
+				}
+			} catch (IOException e) {
+				sms.setErrorMessage(e.getMessage());
+				sms.setStatus("Failed");
+				
+			}
+            
+	
+    	}
     }
 
     @Override

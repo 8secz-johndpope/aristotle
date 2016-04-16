@@ -38,6 +38,7 @@
 			<list>
 				<ref bean="twitterListenerBean" />
 				<ref bean="smsListenerBean" />
+				<ref bean="smsSendBean" />
 				<ref bean="plannedTweetReaderBoltBean" />
 				<ref bean="plannedTweetProcessorBoltBean" />
 				<ref bean="TweetSendBoltBean" />
@@ -157,6 +158,19 @@
         <property name="sourceComponentStreams">
             <map>
                 <entry key="ThirtySecondTimerSpout" value="ThirtySecondTimerStream" />
+            </map>
+        </property>
+        <property name="outputStream">
+			<bean class="com.aristotle.task.topology.beans.Stream">
+				<property name="streamId" value="SmsListenerStream" />
+			</bean>
+		</property>
+    </bean>
+    <bean id="smsSendBean" class="com.aristotle.task.bolt.sms.SendSms">
+        <property name="componentId" value="SendSms" />
+        <property name="sourceComponentStreams">
+            <map>
+                <entry key="SmsListener" value="SmsListenerStream" />
             </map>
         </property>
     </bean>

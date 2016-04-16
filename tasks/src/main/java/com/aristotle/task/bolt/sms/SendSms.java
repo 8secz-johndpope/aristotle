@@ -1,24 +1,19 @@
 package com.aristotle.task.bolt.sms;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import backtype.storm.tuple.Tuple;
-import backtype.storm.tuple.Values;
 
 import com.aristotle.core.service.SmsService;
 import com.aristotle.task.topology.Result;
 import com.aristotle.task.topology.SpringAwareBaseBolt;
-import com.aristotle.task.topology.beans.Stream;
 
-public class SmsListener extends SpringAwareBaseBolt {
+public class SendSms extends SpringAwareBaseBolt {
     private static final long serialVersionUID = 1L;
 
-    private Stream outputStream;
-    
     @Autowired(required = false)
     // required false as this will be injected later
     private transient SmsService smsService;
@@ -26,23 +21,13 @@ public class SmsListener extends SpringAwareBaseBolt {
     @Override
     @Transactional
     public Result onExecute(Tuple input) throws Exception{
-        logInfo("Message Recieved " + new Date());
-        while (smsService.processNextSms()) {
+        logInfo("Message Recieved to send Sms");
+        while (smsService.sendNextSms()) {
             // Keep processing
-            logInfo("More messages to process");
-            Calendar calendar = Calendar.getInstance();
-            writeToParticularStream(input, new Values(calendar.getTime()), outputStream.getStreamId());
+            logInfo("More Sms to process");
         }
         return Result.Success;
     }
-
-	public Stream getOutputStream() {
-		return outputStream;
-	}
-
-	public void setOutputStream(Stream outputStream) {
-		this.outputStream = outputStream;
-	}
 
 
 }

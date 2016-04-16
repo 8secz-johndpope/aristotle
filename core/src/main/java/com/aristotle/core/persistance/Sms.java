@@ -37,6 +37,9 @@ public class Sms extends BaseEntity {
 
     @Column(name = "error_message", length = 1024)
     private String errorMessage;
+    
+    @Column(name = "response", length = 4096)
+    private String response;
 
     @Column(name = "promotional")
     private boolean promotional;
@@ -120,5 +123,13 @@ public class Sms extends BaseEntity {
     public void setMessage(String message) {
         this.message = message;
     }
+
+	public String getResponse() {
+		return response;
+	}
+
+	public void setResponse(String response) {
+		this.response = response;
+	}
 
 }
