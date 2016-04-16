@@ -271,6 +271,11 @@ public class SmsServiceImpl implements SmsService {
             sms.setPhone(phone);
             sms.setStatus("PENDING");
             sms.setMessage(plannedSms.getMessage());
+            if(plannedSms.getSmsTemplate() == null){
+            	sms.setPromotional(false);
+            } else{
+            	sms.setPromotional(true);
+            }
             sms = smsRepository.save(sms);
             totalSchedule++;
         }
@@ -301,6 +306,11 @@ public class SmsServiceImpl implements SmsService {
             sms.setPhone(phone);
             sms.setStatus("PENDING");
             sms.setMessage(plannedSms.getMessage());
+            if(plannedSms.getSmsTemplate() == null){
+            	sms.setPromotional(false);
+            } else{
+            	sms.setPromotional(true);
+            }
             sms = smsRepository.save(sms);
             totalSchedule++;
         }
