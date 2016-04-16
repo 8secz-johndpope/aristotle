@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 
 import com.aristotle.core.enums.AppPermission;
 import com.aristotle.core.enums.PlannedPostStatus;
+import com.aristotle.core.enums.PostLocationType;
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.GroupPlannedSms;
 import com.aristotle.core.persistance.LocationPlannedSms;
@@ -149,8 +150,8 @@ public class AdminSmsBean extends BaseMultiPermissionAdminJsfBean {
 
     public void saveSms() {
 		try {
-            // selectedPlannedSms.setLocationType(menuBean.getSelectedLocation().getLocationType());
-            if (menuBean.getSelectedLocation() != null) {
+			selectedPlannedSms.setLocationType(PostLocationType.Global);
+			if (menuBean.getSelectedLocation() != null) {
                 selectedPlannedSms.setLocationId(menuBean.getSelectedLocation().getId());
             }
 
