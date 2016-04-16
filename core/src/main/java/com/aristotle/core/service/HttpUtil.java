@@ -51,8 +51,9 @@ public class HttpUtil {
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		//System.out.println("IOUtils.copy(httpEntity.getContent(), byteArrayOutputStream);");
 		IOUtils.copy(httpEntity.getContent(), byteArrayOutputStream);
-		String dayDonationString = byteArrayOutputStream.toString();
-		return dayDonationString;
+		String response = byteArrayOutputStream.toString();
+		logger.info("response = {}", response);
+		return response;
 	}
 
     public String getResponse(String url, String apiKey, String secret) throws ClientProtocolException, IOException {

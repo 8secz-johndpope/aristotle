@@ -336,12 +336,13 @@ public class SmsServiceImpl implements SmsService {
     		String message = sms.getMessage();
     		try {
 				message = URLEncoder.encode(message, "UTF-8");
-				url = url.replace("{message}", sms.getMessage());
+				url = url.replace("{message}", message);
 	            try {
 					String response = httpUtil.getResponse(url);
 					JsonObject responseJson = (JsonObject)jsonParser.parse(response);
 					String errorCode = responseJson.get("ErrorCode").getAsString();
 					sms.setResponse(response);
+					
 					if("000".equals(errorCode)){
 						sms.setStatus("SUCCESS");
 					}else{
