@@ -40,7 +40,7 @@
 
 			<h:form id="addMemberForm">
 				<p:messages id="messages" autoUpdate="true" closable="true" />
-				<p:blockUI block="addMemberForm" trigger="@form:">
+				<p:blockUI block="addMemberForm" trigger="@form:saveButton">
 					<p:graphicImage value="http://www.jsclasses.org/browse/view/image/file/3815/name/loading.gif" style="width:100px"/>
 				</p:blockUI>
 				<p:outputPanel id="locationSelectionPanel">
@@ -71,7 +71,7 @@
 				</p:outputPanel>
 				<p:outputPanel>
 				<p:panel header="Location Selection" style="margin-bottom:20px">
-					<h:panelGrid columns="2" styleClass="topAlignPanelColumns" id="locationPanel">
+					<h:panelGrid columns="2" styleClass="topAlignPanelColumns" id="memberPanel">
 						<h:outputLabel value="Name" />
 						<p:inputText value="#{adminMemberBean.selectedMember.name}" id="name" required="true" />
 						<h:outputLabel value="Reference Mobile Number" />
