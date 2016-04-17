@@ -438,6 +438,16 @@ public class MenuBean extends BaseJsfBean {
             buildAndRedirect("/admin/notallowed");
         }
     }
+    
+    public void goToOfflineMemberPage() {
+        if (isEditUserAllowed()) {
+            buildAndRedirect("/admin/member");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
+    
+    
 
     public void goToUploadUserDataPage() {
         if (isUploadUserDataAllowed()) {
