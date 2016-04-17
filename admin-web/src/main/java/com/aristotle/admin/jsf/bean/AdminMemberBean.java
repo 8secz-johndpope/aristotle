@@ -80,6 +80,7 @@ public class AdminMemberBean extends BaseMultiPermissionAdminJsfBean {
 		}
 		selectedMember = new OfflineMember();
 		states = locationService.getAllStates();
+		stateLocationConvertor.setLocations(states);
 	}
 
 	public void saveMember() {
