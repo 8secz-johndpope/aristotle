@@ -80,7 +80,14 @@ public class AdminMemberBean extends BaseMultiPermissionAdminJsfBean {
 		}
 		selectedMember = new OfflineMember();
 		states = locationService.getAllStates();
+		addFirstItem(states, "--Select State--");
 		stateLocationConvertor.setLocations(states);
+	}
+	private void addFirstItem(List<Location> locations, String name){
+		Location location = new Location();
+		location.setName(name);
+		location.setId(0L);
+		locations.add(0, location);
 	}
 
 	public void saveMember() {
@@ -99,8 +106,11 @@ public class AdminMemberBean extends BaseMultiPermissionAdminJsfBean {
 		try {
 			pcs = locationService.getAllParliamentConstituenciesOfState(selectedMember.getSelectedState().getId());
 			pcLocationConvertor.setLocations(pcs);
+			addFirstItem(pcs, "--Select Parliament Constituecy--");
 			districts = locationService.getAllDistrictOfState(selectedMember.getSelectedState().getId());
 			districtLocationConvertor.setLocations(districts);
+			addFirstItem(districts, "--Select District--");
+			acs = null;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -111,6 +121,7 @@ public class AdminMemberBean extends BaseMultiPermissionAdminJsfBean {
 		try {
 			acs = locationService.getAllAssemblyConstituenciesOfDistrict(selectedMember.getSelectedDistrict().getId());
 			acLocationConvertor.setLocations(acs);
+			addFirstItem(acs, "--Select Assemblye Constituency--");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
