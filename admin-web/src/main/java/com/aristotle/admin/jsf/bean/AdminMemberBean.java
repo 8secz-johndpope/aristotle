@@ -49,9 +49,6 @@ public class AdminMemberBean extends BaseMultiPermissionAdminJsfBean {
 
 	private List<UserSearchResult> userSearchResults;
 
-	private String emailText;
-	private String phoneText;
-
 	@Autowired
 	private LocationService locationService;
 	@Autowired
@@ -65,16 +62,8 @@ public class AdminMemberBean extends BaseMultiPermissionAdminJsfBean {
 	@Autowired
 	private LocationConvertor pcLocationConvertor;
 	@Autowired
-	private LocationConvertor countryLocationConvertor;
-	@Autowired
-	private LocationConvertor countryRegionLocationConvertor;
-	@Autowired
-	private LocationConvertor countryRegionAreaLocationConvertor;
-	@Autowired
 	private UserService userService;
-	@Autowired
-	private AppService appService;
-
+	
 	public AdminMemberBean() {
 		super("/admin/member", AppPermission.ADD_MEMBER, AppPermission.VIEW_MEMBER, AppPermission.UPDATE_GLOBAL_MEMBER,
 				AppPermission.UPDATE_MEMBER, AppPermission.SEARCH_MEMBER);
@@ -132,5 +121,109 @@ public class AdminMemberBean extends BaseMultiPermissionAdminJsfBean {
     public void handlePcChange() {
         System.out.println("Location Select : " + selectedMember.getSelectedPc());
     }
+
+	public List<Location> getStates() {
+		return states;
+	}
+
+	public void setStates(List<Location> states) {
+		this.states = states;
+	}
+
+	public List<Location> getDistricts() {
+		return districts;
+	}
+
+	public void setDistricts(List<Location> districts) {
+		this.districts = districts;
+	}
+
+	public List<Location> getAcs() {
+		return acs;
+	}
+
+	public void setAcs(List<Location> acs) {
+		this.acs = acs;
+	}
+
+	public List<Location> getPcs() {
+		return pcs;
+	}
+
+	public void setPcs(List<Location> pcs) {
+		this.pcs = pcs;
+	}
+
+	public OfflineMember getSelectedMember() {
+		return selectedMember;
+	}
+
+	public void setSelectedMember(OfflineMember selectedMember) {
+		this.selectedMember = selectedMember;
+	}
+
+	public List<UserSearchResult> getUserSearchResults() {
+		return userSearchResults;
+	}
+
+	public void setUserSearchResults(List<UserSearchResult> userSearchResults) {
+		this.userSearchResults = userSearchResults;
+	}
+
+	public LocationService getLocationService() {
+		return locationService;
+	}
+
+	public void setLocationService(LocationService locationService) {
+		this.locationService = locationService;
+	}
+
+	public LocationTypeConvertor getLocationTypeConvertor() {
+		return locationTypeConvertor;
+	}
+
+	public void setLocationTypeConvertor(LocationTypeConvertor locationTypeConvertor) {
+		this.locationTypeConvertor = locationTypeConvertor;
+	}
+
+	public LocationConvertor getStateLocationConvertor() {
+		return stateLocationConvertor;
+	}
+
+	public void setStateLocationConvertor(LocationConvertor stateLocationConvertor) {
+		this.stateLocationConvertor = stateLocationConvertor;
+	}
+
+	public LocationConvertor getDistrictLocationConvertor() {
+		return districtLocationConvertor;
+	}
+
+	public void setDistrictLocationConvertor(LocationConvertor districtLocationConvertor) {
+		this.districtLocationConvertor = districtLocationConvertor;
+	}
+
+	public LocationConvertor getAcLocationConvertor() {
+		return acLocationConvertor;
+	}
+
+	public void setAcLocationConvertor(LocationConvertor acLocationConvertor) {
+		this.acLocationConvertor = acLocationConvertor;
+	}
+
+	public LocationConvertor getPcLocationConvertor() {
+		return pcLocationConvertor;
+	}
+
+	public void setPcLocationConvertor(LocationConvertor pcLocationConvertor) {
+		this.pcLocationConvertor = pcLocationConvertor;
+	}
+
+	public UserService getUserService() {
+		return userService;
+	}
+
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
 
 }
