@@ -9,6 +9,7 @@ import com.aristotle.core.persistance.Membership;
 import com.aristotle.core.persistance.MembershipTransaction;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.UserLocation;
+import com.aristotle.core.service.dto.OfflineMember;
 import com.aristotle.core.service.dto.SearchUser;
 import com.aristotle.core.service.dto.UserContactBean;
 import com.aristotle.core.service.dto.UserPersonalDetailBean;
@@ -79,5 +80,9 @@ public interface UserService {
     List<MembershipTransaction> getUserMembershipTransactions(Long userId) throws AppException;
     
     Membership getUserMembership(Long userId) throws AppException;
+    
+    User saveOfflineMember(OfflineMember member) throws AppException;
+    
+    List<UserSearchResult> getUsersCreatedBy(Long userId) throws AppException;
     
 }

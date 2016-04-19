@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -54,6 +55,7 @@ import com.aristotle.core.persistance.repo.PhoneRepository;
 import com.aristotle.core.persistance.repo.UserLocationRepository;
 import com.aristotle.core.persistance.repo.UserRepository;
 import com.aristotle.core.persistance.repo.VolunteerRepository;
+import com.aristotle.core.service.dto.OfflineMember;
 import com.aristotle.core.service.dto.SearchUser;
 import com.aristotle.core.service.dto.UserContactBean;
 import com.aristotle.core.service.dto.UserPersonalDetailBean;
@@ -981,7 +983,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User registerOnlineMember(Long loggedInUserId, String mobileNumber, String name, String amount, String paymentMode, String transactionId, String fees) throws AppException {
     	User user = userRepository.findOne(loggedInUserId);
-    	createUserMembership(user, "Online", transactionId, amount);
+    	createOnlineUserMembership(user, "Online", transactionId, amount);
     	return user;
     }
     @Override
@@ -1030,7 +1032,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
     
-    private Membership createUserMembership(User user, String source, String sourceTransactionId, String fees){
+    private Membership createOnlineUserMembership(User user, String source, String sourceTransactionId, String fees){
     	MembershipTransaction membershipTransaction = membershipTransactionRepository.getMembershipTransactionBySourceTransactionId(sourceTransactionId);
     	if(membershipTransaction != null){
     		//means we have already processed it, no need to reprocess it
@@ -1058,6 +1060,36 @@ public class UserServiceImpl implements UserService {
         membershipTransaction.setMembership(membership);
         membershipTransaction.setSource(source);
         membershipTransaction.setSourceTransactionId(sourceTransactionId);
+        membershipTransaction.setTransactionDate(new Date());
+        membershipTransaction.setAmount(fees);
+        
+        membershipTransaction = membershipTransactionRepository.save(membershipTransaction);
+        return membership;
+    }
+    
+    private Membership createOfflineUserMembership(User user, String fees){
+    	MembershipTransaction membershipTransaction = null;
+    	// If user existed before just make him
+    	Membership membership = membershipRepository.getMembershipByUserId(user.getId());
+        Calendar calendar = Calendar.getInstance();
+    	if(membership == null){
+    		membership = new Membership();
+    		membership.setStartDate(new Date());
+    		calendar.add(Calendar.YEAR, 1);
+            membership.setEndDate(calendar.getTime());
+    	}else{
+    		calendar.setTime(membership.getEndDate());
+    		calendar.add(Calendar.YEAR, 1);
+            membership.setEndDate(calendar.getTime());
+    	}
+        membership.setSource("Admin-Offline");
+        membership.setUser(user);
+        membership = membershipRepository.save(membership);
+        user.setMember(true);
+        
+        membershipTransaction = new MembershipTransaction();
+        membershipTransaction.setMembership(membership);
+        membershipTransaction.setSource("Admin-Offline");
         membershipTransaction.setTransactionDate(new Date());
         membershipTransaction.setAmount(fees);
         
@@ -1219,6 +1251,52 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Membership getUserMembership(Long userId) throws AppException {
 		return membershipRepository.getMembershipByUserId(userId);
+	}
+
+	@Override
+	public User saveOfflineMember(OfflineMember member) throws AppException {
+		if(StringUtils.isEmpty(member.getReferenceMobile()) && StringUtils.isEmpty(member.getMobile())){
+			throw new AppException("Please provide either reference mobile number or mobile number");
+		}
+		if(StringUtils.isNotEmpty(member.getReferenceMobile()) && StringUtils.isNotEmpty(member.getMobile())){
+			throw new AppException("Please provide either reference mobile number or mobile number");
+		}
+		
+		Phone existingPhone = phoneRepository.getPhoneByPhoneNumberAndCountryCode(member.getReferenceMobile(), "91");
+		if(existingPhone == null){
+			throw new AppException("No such phone["+member.getReferenceMobile()+"] found");
+		}
+		
+		User newUser = new User();
+		newUser.setName(member.getName());
+		newUser.setCreationType(CreationType.Admin_Created);
+		newUser.setReferenceMobileNumber(member.getReferenceMobile());
+		addUserLocation(newUser, member.getSelectedState(), "Living");
+        addUserLocation(newUser, member.getSelectedState(), "Voting");
+        addUserLocation(newUser, member.getSelectedDistrict(), "Living");
+        addUserLocation(newUser, member.getSelectedDistrict(), "Voting");
+        addUserLocation(newUser, member.getSelectedAc(), "Living");
+        addUserLocation(newUser, member.getSelectedAc(), "Voting");
+        addUserLocation(newUser, member.getSelectedPc(), "Living");
+        addUserLocation(newUser, member.getSelectedPc(), "Voting");
+        if(member.getCreatedBy() != null){
+        	newUser.setCreatorId(member.getCreatedBy().getId());
+        	newUser.setModifierId(member.getCreatedBy().getId());
+        }
+        
+        newUser = userRepository.save(newUser);
+        
+        createOfflineUserMembership(newUser, "50.00");
+        
+        return newUser;
+		
+	}
+
+	@Override
+	public List<UserSearchResult> getUsersCreatedBy(Long userId) throws AppException {
+		Pageable pageable = new PageRequest(0, 50);
+		Page<User> users = userRepository.searchUserByCreatorId(userId, pageable);
+		return convertUsers(users.getContent());
 	}
 
 

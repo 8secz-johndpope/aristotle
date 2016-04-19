@@ -31,6 +31,8 @@ public class UserSearchResult {
     private String passportNumber;
 
     private String identityNumber;
+    
+    private String referenceMobileNumber;
 
     private String identityType;
     private String mobileNumber;
@@ -276,5 +278,13 @@ public class UserSearchResult {
     public void setNriCountryRegionArea(Location nriCountryRegionArea) {
         this.nriCountryRegionArea = nriCountryRegionArea;
     }
+
+	public String getReferenceMobileNumber() {
+		return referenceMobileNumber;
+	}
+
+	public void setReferenceMobileNumber(String referenceMobileNumber) {
+		this.referenceMobileNumber = referenceMobileNumber;
+	}
 
 }

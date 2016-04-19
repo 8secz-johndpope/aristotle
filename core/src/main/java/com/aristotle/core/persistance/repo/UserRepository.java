@@ -52,5 +52,8 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     @Query("select distinct user from User user where user.reindex=true")
     Page<User> searchUserByReindex(Pageable pageable);
+    
+    @Query("select distinct user from User user where user.creatorId=?1")
+    Page<User> searchUserByCreatorId(Long userId, Pageable pageable);
 
 }

@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
-import com.aristotle.admin.jsf.bean.dto.OfflineMember;
 import com.aristotle.admin.jsf.convertors.LocationConvertor;
 import com.aristotle.admin.jsf.convertors.LocationTypeConvertor;
 import com.aristotle.core.enums.AppPermission;
@@ -24,6 +23,7 @@ import com.aristotle.core.persistance.Volunteer;
 import com.aristotle.core.service.AppService;
 import com.aristotle.core.service.LocationService;
 import com.aristotle.core.service.UserService;
+import com.aristotle.core.service.dto.OfflineMember;
 import com.aristotle.core.service.dto.UserSearchResult;
 import com.mysql.fabric.xmlrpc.base.Member;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
@@ -63,6 +63,8 @@ public class AdminMemberBean extends BaseMultiPermissionAdminJsfBean {
 	private LocationConvertor pcLocationConvertor;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private AppService appService;
 	
 	public AdminMemberBean() {
 		super("/admin/member", AppPermission.ADD_MEMBER, AppPermission.VIEW_MEMBER, AppPermission.UPDATE_GLOBAL_MEMBER,
@@ -93,12 +95,47 @@ public class AdminMemberBean extends BaseMultiPermissionAdminJsfBean {
 	public void saveMember() {
         System.out.println("Saving Member "+selectedMember);
         try {
+        	User user = getLoggedInUser();
+        	selectedMember.setCreatedBy(user);
+        	userService.saveOfflineMember(selectedMember);
         	sendInfoMessageToJsfScreen("Member Saves Succesfully");
+        	userSearchResults = userService.getUsersCreatedBy(user.getId());
         } catch (Exception ex) {
             sendErrorMessageToJsfScreen(ex);
         } finally {
         }
 
+    }
+	
+	public void onRowToggle(ToggleEvent event) {
+        UserSearchResult selectedUser = (UserSearchResult) event.getData();
+        if (event.getVisibility().equals(Visibility.VISIBLE)) {
+            try {
+                Volunteer selectedVolunteer = appService.getVolunteerDataForUser(selectedUser.getId());
+                selectedUser.setVolunteerRecord(selectedVolunteer);
+                if (selectedVolunteer == null) {
+                    System.out.println("Selected Volunteer is null null");
+                    selectedUser.setVolunteerInterests(Collections.emptySet());
+                } else {
+                    System.out.println("Selected Volunteer is not null");
+                    Set<Interest> userInterests = selectedVolunteer.getInterests();
+                    if (userInterests == null || userInterests.isEmpty()) {
+                        System.out.println("No User Interests");
+                        selectedUser.setVolunteerInterests(Collections.emptySet());
+                    } else {
+                        System.out.println("Some User Interests");
+                        selectedUser.setVolunteerInterests(userInterests);
+                    }
+
+                }
+            } catch (AppException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        System.out.println("Row Toggled " + (event.getData()));
     }
 
 	public void handleStateChange() {

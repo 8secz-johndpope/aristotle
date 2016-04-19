@@ -42,6 +42,9 @@ public class User extends BaseEntity {
 
 	@Column(name = "mother_name")
 	private String motherName;
+	
+	@Column(name = "reference_mobile_number")
+	private String referenceMobileNumber;
 
 	@Column(name = "address", length=512)
 	private String address;
@@ -799,7 +802,15 @@ public class User extends BaseEntity {
         this.reindex = reindex;
     }
 
-    @Override
+    public String getReferenceMobileNumber() {
+		return referenceMobileNumber;
+	}
+
+	public void setReferenceMobileNumber(String referenceMobileNumber) {
+		this.referenceMobileNumber = referenceMobileNumber;
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

@@ -79,7 +79,15 @@ public class BaseEntity {
         this.dateModified = dateModified;
     }
 
-    @Override
+    public void setCreatorId(Long creatorId) {
+		this.creatorId = creatorId;
+	}
+
+	public void setModifierId(Long modifierId) {
+		this.modifierId = modifierId;
+	}
+
+	@Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;

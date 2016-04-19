@@ -1,6 +1,7 @@
-package com.aristotle.admin.jsf.bean.dto;
+package com.aristotle.core.service.dto;
 
 import com.aristotle.core.persistance.Location;
+import com.aristotle.core.persistance.User;
 
 public class OfflineMember {
 
@@ -10,6 +11,8 @@ public class OfflineMember {
 	private Location selectedAc;
 	private Location selectedPc;
 	private String referenceMobile;
+	private String mobile;
+	private User createdBy;
 	
 	public String getName() {
 		return name;
@@ -46,5 +49,17 @@ public class OfflineMember {
 	}
 	public void setReferenceMobile(String referenceMobile) {
 		this.referenceMobile = referenceMobile;
+	}
+	public String getMobile() {
+		return mobile;
+	}
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+	public User getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(User createdBy) {
+		this.createdBy = createdBy;
 	}
 }
