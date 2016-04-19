@@ -1271,6 +1271,7 @@ public class UserServiceImpl implements UserService {
 		newUser.setName(member.getName());
 		newUser.setCreationType(CreationType.Admin_Created);
 		newUser.setReferenceMobileNumber(member.getReferenceMobile());
+		newUser.setReferenceUser(existingPhone.getUser());
 		addUserLocation(newUser, member.getSelectedState(), "Living");
         addUserLocation(newUser, member.getSelectedState(), "Voting");
         addUserLocation(newUser, member.getSelectedDistrict(), "Living");

@@ -62,6 +62,12 @@ public class User extends BaseEntity {
 
 	@Column(name = "nri")
 	private boolean nri;
+	
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @JoinColumn(name="reference_user_id")
+    private User referenceUser;
+	@Column(name="reference_user_id", insertable=false,updatable=false)
+	private Long referenceUserId;
 
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="nri_country_id")
@@ -808,6 +814,22 @@ public class User extends BaseEntity {
 
 	public void setReferenceMobileNumber(String referenceMobileNumber) {
 		this.referenceMobileNumber = referenceMobileNumber;
+	}
+
+	public Long getReferenceUserId() {
+		return referenceUserId;
+	}
+
+	public void setReferenceUserId(Long referenceUserId) {
+		this.referenceUserId = referenceUserId;
+	}
+
+	public User getReferenceUser() {
+		return referenceUser;
+	}
+
+	public void setReferenceUser(User referenceUser) {
+		this.referenceUser = referenceUser;
 	}
 
 	@Override
