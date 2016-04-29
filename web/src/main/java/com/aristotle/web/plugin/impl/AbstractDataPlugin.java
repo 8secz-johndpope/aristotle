@@ -379,7 +379,7 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
             if (user.getProfilePic().contains("facebook.com")) {
                 userJsonObject.addProperty("profilePic", user.getProfilePic());
             } else {
-                userJsonObject.addProperty("profilePic", "http://static.swarajabhiyan.org/" + user.getProfilePic());
+                userJsonObject.addProperty("profilePic", "//static.swarajabhiyan.org/" + user.getProfilePic());
             }
 
         }
@@ -424,6 +424,7 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
         oneJsonTeam.addProperty("id", membershipTransaction.getId());
         oneJsonTeam.addProperty("transactionDate", ddMMMyyyyFormat.format(membershipTransaction.getTransactionDate()));
         oneJsonTeam.addProperty("amount", membershipTransaction.getAmount());
+        oneJsonTeam.addProperty("source", membershipTransaction.getSource());
         return oneJsonTeam;
     }
     protected JsonArray convertMembershipTransactions(List<MembershipTransaction> membershipTransactions) {

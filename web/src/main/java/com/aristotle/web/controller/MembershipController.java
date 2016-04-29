@@ -90,7 +90,7 @@ public class MembershipController {
             }
             */
         }
-        modelAndView.setView(new RedirectView("http://www.swarajabhiyan.org/user/editprofile"));
+        modelAndView.setView(new RedirectView("//www.swarajabhiyan.org/user/editprofile"));
         return modelAndView;
     }
 
