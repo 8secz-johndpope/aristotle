@@ -1021,15 +1021,24 @@ public class UserServiceImpl implements UserService {
         }
         // If user existed before just make him
         Membership membership = new Membership();
-        Calendar calendar = Calendar.getInstance();
         membership.setStartDate(new Date());
-        calendar.add(Calendar.YEAR, 1);
-        membership.setEndDate(calendar.getTime());
+        membership.setEndDate(getMembershipEndDate());
         membership.setSource("IVR");
         membership.setUser(user);
         membership = membershipRepository.save(membership);
         user.setMember(true);
         return user;
+    }
+    private Date getMembershipEndDate(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DATE, 1);
+        calendar.set(Calendar.YEAR, 2018);
+        calendar.set(Calendar.MONTH, 2);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        return calendar.getTime();
     }
     
     private Membership createOnlineUserMembership(User user, String source, String sourceTransactionId, String fees){
@@ -1044,8 +1053,7 @@ public class UserServiceImpl implements UserService {
     	if(membership == null){
     		membership = new Membership();
     		membership.setStartDate(new Date());
-    		calendar.add(Calendar.YEAR, 1);
-            membership.setEndDate(calendar.getTime());
+            membership.setEndDate(getMembershipEndDate());
     	}else{
     		calendar.setTime(membership.getEndDate());
     		calendar.add(Calendar.YEAR, 1);
@@ -1075,8 +1083,7 @@ public class UserServiceImpl implements UserService {
     	if(membership == null){
     		membership = new Membership();
     		membership.setStartDate(new Date());
-    		calendar.add(Calendar.YEAR, 1);
-            membership.setEndDate(calendar.getTime());
+            membership.setEndDate(getMembershipEndDate());
     	}else{
     		calendar.setTime(membership.getEndDate());
     		calendar.add(Calendar.YEAR, 1);
