@@ -1031,7 +1031,7 @@ public class UserServiceImpl implements UserService {
     }
     private Date getMembershipEndDate(){
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DATE, 1);
+        calendar.set(Calendar.DATE, 31);
         calendar.set(Calendar.YEAR, 2018);
         calendar.set(Calendar.MONTH, 2);
         calendar.set(Calendar.HOUR_OF_DAY, 23);
