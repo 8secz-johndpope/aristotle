@@ -360,9 +360,8 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
 	public void searchMembers(String query) throws AppException {
 		AmazonCloudSearchQuery amazonCloudSearchQuery = new AmazonCloudSearchQuery();
 		amazonCloudSearchQuery.query = query;
-		amazonCloudSearchQuery.queryParser = "simple";
 		amazonCloudSearchQuery.start = 0;
-		amazonCloudSearchQuery.size = 16;
+		amazonCloudSearchQuery.size = 20;
 		amazonCloudSearchQuery.setDefaultOperator("or");
 		//amazonCloudSearchQuery.setFields("sku_no^11", "title^10", "description^9", "features^8", "specification^8", "categories^7");
 		try {
