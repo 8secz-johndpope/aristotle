@@ -362,7 +362,6 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
 		amazonCloudSearchQuery.query = query;
 		amazonCloudSearchQuery.start = 0;
 		amazonCloudSearchQuery.size = 20;
-		amazonCloudSearchQuery.setDefaultOperator("or");
 		//amazonCloudSearchQuery.setFields("sku_no^11", "title^10", "description^9", "features^8", "specification^8", "categories^7");
 		try {
 			AmazonCloudSearchResult amazonCloudSearchResult = getAmazonCloudSearchClient().search(amazonCloudSearchQuery);
