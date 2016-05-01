@@ -7,5 +7,7 @@ public interface UserSearchService {
     void indexUser(Long userId) throws AppException;
 
     void indexUsers() throws AppException;
+    
+    void searchMembers(String query) throws AppException;
 
 }

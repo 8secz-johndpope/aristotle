@@ -56,7 +56,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import aws.services.cloudsearchv2.AmazonCloudSearchInternalServerException;
+import aws.services.cloudsearchv2.AmazonCloudSearchRequestException;
 import aws.services.cloudsearchv2.documents.AmazonCloudSearchAddRequest;
+import aws.services.cloudsearchv2.search.AmazonCloudSearchQuery;
+import aws.services.cloudsearchv2.search.AmazonCloudSearchResult;
 
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Donation;
@@ -350,5 +354,25 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
         amazonCloudSearchAddRequest.addField(locationIdField, oneUserLocation.getLocation().getId().toString());
         amazonCloudSearchAddRequest.addField(locationNameField, oneUserLocation.getLocation().getName());
     }
+
+
+	@Override
+	public void searchMembers(String query) throws AppException {
+		AmazonCloudSearchQuery amazonCloudSearchQuery = new AmazonCloudSearchQuery();
+		amazonCloudSearchQuery.query = query;
+		amazonCloudSearchQuery.queryParser = "simple";
+		amazonCloudSearchQuery.start = 0;
+		amazonCloudSearchQuery.size = 16;
+		amazonCloudSearchQuery.setDefaultOperator("or");
+		//amazonCloudSearchQuery.setFields("sku_no^11", "title^10", "description^9", "features^8", "specification^8", "categories^7");
+		try {
+			AmazonCloudSearchResult amazonCloudSearchResult = getAmazonCloudSearchClient().search(amazonCloudSearchQuery);
+			System.out.println(amazonCloudSearchResult.toString());
+		} catch (IllegalStateException | AmazonCloudSearchRequestException
+				| AmazonCloudSearchInternalServerException e) {
+			throw new AppException(e);
+		}
+		
+	}
 
 }

@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.service.UserService;
 import com.aristotle.core.service.VideoDownloader;
+import com.aristotle.core.service.aws.UserSearchService;
 import com.aristotle.core.service.temp.LocationUpgradeService;
 import com.aristotle.web.plugin.PluginManager;
 import com.aristotle.web.ui.template.UiTemplateManager;
@@ -36,6 +37,9 @@ public class SetupController {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private UserSearchService userSearchService;
 
     @ExceptionHandler({ Exception.class })
     public String handleException(Exception ex) {
@@ -146,6 +150,15 @@ public class SetupController {
             ex.printStackTrace();
             return ex.getMessage();
         }
+
+        return "done";
+    }
+    
+    @RequestMapping("/sc/admin/members")
+    @ResponseBody
+    public String searchMembers(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
+        String query = httpServletRequest.getParameter("query");
+        userSearchService.searchMembers(query);
 
         return "done";
     }
