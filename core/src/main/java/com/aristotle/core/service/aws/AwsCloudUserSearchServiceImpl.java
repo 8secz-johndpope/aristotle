@@ -150,8 +150,8 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
         ensureTextIndex(MEMBER_FIELD, true, false, false);
         ensureTextIndex(DONOR_FIELD, true, false, false);
         ensureTextIndex(VOTER_ID_FIELD, true, false, false);
-        ensureTextIndex(MEMBER_START_DATE_FIELD, true, false, false);
-        ensureTextIndex(MEMBER_END_DATE_FIELD, true, false, false);
+        ensureTextIndex(MEMBER_START_DATE_FIELD, true, true, false);
+        ensureTextIndex(MEMBER_END_DATE_FIELD, true, true, false);
 
     }
 
