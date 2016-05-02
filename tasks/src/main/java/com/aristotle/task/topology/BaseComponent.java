@@ -83,6 +83,7 @@ public abstract class BaseComponent implements Serializable {
 
     protected void logError(String message, Throwable ex) {
         logger.error(getCurremtTupleAnchor() + " : " + message, ex);
+        logger.error(message, ex);
     }
 
     protected String getCurremtTupleAnchor() {

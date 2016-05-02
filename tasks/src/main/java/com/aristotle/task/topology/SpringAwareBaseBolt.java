@@ -57,6 +57,7 @@ public abstract class SpringAwareBaseBolt extends BaseComponent implements IRich
         }catch(Exception ex){
             result = Result.Failed;
             logError("Error", ex);
+            ex.printStackTrace();
         }
         sendResponse(result, input);
 
