@@ -365,7 +365,7 @@ public class RegisterController {
             jsonObject.addProperty("gender", gender);
             jsonObject.addProperty("amount", amount);
             jsonObject.addProperty("pm", paymentMode);
-            jsonObject.addProperty("sa_id", savedUser.getId());
+            jsonObject.addProperty("sa_id", savedUser.getMembershipNumber());
             httpStatus = HttpStatus.OK;
         } catch (Exception e) {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;

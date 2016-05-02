@@ -1056,18 +1056,19 @@ public class UserServiceImpl implements UserService {
     }
     
     private String getMembershipId(User user, Membership membership){
-    	if(user.isNri()){
-    		return "NR"+ membership.getId();
-    	}
     	String membershipId = user.getId().toString();
-    	UserLocation userLocation = userLocationRepository.getUserLocationByUserIdAndLocationTypesAndUserLocationType(user.getId(), "Living", "State");
-    	if(userLocation == null){
-    		userLocation = userLocationRepository.getUserLocationByUserIdAndLocationTypesAndUserLocationType(user.getId(), "Voting", "State");
+    	if(user.isNri()){
+    		membershipId = "NR"+ membership.getId();
+    	}else{
+    		UserLocation userLocation = userLocationRepository.getUserLocationByUserIdAndLocationTypesAndUserLocationType(user.getId(), "Living", "State");
+        	if(userLocation == null){
+        		userLocation = userLocationRepository.getUserLocationByUserIdAndLocationTypesAndUserLocationType(user.getId(), "Voting", "State");
+        	}
+        	if(userLocation != null){
+            	membershipId = userLocation.getLocation().getStateCode() + membership.getId();
+        	}
     	}
-    	if(userLocation == null){
-    		return membershipId;
-    	}
-    	membershipId = userLocation.getLocation().getStateCode() + membership.getId();
+        user.setMembershipNumber(membershipId);
     	return membershipId;
     }
     private Date getMembershipEndDate(){
