@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.aristotle.core.exception.AppException;
@@ -49,6 +50,11 @@ public class MembershipPlugin extends AbstractDataPlugin {
             if (user != null) {
             	logger.info("Get Membership of user = "+user.getId()+", "+user.getName());
             	Membership membership = userService.getUserMembership(user.getId());
+            	if(StringUtils.isEmpty(membership.getMembershipId())){
+            		membershipJsonObject.addProperty("membershipId", user.getId());
+            	}else{
+            		membershipJsonObject.addProperty("membershipId", membership.getMembershipId());
+            	}
 
             	List<MembershipTransaction> txns = userService.getUserMembershipTransactions(user.getId());
             	logger.info("membership = "+membership);

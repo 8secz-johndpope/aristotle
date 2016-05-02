@@ -20,6 +20,9 @@ public class Location extends BaseEntity {
 
     @Column(name = "isd_code")
     private String isdCode;
+    
+    @Column(name = "state_code")
+    private String stateCode;
 
     @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
     @JoinColumn(name="location_type_id")
@@ -81,7 +84,13 @@ public class Location extends BaseEntity {
     public void setIsdCode(String isdCode) {
         this.isdCode = isdCode;
     }
-    @Override
+    public String getStateCode() {
+		return stateCode;
+	}
+	public void setStateCode(String stateCode) {
+		this.stateCode = stateCode;
+	}
+	@Override
     public String toString() {
         return "Location [name=" + name + ", nameUp=" + nameUp + ", isdCode=" + isdCode + ", locationTypeId=" + locationTypeId + ", parentLocation=" + parentLocation + ", parentLocationId="
                 + parentLocationId

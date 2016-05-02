@@ -29,6 +29,9 @@ public class Membership extends BaseEntity {
 	@Column(name="user_id", insertable=false,updatable=false)
 	private Long userId;
 	
+	@Column(name = "membership_id")
+    private String membershipId;
+	
     public Date getStartDate() {
         return startDate;
     }
@@ -68,6 +71,14 @@ public class Membership extends BaseEntity {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
+
+	public String getMembershipId() {
+		return membershipId;
+	}
+
+	public void setMembershipId(String membershipId) {
+		this.membershipId = membershipId;
+	}
 
 	@Override
 	public String toString() {

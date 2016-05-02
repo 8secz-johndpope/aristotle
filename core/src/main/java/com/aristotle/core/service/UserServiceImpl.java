@@ -96,6 +96,8 @@ public class UserServiceImpl implements UserService {
     private AwsFileManager awsFileManager;
     @Autowired
     private UserSearchService userSearchService;
+    
+    private Map<String, Long> ivrStateToSaDbMap;
 
     @Value("${aws_access_key}")
     private String awsKey;
@@ -111,6 +113,11 @@ public class UserServiceImpl implements UserService {
     private final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
 
+    public UserServiceImpl() {
+    	ivrStateToSaDbMap.put("DELHI", 12L);
+    	ivrStateToSaDbMap.put("RAJASTHAN", 12L);
+
+	}
     @Autowired
     private EmailRepository emailRepository;
 
@@ -1021,6 +1028,11 @@ public class UserServiceImpl implements UserService {
         //
         user.setIvrState(state);
         user.setIvrDistrict(district);
+        if(!StringUtils.isBlank(state)){
+        	Location stateLocation = locationRepository.getLocationByNameUpAndLocationTypeId(state.toUpperCase(), 4L);
+        	addUserLocation(user, stateLocation, "Living");
+        	addUserLocation(user, stateLocation, "Voting");
+        }
         if (StringUtils.isBlank(user.getSmsMessage())) {
             user.setSmsMessage(msg);
         }
@@ -1044,9 +1056,26 @@ public class UserServiceImpl implements UserService {
         }
         membership.setEndDate(getMembershipEndDate());
         membership = membershipRepository.save(membership);
+        membership.setMembershipId(getMembershipId(user, membership));
         user.setMember(true);
         sendMemberForIndexing(user);
         return user;
+    }
+    
+    private String getMembershipId(User user, Membership membership){
+    	if(user.isNri()){
+    		return "NR"+ membership.getId();
+    	}
+    	String membershipId = user.getId().toString();
+    	UserLocation userLocation = userLocationRepository.getUserLocationByUserIdAndLocationTypesAndUserLocationType(user.getId(), "Living", "State");
+    	if(userLocation == null){
+    		userLocation = userLocationRepository.getUserLocationByUserIdAndLocationTypesAndUserLocationType(user.getId(), "Voting", "State");
+    	}
+    	if(userLocation == null){
+    		return membershipId;
+    	}
+    	membershipId = userLocation.getLocation().getStateCode() + membership.getId();
+    	return membershipId;
     }
     private Date getMembershipEndDate(){
         Calendar calendar = Calendar.getInstance();
@@ -1082,6 +1111,7 @@ public class UserServiceImpl implements UserService {
         membership.setUser(user);
         membership = membershipRepository.save(membership);
         user.setMember(true);
+        membership.setMembershipId(getMembershipId(user, membership));
         
         membershipTransaction = new MembershipTransaction();
         membershipTransaction.setMembership(membership);
@@ -1112,6 +1142,7 @@ public class UserServiceImpl implements UserService {
         membership.setUser(user);
         membership = membershipRepository.save(membership);
         user.setMember(true);
+        membership.setMembershipId(getMembershipId(user, membership));
         
         membershipTransaction = new MembershipTransaction();
         membershipTransaction.setMembership(membership);
