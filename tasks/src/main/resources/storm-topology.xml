@@ -277,7 +277,7 @@
             </map>
         </property>
     </bean>
-    <bean id="MemberRefreshBoltBean" class="com.aristotle.task.bolt.donation.MemberRefreshBolt">
+    <bean id="MemberRefreshBoltBean" class="com.aristotle.task.bolt.member.MemberRefreshBolt">
         <property name="componentId" value="MemberRefreshBolt" />
         <property name="sourceComponentStreams">
             <map>
