@@ -55,6 +55,7 @@ import com.aristotle.core.persistance.repo.PhoneRepository;
 import com.aristotle.core.persistance.repo.UserLocationRepository;
 import com.aristotle.core.persistance.repo.UserRepository;
 import com.aristotle.core.persistance.repo.VolunteerRepository;
+import com.aristotle.core.service.aws.UserSearchService;
 import com.aristotle.core.service.dto.OfflineMember;
 import com.aristotle.core.service.dto.SearchUser;
 import com.aristotle.core.service.dto.UserContactBean;
@@ -93,6 +94,8 @@ public class UserServiceImpl implements UserService {
     private MembershipTransactionRepository membershipTransactionRepository;
     @Autowired
     private AwsFileManager awsFileManager;
+    @Autowired
+    private UserSearchService userSearchService;
 
     @Value("${aws_access_key}")
     private String awsKey;
@@ -385,6 +388,7 @@ public class UserServiceImpl implements UserService {
         if (email != null) {
             sendEmailConfirmtionEmail(email.getEmail());
         }
+        sendMemberForIndexing(dbUser);
         //
     }
 
@@ -585,6 +589,7 @@ public class UserServiceImpl implements UserService {
         updateLocations(user, userPersonalDetailBean);
 
         user = userRepository.save(user);
+        sendMemberForIndexing(user);
 
     }
 
@@ -1040,6 +1045,7 @@ public class UserServiceImpl implements UserService {
         membership.setEndDate(getMembershipEndDate());
         membership = membershipRepository.save(membership);
         user.setMember(true);
+        sendMemberForIndexing(user);
         return user;
     }
     private Date getMembershipEndDate(){
@@ -1158,7 +1164,7 @@ public class UserServiceImpl implements UserService {
             phone.setUser(user);
             phone = phoneRepository.save(phone);
         }
-
+        sendMemberForIndexing(user);
         return userSearchResultForEdting;
     }
 
@@ -1244,7 +1250,7 @@ public class UserServiceImpl implements UserService {
         addUserLocation(dbUser, ac, "Voting");
         addUserLocation(dbUser, pc, "Living");
         addUserLocation(dbUser, pc, "Voting");
-
+        sendMemberForIndexing(dbUser);
     }
 
     private void addUserLocation(User dbuser, Location location, String userLocationType) {
@@ -1308,7 +1314,7 @@ public class UserServiceImpl implements UserService {
         newUser = userRepository.save(newUser);
         
         createOfflineUserMembership(newUser, "50.00");
-        
+        sendMemberForIndexing(newUser);
         return newUser;
 		
 	}
@@ -1318,6 +1324,13 @@ public class UserServiceImpl implements UserService {
 		Pageable pageable = new PageRequest(0, 50);
 		Page<User> users = userRepository.searchUserByCreatorId(userId, pageable);
 		return convertUsers(users.getContent());
+	}
+	
+	private void sendMemberForIndexing(User user) throws AppException{
+		if(user.isMember()){
+			userSearchService.sendUserForIndexing(user.getId().toString());
+		
+		}
 	}
 
 
