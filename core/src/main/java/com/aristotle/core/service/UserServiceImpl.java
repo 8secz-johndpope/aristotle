@@ -1020,11 +1020,24 @@ public class UserServiceImpl implements UserService {
             user.setSmsMessage(msg);
         }
         // If user existed before just make him
-        Membership membership = new Membership();
-        membership.setStartDate(new Date());
+        Membership membership = membershipRepository.getMembershipByUserId(user.getId());
+        if(membership == null){
+        	membership = new Membership();
+            membership.setStartDate(new Date());
+            membership.setSource("IVR");
+            membership.setUser(user);
+            
+            MembershipTransaction membershipTransaction = new MembershipTransaction();
+            membershipTransaction.setMembership(membership);
+            membershipTransaction.setSource("IVR");
+            Calendar calendar = Calendar.getInstance();
+            membershipTransaction.setSourceTransactionId(user.getId()+"_"+amount+"_"+calendar.get(Calendar.YEAR)+(calendar.get(Calendar.MONTH)+1)+calendar.get(Calendar.DATE));
+            membershipTransaction.setTransactionDate(new Date());
+            membershipTransaction.setAmount(amount);
+            membershipTransaction = membershipTransactionRepository.save(membershipTransaction);
+
+        }
         membership.setEndDate(getMembershipEndDate());
-        membership.setSource("IVR");
-        membership.setUser(user);
         membership = membershipRepository.save(membership);
         user.setMember(true);
         return user;

@@ -58,6 +58,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import aws.services.cloudsearchv2.AmazonCloudSearchInternalServerException;
 import aws.services.cloudsearchv2.AmazonCloudSearchRequestException;
@@ -383,7 +384,7 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
 
 	@Override
 	public void sendUserForIndexing(String userId) throws AppException {
-		if(userId == null){
+		if(StringUtils.isEmpty(userId)){
 			Sort sort = new Sort(new Sort.Order(Direction.ASC, "id"));
 			Pageable pageable = new PageRequest(0, 100, sort);
 			Page<Membership> members;
