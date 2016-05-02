@@ -83,7 +83,7 @@ public class RegisterController {
     boolean ignore = false;
     @RequestMapping(value = {"/js/registeruser", "/registeruser"}, method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<String> saveUserProfile(HttpServletRequest httpServletRequest, @RequestBody UserRegisterBean user) {
+    public ResponseEntity<String> saveUserProfile(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @RequestBody UserRegisterBean user) {
         JsonObject jsonObject = new JsonObject();
         HttpStatus httpStatus;
         System.out.println("UserRegisterBean = " + user);
@@ -140,6 +140,10 @@ public class RegisterController {
                 try {
                     System.out.println("saving User " + user);
                     userService.registerUser(user);
+                    UserLoginBean userLoginBean = new UserLoginBean();
+                    userLoginBean.setUserName(user.getEmailId());
+                    userLoginBean.setPassword(user.getPassword());
+                    loginUser(httpServletRequest, httpServletResponse, userLoginBean);
                     httpStatus = HttpStatus.OK;
                     jsonObject.addProperty("message", "User Registered Succesfully");
                 } catch (FieldsAppException ex) {
