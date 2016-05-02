@@ -97,8 +97,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserSearchService userSearchService;
     
-    private Map<String, Long> ivrStateToSaDbMap;
-
     @Value("${aws_access_key}")
     private String awsKey;
     @Value("${aws_access_secret}")
@@ -113,11 +111,6 @@ public class UserServiceImpl implements UserService {
     private final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
 
-    public UserServiceImpl() {
-    	ivrStateToSaDbMap.put("DELHI", 12L);
-    	ivrStateToSaDbMap.put("RAJASTHAN", 12L);
-
-	}
     @Autowired
     private EmailRepository emailRepository;
 
