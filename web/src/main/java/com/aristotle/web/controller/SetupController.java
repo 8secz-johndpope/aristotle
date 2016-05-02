@@ -37,7 +37,7 @@ public class SetupController {
 
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private UserSearchService userSearchService;
 
@@ -162,5 +162,13 @@ public class SetupController {
 
         return "done";
     }
+    @RequestMapping("/sc/admin/memberrefresh")
+    @ResponseBody
+    public String refreshMembers(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
+        String userId = httpServletRequest.getParameter("userId");
+        userSearchService.sendUserForIndexing(userId);
+        return "done";
+    }
+    
 
 }

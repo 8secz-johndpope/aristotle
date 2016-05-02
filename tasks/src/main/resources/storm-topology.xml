@@ -31,6 +31,7 @@
 				<ref bean="TwitterReportEmailScheduleSpoutBean" />
 				<ref bean="RefreshYoutubeVideoSpoutBean" />
 				<ref bean="DonationRefreshSpoutBean" />
+				<ref bean="MemberRefreshSpoutBean" />
 				
 			</list>
 		</property>
@@ -49,6 +50,7 @@
 				<ref bean="GenerateDailyTwitterReportEmailBoltBean" />
 				<ref bean="RefreshYoutubeVideoBoltBean" />
 				<ref bean="DonationRefreshBoltBean" />
+				<ref bean="MemberRefreshBoltBean" />
 			</list>
 		</property>
 	</bean>
@@ -112,6 +114,14 @@
         <property name="outputStream">
             <bean class="com.aristotle.task.topology.beans.Stream">
                 <property name="streamId" value="DonationRefreshSpoutStream" />
+            </bean>
+        </property>
+    </bean>
+    <bean id="MemberRefreshSpoutBean" class="com.aristotle.task.spout.MemberRefreshSpout">
+        <property name="componentId" value="MemberRefreshSpout" />
+        <property name="outputStream">
+            <bean class="com.aristotle.task.topology.beans.Stream">
+                <property name="streamId" value="MemberRefreshSpoutStream" />
             </bean>
         </property>
     </bean>
@@ -264,6 +274,14 @@
         <property name="sourceComponentStreams">
             <map>
                 <entry key="DonationRefreshSpout" value="DonationRefreshSpoutStream" />
+            </map>
+        </property>
+    </bean>
+    <bean id="MemberRefreshBoltBean" class="com.aristotle.task.bolt.donation.MemberRefreshBolt">
+        <property name="componentId" value="MemberRefreshBolt" />
+        <property name="sourceComponentStreams">
+            <map>
+                <entry key="MemberRefreshSpout" value="MemberRefreshSpoutStream" />
             </map>
         </property>
     </bean>

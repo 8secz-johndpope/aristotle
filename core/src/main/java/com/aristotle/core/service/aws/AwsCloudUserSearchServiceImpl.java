@@ -48,11 +48,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.omg.CORBA.portable.ApplicationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,6 +78,7 @@ import com.aristotle.core.persistance.UserLocation;
 import com.aristotle.core.persistance.repo.MembershipRepository;
 import com.aristotle.core.persistance.repo.UserLocationRepository;
 import com.aristotle.core.persistance.repo.UserRepository;
+import com.google.gson.JsonObject;
 
 @Service
 @Transactional
@@ -89,6 +93,9 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
 
     @Autowired
     private MembershipRepository membershipRepository;
+    
+    @Autowired
+    private QueueService queueService;
 
 
     @Autowired
@@ -373,4 +380,36 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
 		
 	}
 
+
+	@Override
+	public void sendUserForIndexing(String userId) throws AppException {
+		if(userId == null){
+			Sort sort = new Sort(new Sort.Order(Direction.ASC, "id"));
+			Pageable pageable = new PageRequest(0, 100, sort);
+			Page<Membership> members;
+			while(true){
+				members = membershipRepository.findAll(pageable);	
+				if(members.getContent().isEmpty()){
+					break;
+				}
+				for(Membership oneMembership : members.getContent()){
+					sendMessage(oneMembership.getUserId().toString());
+				}
+			}
+        }else{
+        	sendMessage(userId);
+        }		
+	}
+	private void sendMessage(String userId) throws AppException{
+		try {
+			queueService.sendRefreshUserMessage(buildUserRefreshMessage(userId));
+		} catch (ApplicationException e) {
+			throw new AppException(e);
+		}
+	}
+	private String buildUserRefreshMessage(String userId){
+    	JsonObject jsonObject = new JsonObject();
+    	jsonObject.addProperty("userId", userId);
+    	return jsonObject.toString();
+    }
 }

@@ -9,5 +9,7 @@ public interface UserSearchService {
     void indexUsers() throws AppException;
     
     void searchMembers(String query) throws AppException;
+    
+    void sendUserForIndexing(String userId) throws AppException;
 
 }
