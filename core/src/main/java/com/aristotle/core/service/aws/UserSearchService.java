@@ -12,7 +12,7 @@ public interface UserSearchService {
 
     void indexUsers() throws AppException;
     
-    List<Hit> searchMembers(String query) throws AppException;
+    String searchMembers(String query) throws AppException;
     
     void sendUserForIndexing(String userId) throws AppException;
 

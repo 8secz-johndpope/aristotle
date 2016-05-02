@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.aristotle.core.exception.AppException;
+import com.aristotle.core.service.HttpUtil;
 import com.aristotle.core.service.UserService;
 import com.aristotle.core.service.VideoDownloader;
 import com.aristotle.core.service.aws.UserSearchService;
@@ -44,7 +45,7 @@ public class SetupController {
 
     @Autowired
     private UserSearchService userSearchService;
-
+    
     @ExceptionHandler({ Exception.class })
     public String handleException(Exception ex) {
         ex.printStackTrace();
@@ -160,11 +161,10 @@ public class SetupController {
     
     @RequestMapping("/sc/admin/members")
     @ResponseBody
-    public List<Hit> searchMembers(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
+    public String searchMembers(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
         String query = httpServletRequest.getParameter("query");
-        List<Hit> hits = userSearchService.searchMembers(query);
-    	System.out.println("hits = "+hits);
-        return hits;
+        String result = userSearchService.searchMembers(query);
+        return result;
     }
     @RequestMapping("/sc/admin/memberrefresh")
     @ResponseBody

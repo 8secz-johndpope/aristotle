@@ -44,6 +44,7 @@ import static com.aristotle.core.service.aws.UserDocumentField.VOTING_PC_ID_FIEL
 import static com.aristotle.core.service.aws.UserDocumentField.VOTING_STATE_FIELD;
 import static com.aristotle.core.service.aws.UserDocumentField.VOTING_STATE_ID_FIELD;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -80,6 +81,7 @@ import com.aristotle.core.persistance.UserLocation;
 import com.aristotle.core.persistance.repo.MembershipRepository;
 import com.aristotle.core.persistance.repo.UserLocationRepository;
 import com.aristotle.core.persistance.repo.UserRepository;
+import com.aristotle.core.service.HttpUtil;
 import com.google.gson.JsonObject;
 
 @Service
@@ -98,6 +100,9 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
     
     @Autowired
     private QueueService queueService;
+    
+    @Autowired
+    private HttpUtil httpUtil;
 
 
     @Autowired
@@ -366,21 +371,15 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
 
 
 	@Override
-	public List<Hit> searchMembers(String query) throws AppException {
-		AmazonCloudSearchQuery amazonCloudSearchQuery = new AmazonCloudSearchQuery();
-		amazonCloudSearchQuery.query = query;
-		amazonCloudSearchQuery.start = 0;
-		amazonCloudSearchQuery.size = 20;
-		//amazonCloudSearchQuery.setFields("sku_no^11", "title^10", "description^9", "features^8", "specification^8", "categories^7");
+	public String searchMembers(String query) throws AppException {
+        String response;
 		try {
-			AmazonCloudSearchResult amazonCloudSearchResult = getAmazonCloudSearchClient().search(amazonCloudSearchQuery);
-			System.out.println(amazonCloudSearchResult.toString());
-			return amazonCloudSearchResult.hits;
-		} catch (IllegalStateException | AmazonCloudSearchRequestException
-				| AmazonCloudSearchInternalServerException e) {
+			response = httpUtil.getResponse(getSearchEndpoint()+"/2013-01-01/search?q="+query+"&return=_all_fields&sort=_score+desc");
+			System.out.println("Response = "+response);
+	        return response;
+		} catch (IOException e) {
 			throw new AppException(e);
 		}
-		
 	}
 
 

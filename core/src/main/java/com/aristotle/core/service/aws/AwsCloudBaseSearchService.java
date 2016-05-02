@@ -168,4 +168,8 @@ public abstract class AwsCloudBaseSearchService {
             throw new AppException(ex);
         }
     }
+
+	public String getSearchEndpoint() {
+		return searchEndpoint;
+	}
 }
