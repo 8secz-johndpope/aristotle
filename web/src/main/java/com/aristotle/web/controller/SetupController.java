@@ -1,5 +1,7 @@
 package com.aristotle.web.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,6 +21,8 @@ import com.aristotle.web.plugin.PluginManager;
 import com.aristotle.web.ui.template.UiTemplateManager;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
+
+import aws.services.cloudsearchv2.search.Hit;
 
 @Controller
 public class SetupController {
@@ -156,11 +160,11 @@ public class SetupController {
     
     @RequestMapping("/sc/admin/members")
     @ResponseBody
-    public String searchMembers(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
+    public List<Hit> searchMembers(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
         String query = httpServletRequest.getParameter("query");
-        userSearchService.searchMembers(query);
-
-        return "done";
+        List<Hit> hits = userSearchService.searchMembers(query);
+    	System.out.println("hits = "+hits);
+        return hits;
     }
     @RequestMapping("/sc/admin/memberrefresh")
     @ResponseBody

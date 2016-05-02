@@ -1,6 +1,10 @@
 package com.aristotle.core.service.aws;
 
+import java.util.List;
+
 import com.aristotle.core.exception.AppException;
+
+import aws.services.cloudsearchv2.search.Hit;
 
 public interface UserSearchService {
 
@@ -8,7 +12,7 @@ public interface UserSearchService {
 
     void indexUsers() throws AppException;
     
-    void searchMembers(String query) throws AppException;
+    List<Hit> searchMembers(String query) throws AppException;
     
     void sendUserForIndexing(String userId) throws AppException;
 

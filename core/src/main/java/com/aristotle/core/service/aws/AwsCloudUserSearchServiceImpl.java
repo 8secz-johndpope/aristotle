@@ -65,6 +65,7 @@ import aws.services.cloudsearchv2.AmazonCloudSearchRequestException;
 import aws.services.cloudsearchv2.documents.AmazonCloudSearchAddRequest;
 import aws.services.cloudsearchv2.search.AmazonCloudSearchQuery;
 import aws.services.cloudsearchv2.search.AmazonCloudSearchResult;
+import aws.services.cloudsearchv2.search.Hit;
 
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Donation;
@@ -365,7 +366,7 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
 
 
 	@Override
-	public void searchMembers(String query) throws AppException {
+	public List<Hit> searchMembers(String query) throws AppException {
 		AmazonCloudSearchQuery amazonCloudSearchQuery = new AmazonCloudSearchQuery();
 		amazonCloudSearchQuery.query = query;
 		amazonCloudSearchQuery.start = 0;
@@ -374,6 +375,7 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
 		try {
 			AmazonCloudSearchResult amazonCloudSearchResult = getAmazonCloudSearchClient().search(amazonCloudSearchQuery);
 			System.out.println(amazonCloudSearchResult.toString());
+			return amazonCloudSearchResult.hits;
 		} catch (IllegalStateException | AmazonCloudSearchRequestException
 				| AmazonCloudSearchInternalServerException e) {
 			throw new AppException(e);
