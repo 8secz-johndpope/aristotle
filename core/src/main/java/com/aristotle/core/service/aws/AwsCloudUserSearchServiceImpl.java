@@ -395,6 +395,7 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
 				for(Membership oneMembership : members.getContent()){
 					sendMessage(oneMembership.getUserId().toString());
 				}
+				pageable = pageable.next();
 			}
         }else{
         	sendMessage(userId);
