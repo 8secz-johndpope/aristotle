@@ -209,13 +209,12 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
         if(user.getDateOfBirth() != null){
             amazonCloudSearchAddRequest.addField(DATE_OF_BIRTH_FIELD, dateFormat.format(user.getDateOfBirth()));
         }
-        List<UserLocation> userLocations = userLocationRepository.getUserLocationByUserId(user.getId());
         if (user.isNri()) {
             amazonCloudSearchAddRequest.addField(NRI_FIELD, "yes");
         } else {
             amazonCloudSearchAddRequest.addField(NRI_FIELD, "no");
         }
-        addUserLocationField(userLocations, amazonCloudSearchAddRequest);
+        addUserLocationField(user, amazonCloudSearchAddRequest);
         amazonCloudSearchAddRequest.addField(PROFILE_FIELD, user.getProfile());
         addFacebookAccountField(user.getFacebookAccounts(), amazonCloudSearchAddRequest);
         addTwitterAccountField(user.getTwitterAccounts(), amazonCloudSearchAddRequest);
@@ -318,7 +317,12 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
         */
     }
 
-    private void addUserLocationField(List<UserLocation> userLocations, AmazonCloudSearchAddRequest amazonCloudSearchAddRequest) {
+    private void addUserLocationField(User user, AmazonCloudSearchAddRequest amazonCloudSearchAddRequest) {
+        List<UserLocation> userLocations = userLocationRepository.getUserLocationByUserId(user.getId());
+
+    	if(userLocations == null){
+    		return;
+    	}
         for (UserLocation oneUserLocation : userLocations) {
             if (oneUserLocation.getLocation().getLocationType().getName().equalsIgnoreCase("Country")) {
                 if (!oneUserLocation.getLocation().getName().equalsIgnoreCase("India")) {
