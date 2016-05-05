@@ -50,7 +50,7 @@ public class MembershipPlugin extends AbstractDataPlugin {
             if (user != null) {
             	logger.info("Get Membership of user = "+user.getId()+", "+user.getName());
             	Membership membership = userService.getUserMembership(user.getId());
-            	if(StringUtils.isEmpty(membership.getMembershipId())){
+            	if(membership == null || StringUtils.isEmpty(membership.getMembershipId())){
             		membershipJsonObject.addProperty("membershipId", user.getId());
             	}else{
             		membershipJsonObject.addProperty("membershipId", membership.getMembershipId());

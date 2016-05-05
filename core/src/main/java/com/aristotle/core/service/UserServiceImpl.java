@@ -1060,12 +1060,22 @@ public class UserServiceImpl implements UserService {
     	if(user.isNri()){
     		membershipId = "NR"+ membership.getId();
     	}else{
-    		UserLocation userLocation = userLocationRepository.getUserLocationByUserIdAndLocationTypesAndUserLocationType(user.getId(), "Living", "State");
-        	if(userLocation == null){
-        		userLocation = userLocationRepository.getUserLocationByUserIdAndLocationTypesAndUserLocationType(user.getId(), "Voting", "State");
-        	}
-        	if(userLocation != null){
-            	membershipId = userLocation.getLocation().getStateCode() + membership.getId();
+    		List<UserLocation> userLocations = userLocationRepository.getUserLocationByUserId(user.getId());
+    		UserLocation livingState = null;
+    		UserLocation votingState = null;
+    		for(UserLocation oneUserLocation : userLocations){
+    			if(oneUserLocation.getLocation().getLocationType().getName().equals("State") ){
+    				if(oneUserLocation.getUserLocationType().equals("Living")){
+    					livingState = oneUserLocation;
+    				}else{
+    					votingState = oneUserLocation;
+    				}
+    			}
+    		}
+        	if(livingState != null){
+            	membershipId = livingState.getLocation().getStateCode() + membership.getId();
+        	}else if(votingState != null ){
+            	membershipId = votingState.getLocation().getStateCode() + membership.getId();
         	}
     	}
         user.setMembershipNumber(membershipId);
