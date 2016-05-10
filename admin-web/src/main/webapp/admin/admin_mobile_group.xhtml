@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Mobile Groups - Admin Panel</title>
+	<style>
+.topAlignPanelColumns td {
+	vertical-align: top;
+}
+
+.pf-dock-container-top {
+	background-image: none;
+	background-color: white;
+}
+
+.ui-dock-item-top {
+	color: black;
+}
+
+.ui-dock-container-top {
+	color: black;
+}
+
+.ui-selectonemenu {
+	width: 100px;
+}
+
+.ui-widget, .ui-widget .ui-widget {
+	font-size: 90% !important;
+}
+</style>
+
+</h:head>
+<h:body>
+	<ui:include src="admin_menu.xhtml" />
+	<!-- menu ends -->
+	<div style="width: 1200px; margin: 0 auto;">
+		<div style="width: 1200px; margin: 0;">
+			<p:blockUI block="adminMobileGroupBeanForm" trigger=":adminMobileGroupBeanForm:saveMobileGroup,:adminMobileGroupBeanForm:addMobileGroup">
+			Loading...<br />
+				<p:graphicImage width="80" value="http://static.eswaraj.com/admin/images/ajax-loader.gif" />
+			</p:blockUI>
+			<h:form id="adminMobileGroupBeanForm">
+				<p:messages id="messages" autoUpdate="true" closable="true" />
+				<p:outputPanel id="mainPanel">
+					<p:outputPanel id="listView" rendered="#{adminMobileGroupBean.showList}">
+
+						<p:commandButton value="Create Team" actionListener="#{adminMobileGroupBean.createMobileGroup}" update=":adminMobileGroupBeanForm:mainPanel">
+						</p:commandButton>
+						<p:dataTable id="listOfTeam" var="oneTeam" value="#{adminMobileGroupBean.mobileGroups}" paginator="true" rows="25" paginatorPosition="bottom" paginatorAlwaysVisible="false"
+							emptyMessage="No Team" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15">
+							<f:facet name="header">Team</f:facet>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Id" />
+								</f:facet>
+								<h:outputText value="#{oneTeam.id}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Name" />
+								</f:facet>
+								<h:outputText value="#{oneTeam.name}" />
+							</p:column>
+							<p:column style="width:100px;">
+								<f:facet name="header">
+									<h:outputText value="Update" />
+								</f:facet>
+								<p:commandLink update=":adminMobileGroupBeanForm:mainPanel" title="Update Team">
+									<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/tango-icon-library/48/edit-redo-48.png" height="20" />
+									<f:setPropertyActionListener value="#{oneTeam}" target="#{adminMobileGroupBean.selectedMobileGroup}" />
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+					</p:outputPanel>
+					<p:outputPanel id="formView" rendered="#{!adminMobileGroupBean.showList}">
+						<p:panelGrid columns="2">
+							<p:outputLabel value="Name"></p:outputLabel>
+							<p:inputText value="#{adminMobileGroupBean.selectedMobileGroup.name}" style="width:600px">
+							</p:inputText>
+							<p:outputLabel value="Description"></p:outputLabel>
+							<p:editor id="editor" value="#{adminMobileGroupBean.selectedMobileGroup.description}" width="600" height="500">
+							</p:editor>
+						</p:panelGrid>
+						<br></br>
+						<p:outputPanel id="buttonPanel">
+							<p:commandButton value="Cancel" update=":adminMobileGroupBeanForm:mainPanel" actionListener="#{adminMobileGroupBean.cancel}" styleClass="ui-priority-primary">
+							</p:commandButton>
+							<p:commandButton id="saveMobileGroup" value="Save Team" update=":adminMobileGroupBeanForm:mainPanel" actionListener="#{adminMobileGroupBean.saveMobileGroup}" styleClass="ui-priority-primary">
+							</p:commandButton>
+						</p:outputPanel>
+
+
+						<p:outputPanel id="newMemberPanel" rendered="#{adminMobileGroupBean.showMemberPanel}">
+						<p:outputPanel id="newMemberPanelInner">
+							<p:outputLabel value="Email/Mobile Number(10 digits without country code)"></p:outputLabel>
+							<p:inputText value="#{adminMobileGroupBean.emailMobile}"></p:inputText>
+							
+							<p:commandButton id="addMobileGroup" value="Add Group Member" update=":adminMobileGroupBeanForm:mainPanel" actionListener="#{adminMobileGroupBean.saveMobileGroupMember}"
+								styleClass="ui-priority-primary">
+							</p:commandButton>
+						</p:outputPanel>
+
+						<p:dataTable id="listOfTeamMembers" var="oneMobileGroupMember" value="#{adminMobileGroupBean.mobileGroupMembers}" paginator="true" rows="100" paginatorPosition="bottom"
+							paginatorAlwaysVisible="false" emptyMessage="No Team"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+							<f:facet name="header">Mobile Group Members</f:facet>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Id" />
+								</f:facet>
+								<h:outputText value="#{oneMobileGroupMember.id}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Name" />
+								</f:facet>
+								<h:outputText value="#{oneMobileGroupMember.phone.phoneNumber}" />
+							</p:column>
+							<p:column style="width:100px;">
+								<f:facet name="header">
+									<h:outputText value="Delete" />
+								</f:facet>
+								<p:commandLink update=":adminMobileGroupBeanForm:mainPanel" title="Delete Member" id="deleteMember">
+									<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/line-icons-set/128/1-04-48.png" height="20" />
+									<f:setPropertyActionListener value="#{oneMobileGroupMember}" target="#{adminMobileGroupBean.deleteMobileGroupMember}" />
+								</p:commandLink>
+								<p:blockUI block="adminMobileGroupBeanForm" trigger=":adminMobileGroupBeanForm:listOfTeamMembers:deleteMember">
+            Deleting...<br />
+									<p:graphicImage width="80" value="http://static.eswaraj.com/admin/images/ajax-loader.gif" />
+								</p:blockUI>
+							</p:column>
+						</p:dataTable>
+						</p:outputPanel>
+					</p:outputPanel>
+				</p:outputPanel>
+				<br></br>
+				<br></br>
+				<br></br>
+				<br></br>
+			</h:form>
+
+
+			<!-- footer starts -->
+			<div class="footerWrapper">
+				<div class="container_24">
+					<div class="grid_24 panel footer">
+						Copyright &copy; 2015 <a href="#">www.swarajabhiyan.org</a>. All Rights Reserved.
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<!-- footer ends -->
+		</div>
+	</div>
+
+</h:body>
+</html>

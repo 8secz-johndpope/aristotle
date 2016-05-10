@@ -1,14 +1,17 @@
 package com.aristotle.core.persistance;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -35,6 +38,9 @@ public class LocationType extends BaseEntity {
     })
     private Set<Role> roles;
 
+    @OneToMany(mappedBy = "parentLocationType", fetch = FetchType.EAGER)
+    private List<LocationType> childLocationTypes;
+
     public String getName() {
         return name;
     }
@@ -60,6 +66,14 @@ public class LocationType extends BaseEntity {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public List<LocationType> getChildLocationTypes() {
+        return childLocationTypes;
+    }
+
+    public void setChildLocationTypes(List<LocationType> childLocationTypes) {
+        this.childLocationTypes = childLocationTypes;
     }
     @Override
     public String toString() {

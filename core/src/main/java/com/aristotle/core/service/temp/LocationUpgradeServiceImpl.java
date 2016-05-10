@@ -309,7 +309,10 @@ public class LocationUpgradeServiceImpl implements LocationUpgradeService {
                 true, false, AppPermission.ADD_MEMBER, AppPermission.UPDATE_GLOBAL_MEMBER, AppPermission.VIEW_MEMBER);
 
         createRoleWithPermissions("MemberAdminRole", "User of this role will be able to add new member at any location and will be able to update member at his location only", true, true, true, true,
-                true, true, false, AppPermission.ADD_MEMBER, AppPermission.UPDATE_MEMBER, AppPermission.VIEW_MEMBER);
+                true, true, false, AppPermission.ADD_MEMBER, AppPermission.UPDATE_MEMBER, AppPermission.VIEW_MEMBER, AppPermission.SEARCH_MEMBER);
+
+        createRoleWithPermissions("MemberSearchRole", "User of this role will be able to search member at his/her location or below it", true, true, true, true,
+                true, true, false, AppPermission.SEARCH_MEMBER);
 
         createRoleWithPermissions("AdminEditUserRoles", "User of this role will be able to add or remove user roles on a location", true, true, true, true, true, true, false,
                 AppPermission.EDIT_USER_ROLES);
@@ -355,7 +358,11 @@ public class LocationUpgradeServiceImpl implements LocationUpgradeService {
         createRoleWithPermissions("Web Developer", "User of this role will be able to edit template for website ", true, true, true, true, true, true, true, AppPermission.WEB_ADMIN_DRAFT);
         createRoleWithPermissions("Web Developer Admin", "User of this role will be able to edit template for website and publish them", true, true, true, true, true, true, true,
                 AppPermission.WEB_ADMIN);
+        createRoleWithPermissions("Team Admin", "User of this role will be able to edit Various Teams", true, true, true, true, true, true, true, AppPermission.EDIT_TEAM);
+        createRoleWithPermissions("Call Campaign Admin", "User of this role will be able to edit Various Call Campaigns", true, true, true, true, true, true, true, AppPermission.CALL_CAMPAIGN_ADMIN);
         logger.info("All Roles and permissions are created");
+        createRoleWithPermissions("User Data Upload Admin", "User of this role will be able to Upload various user data using CSV files", true, true, true, true, true, true, true,
+                AppPermission.USER_DATA_UPLOAD);
 
     }
 

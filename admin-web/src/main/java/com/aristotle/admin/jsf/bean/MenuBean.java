@@ -4,17 +4,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
+import com.aristotle.admin.jsf.convertors.LocationConvertor;
 import com.aristotle.admin.service.AdminService;
 import com.aristotle.core.enums.AppPermission;
+import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.User;
+import com.aristotle.core.service.LocationService;
 
 @Component
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "session")
@@ -27,9 +32,39 @@ public class MenuBean extends BaseJsfBean {
     private Map<Long, Set<AppPermission>> locationPermissions;
     private User user;
     private boolean globalSelected = false;
+    private List<Location> states;
+    private List<Location> districts;
+    private List<Location> acs;
+    private List<Location> pcs;
+    private Location selectedState;
+    private Location selectedDistrict;
+    private Location selectedAc;
+    private Location selectedPc;
+    private Location selectedCountry;
+    private Location selectedCountryRegion;
+    private Location selectedCountryRegionArea;
 
     @Autowired
     private AdminService adminService;
+    @Autowired
+    private LocationService locationService;
+    @Autowired
+    private LocationConvertor stateLocationConvertor;
+    @Autowired
+    private LocationConvertor districtLocationConvertor;
+    @Autowired
+    private LocationConvertor acLocationConvertor;
+    @Autowired
+    private LocationConvertor pcLocationConvertor;
+
+    @PostConstruct
+    public void init() {
+        try {
+            loadStates();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public void refreshLoginRoles() {
         try {
@@ -37,11 +72,63 @@ public class MenuBean extends BaseJsfBean {
 
             allPermissions = adminService.getGlobalPermissionsOfUser(user.getId());
             locationPermissions = adminService.getLocationPermissionsOfUser(user.getId());
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    private void loadStates() throws AppException {
+        states = locationService.getAllStates();
+        stateLocationConvertor.setLocations(states);
+    }
+
+    public void handleStateChange(AjaxBehaviorEvent event) {
+        System.out.println("Location Select : " + selectedState + ", " + event);
+        try {
+            pcs = locationService.getAllParliamentConstituenciesOfState(selectedState.getId());
+            pcLocationConvertor.setLocations(pcs);
+            districts = locationService.getAllDistrictOfState(selectedState.getId());
+            districtLocationConvertor.setLocations(districts);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void handleDistrictChange() {
+        System.out.println("Location Select : " + selectedDistrict);
+        try {
+            acs = locationService.getAllAssemblyConstituenciesOfDistrict(selectedDistrict.getId());
+            acLocationConvertor.setLocations(acs);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void selectCurrent(ActionEvent event) {
+        if (selectedAc != null){
+            selectedLocation = selectedAc;
+        } else if(selectedPc != null){
+            selectedLocation = selectedPc;
+        } else if(selectedDistrict != null){
+            selectedLocation = selectedDistrict;
+        } else if(selectedState != null){
+            selectedLocation = selectedState;
+        }
+
+        if (selectedLocation == null) {
+            sendErrorMessageToJsfScreen("Please select a location");
+        } else{
+            globalSelected = false;
+            System.out.println("globalSelected=" + globalSelected);
+            System.out.println("selectedLocation=" + selectedLocation);
+            buildAndRedirect("/admin/home");
+        }
+    }
+
+    public List<Location> getStates() {
+        return states;
+    }
+
     public boolean isAllowed(AppPermission... appPermissions) {
         // If no location Selected then return false as we dont want to display any menu item
         if (isLocationNotSelected(this)) {
@@ -71,6 +158,7 @@ public class MenuBean extends BaseJsfBean {
     public boolean isAdmin() {
         return (user.isSuperAdmin() || !allPermissions.isEmpty() || !locationPermissions.isEmpty());
     }
+
     public boolean isVoiceOfAapFbAllowed() {
         return isAllowed(AppPermission.ADMIN_VOICE_OF_AAP_FB);
     }
@@ -114,6 +202,15 @@ public class MenuBean extends BaseJsfBean {
     public boolean isPublishNewsAllowed() {
         return isAllowed(AppPermission.APPROVE_NEWS);
     }
+
+    public boolean isEditBlogAllowed() {
+        return isAllowed(AppPermission.CREATE_BLOG, AppPermission.UPDATE_BLOG, AppPermission.DELETE_BLOG, AppPermission.APPROVE_BLOG);
+    }
+
+    public boolean isPublishBlogAllowed() {
+        return isAllowed(AppPermission.APPROVE_BLOG);
+    }
+
     public boolean isManageBlogAllowed() {
         return isAllowed(AppPermission.CREATE_BLOG, AppPermission.UPDATE_BLOG, AppPermission.DELETE_BLOG, AppPermission.APPROVE_BLOG);
     }
@@ -135,11 +232,15 @@ public class MenuBean extends BaseJsfBean {
     }
 
     public boolean isWebDeveloperRoleAllowed() {
-        return isAllowed(AppPermission.WEB_ADMIN, AppPermission.WEB_ADMIN_DRAFT);
+        return isAllowed(AppPermission.WEB_ADMIN_DRAFT);
+    }
+
+    public boolean isWebDeveloperAdminRoleAllowed() {
+        return isAllowed(AppPermission.WEB_ADMIN);
     }
 
     public boolean isAdminAllowed() {
-        return isManageUserRoleAllowed() || isEditOfficeDetailAllowed();
+        return isManageUserRoleAllowed() || isEditOfficeDetailAllowed() || isSearchVolunteerAllowed() || isEditTeamAllowed() || isEditUserAllowed();
     }
 
     public boolean isManageUserRoleAllowed() {
@@ -148,6 +249,26 @@ public class MenuBean extends BaseJsfBean {
 
     public boolean isEditOfficeDetailAllowed() {
         return isAllowed(AppPermission.EDIT_OFFICE_ADDRESS);
+    }
+
+    public boolean isSearchVolunteerAllowed() {
+        return isAllowed(AppPermission.SEARCH_MEMBER);
+    }
+
+    public boolean isEditTeamAllowed() {
+        return isAllowed(AppPermission.EDIT_TEAM);
+    }
+
+    public boolean isEditUserAllowed() {
+        return isAllowed(AppPermission.ADD_MEMBER, AppPermission.UPDATE_MEMBER, AppPermission.UPDATE_GLOBAL_MEMBER);
+    }
+
+    public boolean isUploadUserDataAllowed() {
+        return isAllowed(AppPermission.USER_DATA_UPLOAD);
+    }
+
+    public boolean isCallCampaignAllowed() {
+        return isAllowed(AppPermission.CALL_CAMPAIGN_ADMIN);
     }
 
     public void goToVoiceOfAapAdminPageFb() {
@@ -182,6 +303,14 @@ public class MenuBean extends BaseJsfBean {
         }
     }
 
+    public void goToMobileGroupPage() {
+        if (isSmsAllowed()) {
+            buildAndRedirect("/admin/mobilegroup");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
+
     public void goToGlobalDonationcampaignAdminPage() {
         if (isGlobalDonationCampaignAllowed()) {
             buildAndRedirect("/admin/globalcampaign");
@@ -197,12 +326,13 @@ public class MenuBean extends BaseJsfBean {
             buildAndRedirect("/admin/notallowed");
         }
     }
-    public void goToManageNewsPage() { 
-        if (isManageNewsAllowed()) { 
-            buildAndRedirect("/admin/news"); 
-            } else { 
-                buildAndRedirect("/admin/notallowed"); 
-        } 
+
+    public void goToManageNewsPage() {
+        if (isManageNewsAllowed()) {
+            buildAndRedirect("/admin/news");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
     }
 
     public void goToManageBlogPage() {
@@ -252,23 +382,30 @@ public class MenuBean extends BaseJsfBean {
             buildAndRedirect("/admin/notallowed");
         }
     }
-    
+
     public void goToStaticDataPluginPage() {
-        if (isWebDeveloperRoleAllowed()) {
+        if (isWebDeveloperAdminRoleAllowed()) {
             buildAndRedirect("/admin/sdplugin");
         } else {
             buildAndRedirect("/admin/notallowed");
         }
     }
 
-    public void goToUrlMappingPage() {
+    public void goToHtmlPartPage() {
         if (isWebDeveloperRoleAllowed()) {
-            buildAndRedirect("/admin/urls");
+            buildAndRedirect("/admin/htmlpart");
         } else {
             buildAndRedirect("/admin/notallowed");
         }
     }
 
+    public void goToUrlMappingPage() {
+        if (isWebDeveloperAdminRoleAllowed()) {
+            buildAndRedirect("/admin/urls");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
 
     public void goToEditOfficeDetailPage() {
         if (isEditOfficeDetailAllowed()) {
@@ -278,6 +415,55 @@ public class MenuBean extends BaseJsfBean {
         }
     }
 
+    public void goToSearchVolunteerPage() {
+        if (isSearchVolunteerAllowed()) {
+            buildAndRedirect("/admin/search");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
+
+    public void goToTeamsPage() {
+        if (isEditTeamAllowed()) {
+            buildAndRedirect("/admin/teams");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
+
+    public void goToManagerUserPage() {
+        if (isEditUserAllowed()) {
+            buildAndRedirect("/admin/edituser");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
+    
+    public void goToOfflineMemberPage() {
+        if (isEditUserAllowed()) {
+            buildAndRedirect("/admin/member");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
+    
+    
+
+    public void goToUploadUserDataPage() {
+        if (isUploadUserDataAllowed()) {
+            buildAndRedirect("/admin/user-upload");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
+
+    public void goToCallCampaignPage() {
+        if (isCallCampaignAllowed()) {
+            buildAndRedirect("/admin/call");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
 
     public void goToManageUserRolePage() {
         if (isManageUserRoleAllowed()) {
@@ -570,5 +756,105 @@ public class MenuBean extends BaseJsfBean {
 
     public void setGlobalSelected(boolean globalSelected) {
         this.globalSelected = globalSelected;
+    }
+
+    public List<Location> getDistricts() {
+        return districts;
+    }
+
+    public List<Location> getAcs() {
+        return acs;
+    }
+
+    public List<Location> getPcs() {
+        return pcs;
+    }
+
+    public Location getSelectedState() {
+        return selectedState;
+    }
+
+    public void setSelectedState(Location selectedState) {
+        this.selectedState = selectedState;
+    }
+
+    public Location getSelectedDistrict() {
+        return selectedDistrict;
+    }
+
+    public void setSelectedDistrict(Location selectedDistrict) {
+        this.selectedDistrict = selectedDistrict;
+    }
+
+    public Location getSelectedAc() {
+        return selectedAc;
+    }
+
+    public void setSelectedAc(Location selectedAc) {
+        this.selectedAc = selectedAc;
+    }
+
+    public Location getSelectedPc() {
+        return selectedPc;
+    }
+
+    public void setSelectedPc(Location selectedPc) {
+        this.selectedPc = selectedPc;
+    }
+
+    public LocationConvertor getStateLocationConvertor() {
+        return stateLocationConvertor;
+    }
+
+    public void setStateLocationConvertor(LocationConvertor stateLocationConvertor) {
+        this.stateLocationConvertor = stateLocationConvertor;
+    }
+
+    public LocationConvertor getDistrictLocationConvertor() {
+        return districtLocationConvertor;
+    }
+
+    public void setDistrictLocationConvertor(LocationConvertor districtLocationConvertor) {
+        this.districtLocationConvertor = districtLocationConvertor;
+    }
+
+    public LocationConvertor getAcLocationConvertor() {
+        return acLocationConvertor;
+    }
+
+    public void setAcLocationConvertor(LocationConvertor acLocationConvertor) {
+        this.acLocationConvertor = acLocationConvertor;
+    }
+
+    public LocationConvertor getPcLocationConvertor() {
+        return pcLocationConvertor;
+    }
+
+    public void setPcLocationConvertor(LocationConvertor pcLocationConvertor) {
+        this.pcLocationConvertor = pcLocationConvertor;
+    }
+
+    public Location getSelectedCountry() {
+        return selectedCountry;
+    }
+
+    public void setSelectedCountry(Location selectedCountry) {
+        this.selectedCountry = selectedCountry;
+    }
+
+    public Location getSelectedCountryRegion() {
+        return selectedCountryRegion;
+    }
+
+    public void setSelectedCountryRegion(Location selectedCountryRegion) {
+        this.selectedCountryRegion = selectedCountryRegion;
+    }
+
+    public Location getSelectedCountryRegionArea() {
+        return selectedCountryRegionArea;
+    }
+
+    public void setSelectedCountryRegionArea(Location selectedCountryRegionArea) {
+        this.selectedCountryRegionArea = selectedCountryRegionArea;
     }
 }

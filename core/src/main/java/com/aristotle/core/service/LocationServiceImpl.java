@@ -1,5 +1,6 @@
 package com.aristotle.core.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +70,30 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public List<Location> getAllChildLocations(Long locationId) throws AppException {
         return locationRepository.getLocationsByParentLocationId(locationId);
+    }
+
+    @Override
+    public List<LocationType> getAllLocationUnderLocationType(Long locationTypeId) throws AppException {
+        LocationType locationType = locationTypeRepository.findOne(locationTypeId);
+        List<LocationType> locationTypes = new ArrayList<LocationType>();
+        locationTypes.add(locationType);
+        addChildLocationTypes(locationType, locationTypes);
+        return locationTypes;
+    }
+
+    private void addChildLocationTypes(LocationType locationType, List<LocationType> locationTypes) {
+        if (locationType.getChildLocationTypes() == null || locationType.getChildLocationTypes().isEmpty()) {
+            return;
+        }
+        for (LocationType oneChilLocationType : locationType.getChildLocationTypes()) {
+            locationTypes.add(oneChilLocationType);
+            addChildLocationTypes(oneChilLocationType, locationTypes);
+        }
+    }
+
+    @Override
+    public Location findLocationById(Long locationId) throws AppException {
+        return locationRepository.findOne(locationId);
     }
 
 }

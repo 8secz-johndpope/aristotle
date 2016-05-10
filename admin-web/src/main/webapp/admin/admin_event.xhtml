@@ -37,8 +37,11 @@
 								<p:inputTextarea rows="4" cols="50" value="#{adminEventBean.event.address}" />
 
 								<p:outputLabel value="Description"></p:outputLabel>
-								<p:inputTextarea rows="8" cols="50" value="#{adminEventBean.event.description}" />
-								<!-- 
+								<p:editor id="editor" value="#{adminEventBean.event.description}" width="400" height="400">
+                                </p:editor>
+								
+								<!--
+								<p:inputTextarea rows="8" cols="50" value="#{adminEventBean.event.description}" /> 
                         <p:editor id="editor" value="#{adminEventBean.event.description}">
                         </p:editor>
                          -->
@@ -62,17 +65,16 @@
 								<p:inputText id="fbEventId" value="#{adminEventBean.event.fbEventId}" />
 
 								<h:outputLabel for="from" value="From*" />
-								<p:inputMask id="from" value="#{adminEventBean.event.startDate}" mask="99/99/9999 99:99">
-									<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-								</p:inputMask>
+								<p:calendar id="from" value="#{adminEventBean.event.startDate}" locale="in" navigator="true" pattern="dd-MMM-yyyy HH:mm" />
+								
 
 								<h:outputLabel for="to" value="To*" />
-								<p:inputMask id="to" value="#{adminEventBean.event.endDate}" mask="99/99/9999 99:99">
-									<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-								</p:inputMask>
+								<p:calendar id="to" value="#{adminEventBean.event.endDate}" locale="in" navigator="true" pattern="dd-MMM-yyyy HH:mm" />
 
 								<h:outputLabel for="allDay" value="All Day:" />
 								<h:selectBooleanCheckbox id="allDay" value="#{adminEventBean.event.allDay}" />
+								<h:outputLabel for="published" value="Published:" />
+                                <h:selectBooleanCheckbox id="published" value="#{adminEventBean.event.published}" />
 
 							</h:panelGrid>
 							<p:commandButton type="reset" value="Reset" />
@@ -80,13 +82,14 @@
 							<p:commandButton id="addButton" update="@form" value="Save" actionListener="#{adminEventBean.saveEvent}" />
 						</p:outputPanel>
 						<h:panelGrid columns="1" styleClass="topAlignPanelColumns">
-							<p:outputLabel
+						<p:outputLabel value="Please Move marker on the Map with mouse on exact location" />
+							<p:outputLabel id="markerPosition"
 								value=" - #{adminEventBean.event.lattitude},#{adminEventBean.event.longitude},#{adminEventBean.event.depth}"></p:outputLabel>
 							<p:gmap center="#{adminEventBean.event.lattitude},#{adminEventBean.event.longitude}"
 								zoom="#{adminEventBean.event.depth}" type="HYBRID" model="#{adminEventBean.draggableMapModel}" fitBounds="true"
 								style="width:600px;height:600px">
-								<p:ajax event="markerDrag" listener="#{adminEventBean.onMarkerDrag}" />
-								<p:ajax event="stateChange" listener="#{adminEventBean.onStateChange}" />
+								<p:ajax event="markerDrag" listener="#{adminEventBean.onMarkerDrag}" update="markerPosition"/>
+								<p:ajax event="stateChange" listener="#{adminEventBean.onStateChange}" update="markerPosition"/>
 
 							</p:gmap>
 						</h:panelGrid>

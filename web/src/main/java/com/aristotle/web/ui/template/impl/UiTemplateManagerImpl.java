@@ -3,9 +3,10 @@ package com.aristotle.web.ui.template.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ import com.aristotle.web.ui.template.UiTemplateManager;
 public class UiTemplateManagerImpl implements UiTemplateManager {
 
     private Map<String, Map<Long, DomainPageTemplate>> domainUiTemplateMap;
+
+    private Map<String, Long> domainLocationMap;
+
     @Autowired
     private UiTemplateService uiTemplateService;
 
@@ -47,10 +51,19 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
             try {
 
                 domainUiTemplateMap = new HashMap<String, Map<Long, DomainPageTemplate>>();
+                domainLocationMap = new HashMap<String, Long>();
                 List<Domain> domains = uiTemplateService.getAllDomains();
                 DomainPageTemplate detachedDomainPageTemplate;
                 for (Domain oneDomain : domains) {
                     List<DomainPageTemplate> domainPageTemplates = uiTemplateService.getCurrentDomainPageTemplate(oneDomain.getId());
+                    domainLocationMap.put(oneDomain.getName().toLowerCase(), oneDomain.getLocationId());
+                    String[] otherDomainNames = null;
+                    if (!StringUtils.isEmpty(oneDomain.getNameAliases())) {
+                        otherDomainNames = StringUtils.commaDelimitedListToStringArray(oneDomain.getNameAliases());
+                        for (String oneOtherDomainName : otherDomainNames) {
+                            domainLocationMap.put(oneOtherDomainName.toLowerCase(), oneDomain.getLocationId());
+                        }
+                    }
                     if (domainPageTemplates == null || domainPageTemplates.isEmpty()) {
                         continue;
                     }
@@ -63,7 +76,16 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
                         applySubTemplates(detachedDomainPageTemplate, subTemplates);
                         pageTemplates.put(detachedDomainPageTemplate.getUrlMappingId(), detachedDomainPageTemplate);
                     }
+
                     domainUiTemplateMap.put(oneDomain.getName().toLowerCase(), pageTemplates);
+                    if (oneDomain.getLocationId() == null) {
+                        domainUiTemplateMap.put("default", pageTemplates);
+                    }
+                    if (otherDomainNames != null) {
+                        for (String oneOtherDomainName : otherDomainNames) {
+                            domainUiTemplateMap.put(oneOtherDomainName.toLowerCase(), pageTemplates);
+                        }
+                    }
                 }
                 isInitialised = true;
 
@@ -77,9 +99,6 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
 
     private void applySubTemplates(DomainPageTemplate oneDomainPageTemplate, List<DomainTemplatePart> subTemplates) {
         for (DomainTemplatePart oneDomainTemplatePart : subTemplates) {
-            if (oneDomainTemplatePart.getName().equals("FOOTER")) {
-                System.out.println(oneDomainTemplatePart.getHtmlContent());
-            }
             String templateKey = "[[" + oneDomainTemplatePart.getName() + "]]";
             String htmlContent = StringUtils.replace(oneDomainPageTemplate.getHtmlContent(), templateKey, oneDomainTemplatePart.getHtmlContent());
             oneDomainPageTemplate.setHtmlContent(htmlContent);
@@ -90,7 +109,21 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
     }
 
     @Override
-    public String getTemplate(HttpServletRequest httpServletRequest) {
+    public Integer getCacheTime(HttpServletRequest httpServletRequest) {
+        init();
+        UrlMapping urlMapping = (UrlMapping) httpServletRequest.getAttribute(HttpParameters.URL_MAPPING);
+        if (urlMapping == null) {
+            return 300;
+        }
+        return urlMapping.getCacheTimeSeconds();
+    }
+
+    @Override
+    public String getTemplate(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        boolean requestForDraft = isRequestForDraft(httpServletRequest, httpServletResponse);
+        if (requestForDraft) {
+            refresh();// refresh if draft is requested
+        }
         init();
         String domainName = httpServletRequest.getServerName();
         UrlMapping urlMapping = (UrlMapping) httpServletRequest.getAttribute(HttpParameters.URL_MAPPING);
@@ -103,23 +136,54 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
             System.out.println("No Domain page Template Found");
             return "No Template Defined";
         }
-        if (httpServletRequest.getParameter("draft") == null) {
-            return domainPageTemplate.getHtmlContent();
+        if (requestForDraft) {
+            return domainPageTemplate.getHtmlContentDraft();
         }
-        return domainPageTemplate.getHtmlContentDraft();
+        return domainPageTemplate.getHtmlContent();
+
+    }
+
+    private boolean isRequestForDraft(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        String draftParamValue = httpServletRequest.getParameter("draft");
+        if (draftParamValue == null) {
+            Cookie[] cookies = httpServletRequest.getCookies();
+            if (cookies != null && cookies.length > 0) {
+                for (Cookie oneCookie : cookies) {
+                    if (oneCookie.getName().equals("draft")) {
+                        draftParamValue = oneCookie.getValue();
+                    }
+                }
+            }
+        } else {
+            Cookie cookie = new Cookie("draft", draftParamValue);
+            cookie.setPath("/");
+            httpServletResponse.addCookie(cookie);
+        }
+        System.out.println("draftParamValue = " + draftParamValue);
+        if (draftParamValue == null || !draftParamValue.equals("1")) {
+            return false;
+        }
+        return true;
     }
 
     private DomainPageTemplate getDomainPageTemplate(String domain, Long urlMappingId) {
-        System.out.println("Getting domain = " + domain + " , urlMappingId=" + urlMappingId);
-        for (Entry<String, Map<Long, DomainPageTemplate>> oneNtry : domainUiTemplateMap.entrySet()) {
-
-        }
         Map<Long, DomainPageTemplate> domainPageTemplateMap = domainUiTemplateMap.get(domain.toLowerCase());
+        if (domainPageTemplateMap == null) {
+            domainPageTemplateMap = domainUiTemplateMap.get("default");
+        }
         if (domainPageTemplateMap == null) {
             System.out.println("Not found");
             return null;
         }
         return domainPageTemplateMap.get(urlMappingId);
+    }
+
+    @Override
+    public Long getDomainLocation(HttpServletRequest httpServletRequest) {
+        init();
+        String domain = httpServletRequest.getServerName().toLowerCase();
+        // System.out.println("Getting Domain location for " + domain);
+        return domainLocationMap.get(domain);
     }
 
 }

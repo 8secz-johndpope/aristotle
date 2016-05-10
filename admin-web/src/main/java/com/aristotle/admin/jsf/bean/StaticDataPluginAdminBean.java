@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.aristotle.core.enums.AppPermission;
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.StaticDataPlugin;
+import com.google.gson.JsonParser;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
@@ -52,13 +53,23 @@ public class StaticDataPluginAdminBean extends BaseMultiPermissionAdminJsfBean {
 
     public void saveStaticDataPlugin() {
         try {
+            checkForValidJson(selectedStaticDataPlugin.getContent());
             adminService.saveStaticDataPlugin(selectedStaticDataPlugin);
             refreshPluginList();
             showList = true;
-        } catch (AppException e) {
+        } catch (Exception e) {
             sendErrorMessageToJsfScreen(e);
         }
 	}
+
+    private void checkForValidJson(String message) throws AppException {
+        try {
+            JsonParser jsonParser = new JsonParser();
+            jsonParser.parse(message);
+        } catch (Exception ex) {
+            throw new AppException("Not a valid Json Message");
+        }
+    }
 
     public void createStaticDataPlugin() {
         selectedStaticDataPlugin = new StaticDataPlugin();

@@ -22,11 +22,17 @@ import com.aristotle.core.enums.CreationType;
 @Table(name="users")
 public class User extends BaseEntity {
 	
-	@Column(name = "membership_no")
-	private String membershipNumber;
+    @Column(name = "ivr_state")
+    private String ivrState;
 
-	@Column(name = "legacy_membership_no")
-	private String legacyMembershipNumber;
+    @Column(name = "ivr_district")
+    private String ivrDistrict;
+
+    @Column(name = "sms_msg")
+    private String smsMessage;
+
+    @Column(name = "membership_no")
+	private String membershipNumber;
 
 	@Column(name = "name", nullable = false, length=256)
 	private String name;
@@ -36,6 +42,9 @@ public class User extends BaseEntity {
 
 	@Column(name = "mother_name")
 	private String motherName;
+	
+	@Column(name = "reference_mobile_number")
+	private String referenceMobileNumber;
 
 	@Column(name = "address", length=512)
 	private String address;
@@ -53,6 +62,12 @@ public class User extends BaseEntity {
 
 	@Column(name = "nri")
 	private boolean nri;
+	
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @JoinColumn(name="reference_user_id")
+    private User referenceUser;
+	@Column(name="reference_user_id", insertable=false,updatable=false)
+	private Long referenceUserId;
 
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="nri_country_id")
@@ -121,6 +136,9 @@ public class User extends BaseEntity {
 	@Column(name="voting_pc_id", insertable=false,updatable=false)
 	private Long parliamentConstituencyVotingId;
 	
+    @Column(name = "profile", columnDefinition = "LONGTEXT")
+    private String profile;
+
 	@OneToMany(mappedBy="user", fetch=FetchType.LAZY)
 	private Set<FacebookAccount> facebookAccounts;
 
@@ -130,10 +148,10 @@ public class User extends BaseEntity {
 	@OneToMany(mappedBy="user", fetch=FetchType.LAZY)
 	private Set<Donation> donations;
 
-	@OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private Set<Email> emails;
 
-	@OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private Set<Phone> phones;
 
 	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
@@ -254,7 +272,10 @@ public class User extends BaseEntity {
 	@Column(name = "volunteer", nullable = false)
 	private boolean volunteer;
 
-	@Column(name = "membership_status")
+    @Column(name = "reindex", nullable = true)
+    private boolean reindex;
+
+    @Column(name = "membership_status")
 	private String membershipStatus;
 	
 	@Column(name = "passport_number")
@@ -723,14 +744,6 @@ public class User extends BaseEntity {
 		this.phones = phones;
 	}
 
-	public String getLegacyMembershipNumber() {
-		return legacyMembershipNumber;
-	}
-
-	public void setLegacyMembershipNumber(String legacyMembershipNumber) {
-		this.legacyMembershipNumber = legacyMembershipNumber;
-	}
-
     public String getIdentityNumber() {
         return identityNumber;
     }
@@ -755,7 +768,71 @@ public class User extends BaseEntity {
         this.locationRoles = locationRoles;
     }
 
-    @Override
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
+
+    public String getIvrState() {
+        return ivrState;
+    }
+
+    public void setIvrState(String ivrState) {
+        this.ivrState = ivrState;
+    }
+
+    public String getIvrDistrict() {
+        return ivrDistrict;
+    }
+
+    public void setIvrDistrict(String ivrDistrict) {
+        this.ivrDistrict = ivrDistrict;
+    }
+
+    public String getSmsMessage() {
+        return smsMessage;
+    }
+
+    public void setSmsMessage(String smsMessage) {
+        this.smsMessage = smsMessage;
+    }
+
+    public boolean isReindex() {
+        return reindex;
+    }
+
+    public void setReindex(boolean reindex) {
+        this.reindex = reindex;
+    }
+
+    public String getReferenceMobileNumber() {
+		return referenceMobileNumber;
+	}
+
+	public void setReferenceMobileNumber(String referenceMobileNumber) {
+		this.referenceMobileNumber = referenceMobileNumber;
+	}
+
+	public Long getReferenceUserId() {
+		return referenceUserId;
+	}
+
+	public void setReferenceUserId(Long referenceUserId) {
+		this.referenceUserId = referenceUserId;
+	}
+
+	public User getReferenceUser() {
+		return referenceUser;
+	}
+
+	public void setReferenceUser(User referenceUser) {
+		this.referenceUser = referenceUser;
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

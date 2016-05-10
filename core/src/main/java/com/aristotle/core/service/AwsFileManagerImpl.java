@@ -1,4 +1,4 @@
-package com.aristotle.admin.service;
+package com.aristotle.core.service;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -20,6 +20,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
@@ -73,11 +74,32 @@ public class AwsFileManagerImpl implements AwsFileManager {
     @Override
     public void uploadFileToS3(String awsKey, String awsSecret, String bucketName, String remoteFileNameAndPath, InputStream fileToUpload, String contentType) throws FileNotFoundException {
 
+        logger.info("Uploading a new object to S3 from input Stream to remote file " + bucketName + "/" + remoteFileNameAndPath);
+        int maxAge = 2592000;
+        if(contentType == null){
+            maxAge = 2592000;
+        }else if(contentType.startsWith("image")){
+            maxAge = 2592000;
+        }else if(contentType.startsWith("application")){
+            maxAge = 3600;
+        }else if(contentType.startsWith("text")){
+            maxAge = 600;
+        }else{
+            maxAge = 2592000;
+        }
+        uploadFileToS3(awsKey, awsSecret, bucketName, remoteFileNameAndPath, fileToUpload, contentType, maxAge);
+    }
+
+    @Override
+    public void uploadFileToS3(String awsKey, String awsSecret, String bucketName, String remoteFileNameAndPath, InputStream fileToUpload, String contentType, int maxAge) throws FileNotFoundException {
+
         AmazonS3 s3client = new AmazonS3Client(new BasicAWSCredentials(awsKey, awsSecret));
 
         logger.info("Uploading a new object to S3 from input Stream to remote file " + bucketName + "/" + remoteFileNameAndPath);
         ObjectMetadata objectMetadata = new ObjectMetadata();
-        objectMetadata.setCacheControl("max-age=2592000");
+        if (maxAge > 0) {
+            objectMetadata.setCacheControl("max-age=" + maxAge);
+        }
         objectMetadata.setContentType(contentType);
         objectMetadata.addUserMetadata("x-amz-storage-class", "RRS");
         remoteFileNameAndPath = remoteFileNameAndPath.toLowerCase();
@@ -104,6 +126,12 @@ public class AwsFileManagerImpl implements AwsFileManager {
         if (fileName.endsWith(".gif")) {
             return "image/gif";
         }
+        if (fileName.endsWith(".pdf")) {
+            return "application/pdf";
+        }
+        if (fileName.endsWith(".doc") || fileName.endsWith(".docx")) {
+            return "application/msword";
+        }
 
         return null;
     }
@@ -128,6 +156,13 @@ public class AwsFileManagerImpl implements AwsFileManager {
         g.drawImage(img, 0, 0, newW, newH, 0, 0, w, h, null);
         g.dispose();
         return dimg;
+    }
+
+    @Override
+    public void deleteFileFromS3(String awsKey, String awsSecret, String bucketName, String remoteFileNameAndPath) throws FileNotFoundException {
+        AmazonS3 s3client = new AmazonS3Client(new BasicAWSCredentials(awsKey, awsSecret));
+        DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucketName, remoteFileNameAndPath);
+        s3client.deleteObject(deleteObjectRequest);
     }
 
 }

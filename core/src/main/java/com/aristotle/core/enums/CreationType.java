@@ -4,5 +4,8 @@ public enum CreationType {
     Imported,
     Admin_Created,
     SelfServiceUser,
-    OnlineUser;
+    OnlineUser,
+    IVR,
+    SMS,
+    Admin_Imported_Via_Csv;
 }

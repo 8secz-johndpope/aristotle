@@ -1,11 +1,18 @@
 package com.aristotle.core.persistance.repo;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.aristotle.core.persistance.Office;
 
 public interface OfficeRepository extends JpaRepository<Office, Long> {
     
+    public abstract List<Office> getOfficeByLocationId(Long locationId);
+
+    @Query("select office from Office office where office.national=true")
+    public abstract List<Office> getNationalOffices();
     /*
 	public abstract List<Office> getNationalOffices();
 	

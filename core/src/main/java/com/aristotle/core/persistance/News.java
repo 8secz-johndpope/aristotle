@@ -65,6 +65,16 @@ public class News extends BaseEntity {
     private Set<Location> locations;
 	
 	@ManyToMany(cascade=CascadeType.ALL)
+    @JoinTable(name = "news_uploaded_files",
+    joinColumns = {
+    @JoinColumn(name="news_id") 
+    },
+    inverseJoinColumns = {
+    @JoinColumn(name = "uploaded_file_id")
+    })
+    private Set<UploadedFile> files;
+	
+	@ManyToMany(cascade=CascadeType.ALL)
 	@JoinTable(name = "news_ac",
 	joinColumns = {
 	@JoinColumn(name="news_id") 
@@ -258,5 +268,13 @@ public class News extends BaseEntity {
 
     public void setLocations(Set<Location> locations) {
         this.locations = locations;
+    }
+
+    public Set<UploadedFile> getFiles() {
+        return files;
+    }
+
+    public void setFiles(Set<UploadedFile> files) {
+        this.files = files;
     }
 }

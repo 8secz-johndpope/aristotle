@@ -34,5 +34,8 @@ public class AppTest
     public void testApp()
     {
         assertTrue( true );
+        if ("Male".equalsIgnoreCase(null)) {
+            System.out.println("No");
+        }
     }
 }

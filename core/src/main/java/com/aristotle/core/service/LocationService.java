@@ -14,6 +14,8 @@ public interface LocationService {
 
     List<LocationType> getAllLocationTypes() throws AppException;
 
+    List<LocationType> getAllLocationUnderLocationType(Long locationTypeId) throws AppException;
+
     // Helper Functions
     List<Location> getAllCountries() throws AppException;
 
@@ -26,5 +28,7 @@ public interface LocationService {
     List<Location> getAllAssemblyConstituenciesOfDistrict(Long districtId) throws AppException;
 
     List<Location> getAllChildLocations(Long locationId) throws AppException;
+
+    Location findLocationById(Long locationId) throws AppException;
 
 }

@@ -1,13 +1,22 @@
 package com.aristotle.core.persistance.repo;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
-import com.aristotle.core.persistance.Tweet;
+import com.aristotle.core.persistance.TwitterAccount;
 
-public interface TwitterAccountRepository extends JpaRepository<Tweet, Long> {
+public interface TwitterAccountRepository extends JpaRepository<TwitterAccount, Long> {
 
+	@Query("select ta from TwitterAccount ta where ta.retweetable=true")
+	public List<TwitterAccount> getAllSourceTwitterAccounts();
+
+    public TwitterAccount getTwitterAccountByTwitterId(String String);
+    
+    public TwitterAccount getTwitterAccountByUserId(Long userId);
     /*
-	public abstract TwitterAccount getTwitterAccountByUserId(Long userId);
+	
 
 	public abstract TwitterAccount getTwitterAccountByHandle(String userName);
 

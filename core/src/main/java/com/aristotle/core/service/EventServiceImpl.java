@@ -7,6 +7,8 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.aristotle.core.persistance.Event;
@@ -25,6 +27,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event saveEvent(Event event, Location location) {
+        System.out.println("Saving Event : " + event);
+        System.out.println("Saving Event : " + event.getVer());
+        System.out.println("Saving Event : " + event.getId());
         event = eventRepository.save(event);
         if (location == null) {
             event.setNational(true);
@@ -41,12 +46,19 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Cacheable(value = "events")
-    public List<Event> getLocationEvents(Location location, int size) {
+    public List<Event> getLocationEvents(Location location, int size, boolean publishedOnly) {
         System.out.println("Getting Data From Database");
+        Pageable pageRequest = new PageRequest(0, size);
         if(location == null){
-            return eventRepository.getAllNationalEvents();
+            if (publishedOnly) {
+                return eventRepository.getAllNationalUpComingPublishedEvents(pageRequest);
+            }
+            return eventRepository.getAllNationalUpComingEvents(pageRequest);
         }
-        return eventRepository.getLocationEvents(location.getId());
+        if (publishedOnly) {
+            return eventRepository.getLocationUpcomingPublishedEvents(location.getId(), pageRequest);
+        }
+        return eventRepository.getLocationUpcomingEvents(location.getId(), pageRequest);
     }
 
     @Override

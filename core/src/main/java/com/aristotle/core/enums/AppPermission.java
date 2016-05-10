@@ -9,6 +9,7 @@ public enum AppPermission {
     APPROVE_NEWS,
     ADD_MEMBER,
     UPDATE_MEMBER,
+    SEARCH_MEMBER,
     UPDATE_GLOBAL_MEMBER,
     VIEW_MEMBER,
     EDIT_USER_ROLES,
@@ -28,7 +29,10 @@ public enum AppPermission {
     ADMIN_EVENT,
     ADMIN_CANDIDATE_PC,
     WEB_ADMIN_DRAFT,
-    WEB_ADMIN
+    WEB_ADMIN,
+    EDIT_TEAM,
+    CALL_CAMPAIGN_ADMIN, 
+    USER_DATA_UPLOAD
     ;
     
     private AppPermission() {

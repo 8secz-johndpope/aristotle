@@ -1,11 +1,17 @@
 package com.aristotle.core.persistance.repo;
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 
 import com.aristotle.core.persistance.User;
 
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
 	/**
 	 * Search user by Email
@@ -29,34 +35,25 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 */
 	public abstract User getUserByPassportNumber(String passportNumber);
 
-	/*
-	List<User> searchUserOfAssemblyConstituency(String name,Long livingAcId,Long votingAcId);
-	
-	
-	List<Long> getAllAdminUserForGlobalTreasur();
-	
-	List<Long> getAllAdminUserForStateTreasure(long stateId);
-	
-	List<Long> getAllAdminUserForDistrictTreasure(long districtId);
-	
-	List<Long> getAllAdminUserForAcTreasure(long acId);
-	
-	List<Long> getAllAdminUserForPcTreasure(long pcId);
-	
-	List<Long> getAdminUserForGlobalTreasur();
-	
-	List<Long> getAdminUserForStateTreasure(long stateId);
-	
-	List<Long> getAdminUserForDistrictTreasure(long districtId);
-	
-	List<Long> getAdminUserForAcTreasure(long acId);
-	
-	List<Long> getAdminUserForPcTreasure(long pcId);
-	
-	LegacyMembership getLegacyMembershipByEmail(String email);
-	
-	LegacyMembership getLegacyMembershipByMobile(String mobile);
+    @Query("select distinct user from User user, Volunteer vl join vl.interests interests where  interests.id in ?1 and vl.userId=user.id and user.nri=true")
+    Page<User> searchNriUserForVolunteerIntrest(List<Long> interestIds, Pageable pageable);
 
-	LegacyMembership getLegacyMembershipsByMembershipNumbers(Long membershipNumber);
-	*/
+    @Query("select user from User user where user.nri=true")
+    Page<User> searchNriOnly(Pageable pageable);
+
+    @Query("select distinct user from User user, Volunteer vl join vl.interests interests where  interests.id in ?1 and vl.userId=user.id")
+    Page<User> searchGlobalUserForVolunteerIntrest(List<Long> interestIds, Pageable pageable);
+
+    @Query("select distinct user from User user, UserLocation ul, Volunteer vl join vl.interests interests where interests.id in ?2 and vl.userId=user.id and ul.userId=user.id and ul.locationId=?1")
+    Page<User> searchLocationUserForVolunteerIntrest(Long locationId, List<Long> interestIds, Pageable pageable);
+
+    @Query("select distinct user from User user, UserLocation ul where ul.locationId=?1 and ul.userId=user.id")
+    Page<User> searchLocationUser(Long locationId, Pageable pageable);
+
+    @Query("select distinct user from User user where user.reindex=true")
+    Page<User> searchUserByReindex(Pageable pageable);
+    
+    @Query("select distinct user from User user where user.creatorId=?1")
+    Page<User> searchUserByCreatorId(Long userId, Pageable pageable);
+
 }

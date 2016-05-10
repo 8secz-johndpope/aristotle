@@ -31,8 +31,8 @@ public class BaseJsfBean extends BaseController implements Serializable {
         }
     }
 
-    protected void sendErrorMessageToJsfScreen(String componentId, Exception e) {
-        sendErrorMessageToJsfScreen(componentId, null, e);
+    protected void sendErrorMessageToJsfScreen(String message, Exception e) {
+        sendErrorMessageToJsfScreen(null, message, e);
     }
 
     protected void sendErrorMessageToJsfScreen(String componentId, String message) {

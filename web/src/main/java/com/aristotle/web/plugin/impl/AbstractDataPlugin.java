@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -17,13 +18,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.StringUtils;
 
 import com.aristotle.core.persistance.Blog;
+import com.aristotle.core.persistance.Donation;
 import com.aristotle.core.persistance.Event;
 import com.aristotle.core.persistance.Location;
+import com.aristotle.core.persistance.Membership;
+import com.aristotle.core.persistance.MembershipTransaction;
 import com.aristotle.core.persistance.News;
+import com.aristotle.core.persistance.PaymentGatewayDonation;
+import com.aristotle.core.persistance.Team;
+import com.aristotle.core.persistance.User;
+import com.aristotle.core.persistance.Video;
 import com.aristotle.web.parameters.HttpParameters;
 import com.aristotle.web.plugin.WebDataPlugin;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -33,7 +43,10 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
     private DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-    private SimpleDateFormat ddMMMyyyyFormat = new SimpleDateFormat("dd-MMM-yyyy");
+    protected SimpleDateFormat ddMMMyyyyFormat = new SimpleDateFormat("dd-MMM-yyyy");
+    protected SimpleDateFormat ddMMyyyyFormat = new SimpleDateFormat("dd-MM-yyyy");
+    protected SimpleDateFormat ddMMyyyyHHMMFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+    private Gson gson = new Gson();
 
     Map<String, String> settingMap = new LinkedHashMap<String, String>();
     protected final String name;
@@ -138,6 +151,19 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
         jsonObject.addProperty(fieldName, fmt.print(fieldValue.getTime()));
     }
 
+    protected JsonObject convertDonation(Donation donation) {
+        JsonObject donationJsonObject = new JsonObject();
+        donationJsonObject.addProperty("id", donation.getId());
+        donationJsonObject.addProperty("name", donation.getDonorName());
+        donationJsonObject.addProperty("amount", donation.getAmount());
+        if (donation instanceof PaymentGatewayDonation) {
+            donationJsonObject.addProperty("pgTransactionId", ((PaymentGatewayDonation) donation).getMerchantReferenceNumber());
+        }
+
+        donationJsonObject.addProperty("donationDate", ddMMyyyyHHMMFormat.format(donation.getDonationDate()));
+
+        return donationJsonObject;
+    }
     protected JsonObject convertNews(News news) {
         JsonObject newsJsonObject = new JsonObject();
         newsJsonObject.addProperty("id", news.getId());
@@ -168,6 +194,18 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
         }
         for (News oneNews : newsList) {
             JsonObject newsJsonObject = convertNews(oneNews);
+            jsonArray.add(newsJsonObject);
+        }
+        return jsonArray;
+    }
+
+    protected JsonArray convertDonationList(Collection<Donation> donationList) {
+        JsonArray jsonArray = new JsonArray();
+        if (donationList == null) {
+            return jsonArray;
+        }
+        for (Donation oneDonation : donationList) {
+            JsonObject newsJsonObject = convertDonation(oneDonation);
             jsonArray.add(newsJsonObject);
         }
         return jsonArray;
@@ -269,10 +307,18 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
         eventJsonObject.addProperty("date", calendar.get(Calendar.DATE));
         eventJsonObject.addProperty("year", calendar.get(Calendar.YEAR));
         StringBuilder sb = new StringBuilder();
-        sb.append(calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE) + " " + calendar.getDisplayName(Calendar.AM_PM, Calendar.SHORT, Locale.UK).toLowerCase());
+        String minute = "00";
+        if (calendar.get(Calendar.MINUTE) > 0) {
+            minute = calendar.get(Calendar.MINUTE) + "";
+        }
+        sb.append(calendar.get(Calendar.HOUR) + ":" + minute + " " + calendar.getDisplayName(Calendar.AM_PM, Calendar.SHORT, Locale.UK).toLowerCase());
         sb.append(" - ");
         calendar.setTime(event.getEndDate());
-        sb.append(calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE) + " " + calendar.getDisplayName(Calendar.AM_PM, Calendar.SHORT, Locale.UK).toLowerCase());
+        minute = "00";
+        if (calendar.get(Calendar.MINUTE) > 0) {
+            minute = calendar.get(Calendar.MINUTE) + "";
+        }
+        sb.append(calendar.get(Calendar.HOUR) + ":" + minute + " " + calendar.getDisplayName(Calendar.AM_PM, Calendar.SHORT, Locale.UK).toLowerCase());
         addDateField(eventJsonObject, "startDate", event.getStartDate());
         addDateField(eventJsonObject, "endDate", event.getEndDate());
         eventJsonObject.addProperty("time", sb.toString());
@@ -291,4 +337,102 @@ public abstract class AbstractDataPlugin implements WebDataPlugin {
         }
         return jsonArray;
     }
+
+    protected JsonObject convertVideo(Video event) {
+        JsonObject eventJsonObject = new JsonObject();
+        eventJsonObject.addProperty("id", event.getId());
+        eventJsonObject.addProperty("title", event.getTitle());
+        eventJsonObject.addProperty("description", event.getDescription());
+        eventJsonObject.addProperty("channelId", event.getChannelId());
+        eventJsonObject.addProperty("webUrl", event.getWebUrl());
+        eventJsonObject.addProperty("youtubeVideoId", event.getYoutubeVideoId());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(event.getPublishDate());
+
+        eventJsonObject.addProperty("month", calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.UK).toUpperCase());
+        eventJsonObject.addProperty("date", calendar.get(Calendar.DATE));
+        eventJsonObject.addProperty("year", calendar.get(Calendar.YEAR));
+
+        return eventJsonObject;
+
+    }
+
+    protected JsonArray convertVideoList(Collection<Video> videoList) {
+        JsonArray jsonArray = new JsonArray();
+        if (videoList == null) {
+            return jsonArray;
+        }
+        for (Video oneVideo : videoList) {
+            JsonObject newsJsonObject = convertVideo(oneVideo);
+            jsonArray.add(newsJsonObject);
+        }
+        return jsonArray;
+    }
+
+    protected JsonObject convertUser(User user) {
+        JsonObject userJsonObject = new JsonObject();
+        userJsonObject.addProperty("id", user.getId());
+        userJsonObject.addProperty("name", user.getName());
+        if (StringUtils.isEmpty(user.getProfilePic())) {
+            userJsonObject.addProperty("profilePic", "http://www.wpclipart.com/people/faces/anonymous/photo_not_available_large.jpg");
+        } else {
+            if (user.getProfilePic().contains("facebook.com")) {
+                userJsonObject.addProperty("profilePic", user.getProfilePic());
+            } else {
+                userJsonObject.addProperty("profilePic", "//static.swarajabhiyan.org/" + user.getProfilePic());
+            }
+
+        }
+
+        return userJsonObject;
+    }
+
+    protected JsonArray convertTeams(Collection<Team> teams) {
+        JsonArray teamArray = new JsonArray();
+        if (teams == null) {
+            return teamArray;
+        }
+        for (Team oneTeam : teams) {
+
+            teamArray.add(convertTeam(oneTeam));
+        }
+        return teamArray;
+    }
+
+    protected JsonObject convertTeam(Team oneTeam) {
+        JsonObject oneJsonTeam = new JsonObject();
+        oneJsonTeam.addProperty("description", oneTeam.getDescription());
+        if (oneTeam.getDescription() != null) {
+            String contentWithOutHtml = oneTeam.getDescription().replaceAll("\\<[^>]*>", "");
+            oneJsonTeam.addProperty("descriptionWithOutHtml", contentWithOutHtml);
+        }
+
+        oneJsonTeam.addProperty("name", oneTeam.getName());
+        oneJsonTeam.addProperty("url", oneTeam.getUrl());
+        return oneJsonTeam;
+    }
+    
+    protected JsonObject convertMembership(Membership membership) {
+        JsonObject oneJsonTeam = new JsonObject();
+        oneJsonTeam.addProperty("id", membership.getId());
+        oneJsonTeam.addProperty("startDate", ddMMMyyyyFormat.format(membership.getStartDate()));
+        oneJsonTeam.addProperty("endDate", ddMMMyyyyFormat.format(membership.getEndDate()));
+        return oneJsonTeam;
+    }
+    protected JsonObject convertMembershipTransaction(MembershipTransaction membershipTransaction) {
+        JsonObject oneJsonTeam = new JsonObject();
+        oneJsonTeam.addProperty("id", membershipTransaction.getId());
+        oneJsonTeam.addProperty("transactionDate", ddMMMyyyyFormat.format(membershipTransaction.getTransactionDate()));
+        oneJsonTeam.addProperty("amount", membershipTransaction.getAmount());
+        oneJsonTeam.addProperty("source", membershipTransaction.getSource());
+        return oneJsonTeam;
+    }
+    protected JsonArray convertMembershipTransactions(List<MembershipTransaction> membershipTransactions) {
+    	JsonArray jsonArray = new JsonArray();
+    	for(MembershipTransaction oneMembershipTransaction : membershipTransactions){
+    		jsonArray.add(convertMembershipTransaction(oneMembershipTransaction));
+    	}
+        return jsonArray;
+    }
+
 }

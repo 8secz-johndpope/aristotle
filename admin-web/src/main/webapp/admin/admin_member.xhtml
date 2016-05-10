@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Add Members</title>
+	<style>
+.topAlignPanelColumns td {
+	vertical-align: top;
+}
+
+.pf-dock-container-top {
+	background-image: none;
+	background-color: white;
+}
+
+.ui-dock-item-top {
+	color: black;
+}
+
+.ui-dock-container-top {
+	color: black;
+}
+
+.ui-selectonemenu {
+	width: 100px;
+}
+</style>
+
+</h:head>
+<h:body>
+	<!-- menu starts -->
+	<ui:include src="admin_menu.xhtml" />
+	<!-- menu ends -->
+	<div style="width: 1200px; margin: 0 auto;">
+		<div style="width: 1200px; margin: 0;">
+
+			<!-- header starts -->
+			<h2>Add Member</h2>
+
+			<h:form id="addMemberForm">
+				<p:messages id="messages" autoUpdate="true" closable="true" />
+				<p:blockUI block="addMemberForm" trigger="@form:saveButton,@form:state,@form:district">
+					<p:graphicImage value="http://www.jsclasses.org/browse/view/image/file/3815/name/loading.gif" style="width:100px"/>
+				</p:blockUI>
+				<p:outputPanel id="locationSelectionPanel">
+					<p:panel header="Location Selection" style="margin-bottom:20px">
+						<h:panelGrid columns="4" styleClass="topAlignPanelColumns" id="locationPanel">
+							<h:outputLabel for="state" value="State*" />
+							<p:selectOneMenu id="state" effect="fold" value="#{adminMemberBean.selectedMember.selectedState}" converter="#{adminMemberBean.stateLocationConvertor}">
+								<f:selectItems value="#{adminMemberBean.states}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState}" />
+								<p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminMemberBean.handleStateChange}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="district" value="District*" />
+							<p:selectOneMenu id="district" effect="fold" value="#{adminMemberBean.selectedMember.selectedDistrict}" converter="#{adminMemberBean.districtLocationConvertor}">
+								<f:selectItems value="#{adminMemberBean.districts}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict}" />
+								<p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminMemberBean.handleDistrictChange}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="ac" value="Assembly Constituency*" />
+							<p:selectOneMenu id="ac" effect="fold" value="#{adminMemberBean.selectedMember.selectedAc}" converter="#{adminMemberBean.acLocationConvertor}">
+								<f:selectItems value="#{adminMemberBean.acs}" var="oneAc" itemLabel="#{oneAc.name}" itemValue="#{oneAc}" />
+								<p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminMemberBean.handleAcChange}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="pc" value="Parliament Constituency*" />
+							<p:selectOneMenu id="pc" effect="fold" value="#{adminMemberBean.selectedMember.selectedPc}" converter="#{adminMemberBean.pcLocationConvertor}">
+								<f:selectItems value="#{adminMemberBean.pcs}" var="onePc" itemLabel="#{onePc.name}" itemValue="#{onePc}" />
+								<p:ajax event="change" update="@form:locationSelectionPanel" listener="#{adminMemberBean.handlePcChange}" />
+							</p:selectOneMenu>
+						</h:panelGrid>
+					</p:panel>
+				</p:outputPanel>
+				<p:outputPanel>
+				<p:panel header="Location Selection" style="margin-bottom:20px">
+					<h:panelGrid columns="2" styleClass="topAlignPanelColumns" id="memberPanel">
+						<h:outputLabel value="Name" />
+						<p:inputText value="#{adminMemberBean.selectedMember.name}" id="name" required="true" />
+						<h:outputLabel value="Reference Mobile Number" />
+						<p:inputText value="#{adminMemberBean.selectedMember.referenceMobile}" id="referenceMobile" required="false" />
+						
+					</h:panelGrid>
+				</p:panel>
+				</p:outputPanel>
+				<p:commandButton id="saveButton" update="@form" value="Save" actionListener="#{adminMemberBean.saveMember}" ajax="true" />
+				
+				
+				<p:dataTable id="listOfUsers" var="oneUser" value="#{adminMemberBean.userSearchResults}" paginator="true" rows="50" paginatorPosition="bottom"
+							paginatorAlwaysVisible="false" emptyMessage="No Member Found" style="width:100%;"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+							<p:ajax event="rowToggle" listener="#{adminMemberBean.onRowToggle}" />
+							<f:facet name="header">Recently Created Members/Volunteers</f:facet>
+							
+							<p:column style="width:5%" exportable="false">
+								<p:rowToggler />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="ID" />
+								</f:facet>
+								<h:outputText value="#{oneUser.id}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Name" />
+								</f:facet>
+								<h:outputText value="#{oneUser.name}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Address" />
+								</f:facet>
+								<h:outputText value="#{oneUser.address}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Phone" />
+								</f:facet>
+								<h:outputText value="#{oneUser.mobileNumber}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Reference Phone" />
+								</f:facet>
+								<h:outputText value="#{oneUser.referenceMobileNumber}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Email" />
+								</f:facet>
+								<h:outputText value="#{oneUser.email}" />
+							</p:column>
+							<p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="State" />
+                                </f:facet>
+                                <h:outputText value="#{oneUser.livingState.name}" rendered="#{!empty oneUser.livingState}"/>
+                                <h:outputText value="#{oneUser.votingState.name}" rendered="#{empty oneUser.livingState}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="AC" />
+                                </f:facet>
+                                <h:outputText value="#{oneUser.livingAssemblyConstituency.name}" rendered="#{!empty oneUser.livingAssemblyConstituency}"/>
+                                <h:outputText value="#{oneUser.livingAssemblyConstituency.name}" rendered="#{empty oneUser.livingAssemblyConstituency}"/>
+                            </p:column>
+
+
+
+							<p:rowExpansion>
+								<p:panelGrid columns="2" styleClass="topAlignPanelColumns">
+									<f:facet name="header">Member Details</f:facet>
+
+									<h:panelGrid id="display" columns="2" cellpadding="4">
+										<f:facet name="header">
+											<p:graphicImage value="#{oneUser.profilePic}" width="200" />
+										</f:facet>
+
+										<h:outputText value="Name" />
+										<h:outputText value="#{oneUser.name}" />
+
+										<h:outputText value="Gender" />
+										<h:outputText value="#{oneUser.gender}" />
+
+										<h:outputText value="Date Of Birth" />
+										<h:outputText value="#{oneUser.dateOfBirth}">
+											<f:convertDateTime pattern="dd-MMM-yyyy" />
+										</h:outputText>
+
+										<h:outputText value="Phone" />
+										<h:outputText value="#{oneUser.mobileNumber}" />
+										<h:outputText value="Email" />
+										<h:outputText value="#{oneUser.email}" />
+										
+                                        <h:outputText value="Living State" rendered="#{!empty oneUser.livingState}"/>
+                                        <h:outputText value="#{oneUser.livingState.name}" rendered="#{!empty oneUser.livingState}"/>
+                                        <h:outputText value="Living PC" rendered="#{!empty oneUser.livingParliamentConstituency}"/>
+                                        <h:outputText value="#{oneUser.livingParliamentConstituency.name}" rendered="#{!empty oneUser.livingParliamentConstituency}"/>
+                                        <h:outputText value="Living District" rendered="#{!empty oneUser.livingDistrict}"/>
+                                        <h:outputText value="#{oneUser.livingDistrict.name}" rendered="#{!empty oneUser.livingDistrict}"/>
+                                        <h:outputText value="Living AC" rendered="#{!empty oneUser.livingAssemblyConstituency}"/>
+                                        <h:outputText value="#{oneUser.livingAssemblyConstituency.name}" rendered="#{!empty oneUser.livingAssemblyConstituency}"/>
+                                        
+                                        <h:outputText value="Voting State" rendered="#{!empty oneUser.votingState}"/>
+                                        <h:outputText value="#{oneUser.votingState.name}" rendered="#{!empty oneUser.votingState}"/>
+                                        <h:outputText value="Voting PC" rendered="#{!empty oneUser.votingParliamentConstituency}"/>
+                                        <h:outputText value="#{oneUser.votingParliamentConstituency.name}" rendered="#{!empty oneUser.votingParliamentConstituency}"/>
+                                        <h:outputText value="Voting District" rendered="#{!empty oneUser.votingDistrict}"/>
+                                        <h:outputText value="#{oneUser.votingDistrict.name}" rendered="#{!empty oneUser.votingDistrict}"/>
+                                        <h:outputText value="Voting AC" rendered="#{!empty oneUser.votingAssemblyConstituency}"/>
+                                        <h:outputText value="#{oneUser.votingAssemblyConstituency.name}" rendered="#{!empty oneUser.votingAssemblyConstituency}"/>
+										
+                                        <h:outputText value="NRI Country" rendered="#{!empty oneUser.nriCountry}"/>
+                                        <h:outputText value="#{oneUser.nriCountry.name}" rendered="#{!empty oneUser.nriCountry}"/>
+                                        <h:outputText value="NRI Country Region" rendered="#{!empty oneUser.nriCountryRegion}"/>
+                                        <h:outputText value="#{oneUser.nriCountryRegion.name}" rendered="#{!empty oneUser.nriCountryRegion}"/>
+                                        <h:outputText value="NRI Country Region Area" rendered="#{!empty oneUser.nriCountryRegionArea}"/>
+                                        <h:outputText value="#{oneUser.nriCountryRegionArea.name}" rendered="#{!empty oneUser.nriCountryRegionArea}"/>
+
+									</h:panelGrid>
+									<p:dataTable var="oneInterest" value="#{oneUser.volunteerInterests}" emptyMessage="No Interests" style="width:100%;">
+										<p:column>
+											<h:outputText value="#{oneInterest.description}" />
+										</p:column>
+									</p:dataTable>
+								</p:panelGrid>
+
+								<!-- 
+								<p:outputLabel value="You can not edit this member" rendered="#{!adminSearchMemberBean.isMemberUpdateAllowed(oneUser)}"></p:outputLabel>
+								<p:commandButton id="editMemberButton" update=":userProfileForm:userProfileFormMainPanel" value="Update Member"
+									rendered="#{adminSearchMemberBean.isMemberUpdateAllowed(oneUser)}">
+									<f:setPropertyActionListener value="#{oneUser}" target="#{adminSearchMemberBean.selectedUserForEditing}" />
+								</p:commandButton>
+ -->
+							</p:rowExpansion>
+						</p:dataTable>
+			</h:form>
+			<!-- header ends -->
+
+
+			<!-- footer starts -->
+			<div class="footerWrapper">
+				<div class="container_24">
+					<div class="grid_24 panel footer">
+						Copyright &copy; 2016 <a href="#">www.swarajabhiyan.org</a>. All Rights Reserved.
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<!-- footer ends -->
+			<br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br>
+
+		</div>
+	</div>
+
+</h:body>
+</html>

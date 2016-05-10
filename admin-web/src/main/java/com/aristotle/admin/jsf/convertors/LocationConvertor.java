@@ -8,11 +8,13 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.aristotle.core.persistance.Location;
 
-@Component("jsfLocationConvertor")
+@Component
+@Scope("prototype")
 public class LocationConvertor implements Converter {
 
     private List<Location> locations;
@@ -23,6 +25,10 @@ public class LocationConvertor implements Converter {
 
     @Override
     public Object getAsObject(FacesContext fc, UIComponent uic, String value) {
+        System.out.println(this);
+        if (locations == null) {
+            return null;
+        }
         if (value != null && value.trim().length() > 0) {
             try {
                 long id = Long.parseLong(value);
@@ -57,6 +63,7 @@ public class LocationConvertor implements Converter {
     }
 
     public void setLocations(List<Location> locations) {
+        System.out.println("Setting Locations");
         this.locations = locations;
     }
 

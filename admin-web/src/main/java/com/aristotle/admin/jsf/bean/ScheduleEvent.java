@@ -21,8 +21,9 @@ public class ScheduleEvent extends DefaultScheduleEvent {
     private String contactEmail;
 	private String fbEventId;
 	private boolean national;
+    private boolean published;
 	private Long dbId;
-	
+    private int ver;
 	
 	public ScheduleEvent() {
 		super();
@@ -41,9 +42,12 @@ public class ScheduleEvent extends DefaultScheduleEvent {
 		contactNumber2 = eventDto.getContactNumber2();
 		contactNumber3 = eventDto.getContactNumber3();
 		contactNumber4 = eventDto.getContactNumber4();
+        contactEmail = eventDto.getContactEmail();
 		fbEventId = eventDto.getFbEventId();
 		national = eventDto.isNational();
 		dbId = eventDto.getId();
+        ver = eventDto.getVer();
+        published = eventDto.isPublished();
 	}
 	public ScheduleEvent(String title, Date start, Date end, boolean allDay) {
 		super(title, start, end, allDay);
@@ -138,6 +142,30 @@ public class ScheduleEvent extends DefaultScheduleEvent {
 
     public void setContactEmail(String contactEmail) {
         this.contactEmail = contactEmail;
+    }
+
+    public int getVer() {
+        return ver;
+    }
+
+    public void setVer(int ver) {
+        this.ver = ver;
+    }
+
+    public boolean isPublished() {
+        return published;
+    }
+
+    public void setPublished(boolean published) {
+        this.published = published;
+    }
+
+    @Override
+    public String toString() {
+        return "ScheduleEvent [description=" + description + ", lattitude=" + lattitude + ", longitude=" + longitude + ", depth=" + depth + ", address=" + address + ", contactNumber1="
+                + contactNumber1 + ", contactNumber2=" + contactNumber2 + ", contactNumber3=" + contactNumber3 + ", contactNumber4=" + contactNumber4 + ", contactEmail=" + contactEmail
+                + ", fbEventId=" + fbEventId + ", national=" + national + ", published=" + published + ", dbId=" + dbId + ", ver=" + ver + ", getId()=" + getId() + ", getStartDate()="
+                + getStartDate() + ", getEndDate()=" + getEndDate() + ", isAllDay()=" + isAllDay() + ", isEditable()=" + isEditable() + "]";
     }
 	
 

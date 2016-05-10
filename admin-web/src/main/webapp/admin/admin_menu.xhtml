@@ -31,10 +31,6 @@ body {
 	padding: 0;
 }
 
-.ui-widget,.ui-widget .ui-widget {
-	font-size: 90% !important;
-}
-
 .topAlignPanelColumns td {
 	vertical-align: top;
 }
@@ -68,8 +64,10 @@ body {
 				<p:menuitem value="Twitter" actionListener="#{menuBean.goToVoiceOfAapAdminPageTwitter}" rendered="#{menuBean.voiceOfAapTwitterAllowed}"></p:menuitem>
 				<p:menuitem value="Email" actionListener="#{menuBean.goToEmailAdminPageTwitter}" rendered="#{menuBean.emailAllowed}"></p:menuitem>
 				<p:menuitem value="Sms" actionListener="#{menuBean.goToSmsAdminPageTwitter}" rendered="#{menuBean.smsAllowed}"></p:menuitem>
+				<p:menuitem value="Mobile Groups" actionListener="#{menuBean.goToMobileGroupPage}" rendered="#{menuBean.smsAllowed}"></p:menuitem>
 				<p:menuitem value="Global Donation Campaign" actionListener="#{menuBean.goToGlobalDonationcampaignAdminPage}" rendered="#{menuBean.globalDonationCampaignAllowed}"></p:menuitem>
 				<p:menuitem value="Candidates" actionListener="#{menuBean.goToCandidateAdminPage}" rendered="#{menuBean.candidateAllowed}"></p:menuitem>
+				<p:menuitem value="Call Campaigns" actionListener="#{menuBean.goToCallCampaignPage}" rendered="#{menuBean.callCampaignAllowed}"></p:menuitem>
 			</p:submenu>
 
 			<p:submenu label="Content" rendered="#{menuBean.contentAllowed}">
@@ -81,11 +79,18 @@ body {
 			<p:submenu label="Developer" rendered="#{menuBean.developerAllowed}">
 			<p:menuitem value="Url Mappings" actionListener="#{menuBean.goToUrlMappingPage}" rendered="#{menuBean.webDeveloperRoleAllowed}"></p:menuitem>
                 <p:menuitem value="Html templates" actionListener="#{menuBean.goToHtmlTemplatePage}" rendered="#{menuBean.webDeveloperRoleAllowed}"></p:menuitem>
+                <p:menuitem value="Html Parts" actionListener="#{menuBean.goToHtmlPartPage}" rendered="#{menuBean.webDeveloperRoleAllowed}"></p:menuitem>
                 <p:menuitem value="Static Data Plugins" actionListener="#{menuBean.goToStaticDataPluginPage}" rendered="#{menuBean.webDeveloperRoleAllowed}"></p:menuitem>
             </p:submenu>
             <p:submenu label="Admin" rendered="#{menuBean.adminAllowed}">
                 <p:menuitem value="Manage User Roles" actionListener="#{menuBean.goToManageUserRolePage}" rendered="#{menuBean.manageUserRoleAllowed}"></p:menuitem>
                 <p:menuitem value="Edit Office Detail" actionListener="#{menuBean.goToEditOfficeDetailPage}" rendered="#{menuBean.editOfficeDetailAllowed}"></p:menuitem>
+                <p:menuitem value="Search Volunteer" actionListener="#{menuBean.goToSearchVolunteerPage}" rendered="#{menuBean.searchVolunteerAllowed}"></p:menuitem>
+                <p:menuitem value="Teams" actionListener="#{menuBean.goToTeamsPage}" rendered="#{menuBean.editTeamAllowed}"></p:menuitem>
+                <p:menuitem value="Manager User/Member/Volunteer" actionListener="#{menuBean.goToManagerUserPage}" rendered="#{menuBean.editUserAllowed}"></p:menuitem>
+                <p:menuitem value="Create Offline Members" actionListener="#{menuBean.goToOfflineMemberPage}" rendered="#{menuBean.editUserAllowed}"></p:menuitem>
+                <p:menuitem value="Upload user Data" actionListener="#{menuBean.goToUploadUserDataPage}" rendered="#{menuBean.uploadUserDataAllowed}"></p:menuitem>
+                
             </p:submenu>
 <!-- 
 			<p:submenu label="Members" rendered="#{menuBean.memberAllowed}">
@@ -137,39 +142,40 @@ body {
 					<p:outputLabel />
 					<p:commandButton value="Global" actionListener="#{menuBean.selectGlobal}" styleClass="ui-priority-primary">
 						</p:commandButton>
-						<!-- 
+						 
 					<h:outputLabel for="state" value="State" />
-					<p:selectOneMenu id="state" value="#{menuBean.selectedStateId}" effect="fold" editable="false">
-						<f:selectItem itemLabel="Select State" itemValue="0" />
-						<f:selectItems value="#{menuBean.states}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
+					<p:selectOneMenu id="state" value="#{menuBean.selectedState}" effect="fold" editable="false"  converter="#{menuBean.stateLocationConvertor}">
+                        <f:selectItem itemLabel="Select State" itemValue="0" />
+						<f:selectItems value="#{menuBean.states}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState}"/>
 
-						<p:ajax event="change" update=":adminForm:district,:adminForm:parliamentConstituency" listener="#{menuBean.handleStateChange}" />
+						<p:ajax event="change" update="@form:district,@form:parliamentConstituency" listener="#{menuBean.handleStateChange}" />
 					</p:selectOneMenu>
+					
 					<h:outputLabel for="district" value="District*" />
-					<p:selectOneMenu id="district" value="#{menuBean.selectedDistrictId}" effect="fold" editable="false">
+					<p:selectOneMenu id="district" value="#{menuBean.selectedDistrict}" effect="fold" editable="false"  converter="#{menuBean.districtLocationConvertor}">
 						<f:selectItem itemLabel="Select District" itemValue="0" />
-						<f:selectItems value="#{menuBean.districtOfState}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict.id}" />
+						<f:selectItems value="#{menuBean.districts}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict}"/>
 
-						<p:ajax event="change" update=":adminForm:assemblyConstituency" listener="#{menuBean.handleDistrictChange}" />
+						<p:ajax event="change" update="@form:assemblyConstituency" listener="#{menuBean.handleDistrictChange}" />
 					</p:selectOneMenu>
-
+ 
 					<h:outputLabel for="parliamentConstituency" value="Parliament Constituency*" />
 
-					<p:selectOneMenu id="parliamentConstituency" value="#{menuBean.selectedPcId}" effect="fold" editable="false">
+					<p:selectOneMenu id="parliamentConstituency" value="#{menuBean.selectedPc}" effect="fold" editable="false" converter="#{menuBean.pcLocationConvertor}">
 						<f:selectItem itemLabel="Select Parliament Constituency" itemValue="0" />
-						<f:selectItems value="#{menuBean.parliamentConstituencyOfState}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}"
-							itemValue="#{oneParliamentConstituency.id}" />
+						<f:selectItems value="#{menuBean.pcs}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}"
+							itemValue="#{oneParliamentConstituency}"/>
 
 					</p:selectOneMenu>
 
 					<h:outputLabel for="assemblyConstituency" value="Assembly Constituency*" />
-					<p:selectOneMenu id="assemblyConstituency" value="#{menuBean.selectedAcId}" effect="fold" editable="false">
+					<p:selectOneMenu id="assemblyConstituency" value="#{menuBean.selectedAc}" effect="fold" editable="false" converter="#{menuBean.acLocationConvertor}">
 						<f:selectItem itemLabel="Select Assembly Constituency" itemValue="0" />
-						<f:selectItems value="#{menuBean.assemblyConstituencyOfDistrict}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
-							itemValue="#{oneAssemblyConstituency.id}" />
+						<f:selectItems value="#{menuBean.acs}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
+							itemValue="#{oneAssemblyConstituency}"/>
 
 					</p:selectOneMenu>
-                -->
+                
 			 	</p:panelGrid>
 				<p:commandButton value="Cancel" oncomplete="chooseLocation.hide()" styleClass="ui-priority-primary">
 				</p:commandButton>

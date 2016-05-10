@@ -8,38 +8,17 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.Version;
 
 import com.aristotle.core.enums.ContentStatus;
 
 @Entity
 @Table(name="videos")
-public class Video {
+public class Video extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
-	@Version
-	@Column(name="ver")
-	private int ver;
-	
-	@Column(name="date_created")
-	private Date dateCreated;
-	@Column(name="date_modified")
-	private Date dateModified;
-	@Column(name="creator_id")
-	private Long creatorId;
-	@Column(name="modifier_id")
-	private Long modifierId;
-	
-	
 	@Column(name = "title")
 	private String title; // Title of the news/post item
 	@Column(name = "image_url")
@@ -106,7 +85,18 @@ public class Video {
 	inverseJoinColumns = {
 	@JoinColumn(name="state_id")
 	})
-	private List<State> states;
+    private List<State> states;
+	
+	
+	@ManyToMany(cascade=CascadeType.ALL)
+    @JoinTable(name = "video_location",
+    joinColumns = {
+    @JoinColumn(name="video_id") 
+    },
+    inverseJoinColumns = {
+    @JoinColumn(name="location_id")
+    })
+    private List<Location> locations;
 	
 	@ManyToMany(cascade=CascadeType.ALL)
 	@JoinTable(name = "video_country",
@@ -132,42 +122,6 @@ public class Video {
 	@Enumerated(EnumType.STRING)
 	private ContentStatus contentStatus;
 
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public int getVer() {
-		return ver;
-	}
-	public void setVer(int ver) {
-		this.ver = ver;
-	}
-	public Date getDateCreated() {
-		return dateCreated;
-	}
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-	public Date getDateModified() {
-		return dateModified;
-	}
-	public void setDateModified(Date dateModified) {
-		this.dateModified = dateModified;
-	}
-	public Long getCreatorId() {
-		return creatorId;
-	}
-	public void setCreatorId(Long creatorId) {
-		this.creatorId = creatorId;
-	}
-	public Long getModifierId() {
-		return modifierId;
-	}
-	public void setModifierId(Long modifierId) {
-		this.modifierId = modifierId;
-	}
 	public String getTitle() {
 		return title;
 	}
@@ -264,4 +218,12 @@ public class Video {
 	public void setChannelId(String channelId) {
 		this.channelId = channelId;
 	}
+
+    public List<Location> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(List<Location> locations) {
+        this.locations = locations;
+    }
 }

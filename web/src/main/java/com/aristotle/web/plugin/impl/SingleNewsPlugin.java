@@ -39,7 +39,6 @@ public class SingleNewsPlugin extends AbstractDataPlugin {
 
             News news = newsService.getNewsById(newsId);
             JsonObject newsJsonObject = convertNews(news);
-            System.out.println("news = " + news);
 
             context.add(name, newsJsonObject);
         } catch (Exception ex) {

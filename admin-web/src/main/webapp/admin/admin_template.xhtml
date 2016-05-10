@@ -44,8 +44,8 @@
 	<div style="width: 1200px; margin: 0 auto;">
 		<div style="width: 12 00px; margin: 0;">
 			<p:blockUI block="adminTemplateForm" trigger=":adminTemplateForm:tabview:saveTemplate">
-			Saving Profile<br />
-				<p:graphicImage value="/images/ajax-loader.gif" />
+			Loading...<br />
+                <p:graphicImage width="80" value="http://static.eswaraj.com/admin/images/ajax-loader.gif" />
 			</p:blockUI>
 			<h:form id="adminTemplateForm"  enctype="multipart/form-data">
 				<p:messages id="messages" autoUpdate="true" closable="true" />
@@ -105,7 +105,7 @@
                                     <p:ajax event="change" update=":adminTemplateForm:formView" listener="#{templateAdminBean.handleUrlSelection}" />
                                 </p:selectOneMenu>
                                 <p:outputLabel value="Template"></p:outputLabel>
-                                <p:inputTextarea rows="6" cols="175" value="#{templateAdminBean.selectedTemplateUrl.htmlContent}" />
+                                <p:inputTextarea rows="35" cols="175" value="#{templateAdminBean.selectedTemplateUrl.htmlContentDraft}" autoResize="false" style="font-family: Verdana, Geneva, sans-serif;font-size: 16px;"/>
                             </p:panelGrid>
                             <br></br>
                             <p:outputPanel id="buttonPanel">
@@ -118,9 +118,9 @@
                                         actionListener="#{templateAdminBean.saveTemplate}" styleClass="ui-priority-primary"
                                         oncomplete="window.open('#{templateAdminBean.draftUrl}');" rendered="#{!empty templateAdminBean.draftUrl}">
                                     </p:commandButton>
-                                    <p:commandButton id="saveTemplate" value="Save Template" update=":adminTemplateForm:mainPanel"
-                                        actionListener="#{templateAdminBean.saveTemplate}" styleClass="ui-priority-primary"
-                                        rendered="#{empty templateAdminBean.draftUrl}">
+                                    <p:commandButton id="saveTemplate" value="Make it Live" update=":adminTemplateForm:mainPanel"
+                                        actionListener="#{templateAdminBean.makeItLive}" styleClass="ui-priority-primary"
+                                        rendered="#{templateAdminBean.copyToProdAvailable}">
                                     </p:commandButton>
                                 </p:outputPanel>
 

@@ -2,46 +2,45 @@ package com.aristotle.core.persistance;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Version;
 
 import com.aristotle.core.enums.PlannedPostStatus;
 import com.aristotle.core.enums.PostLocationType;
 
 @Entity
 @Table(name = "planned_sms")
-public class PlannedSms {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "target_type")
+public class PlannedSms extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	@Version
-	@Column(name = "ver")
-	private int ver;
 
-	@Column(name = "date_created")
-	private Date dateCreated;
-	@Column(name = "date_modified")
-	private Date dateModified;
-	@Column(name = "creator_id")
-	private Long creatorId;
-	@Column(name = "modifier_id")
-	private Long modifierId;
 
 	@Column(name = "message", length = 140)
 	private String message;
 
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinColumn(name = "sms_template_id")
+    private SmsTemplate smsTemplate;
+    @Column(name = "sms_template_id", insertable = false, updatable = false)
+    private Long smsTemplateId;
+
 	@Column(name = "posting_time")
 	private Date postingTime;
 
-	@Column(name = "status", nullable = false)
+    @Column(name = "target_type", insertable = false, updatable = false)
+    private String targetType;
+
+    @Column(name = "status", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private PlannedPostStatus status;
 
@@ -49,61 +48,22 @@ public class PlannedSms {
 	@Enumerated(EnumType.STRING)
 	private PostLocationType locationType;
 
-	@Column(name = "location_id")
+    @Column(name = "location_id")
 	private Long locationId;
 
 	@Column(name = "error_message")
 	private String errorMessage;
 
-	public Long getId() {
-		return id;
-	}
+    @Column(name = "total_members")
+    private Integer totalMembers = 0;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @Column(name = "total_schedules")
+    private Integer totalScheduled = 0;
 
-	public int getVer() {
-		return ver;
-	}
+    @Column(name = "total_success")
+    private Integer totalSuccess = 0;
 
-	public void setVer(int ver) {
-		this.ver = ver;
-	}
-
-	public Date getDateCreated() {
-		return dateCreated;
-	}
-
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-
-	public Date getDateModified() {
-		return dateModified;
-	}
-
-	public void setDateModified(Date dateModified) {
-		this.dateModified = dateModified;
-	}
-
-	public Long getCreatorId() {
-		return creatorId;
-	}
-
-	public void setCreatorId(Long creatorId) {
-		this.creatorId = creatorId;
-	}
-
-	public Long getModifierId() {
-		return modifierId;
-	}
-
-	public void setModifierId(Long modifierId) {
-		this.modifierId = modifierId;
-	}
-
-	public String getMessage() {
+    public String getMessage() {
 		return message;
 	}
 
@@ -151,6 +111,53 @@ public class PlannedSms {
 		this.errorMessage = errorMessage;
 	}
 
+    public String getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
+    }
+
+    public Integer getTotalMembers() {
+        return totalMembers;
+    }
+
+    public void setTotalMembers(Integer totalMembers) {
+        this.totalMembers = totalMembers;
+    }
+
+    public Integer getTotalScheduled() {
+        return totalScheduled;
+    }
+
+    public void setTotalScheduled(Integer totalScheduled) {
+        this.totalScheduled = totalScheduled;
+    }
+
+    public Integer getTotalSuccess() {
+        return totalSuccess;
+    }
+
+    public void setTotalSuccess(Integer totalSuccess) {
+        this.totalSuccess = totalSuccess;
+    }
+
+    public SmsTemplate getSmsTemplate() {
+        return smsTemplate;
+    }
+
+    public void setSmsTemplate(SmsTemplate smsTemplate) {
+        this.smsTemplate = smsTemplate;
+    }
+
+    public Long getSmsTemplateId() {
+        return smsTemplateId;
+    }
+
+    public void setSmsTemplateId(Long smsTemplateId) {
+        this.smsTemplateId = smsTemplateId;
+    }
 	
 
 }

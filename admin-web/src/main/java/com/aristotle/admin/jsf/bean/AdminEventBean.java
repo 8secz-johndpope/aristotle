@@ -140,11 +140,10 @@ public class AdminEventBean extends BaseMultiPermissionAdminJsfBean {
 		eventDto.setFbEventId(event.getFbEventId());
 		eventDto.setLattitude(marker.getLatlng().getLat());
 		eventDto.setLongitude(marker.getLatlng().getLng());
-		
+        eventDto.setVer(event.getVer());
 		eventDto.setStartDate(event.getStartDate());
 		eventDto.setTitle(event.getTitle());
-
-        Long selectedLocationId = null;
+        eventDto.setPublished(event.isPublished());
 
         eventDto = eventService.saveEvent(eventDto, menuBean.getSelectedLocation());
 		event = new ScheduleEvent(eventDto);
@@ -154,6 +153,7 @@ public class AdminEventBean extends BaseMultiPermissionAdminJsfBean {
 
 	public void onEventSelect(SelectEvent selectEvent) {
 		try {
+            System.out.println("Existing Event Selected  : " + selectEvent.getObject());
 			event = (ScheduleEvent) selectEvent.getObject();
 			marker.setLatlng(new LatLng(((ScheduleEvent) selectEvent.getObject()).getLattitude(), ((ScheduleEvent) selectEvent.getObject())
 					.getLongitude()));
@@ -165,12 +165,14 @@ public class AdminEventBean extends BaseMultiPermissionAdminJsfBean {
 
 	public void onDateSelect(SelectEvent selectEvent) {
 		try {
+            System.out.println("New Event creation for Date " + selectEvent.getObject());
 			event = new ScheduleEvent("", (Date) selectEvent.getObject(), (Date) selectEvent.getObject());
 			event.setLattitude(defaultLattitude);
 			event.setLongitude(defaultLongitude);
 			event.setDepth(defaultDepth);
             event.setContactEmail("contact@swarajabhiyan.org");
 			marker.setLatlng(new LatLng(defaultLattitude, defaultLongitude));
+            event.setPublished(true);
             showCalendarView = false;
 		} catch (Exception ex) {
 			sendErrorMessageToJsfScreen(ex);
@@ -210,7 +212,7 @@ public class AdminEventBean extends BaseMultiPermissionAdminJsfBean {
 
 	private void refreshEvents() {
 		try {
-            List<Event> events = eventService.getLocationEvents(menuBean.getSelectedLocation(), 100);
+            List<Event> events = eventService.getLocationEvents(menuBean.getSelectedLocation(), 100, false);
 			eventModel.clear();
             for (Event oneEvent : events) {
 				eventModel.addEvent(new ScheduleEvent(oneEvent));
@@ -222,6 +224,8 @@ public class AdminEventBean extends BaseMultiPermissionAdminJsfBean {
 
 	public void onMarkerDrag(MarkerDragEvent event) {
 		marker = event.getMarker();
+        this.event.setLattitude(marker.getLatlng().getLat());
+        this.event.setLongitude(marker.getLatlng().getLng());
 	}
 
 	public void onStateChange(StateChangeEvent stateChangeEvent) {

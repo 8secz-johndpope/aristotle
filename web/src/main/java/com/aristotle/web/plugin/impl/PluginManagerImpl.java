@@ -25,7 +25,9 @@ import com.aristotle.core.persistance.DataPlugin;
 import com.aristotle.core.persistance.StaticDataPlugin;
 import com.aristotle.core.persistance.UrlMapping;
 import com.aristotle.core.persistance.UrlMappingPlugin;
+import com.aristotle.core.persistance.User;
 import com.aristotle.core.service.DataPluginService;
+import com.aristotle.web.exception.NotLoggedInException;
 import com.aristotle.web.parameters.HttpParameters;
 import com.aristotle.web.plugin.PatternUrlMapping;
 import com.aristotle.web.plugin.PluginManager;
@@ -100,11 +102,9 @@ public class PluginManagerImpl implements PluginManager {
     }
 
     private void loadGlobalDataPlugins(JsonParser jsonParser) throws AppException {
-        System.out.println("Loading Global Data Plugins");
         List<DataPlugin> globalDataPlugins = dataPluginService.getAllGlobalDataPlugins();
         globalWebDataPlugins = new ArrayList<WebDataPlugin>(globalDataPlugins.size());
         for(DataPlugin oneDataPlugin : globalDataPlugins){
-            System.out.println(oneDataPlugin.getPluginName());
             WebDataPlugin oneWebDataPlugin = createDataPlugin(oneDataPlugin, jsonParser);
             oneWebDataPlugin.setSettings("{}");// just empty valid Json
             globalWebDataPlugins.add(oneWebDataPlugin);
@@ -142,18 +142,30 @@ public class PluginManagerImpl implements PluginManager {
     }
 
     @Override
-    public void applyAllPluginsForUrl(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView, boolean addData) {
+    public void applyAllPluginsForUrl(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView, boolean addData, boolean applyGenericPlugins) throws NotLoggedInException {
         init();
         String requestedUrl = httpServletRequest.getRequestURI();
         System.out.println("Handling Url = " + requestedUrl);
-        List<WebDataPlugin> plugins = findDataPlugins(httpServletRequest, requestedUrl);
-        if (plugins == null || plugins.isEmpty()) {
+        PatternUrlMapping patternUrlMapping = findDataPlugins(httpServletRequest, requestedUrl);
+        if(patternUrlMapping == null){
             return;
+        }
+        if (patternUrlMapping.getUrlMapping().isSecured()) {
+            User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
+            if (user == null) {
+                throw new NotLoggedInException("User Not logged In");
+            }
         }
         if(addData){
             // First apply all Global Data Plugins
-            for (WebDataPlugin oneWebDataPlugin : globalWebDataPlugins) {
-                oneWebDataPlugin.applyPlugin(httpServletRequest, httpServletResponse, modelAndView);
+            if(applyGenericPlugins){
+                for (WebDataPlugin oneWebDataPlugin : globalWebDataPlugins) {
+                    oneWebDataPlugin.applyPlugin(httpServletRequest, httpServletResponse, modelAndView);
+                }
+            }
+            List<WebDataPlugin> plugins = patternUrlMapping.getDataPlugins();
+            if (plugins == null) {
+                return;
             }
             for (WebDataPlugin oneWebDataPlugin : plugins) {
                 oneWebDataPlugin.applyPlugin(httpServletRequest, httpServletResponse, modelAndView);
@@ -163,7 +175,7 @@ public class PluginManagerImpl implements PluginManager {
         
     }
 
-    private List<WebDataPlugin> findDataPlugins(HttpServletRequest httpServletRequest, String url) {
+    private PatternUrlMapping findDataPlugins(HttpServletRequest httpServletRequest, String url) {
         String apiUrl = url;
         if (url.startsWith("/api")) {
             apiUrl = url.replaceAll("/api", "");
@@ -174,13 +186,13 @@ public class PluginManagerImpl implements PluginManager {
                 if (url.equalsIgnoreCase(onePatternUrlMapping.getUrlMapping().getUrlPattern()) || apiUrl.equalsIgnoreCase(onePatternUrlMapping.getUrlMapping().getUrlPattern())) {
                     httpServletRequest.setAttribute(HttpParameters.PATH_PARAMETER_PARAM, Collections.emptyMap());
                     httpServletRequest.setAttribute(HttpParameters.URL_MAPPING, onePatternUrlMapping.getUrlMapping());
-                    return onePatternUrlMapping.getDataPlugins();
+                    return onePatternUrlMapping;
                 }
                 for (String oneUrl : onePatternUrlMapping.getAliases()) {
                     if (url.equalsIgnoreCase(oneUrl)) {
                         httpServletRequest.setAttribute(HttpParameters.PATH_PARAMETER_PARAM, Collections.emptyMap());
                         httpServletRequest.setAttribute(HttpParameters.URL_MAPPING, onePatternUrlMapping.getUrlMapping());
-                        return onePatternUrlMapping.getDataPlugins();
+                        return onePatternUrlMapping;
                     }
                 }
             } else {
@@ -189,14 +201,13 @@ public class PluginManagerImpl implements PluginManager {
                     Map<String, String> pathParameters = new LinkedHashMap<String, String>();
                     int count = 1;
                     for (String oneParam : onePatternUrlMapping.getParameters()) {
-                        System.out.println("Found " + oneParam + ": " + m.group(count));
                         pathParameters.put(oneParam, m.group(count));
                         count++;
                     }
 
                     httpServletRequest.setAttribute(HttpParameters.PATH_PARAMETER_PARAM, pathParameters);
                     httpServletRequest.setAttribute(HttpParameters.URL_MAPPING, onePatternUrlMapping.getUrlMapping());
-                    return onePatternUrlMapping.getDataPlugins();
+                    return onePatternUrlMapping;
                 }
             }
 

@@ -2,44 +2,30 @@ package com.aristotle.core.persistance;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Version;
 
 import com.aristotle.core.enums.PlannedPostStatus;
 import com.aristotle.core.enums.PostLocationType;
 
 @Entity
 @Table(name = "planned_tweets")
-public class PlannedTweet {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	@Version
-	@Column(name = "ver")
-	private int ver;
-
-	@Column(name = "date_created")
-	private Date dateCreated;
-	@Column(name = "date_modified")
-	private Date dateModified;
-	@Column(name = "creator_id")
-	private Long creatorId;
-	@Column(name = "modifier_id")
-	private Long modifierId;
+public class PlannedTweet extends BaseEntity{
 
 	@Column(name = "tweet_type")
 	private String tweetType;
 	
 	@Column(name = "tweet_id")
 	private Long tweetId;
+
+    @Column(name = "from_twitter_user_id")
+    private Long fromTwitterUserId;
 
 	@Column(name = "picture")
 	private String picture;
@@ -49,6 +35,10 @@ public class PlannedTweet {
 
     @Column(name = "total_required")
     private Integer totalRequired;
+
+    @Column(name = "total_retweets")
+    // Total ReTweets On Twitter
+    private Integer totalRetweets;
 
     @Column(name = "posting_time")
 	private Date postingTime;
@@ -72,39 +62,55 @@ public class PlannedTweet {
 	@Column(name = "total_failed_tweets")
 	private int totalFailedTweets;
 
-	public Long getId() {
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@JoinColumn(name="twitter_account_id")
+	private TwitterAccount twitterAccount;
+	@Column(name="twitter_account_id", insertable=false,updatable=false)
+	private Long twitterAccountId;
+
+
+	@Override
+    public Long getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	@Override
+    public void setId(Long id) {
 		this.id = id;
 	}
 
-	public int getVer() {
+	@Override
+    public int getVer() {
 		return ver;
 	}
 
-	public void setVer(int ver) {
+	@Override
+    public void setVer(int ver) {
 		this.ver = ver;
 	}
 
-	public Date getDateCreated() {
+	@Override
+    public Date getDateCreated() {
 		return dateCreated;
 	}
 
-	public void setDateCreated(Date dateCreated) {
+	@Override
+    public void setDateCreated(Date dateCreated) {
 		this.dateCreated = dateCreated;
 	}
 
-	public Date getDateModified() {
+	@Override
+    public Date getDateModified() {
 		return dateModified;
 	}
 
-	public void setDateModified(Date dateModified) {
+	@Override
+    public void setDateModified(Date dateModified) {
 		this.dateModified = dateModified;
 	}
 
-	public Long getCreatorId() {
+	@Override
+    public Long getCreatorId() {
 		return creatorId;
 	}
 
@@ -112,7 +118,8 @@ public class PlannedTweet {
 		this.creatorId = creatorId;
 	}
 
-	public Long getModifierId() {
+	@Override
+    public Long getModifierId() {
 		return modifierId;
 	}
 
@@ -214,6 +221,39 @@ public class PlannedTweet {
 
     public void setTotalRequired(Integer totalRequired) {
         this.totalRequired = totalRequired;
+    }
+
+    public Long getFromTwitterUserId() {
+        return fromTwitterUserId;
+    }
+
+    public void setFromTwitterUserId(Long fromTwitterUserId) {
+        this.fromTwitterUserId = fromTwitterUserId;
+    }
+
+	public Long getTwitterAccountId() {
+		return twitterAccountId;
+	}
+
+	public void setTwitterAccountId(Long twitterAccountId) {
+		this.twitterAccountId = twitterAccountId;
+	}
+
+	public TwitterAccount getTwitterAccount() {
+		return twitterAccount;
+	}
+
+	public void setTwitterAccount(TwitterAccount twitterAccount) {
+		this.twitterAccount = twitterAccount;
+	}
+
+
+    public Integer getTotalRetweets() {
+        return totalRetweets;
+    }
+
+    public void setTotalRetweets(Integer totalRetweets) {
+        this.totalRetweets = totalRetweets;
     }
 
     @Override
