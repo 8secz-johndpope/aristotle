@@ -44,7 +44,6 @@ public class DomainEditor extends FormLayout {
 	Button delete = new Button("Delete", FontAwesome.TRASH_O);
 	CssLayout actions = new CssLayout(save, cancel, delete);
 
-	@Autowired
 	public DomainEditor() {
 
 		addComponents(name, nameAliases, actions);
