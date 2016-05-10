@@ -20,7 +20,7 @@ import com.google.common.cache.CacheBuilder;
 
 @SpringBootApplication
 @ComponentScan(basePackages = { "com.aristotle.core.service", "com.aristotle.web.controller", "com.aristotle.web.plugin.impl", "com.aristotle.web.plugin.impl", "com.aristotle.web.ui.template.impl",
-        "com.aristotle.web.service" })
+        "com.aristotle.web.service", "com.aristotle.web.ui" })
 @EnableAutoConfiguration
 @EnableCaching
 public class App extends SpringBootServletInitializer {
