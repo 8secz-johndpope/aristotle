@@ -30,8 +30,8 @@ public class MemberListUI extends UI {
 	private final Button addNewBtn;
 
 	@Autowired
-	public MemberListUI(DomainEditor editor) {
-		this.editor = editor;
+	public MemberListUI() {
+		this.editor = new DomainEditor();
 		this.grid = new Grid();
 		this.filter = new TextField();
 		this.addNewBtn = new Button("New Domain", FontAwesome.PLUS);
