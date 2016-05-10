@@ -7,6 +7,7 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
@@ -25,7 +26,7 @@ import com.vaadin.ui.themes.ValoTheme;
  * (https://vaadin.com/addon/viritin).
  */
 @SpringComponent
-@UIScope
+@SpringView
 public class DomainEditor extends FormLayout {
 
 	/**
