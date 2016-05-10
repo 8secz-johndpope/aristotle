@@ -7,8 +7,8 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.UIScope;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
@@ -26,7 +26,7 @@ import com.vaadin.ui.themes.ValoTheme;
  * (https://vaadin.com/addon/viritin).
  */
 @SpringComponent
-@SpringView
+@ViewScope
 public class DomainEditor extends FormLayout {
 
 	/**
@@ -78,7 +78,7 @@ public class DomainEditor extends FormLayout {
 	public final void editDomain(Domain c) {
 
 		final boolean persisted = c.getId() != null;
-		domain = c;
+			domain = c;
 		cancel.setVisible(persisted);
 
 		// Bind customer properties to similarly named fields
