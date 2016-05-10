@@ -29,7 +29,6 @@ public class MemberListUI extends UI {
 
 	private final Button addNewBtn;
 
-	@Autowired
 	public MemberListUI() {
 		this.editor = new DomainEditor();
 		this.grid = new Grid();
