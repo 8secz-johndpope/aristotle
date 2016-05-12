@@ -361,7 +361,7 @@ public class RegisterController {
             String msg = getParam(httpServletRequest, "msg", null);
             User savedUser = userService.registerIvrMember(mobileNumber, name, gender, amount, paymentMode, state, district, msg);
             jsonObject.addProperty("mobile", mobileNumber);
-            jsonObject.addProperty("name", name);
+            jsonObject.addProperty("name", name.trim());
             jsonObject.addProperty("gender", gender);
             jsonObject.addProperty("amount", amount);
             jsonObject.addProperty("pm", paymentMode);
