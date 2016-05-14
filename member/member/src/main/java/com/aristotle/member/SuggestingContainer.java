@@ -19,7 +19,7 @@ import com.vaadin.server.ExternalResource;
 @Component
 public class SuggestingContainer extends BeanItemContainer<CountryBean> {
 
-	@Value("${user_search_end_point:search-sa-users-vog5arqjslh4wkqhjcnncwia44.us-west-2.cloudsearch.amazonaws.com}")
+	@Value("${user_search_end_point}")
 	private String searchEndPoint;
 	private CountryBean defaultCountry;
 	private HttpUtil httpUtil = new HttpUtil();

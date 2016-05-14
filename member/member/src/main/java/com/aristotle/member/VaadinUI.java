@@ -37,7 +37,7 @@ import com.vaadin.ui.themes.ValoTheme;
 @Theme("valo")
 public class VaadinUI extends UI {
 
-	@Value("${user_search_end_point:search-sa-users-vog5arqjslh4wkqhjcnncwia44.us-west-2.cloudsearch.amazonaws.com}")
+	@Value("${user_search_end_point}")
 	private String searchEndPoint;
 	private HttpUtil httpUtil = new HttpUtil();
 	private JsonParser jsonParser = new JsonParser();
