@@ -12,6 +12,7 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.spring.annotation.SpringUI;
@@ -39,12 +40,10 @@ public class VaadinUI extends UI {
 	public VaadinUI() {
 		//nameSuggestBox = new NameSuggestBox();
 		suggestingComboBox = new SuggestingComboBox();
-		stateCombobox = new ComboBox("State");
+		stateCombobox = new ComboBox();
 		stateCombobox.setInvalidAllowed(false);
 		stateCombobox.setNullSelectionAllowed(false);
 		
-		stateCombobox.setItemCaptionMode(ItemCaptionMode.PROPERTY);
-		stateCombobox.setItemCaptionPropertyId("name");
 		//suggestingContainer = new SuggestingContainer();
 	}
 
@@ -52,7 +51,12 @@ public class VaadinUI extends UI {
 	protected void init(VaadinRequest request) {
 		// build layout
 		List<State> states = stateService.getAllStates();
-		stateCombobox.addItems(states);
+		BeanItemContainer<State> stateContainer = new BeanItemContainer<State>(State.class);
+		stateContainer.addAll(states);
+		stateCombobox.setContainerDataSource(stateContainer);
+		stateCombobox.setItemCaptionMode(ItemCaptionMode.PROPERTY);
+		stateCombobox.setItemCaptionPropertyId("name");
+		
 		suggestingComboBox.setImmediate(false);
 		suggestingComboBox.addValueChangeListener(new Property.ValueChangeListener() {
 			
