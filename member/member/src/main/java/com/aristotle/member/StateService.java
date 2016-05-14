@@ -14,12 +14,15 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 @Component
 public class StateService {
 
 	HttpUtil httpUtil = new HttpUtil();
 	Gson gson = new Gson();
+	JsonParser jsonParser = new JsonParser();
 	
 	LoadingCache<Long, List<State>> cache = CacheBuilder.newBuilder()
 		       .maximumSize(1000)
@@ -28,7 +31,9 @@ public class StateService {
 		           new CacheLoader<Long, List<State>>() {
 		             public List<State> load(Long key) throws Exception {
 		            	 String data = httpUtil.getResponse("https://www.swarajabhiyan.org/api/states");
-		            	 List<State> states = gson.fromJson(data, new TypeToken<List<State>>(){}.getType());
+		            	 JsonObject result = jsonParser.parse(data).getAsJsonObject();
+		            	 System.out.println(result.get("LocationPlugin").toString());
+		            	 List<State> states = gson.fromJson(result.get("LocationPlugin").toString(), new TypeToken<List<State>>(){}.getType());
 		               return states;
 		             }
 		           });
