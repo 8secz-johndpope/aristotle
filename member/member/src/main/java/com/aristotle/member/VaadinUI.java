@@ -21,6 +21,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 
 @SpringUI(path="/test.html")
 @Theme("valo")
@@ -41,6 +42,9 @@ public class VaadinUI extends UI {
 		stateCombobox = new ComboBox("State");
 		stateCombobox.setInvalidAllowed(false);
 		stateCombobox.setNullSelectionAllowed(false);
+		
+		stateCombobox.setItemCaptionMode(ItemCaptionMode.PROPERTY);
+		stateCombobox.setItemCaptionPropertyId("name");
 		//suggestingContainer = new SuggestingContainer();
 	}
 
