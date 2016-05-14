@@ -14,11 +14,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.UnsupportedFilterException;
+import com.vaadin.server.ExternalResource;
 
 @Component
 public class SuggestingContainer extends BeanItemContainer<CountryBean> {
 
-	@Value("${user_search_end_point}")
+	@Value("${user_search_end_point:search-sa-users-vog5arqjslh4wkqhjcnncwia44.us-west-2.cloudsearch.amazonaws.com}")
 	private String searchEndPoint;
 	private CountryBean defaultCountry;
 	private HttpUtil httpUtil = new HttpUtil();
@@ -69,9 +70,6 @@ public class SuggestingContainer extends BeanItemContainer<CountryBean> {
 			CountryBean oneCountryBean;
 			for (int i = 0; i < suggestions.size(); i++) {
 				oneCountryBean = new CountryBean(suggestions.get(i).getAsJsonObject().get("id").getAsLong(), suggestions.get(i).getAsJsonObject().get("suggestion").getAsString());
-				if(suggestions.get(i).getAsJsonObject().get("profilePic") != null && !suggestions.get(i).getAsJsonObject().get("profilePic").isJsonNull()){
-					oneCountryBean.setProfilePic("http://static.swarajabhiyan.org/"+suggestions.get(i).getAsJsonObject().get("profilePic").getAsString());
-				}
 				countries.add(oneCountryBean);
 			}
 			addAll(countries);
