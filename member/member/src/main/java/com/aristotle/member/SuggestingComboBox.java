@@ -9,6 +9,7 @@ public class SuggestingComboBox extends ComboBox {
     setItemCaptionMode(ItemCaptionMode.PROPERTY);
     setItemCaptionPropertyId("name");
     setFilteringMode(FilteringMode.STARTSWITH);
+    setItemCaptionMode(ItemCaptionMode.PROPERTY);
     setItemIconPropertyId("profilePic");
   }
  
