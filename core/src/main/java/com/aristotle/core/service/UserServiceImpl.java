@@ -616,6 +616,9 @@ public class UserServiceImpl implements UserService {
             }
         } else {
             Location location = locationRepository.findOne(locationId);
+            if(location == null){
+            	return;
+            }
             if (userLocation == null) {
                 userLocation = new UserLocation();
                 userLocation.setUser(user);
