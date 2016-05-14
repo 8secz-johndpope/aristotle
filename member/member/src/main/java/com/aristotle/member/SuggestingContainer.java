@@ -66,8 +66,13 @@ public class SuggestingContainer extends BeanItemContainer<CountryBean> {
 			JsonObject resultJson = (JsonObject)jsonParser.parse(data);
 			JsonArray suggestions = resultJson.get("suggest").getAsJsonObject().get("suggestions").getAsJsonArray();
 			List<CountryBean> countries = new ArrayList<>(suggestions.size());
+			CountryBean oneCountryBean;
 			for (int i = 0; i < suggestions.size(); i++) {
-				countries.add(new CountryBean(suggestions.get(i).getAsJsonObject().get("id").getAsLong(), suggestions.get(i).getAsJsonObject().get("suggestion").getAsString()));
+				oneCountryBean = new CountryBean(suggestions.get(i).getAsJsonObject().get("id").getAsLong(), suggestions.get(i).getAsJsonObject().get("suggestion").getAsString());
+				if(suggestions.get(i).getAsJsonObject().get("profilePic") != null && !suggestions.get(i).getAsJsonObject().get("profilePic").isJsonNull()){
+					oneCountryBean.setProfilePic("http://static.swarajabhiyan.org/"+suggestions.get(i).getAsJsonObject().get("profilePic").getAsString());
+				}
+				countries.add(oneCountryBean);
 			}
 			addAll(countries);
 			
