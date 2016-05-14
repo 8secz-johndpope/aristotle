@@ -22,6 +22,7 @@ import static com.aristotle.core.service.aws.UserDocumentField.MEMBER_END_DATE_F
 import static com.aristotle.core.service.aws.UserDocumentField.MEMBER_FIELD;
 import static com.aristotle.core.service.aws.UserDocumentField.MEMBER_START_DATE_FIELD;
 import static com.aristotle.core.service.aws.UserDocumentField.MOTHER_NAME_FIELD;
+import static com.aristotle.core.service.aws.UserDocumentField.MEMBERSHIP_ID;
 import static com.aristotle.core.service.aws.UserDocumentField.NAME_FIELD;
 import static com.aristotle.core.service.aws.UserDocumentField.NRI_COUNTRY_FIELD;
 import static com.aristotle.core.service.aws.UserDocumentField.NRI_COUNTRY_ID_FIELD;
@@ -103,7 +104,7 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
     
     @Autowired
     private HttpUtil httpUtil;
-
+    
 
     @Autowired
     public AwsCloudUserSearchServiceImpl(@Value("${user_search_end_point}") String searchEndpoint, @Value("${user_document_end_point}") String userDocumentEndpoint,
@@ -155,6 +156,7 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
         ensureTextArrayIndex(INTEREST_FIELD, true, false);
         ensureTextIndex(PROFILE_PIC_FIELD, true, false, false);
         ensureTextIndex(MEMBER_FIELD, true, false, false);
+        ensureTextIndex(MEMBERSHIP_ID, true, false, false);
         ensureTextIndex(DONOR_FIELD, true, false, false);
         ensureTextIndex(VOTER_ID_FIELD, true, false, false);
         ensureTextIndex(MEMBER_START_DATE_FIELD, true, true, false);
@@ -297,6 +299,7 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
             amazonCloudSearchAddRequest.addField(MEMBER_FIELD, "yes");
             amazonCloudSearchAddRequest.addField(MEMBER_START_DATE_FIELD, dateFormat.format(membership.getStartDate()));
             amazonCloudSearchAddRequest.addField(MEMBER_END_DATE_FIELD, dateFormat.format(membership.getEndDate()));
+            amazonCloudSearchAddRequest.addField(MEMBERSHIP_ID, user.getMembershipNumber());
         }
     }
     
@@ -323,6 +326,8 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
     	if(userLocations == null){
     		return;
     	}
+    	boolean stateLivingAdded = false;
+    	boolean stateVotingAdded = false;
         for (UserLocation oneUserLocation : userLocations) {
             if (oneUserLocation.getLocation().getLocationType().getName().equalsIgnoreCase("Country")) {
                 if (!oneUserLocation.getLocation().getName().equalsIgnoreCase("India")) {
@@ -339,8 +344,10 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
             }
             if (oneUserLocation.getLocation().getLocationType().getName().equalsIgnoreCase("state")) {
                 if (oneUserLocation.getUserLocationType().equalsIgnoreCase("voting")) {
+                	stateVotingAdded = true;
                     addLocations(amazonCloudSearchAddRequest, VOTING_STATE_ID_FIELD, VOTING_STATE_FIELD, oneUserLocation);
                 } else {
+                	stateLivingAdded = true;
                     addLocations(amazonCloudSearchAddRequest, LIVING_STATE_ID_FIELD, LIVING_STATE_FIELD, oneUserLocation);
                 }
             }
@@ -365,6 +372,12 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
                     addLocations(amazonCloudSearchAddRequest, LIVING_PC_ID_FIELD, LIVING_PC_FIELD, oneUserLocation);
                 }
             }
+        }
+        if(!stateLivingAdded && !StringUtils.isEmpty(user.getIvrState())){
+        	amazonCloudSearchAddRequest.addField(LIVING_STATE_ID_FIELD, user.getIvrState());
+        }
+        if(!stateVotingAdded && !StringUtils.isEmpty(user.getIvrState())){
+        	amazonCloudSearchAddRequest.addField(VOTING_STATE_ID_FIELD, user.getIvrState());
         }
     }
 
