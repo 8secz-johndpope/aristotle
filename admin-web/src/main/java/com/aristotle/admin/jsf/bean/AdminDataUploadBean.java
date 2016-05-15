@@ -154,12 +154,14 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
     }
 
     private void loadStates(Location location) throws AppException {
+    	System.out.println("load States for "+location);
         districts = locationService.getAllDistrictOfState(location.getId());
         districtLocationConvertor.setLocations(districts);
         pcs = locationService.getAllParliamentConstituenciesOfState(location.getId());
         pcLocationConvertor.setLocations(pcs);
 
         states = locationService.getAllLocationsOfType(location.getLocationTypeId(), location.getParentLocationId());
+        System.out.println("States = "+states);
         stateLocationConvertor.setLocations(states);
         selectedState = location;
         showStateLocationSelectionOption = true;
