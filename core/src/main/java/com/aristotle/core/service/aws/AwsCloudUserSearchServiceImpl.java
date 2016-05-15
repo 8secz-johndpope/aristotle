@@ -402,13 +402,16 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
 
 	@Override
 	public void sendUserForIndexing(String userId) throws AppException {
+		System.out.println("userId : "+userId);
 		if(StringUtils.isEmpty(userId)){
 			Sort sort = new Sort(new Sort.Order(Direction.ASC, "id"));
 			Pageable pageable = new PageRequest(0, 100, sort);
 			Page<Membership> members;
 			while(true){
+				System.out.println("Requesting page : "+pageable.getPageNumber());
 				members = membershipRepository.findAll(pageable);	
 				if(members.getContent().isEmpty()){
+					System.out.println("No More Content So Braking the loop");
 					break;
 				}
 				for(Membership oneMembership : members.getContent()){
