@@ -113,9 +113,12 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
         }
         locationTypeConvertor.setLocationTypes(locationTypes);
         selectedLocationType = locationTypes.get(0);
+        loadStates(menuBean.getSelectedLocation());
+        /*
         if (selectedLocationType.getName().equalsIgnoreCase("State")) {
             loadStates(menuBean.getSelectedLocation());
         }
+        */
         if (selectedLocationType.getName().equalsIgnoreCase("District")) {
             loadDistricts(menuBean.getSelectedLocation());
         }
@@ -364,6 +367,7 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
         System.out.println("Location Select : " + selectedDistrict);
         try {
             selectedAc = null;
+            
             if (isShowAcLocationSelectionOption()) {
                 acs = locationService.getAllAssemblyConstituenciesOfDistrict(selectedDistrict.getId());
                 acLocationConvertor.setLocations(acs);
