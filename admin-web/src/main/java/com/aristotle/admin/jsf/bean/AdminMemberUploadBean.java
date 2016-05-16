@@ -76,6 +76,7 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
             locationTypes = locationService.getAllLocationUnderLocationType(menuBean.getSelectedLocation().getLocationTypeId());
         }
         states = locationService.getAllStates();
+        stateLocationConvertor.setLocations(states);
 	}
 
     public void uploadData() {
