@@ -77,6 +77,8 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
         }
         states = locationService.getAllStates();
         stateLocationConvertor.setLocations(states);
+        selectedState = states.get(0);
+        handleStateChange();
 	}
 
     public void uploadData() {
@@ -156,12 +158,12 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
         }
     }
 
-    public void handleStateChange(final AjaxBehaviorEvent event) {
-        System.out.println("Location Select : " + selectedState+", "+event);
+    public void handleStateChange() {
+        System.out.println("Location Select : " + selectedState);
         try {
-            selectedDistrict = null;
             districts = locationService.getAllDistrictOfState(selectedState.getId());
             districtLocationConvertor.setLocations(districts);
+            selectedDistrict = districts.get(0);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
