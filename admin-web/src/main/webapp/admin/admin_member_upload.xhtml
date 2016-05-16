@@ -51,7 +51,6 @@
 				<p:messages id="messages" autoUpdate="true" closable="true" />
 				<p:outputPanel id="locationSelectionPanel">
 					<p:panel header="Location Selection" style="margin-bottom:20px">
-						<h:panelGrid columns="4" styleClass="topAlignPanelColumns"
 							id="locationPanel">
 							<h:outputLabel for="state" value="State*" />
 							<p:selectOneMenu id="state" effect="fold" editable="false"
@@ -73,7 +72,6 @@
 								<p:ajax event="change" update="@form:locationSelectionPanel"
 									listener="#{adminMemberUploadBean.handleDistrictChange}" />
 							</p:selectOneMenu>
-						</h:panelGrid>
 					</p:panel>
 				</p:outputPanel>
                 Select CSV file
