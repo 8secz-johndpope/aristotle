@@ -5,6 +5,8 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.event.AjaxBehaviorEvent;
+
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.primefaces.event.FileUploadEvent;
@@ -153,8 +155,8 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
         }
     }
 
-    public void handleStateChange() {
-        System.out.println("Location Select : " + selectedState);
+    public void handleStateChange(final AjaxBehaviorEvent event) {
+        System.out.println("Location Select : " + selectedState+", "+event);
         try {
             selectedDistrict = null;
             districts = locationService.getAllDistrictOfState(selectedState.getId());
