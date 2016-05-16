@@ -456,6 +456,13 @@ public class MenuBean extends BaseJsfBean {
             buildAndRedirect("/admin/notallowed");
         }
     }
+    public void goToUploadMemberDataPage() {
+        if (isUploadUserDataAllowed()) {
+            buildAndRedirect("/admin/member-upload");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
 
     public void goToCallCampaignPage() {
         if (isCallCampaignAllowed()) {

@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Upload Member Data - Admin Panel</title>
+	<style>
+.topAlignPanelColumns td {
+	vertical-align: top;
+}
+
+.pf-dock-container-top {
+	background-image: none;
+	background-color: white;
+}
+
+.ui-dock-item-top {
+	color: black;
+}
+
+.ui-dock-container-top {
+	color: black;
+}
+
+.ui-selectonemenu {
+	width: 100px;
+}
+
+.ui-widget, .ui-widget .ui-widget {
+	font-size: 90% !important;
+}
+</style>
+
+</h:head>
+<h:body>
+	<ui:include src="admin_menu.xhtml" />
+	<!-- menu ends -->
+	<div style="width: 800px; margin: 0 auto;">
+		<div style="width: 800px; margin: 0;">
+			<p:blockUI block="adminMemberUploadForm"
+				trigger=":adminMemberUploadForm:csvFileUpload,:adminMemberUploadForm:uploadDataButton,:adminMemberUploadForm:state,:adminMemberUploadForm:district,,:adminMemberUploadForm:ac,,:adminMemberUploadForm:pc">
+			Loading...<br />
+				<p:graphicImage width="80"
+					value="http://static.eswaraj.com/admin/images/ajax-loader.gif" />
+			</p:blockUI>
+			<h:form id="adminMemberUploadForm">
+				<p:messages id="messages" autoUpdate="true" closable="true" />
+				<p:outputPanel id="locationSelectionPanel">
+					<p:panel header="Location Selection" style="margin-bottom:20px">
+						<h:panelGrid columns="4" styleClass="topAlignPanelColumns"
+							id="locationPanel">
+							<h:outputLabel for="state" value="State*" />
+							<p:selectOneMenu id="state" effect="fold" editable="false"
+								value="#{adminMemberUploadBean.selectedState}"
+								converter="#{adminMemberUploadBean.stateLocationConvertor}" >
+								<f:selectItems value="#{adminMemberUploadBean.states}"
+									var="oneState" itemLabel="#{oneState.name}"
+									itemValue="#{oneState}" />
+								<p:ajax event="change" update="@form:locationSelectionPanel"
+									listener="#{adminMemberUploadBean.handleStateChange}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="district" value="District*" />
+							<p:selectOneMenu id="district" effect="fold" editable="false"
+								value="#{adminMemberUploadBean.selectedDistrict}"
+								converter="#{adminMemberUploadBean.districtLocationConvertor}">
+								<f:selectItems value="#{adminMemberUploadBean.districts}"
+									var="oneDistrict" itemLabel="#{oneDistrict.name}"
+									itemValue="#{oneDistrict}" />
+								<p:ajax event="change" update="@form:locationSelectionPanel"
+									listener="#{adminMemberUploadBean.handleDistrictChange}" />
+							</p:selectOneMenu>
+						</h:panelGrid>
+					</p:panel>
+				</p:outputPanel>
+                Select CSV file
+				<p:fileUpload id="csvFileUpload"
+					fileUploadListener="#{adminMemberUploadBean.handleFileUpload}"
+					mode="advanced" update="messages,:adminMemberUploadForm:mainPanel"
+					auto="true" sizeLimit="1000000" allowTypes="/(\.|\/)(csv)$/" />
+
+
+				<p:outputPanel id="mainPanel">
+					<p:outputPanel id="listView">
+
+						<p:dataTable id="userList" var="oneUser"
+							value="#{adminMemberUploadBean.userBeingUploaded}"
+							emptyMessage="Please upoada a csv file with email, mobile and name columns"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+							paginator="true" rows="50">
+							<f:facet name="header">Users</f:facet>
+							<f:facet name="{Exporters}">
+								<h:commandLink>
+									<p:graphicImage
+										name="https://cdn3.iconfinder.com/data/icons/document-icons-2/30/647708-excel-48.png"
+										width="24" />
+									<p:dataExporter type="xls" target="userList" fileName="users" />
+								</h:commandLink>
+							</f:facet>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Email" />
+								</f:facet>
+								<h:outputText value="#{oneUser.email}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Email Exists" />
+								</f:facet>
+								<h:outputText value="#{oneUser.emailAlreadyExists}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Mobile/Phone" />
+								</f:facet>
+								<h:outputText value="#{oneUser.phone}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Mobile Exists" />
+								</f:facet>
+								<h:outputText value="#{oneUser.phoneAlreadyExists}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Name" />
+								</f:facet>
+								<h:outputText value="#{oneUser.name}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Creation Status" />
+								</f:facet>
+								<h:outputText value="#{oneUser.userCreated}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Message" />
+								</f:facet>
+								<h:outputText value="#{oneUser.errorMessage}" />
+							</p:column>
+						</p:dataTable>
+					</p:outputPanel>
+					<p:commandButton id="cancelButton" value="Cancel"
+						actionListener="#{adminMemberUploadBean.cancel}"
+						update=":adminMemberUploadForm:mainPanel"
+						rendered="#{adminMemberUploadBean.showUploadButton}">
+					</p:commandButton>
+					<p:commandButton id="uploadDataButton" value="Upload Data"
+						actionListener="#{adminMemberUploadBean.uploadData}"
+						update=":adminMemberUploadForm:mainPanel"
+						rendered="#{adminMemberUploadBean.showUploadButton}">
+					</p:commandButton>
+				</p:outputPanel>
+
+				<br></br>
+				<br></br>
+				<br></br>
+				<br></br>
+			</h:form>
+
+
+			<!-- footer starts -->
+			<div class="footerWrapper">
+				<div class="container_24">
+					<div class="grid_24 panel footer">
+						Copyright &copy; 2016 <a href="#">www.swarajabhiyan.org</a>. All
+						Rights Reserved.
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<!-- footer ends -->
+		</div>
+	</div>
+
+</h:body>
+</html>

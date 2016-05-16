@@ -89,7 +89,12 @@ body {
                 <p:menuitem value="Teams" actionListener="#{menuBean.goToTeamsPage}" rendered="#{menuBean.editTeamAllowed}"></p:menuitem>
                 <p:menuitem value="Manager User/Member/Volunteer" actionListener="#{menuBean.goToManagerUserPage}" rendered="#{menuBean.editUserAllowed}"></p:menuitem>
                 <p:menuitem value="Create Offline Members" actionListener="#{menuBean.goToOfflineMemberPage}" rendered="#{menuBean.editUserAllowed}"></p:menuitem>
+                <!-- 
                 <p:menuitem value="Upload user Data" actionListener="#{menuBean.goToUploadUserDataPage}" rendered="#{menuBean.uploadUserDataAllowed}"></p:menuitem>
+                 -->
+                <p:menuitem value="Upload user Data" actionListener="#{menuBean.goToUploadMemberDataPage}" rendered="#{menuBean.uploadUserDataAllowed}"></p:menuitem>
+                
+                
                 
             </p:submenu>
 <!-- 
