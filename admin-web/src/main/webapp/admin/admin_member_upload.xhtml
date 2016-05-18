@@ -39,9 +39,9 @@
 <h:body>
 	<ui:include src="admin_menu.xhtml" />
 	<!-- menu ends -->
-	<div style="width: 100%; margin: 0 auto;">
-		<div style="width: 95%; margin: 0;">
-			<p:blockUI block="adminMemberUploadForm"
+	<div style="width: 90%; margin: 0 auto;">
+		<div style="width: 100%; margin: 0;">
+			<p:blockUI block="adminMemberUploadForm" widgetVar="adminMemberUploadFormBlocker"
 				trigger=":adminMemberUploadForm:csvFileUpload,:adminMemberUploadForm:uploadDataButton,:adminMemberUploadForm:state,:adminMemberUploadForm:district">
 			Loading...<br />
 				<p:graphicImage width="80"
@@ -77,7 +77,8 @@
 				<p:fileUpload id="csvFileUpload"
 					fileUploadListener="#{adminMemberUploadBean.handleFileUpload}"
 					mode="advanced" update="messages,:adminMemberUploadForm:mainPanel"
-					auto="true" sizeLimit="1000000" allowTypes="/(\.|\/)(csv)$/" />
+					auto="true" sizeLimit="1000000" allowTypes="/(\.|\/)(csv)$/" 
+					onstart="PF('adminMemberUploadFormBlocker').show();" oncomplete="PF('adminMemberUploadFormBlocker').hide();"/>
 
 
 				<p:outputPanel id="mainPanel">
