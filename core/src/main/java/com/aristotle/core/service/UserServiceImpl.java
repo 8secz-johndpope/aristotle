@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.neo4j.cypher.internal.compiler.v2_1.functions.E;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -1316,6 +1317,7 @@ public class UserServiceImpl implements UserService {
                 saveMember(oneUserUploadDto, createUserNamePassword, state, district, pc, ac);
                 oneUserUploadDto.setUserCreated(true);
             } catch (Exception ex) {
+            	ex.printStackTrace();
                 oneUserUploadDto.setErrorMessage(ex.getMessage());
                 oneUserUploadDto.setUserCreated(false);
             }
@@ -1355,9 +1357,15 @@ public class UserServiceImpl implements UserService {
         }
         if(dbUser == null){
         	dbUser = new User();
+            dbUser.setCreationType(CreationType.Admin_Imported_Via_Csv);
+
         }
         dbUser.setName(oneUserUploadDto.getName());
-        dbUser.setCreationType(CreationType.Admin_Imported_Via_Csv);
+        dbUser.setMember(true);
+        if(referenceMobile != null){
+        	dbUser.setReferenceUser(referenceMobile.getUser());
+        	dbUser.setReferenceMobileNumber(referenceMobile.getPhoneNumber());
+        }
 
         dbUser = userRepository.save(dbUser);
         
