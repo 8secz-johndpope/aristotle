@@ -38,7 +38,6 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
 
 	private static final long serialVersionUID = 1L;
     private List<UserUploadDto> userBeingUploaded;
-    private List<LocationType> locationTypes;
 
     private Location selectedState;
     private Location selectedDistrict;
@@ -70,11 +69,6 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
             return;
         }
 		System.out.println("Init");
-        if (menuBean.getSelectedLocation() == null && (loggedInAdminUser.isSuperAdmin() || menuBean.isGlobalAdmin())) {
-            locationTypes = locationService.getAllLocationTypes();
-        } else {
-            locationTypes = locationService.getAllLocationUnderLocationType(menuBean.getSelectedLocation().getLocationTypeId());
-        }
         states = locationService.getAllStates();
         stateLocationConvertor.setLocations(states);
         selectedState = states.get(0);
@@ -129,23 +123,25 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
 
         try {
             Reader in = new InputStreamReader(event.getFile().getInputstream());
-            Iterable<CSVRecord> records = CSVFormat.DEFAULT.withHeader("name", "email", "phone").withDelimiter(',').parse(in);
+            Iterable<CSVRecord> records = CSVFormat.DEFAULT.withHeader("Name", "Mobile", "Email", "State", "District","Reference", "TxnId").withDelimiter(',').parse(in);
             userBeingUploaded = new ArrayList<UserUploadDto>();
             boolean header = true;
             for (CSVRecord record : records) {
                 if (header) {
                     header = false;
                 } else {
-                    String email = record.get("email");
-                    String phone = record.get("phone");
-                    String name = record.get("name");
-                    if (StringUtils.isEmpty(phone)) {
-                        phone = record.get("mobile");
-                    }
+                    String email = record.get("Email");
+                    String mobile = record.get("Mobile");
+                    String referenceMobile = record.get("Reference");
+                    String name = record.get("Name");
+                    String txnId = record.get("TxnId");
+                   
 
                     UserUploadDto userUploadDto = new UserUploadDto();
                     userUploadDto.setEmail(email);
-                    userUploadDto.setPhone(phone);
+                    userUploadDto.setPhone(mobile);
+                    userUploadDto.setReferencePhone(referenceMobile);
+                    userUploadDto.setTxnId(txnId);
                     userUploadDto.setName(name);
                     userBeingUploaded.add(userUploadDto);
                 }
@@ -179,14 +175,6 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
 
     public void setUserBeingUploaded(List<UserUploadDto> userBeingUploaded) {
         this.userBeingUploaded = userBeingUploaded;
-    }
-
-    public List<LocationType> getLocationTypes() {
-        return locationTypes;
-    }
-
-    public void setLocationTypes(List<LocationType> locationTypes) {
-        this.locationTypes = locationTypes;
     }
 
     public Location getSelectedState() {
