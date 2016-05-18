@@ -9,6 +9,11 @@
 <h:head>
 	<title>Upload Member Data - Admin Panel</title>
 	<style>
+	.error-row {
+	color: red;
+	background-color: #FFFF00;
+}
+	
 .topAlignPanelColumns td {
 	vertical-align: top;
 }
@@ -84,7 +89,7 @@
 				<p:outputPanel id="mainPanel">
 					<p:outputPanel id="listView">
 
-						<p:dataTable id="userList" var="oneUser"
+						<p:dataTable id="userList" var="oneUser" rowStyleClass="#{empty oneUser.errorMessage ? null : 'error-row'}"
 							value="#{adminMemberUploadBean.userBeingUploaded}"
 							emptyMessage="Please upoada a csv file with email, mobile and name columns"
 							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
