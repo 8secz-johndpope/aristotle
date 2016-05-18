@@ -926,7 +926,7 @@ public class UserServiceImpl implements UserService {
         sb.append("Hello "+user.getName());
         sb.append("<br>");
         sb.append("<br>");
-        sb.append("<p>Thankyou for registering at <a href=\"http://www.swarajabhiyan.org\">Swaraj Abhiyan</a>and becomeing its valuable member</p>");
+        sb.append("<p>Thankyou for registering at <a href=\"http://www.swarajabhiyan.org\">Swaraj Abhiyan</a> and becoming its valuable member</p>");
         sb.append("<br>");
         sb.append("<p>Your Membership ID is : "+ user.getMembershipNumber()+"</p>");
         sb.append("<br>");
@@ -953,7 +953,7 @@ public class UserServiceImpl implements UserService {
         String contentWithOutHtml = sb.toString();
         contentWithOutHtml = contentWithOutHtml.replaceAll("<br>", "\n");
         contentWithOutHtml = contentWithOutHtml.replaceAll("\\<[^>]*>", "");
-        emailManager.sendEmail(emailId, "Registration", regsitrationEmailId, "Swaraj Abhiyan Email Verification", contentWithOutHtml, sb.toString());
+        emailManager.sendEmail(emailId, "Member Registration", regsitrationEmailId, "Welcome to Swaraj Abhiyan", contentWithOutHtml, sb.toString());
 
     }
     @Override
