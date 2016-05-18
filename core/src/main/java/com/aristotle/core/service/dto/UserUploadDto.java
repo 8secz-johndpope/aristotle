@@ -4,6 +4,8 @@ public class UserUploadDto {
 
     private String email;
     private String phone;
+    private String referencePhone;
+    private String txnId;
     private String name;
     private boolean emailAlreadyExists;
     private boolean phoneAlreadyExists;
@@ -83,5 +85,21 @@ public class UserUploadDto {
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
+
+	public String getReferencePhone() {
+		return referencePhone;
+	}
+
+	public void setReferencePhone(String referencePhone) {
+		this.referencePhone = referencePhone;
+	}
+
+	public String getTxnId() {
+		return txnId;
+	}
+
+	public void setTxnId(String txnId) {
+		this.txnId = txnId;
+	}
 
 }
