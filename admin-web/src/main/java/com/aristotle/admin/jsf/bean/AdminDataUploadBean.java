@@ -177,7 +177,7 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
                 return;
             }
             userNamePassword = false;
-            userService.saveUsers(userBeingUploaded, userNamePassword, selectedState, selectedDistrict, selectedPc, selectedAc);
+            userService.saveMembers(userBeingUploaded, userNamePassword, selectedState, selectedDistrict, selectedPc, selectedAc);
             int totalSuccess = 0;
             int totalFailed = 0;
             for (UserUploadDto oneUserUploadDto : userBeingUploaded) {

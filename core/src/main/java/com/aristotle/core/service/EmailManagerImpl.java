@@ -2,6 +2,7 @@ package com.aristotle.core.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -26,6 +27,9 @@ public class EmailManagerImpl implements EmailManager {
     @Override
     public void sendEmail(String toEmail, String fromName, String fromEmail, String subjectStr, String bodyStr, String htmlContent) throws AppException {
         System.out.println("Sending Email to " + toEmail + ", from : " + fromEmail + " with Subject " + subjectStr);
+        if(StringUtils.isEmpty(toEmail)){
+        	return;
+        }
         // Construct an object to contain the recipient address.
         Destination destination = new Destination().withToAddresses(new String[] { toEmail });
 

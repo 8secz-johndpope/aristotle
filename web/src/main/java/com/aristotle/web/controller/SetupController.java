@@ -159,6 +159,23 @@ public class SetupController {
         return "done";
     }
     
+    @RequestMapping("/sc/admin/sendmemberemail")
+    @ResponseBody
+    public String sendMembershipEmail(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
+        String email = httpServletRequest.getParameter("email");
+        if (email == null) {
+            return "Emai is required";
+        }
+        try {
+            userService.sendMembershipConfirmtionEmail(email);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ex.getMessage();
+        }
+
+        return "done";
+    }
+    
     @RequestMapping("/sc/admin/members")
     @ResponseBody
     public String searchMembers(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {

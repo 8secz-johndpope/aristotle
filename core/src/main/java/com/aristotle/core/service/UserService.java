@@ -62,6 +62,8 @@ public interface UserService {
     void updatePassword(String email, String newPassword, String token) throws AppException;
 
     void sendEmailConfirmtionEmail(String email) throws AppException;
+    
+    public void sendMembershipConfirmtionEmail(String emailId) throws AppException;
 
     void confirmEmail(String email, String token) throws AppException;
 
@@ -75,7 +77,7 @@ public interface UserService {
 
     void checkUserStatus(List<UserUploadDto> users) throws AppException;
 
-    void saveUsers(List<UserUploadDto> users, boolean createUserNamePassword, Location state, Location district, Location pc, Location ac) throws AppException;
+    void saveMembers(List<UserUploadDto> users, boolean createUserNamePassword, Location state, Location district, Location pc, Location ac) throws AppException;
     
     List<MembershipTransaction> getUserMembershipTransactions(Long userId) throws AppException;
     
