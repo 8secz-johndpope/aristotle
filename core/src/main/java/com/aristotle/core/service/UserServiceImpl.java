@@ -1272,6 +1272,12 @@ public class UserServiceImpl implements UserService {
         	email = null;
         	phone =  null;
         	referenceMobile = null;
+        	if (StringUtils.isBlank(oneUserUploadDto.getEmail()) && StringUtils.isBlank(oneUserUploadDto.getPhone().trim()) && StringUtils.isEmpty(oneUserUploadDto.getReferencePhone())) {
+            	oneUserUploadDto.setErrorMessage("either email or phone or reference mobile must be provided");
+            }
+            if(StringUtils.isEmpty(oneUserUploadDto.getName())){
+        		oneUserUploadDto.setErrorMessage("Name can not be empty");
+            }
             if (!StringUtils.isBlank(oneUserUploadDto.getEmail())) {
                 email = emailRepository.getEmailByEmailUp(oneUserUploadDto.getEmail().toUpperCase());
                 if (email != null) {
@@ -1298,12 +1304,7 @@ public class UserServiceImpl implements UserService {
             		oneUserUploadDto.setErrorMessage("No Such mobile registered :" + oneUserUploadDto.getReferencePhone());
                 }
             }
-            if (email == null && phone == null && referenceMobile == null) {
-            	oneUserUploadDto.setErrorMessage("either email or phone or reference mobile must be provided");
-            }
-            if(StringUtils.isEmpty(oneUserUploadDto.getName())){
-        		oneUserUploadDto.setErrorMessage("Name can not be empty");
-            }
+            
         }
 
     }
