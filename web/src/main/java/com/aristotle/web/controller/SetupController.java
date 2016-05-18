@@ -214,7 +214,12 @@ public class SetupController {
             sms.setPromotional(promotional);
             sms.setStatus("PENDING");
             sms.setUser(phone.getUser());
-        	smsService.sendPromotionalSms(sms);
+            if(promotional){
+            	smsService.sendPromotionalSms(sms);	
+            }else{
+            	smsService.sendTransactionalSms(sms);
+            }
+        	
         } catch (Exception ex) {
             ex.printStackTrace();
             return ex.getMessage();
