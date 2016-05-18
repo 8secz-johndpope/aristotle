@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.aristotle.core.exception.AppException;
+import com.aristotle.core.persistance.Phone;
+import com.aristotle.core.persistance.Sms;
+import com.aristotle.core.persistance.Phone.PhoneType;
 import com.aristotle.core.service.HttpUtil;
+import com.aristotle.core.service.SmsService;
 import com.aristotle.core.service.UserService;
 import com.aristotle.core.service.VideoDownloader;
 import com.aristotle.core.service.aws.UserSearchService;
@@ -42,6 +46,9 @@ public class SetupController {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private SmsService smsService;
 
     @Autowired
     private UserSearchService userSearchService;
@@ -168,6 +175,46 @@ public class SetupController {
         }
         try {
             userService.sendMembershipConfirmtionEmail(email);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ex.getMessage();
+        }
+
+        return "done";
+    }
+    
+    @RequestMapping("/sc/admin/sendmembersmst")
+    @ResponseBody
+    public String sendMembershipSms(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
+        return sendSms(httpServletRequest, httpServletResponse, false);
+    }
+    @RequestMapping("/sc/admin/sendmembersmsp")
+    @ResponseBody
+    public String sendMembershipSmsP(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
+        return sendSms(httpServletRequest, httpServletResponse, true);
+    }
+    private String sendSms(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, boolean promotional){
+    	String mobile = httpServletRequest.getParameter("mobile");
+        String message = httpServletRequest.getParameter("message");
+        if (mobile == null) {
+            return "mobile is required";
+        }
+        if (message == null) {
+            return "Message is required";
+        }
+        try {
+        	Phone phone = new Phone();
+        	phone.setConfirmed(true);
+        	phone.setCountryCode("91");
+        	phone.setPhoneNumber(mobile);
+        	phone.setPhoneType(PhoneType.MOBILE);
+        	Sms sms = new Sms();
+        	sms.setMessage(message);
+            sms.setPhone(phone);
+            sms.setPromotional(promotional);
+            sms.setStatus("PENDING");
+            sms.setUser(phone.getUser());
+        	smsService.sendPromotionalSms(sms);
         } catch (Exception ex) {
             ex.printStackTrace();
             return ex.getMessage();

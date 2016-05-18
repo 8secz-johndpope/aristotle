@@ -9,6 +9,7 @@ import com.aristotle.core.persistance.MobileGroup;
 import com.aristotle.core.persistance.MobileGroupMobile;
 import com.aristotle.core.persistance.Phone;
 import com.aristotle.core.persistance.PlannedSms;
+import com.aristotle.core.persistance.Sms;
 import com.aristotle.core.persistance.SmsTemplate;
 import com.aristotle.core.persistance.TeamPlannedSms;
 
@@ -39,4 +40,10 @@ public interface SmsService {
     List<SmsTemplate> getAllSmsTemplates() throws AppException;
 
     void sendUsernamePasswordSms(Phone phone, String userName, String password) throws Exception;
+    
+    void sendMemberRegistrationSms(Phone phone, String name, String membershipId, String password) throws Exception;
+    
+    public void sendPromotionalSms(Sms sms);
+
+    public void sendTransactionalSms(Sms sms);
 }

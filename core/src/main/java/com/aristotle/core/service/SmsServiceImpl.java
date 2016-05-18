@@ -333,11 +333,13 @@ public class SmsServiceImpl implements SmsService {
         return false;
     }
 
-    private void sendPromotionalSms(Sms sms) {
+    @Override
+    public void sendPromotionalSms(Sms sms) {
         sendSms(smsPromotionalUrlTemplate, sms);
     }
 
-    private void sendTransactionalSms(Sms sms) {
+    @Override
+    public void sendTransactionalSms(Sms sms) {
         sendSms(smsTransactionalUrlTemplate, sms);
     }
     private void sendSms(String url, Sms sms) {
@@ -360,6 +362,7 @@ public class SmsServiceImpl implements SmsService {
 						sms.setErrorMessage(responseJson.get("ErrorMessage").getAsString());
 					}
 				} catch (Exception e) {
+					e.printStackTrace();
 					sms.setErrorMessage(e.getMessage());
 					sms.setStatus("FAILED");
 					
@@ -402,5 +405,28 @@ public class SmsServiceImpl implements SmsService {
         sms.setUser(phone.getUser());
         sms = smsRepository.save(sms);
     }
+    
+    
+	@Override
+	public void sendMemberRegistrationSms(Phone phone, String name, String membershipId, String password) throws Exception {
+    	String templateSystemName = "MemberRegistrationTemplate";
+        SmsTemplate smsTemplate = smsTemplateRepository.getSmsTemplateBySystemName(templateSystemName);
+        if(smsTemplate == null){
+            logger.error("No SMS Template found for System Name {}", templateSystemName);
+        }
+        String message = smsTemplate.getMessage();
+        message = message.replace("##MemberName##", name);
+        message = message.replace("##ID##", membershipId);
+        message = message.replace("##password##", password);
+
+        Sms sms = new Sms();
+        sms.setMessage(message);
+        sms.setPhone(phone);
+        sms.setPromotional(false);
+        sms.setStatus("PENDING");
+        sms.setUser(phone.getUser());
+        sms = smsRepository.save(sms);
+		
+	}
 
 }
