@@ -130,6 +130,19 @@
 							</p:column>
 							<p:column>
 								<f:facet name="header">
+									<h:outputText value="Reference Mobile" />
+								</f:facet>
+								<h:outputText value="#{oneUser.referencePhone}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="TxnId" />
+								</f:facet>
+								<h:outputText value="#{oneUser.txnId}" />
+							</p:column>
+							
+							<p:column>
+								<f:facet name="header">
 									<h:outputText value="Creation Status" />
 								</f:facet>
 								<h:outputText value="#{oneUser.userCreated}" />
