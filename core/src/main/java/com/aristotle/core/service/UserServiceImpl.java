@@ -1318,7 +1318,7 @@ public class UserServiceImpl implements UserService {
                 oneUserUploadDto.setUserCreated(true);
             } catch (Exception ex) {
             	ex.printStackTrace();
-                oneUserUploadDto.setErrorMessage(ex.getMessage());
+                oneUserUploadDto.setErrorMessage("Failed:"+ex.getMessage());
                 oneUserUploadDto.setUserCreated(false);
             }
         }
@@ -1358,7 +1358,8 @@ public class UserServiceImpl implements UserService {
         if(dbUser == null){
         	dbUser = new User();
             dbUser.setCreationType(CreationType.Admin_Imported_Via_Csv);
-
+        }else{
+        	System.out.println("Existing User found");
         }
         dbUser.setName(oneUserUploadDto.getName());
         dbUser.setMember(true);
@@ -1389,12 +1390,11 @@ public class UserServiceImpl implements UserService {
             membershipTransaction.setTransactionDate(new Date());
             membershipTransaction.setAmount("50");
             membershipTransaction = membershipTransactionRepository.save(membershipTransaction);
-
+            membership.setEndDate(getMembershipEndDate());
+            membership = membershipRepository.save(membership);
         }
-        membership.setEndDate(getMembershipEndDate());
-        membership = membershipRepository.save(membership);
+        
         membership.setMembershipId(getMembershipId(dbUser, membership));
-        dbUser.setMember(true);
         
         
 
