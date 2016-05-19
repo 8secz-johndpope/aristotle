@@ -87,10 +87,11 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
             if (!isValidInput()) {
                 return;
             }
-            userService.saveMembers(userBeingUploaded, false, selectedState, selectedDistrict, null, null);
+            //userService.saveMembers(userBeingUploaded, false, selectedState, selectedDistrict, null, null);
             int totalSuccess = 0;
             int totalFailed = 0;
             for (UserUploadDto oneUserUploadDto : userBeingUploaded) {
+            	userService.saveMember(oneUserUploadDto, false, selectedState, selectedDistrict, null, null);
                 if (oneUserUploadDto.isUserCreated()) {
                     totalSuccess++;
                 } else {

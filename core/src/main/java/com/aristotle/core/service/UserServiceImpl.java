@@ -1349,7 +1349,8 @@ public class UserServiceImpl implements UserService {
             }
         }
     }
-    private void saveMember(UserUploadDto oneUserUploadDto, boolean createUserNamePassword, Location state, Location district, Location pc, Location ac) throws AppException {
+    @Override
+    public void saveMember(UserUploadDto oneUserUploadDto, boolean createUserNamePassword, Location state, Location district, Location pc, Location ac) throws AppException {
         Email email = getOrCreateEmail(oneUserUploadDto.getEmail());
         Phone phone = getOrCreateMobile(oneUserUploadDto.getPhone(), "91", "mobile");
 
@@ -1449,8 +1450,10 @@ public class UserServiceImpl implements UserService {
         	message = message.replace("##password##", password);
         	sms.setMessage(message);
         	sms.setPhone(phone);
-        	
-        	smsService.sendTransactionalSms(sms);
+        	sms.setPromotional(false);
+        	sms.setStatus("PENDING");
+        	sms.setUser(dbUser);
+        	smsService.sendSmsAsync(sms);
         }
         sendMemberForIndexing(dbUser);
     }

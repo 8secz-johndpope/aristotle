@@ -79,6 +79,8 @@ public interface UserService {
 
     void saveMembers(List<UserUploadDto> users, boolean createUserNamePassword, Location state, Location district, Location pc, Location ac) throws AppException;
     
+    void saveMember(UserUploadDto oneUserUploadDto, boolean createUserNamePassword, Location state, Location district, Location pc, Location ac) throws AppException;
+    
     List<MembershipTransaction> getUserMembershipTransactions(Long userId) throws AppException;
     
     Membership getUserMembership(Long userId) throws AppException;

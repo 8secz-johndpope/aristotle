@@ -46,4 +46,6 @@ public interface SmsService {
     public void sendPromotionalSms(Sms sms);
 
     public void sendTransactionalSms(Sms sms);
+    
+    public void sendSmsAsync(Sms sms);
 }

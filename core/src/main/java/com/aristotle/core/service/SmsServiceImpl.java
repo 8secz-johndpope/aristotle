@@ -428,5 +428,10 @@ public class SmsServiceImpl implements SmsService {
         sms = smsRepository.save(sms);
 		
 	}
+	@Override
+	public void sendSmsAsync(Sms sms) {
+		smsRepository.save(sms);
+		
+	}
 
 }
