@@ -4,7 +4,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.event.AjaxBehaviorEvent;
 
@@ -91,8 +93,14 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
             int totalSuccess = 0;
             int totalFailed = 0;
             for (UserUploadDto oneUserUploadDto : userBeingUploaded) {
-            	userService.saveMember(oneUserUploadDto, false, selectedState, selectedDistrict, null, null);
-                if (oneUserUploadDto.isUserCreated()) {
+            	try{
+            		userService.saveMember(oneUserUploadDto, false, selectedState, selectedDistrict, null, null);
+            		oneUserUploadDto.setUserCreated(true);	
+            	}catch(Exception ex){
+            		oneUserUploadDto.setUserCreated(false);
+            		oneUserUploadDto.setErrorMessage(ex.getMessage());
+            	}
+            	if (oneUserUploadDto.isUserCreated()) {
                     totalSuccess++;
                 } else {
                     totalFailed++;
@@ -155,6 +163,14 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
 
             }
             userService.checkUserStatus(userBeingUploaded);
+            
+            Map<String, UserUploadDto> map = new HashMap<>();
+            for(UserUploadDto oneUserUploadDto : userBeingUploaded){
+            	if(map.containsKey(oneUserUploadDto.getPhone())){
+            		oneUserUploadDto.setErrorMessage("Mobile Number used more then once in this excel sheet");
+            	}
+            	map.put(oneUserUploadDto.getPhone(), oneUserUploadDto);
+            }
         } catch (Exception ex) {
             logger.error("Unable to upload File", ex);
             sendErrorMessageToJsfScreen("Failed", event.getFile().getFileName() + " is failed to uploaded.");
