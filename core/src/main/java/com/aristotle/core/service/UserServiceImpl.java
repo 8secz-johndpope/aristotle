@@ -1438,6 +1438,8 @@ public class UserServiceImpl implements UserService {
         if (phone != null) {
             phone.setUser(dbUser);
         }
+        membership.setMembershipId(getMembershipId(dbUser, membership));
+
         if(email == null && phone != null){
         	String password = generateUserLoginAccountForMobileAndMembershipId(phone, dbUser.getMembershipNumber());
         	Sms sms = new Sms();
@@ -1448,7 +1450,6 @@ public class UserServiceImpl implements UserService {
         	sms.setMessage(message);
         	smsService.sendTransactionalSms(sms);
         }
-        membership.setMembershipId(getMembershipId(dbUser, membership));
         sendMemberForIndexing(dbUser);
     }
 
