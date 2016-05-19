@@ -180,7 +180,7 @@
         <property name="componentId" value="SendSms" />
         <property name="sourceComponentStreams">
             <map>
-                <entry key="SmsListener" value="SmsListenerStream" />
+                <entry key="ThirtySecondTimerSpout" value="ThirtySecondTimerStream" />
             </map>
         </property>
     </bean>
