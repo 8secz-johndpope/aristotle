@@ -41,6 +41,7 @@ import com.aristotle.core.persistance.MembershipTransaction;
 import com.aristotle.core.persistance.PasswordResetRequest;
 import com.aristotle.core.persistance.Phone;
 import com.aristotle.core.persistance.Phone.PhoneType;
+import com.aristotle.core.persistance.Sms;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.UserLocation;
 import com.aristotle.core.persistance.Volunteer;
@@ -97,6 +98,8 @@ public class UserServiceImpl implements UserService {
     private AwsFileManager awsFileManager;
     @Autowired
     private UserSearchService userSearchService;
+    @Autowired
+    private SmsService smsService;
     
     @Value("${aws_access_key}")
     private String awsKey;
@@ -754,6 +757,29 @@ public class UserServiceImpl implements UserService {
             throw new AppException("Login Account already Exists");
         }
     }
+    private String generateUserLoginAccountForMobileAndMembershipId(Phone phone, String membershipid) throws AppException {
+    	String password = "*****";
+        if (phone == null) {
+            throw new AppException("Mobile Is not registered");
+        }
+        User user = phone.getUser();
+        if (user == null) {
+            throw new AppException("Phone(user) Is not registered");
+        }
+        LoginAccount loginAccount = loginAccountRepository.getLoginAccountByUserId(user.getId());
+        if (loginAccount == null) {
+            loginAccount = new LoginAccount();
+            password = generateRandompassword();
+            loginAccount.setPassword(passwordUtil.encryptPassword(password));
+            loginAccount.setUser(user);
+            loginAccount.setUserName(membershipid);
+            loginAccount = loginAccountRepository.save(loginAccount);
+            //sendLoginAccountDetails(loginAccount, password);
+        } else {
+            throw new AppException("Login Account already Exists");
+        }
+        return password;
+    }
 
 
     private void sendLoginAccountDetails(LoginAccount loginAccount, String password) throws AppException {
@@ -1406,16 +1432,21 @@ public class UserServiceImpl implements UserService {
         
         if (email != null) {
             email.setUser(dbUser);
-            if (createUserNamePassword) {
-            	sendMembershipConfirmtionEmail(email.getEmail());
-                generateUserLoginAccount(email.getEmail());
-            }
+        	sendMembershipConfirmtionEmail(email.getEmail());
+            generateUserLoginAccount(email.getEmail());
         }
         if (phone != null) {
             phone.setUser(dbUser);
-            if (createUserNamePassword) {
-                generateUserLoginAccountForMobile(phone);
-            }
+        }
+        if(email == null && phone != null){
+        	String password = generateUserLoginAccountForMobileAndMembershipId(phone, dbUser.getMembershipNumber());
+        	Sms sms = new Sms();
+        	String message = "Dear ##MemberName##, your membership id for swaraj abhiyan is ##ID## and your password is ##password##. You can login to swarajabhiyan.org to view your details. Thanks, Swaraj Abhiyan.";
+        	message = message.replace("##MemberName##", dbUser.getName());
+        	message = message.replace("##ID##", dbUser.getMembershipNumber());
+        	message = message.replace("##password##", password);
+        	sms.setMessage(message);
+        	smsService.sendTransactionalSms(sms);
         }
         membership.setMembershipId(getMembershipId(dbUser, membership));
         sendMemberForIndexing(dbUser);

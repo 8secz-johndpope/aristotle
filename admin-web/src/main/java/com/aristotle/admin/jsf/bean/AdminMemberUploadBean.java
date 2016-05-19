@@ -3,6 +3,7 @@ package com.aristotle.admin.jsf.bean;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.faces.event.AjaxBehaviorEvent;
@@ -22,6 +23,7 @@ import com.aristotle.core.enums.AppPermission;
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.LocationType;
+import com.aristotle.core.persistance.State;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.service.LocationService;
 import com.aristotle.core.service.UserService;
@@ -70,6 +72,10 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
         }
 		System.out.println("Init");
         states = locationService.getAllStates();
+        Location state = new Location();
+        state.setId(0L);
+        state.setName("Select State");
+        states.add(0, state);
         stateLocationConvertor.setLocations(states);
         selectedState = states.get(0);
         handleStateChange();
@@ -157,7 +163,15 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
     public void handleStateChange() {
         System.out.println("Location Select : " + selectedState);
         try {
+        	if(selectedState.getId() == 0L){
+        		districts = Collections.emptyList();
+        		return;
+        	}
             districts = locationService.getAllDistrictOfState(selectedState.getId());
+            Location district = new Location();
+            district.setId(0L);
+            district.setName("Select District");
+            districts.add(0, district);
             districtLocationConvertor.setLocations(districts);
             selectedDistrict = districts.get(0);
         } catch (Exception ex) {
