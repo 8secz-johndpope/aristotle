@@ -1394,9 +1394,6 @@ public class UserServiceImpl implements UserService {
             membership = membershipRepository.save(membership);
         }
         
-        membership.setMembershipId(getMembershipId(dbUser, membership));
-        
-        
 
         addUserLocation(dbUser, state, "Living");
         addUserLocation(dbUser, state, "Voting");
@@ -1420,7 +1417,7 @@ public class UserServiceImpl implements UserService {
                 generateUserLoginAccountForMobile(phone);
             }
         }
-
+        membership.setMembershipId(getMembershipId(dbUser, membership));
         sendMemberForIndexing(dbUser);
     }
 
