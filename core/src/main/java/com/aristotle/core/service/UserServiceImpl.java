@@ -1448,6 +1448,8 @@ public class UserServiceImpl implements UserService {
         	message = message.replace("##ID##", dbUser.getMembershipNumber());
         	message = message.replace("##password##", password);
         	sms.setMessage(message);
+        	sms.setPhone(phone);
+        	
         	smsService.sendTransactionalSms(sms);
         }
         sendMemberForIndexing(dbUser);
