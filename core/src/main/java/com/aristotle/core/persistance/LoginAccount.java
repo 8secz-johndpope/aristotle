@@ -18,7 +18,7 @@ public class LoginAccount extends BaseEntity {
 	@Column(name = "password", nullable = false)
 	private String password;
 
-	@Column(name = "email", nullable = false)
+	@Column(name = "email", nullable = true)
 	private String email;
 
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
