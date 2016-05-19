@@ -14,9 +14,9 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
     @Query("select distinct loc from Location loc, User user join user.locationRoles lr where  user.id=?1 and lr.locationId=loc.id")
     List<Location> getAdminLocationsOfUser(Long userId);
 
-    List<Location> getLocationsByLocationTypeIdOrderByName(Long locationTypeId);
+    List<Location> getLocationsByLocationTypeIdOrderByNameAsc(Long locationTypeId);
 
-    List<Location> getLocationsByLocationTypeIdAndParentLocationIdOrderByName(Long locationTypeId, long parentLocationId);
+    List<Location> getLocationsByLocationTypeIdAndParentLocationIdOrderByNameAsc(Long locationTypeId, long parentLocationId);
 
     List<Location> getLocationsByParentLocationId(long parentLocationId);
 
