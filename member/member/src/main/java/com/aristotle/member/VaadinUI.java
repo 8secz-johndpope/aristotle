@@ -51,6 +51,7 @@ public class VaadinUI extends UI {
 	private LocationService locationService;
 	private final ComboBox stateCombobox;
 	private final ComboBox districtCombobox;
+	private final ComboBox sortByComboBox;
 	private int pageSize = 20;
 	private int currentPage = 0;
 	private int totalPages = 0;
@@ -62,7 +63,9 @@ public class VaadinUI extends UI {
 	Button next;
 	String searchType = "GLOBAl";
 	String selectedLocationName;
+	Long selectedLocationId;
 	Label pageLabel;
+	String sortBy;
 
 	public VaadinUI() {
 		start = new Button("<<");
@@ -96,7 +99,12 @@ public class VaadinUI extends UI {
 		districtCombobox.setNullSelectionAllowed(false);
 		districtCombobox.setPageLength(0);
 		setupButtonListeners();
-
+		
+		sortByComboBox = new ComboBox("Sort By");
+		sortByComboBox.setInvalidAllowed(false);
+		sortByComboBox.setNullSelectionAllowed(false);
+		sortByComboBox.setPageLength(0);
+		
 		// suggestingContainer = new SuggestingContainer();
 	}
 
@@ -124,14 +132,15 @@ public class VaadinUI extends UI {
 		});
 		buildStateComoboBox();
 		buildDistrictComoboBox(0L);
+		buildSortByComoboBox();
 		suggestingComboBox.setContainerDataSource(suggestingContainer);
 		// suggestingComboBox.setItemIconPropertyId("profilePic");
 		//Label label = new Label("----OR-----");
 
-		VerticalLayout layout = new VerticalLayout(stateCombobox, districtCombobox, grid);
-		//VerticalLayout layout = new VerticalLayout(grid);
-		HorizontalLayout pageingLayout = new HorizontalLayout(start, previous, pageLabel, next, end);
-		layout.addComponent(pageingLayout);
+		HorizontalLayout locationLayout = new HorizontalLayout(stateCombobox, districtCombobox, sortByComboBox);
+		HorizontalLayout pagingLayout = new HorizontalLayout(start, previous, pageLabel, next, end);
+
+		VerticalLayout layout = new VerticalLayout(locationLayout, grid, pagingLayout);
 		layout.setWidth("100%");
 
 		setContent(layout);
@@ -163,6 +172,7 @@ public class VaadinUI extends UI {
 				// selected value is displayed by the ComboBox
 				Location selecteState = (Location) event.getProperty().getValue();
 				selectedLocationName = selecteState.getName();
+				selectedLocationId = selecteState.getId();
 				stateCombobox.setValue(selectedLocationName);
 				searchType = "State";
 				currentPage = 0;
@@ -202,7 +212,9 @@ public class VaadinUI extends UI {
 				// tell the custom container that a value has been selected.
 				// This is necessary to ensure that the
 				// selected value is displayed by the ComboBox
-				selectedLocationName = ((Location) event.getProperty().getValue()).getName();
+				Location selecteDistrict = (Location) event.getProperty().getValue();
+				selectedLocationName = selecteDistrict.getName();
+				selectedLocationId = selecteDistrict.getId();
 				districtCombobox.setValue(selectedLocationName);
 				searchType = "District";
 				currentPage = 0;
@@ -212,46 +224,30 @@ public class VaadinUI extends UI {
 			}
 		});
 	}
+	
+	private void buildSortByComoboBox() {
+		sortByComboBox.addItem("Name");
+		sortByComboBox.addItem("MemberId");
+
+		sortByComboBox.addValueChangeListener(new Property.ValueChangeListener() {
+
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				sortBy = (String) event.getProperty().getValue();
+				sortByComboBox.setValue(sortBy);
+				currentPage = 0;
+				reloadTable();
+				enableDisableButtons();
+			}
+		});
+	}
 
 	private void reloadTable() {
 		try {
 			// layout.removeComponent(grid);
 			final BeanItemContainer<Member> beans = new BeanItemContainer<Member>(Member.class);
-			// &q.options={fields: ['member']}
-			String result = null;
-			String httpParams = "q=yes&return=_all_fields&sort=_score%20desc&size=" + pageSize + "&start="
-					+ (currentPage * pageSize);
 			
-			if ("STATE".equalsIgnoreCase(searchType) || "DISTRICT".equalsIgnoreCase(searchType)) {
-				String searchQuery = selectedLocationName.replaceAll(" ", "+");
-				httpParams = "q=" + searchQuery + "&return=_all_fields&sort=_score%20desc&size=" + pageSize + "&start="
-						+ (currentPage * pageSize);
-			}
-			String url = "http://" + searchEndPoint+ "/2013-01-01/search?"+httpParams;
-
-			result = httpUtil.getResponse(url);
-
-			// result =
-			// httpUtil.getResponse("http://"+searchEndPoint+"/2013-01-01/search?q=yes&return=_all_fields&sort=_score%20desc&size="+pageSize+"&start="+(currentPage*pageSize));
-
-			// String result =
-			// httpUtil.getResponse("http://search-sa-users-vog5arqjslh4wkqhjcnncwia44.us-west-2.cloudsearch.amazonaws.com/2013-01-01/search?q=yes&'q.options'={fields:
-			// ['member']}&return=_all_fields&sort=_score desc");
-			JsonObject resultObject = jsonParser.parse(result).getAsJsonObject();
-			JsonArray hits = resultObject.get("hits").getAsJsonObject().get("hit").getAsJsonArray();
-			int total = resultObject.get("hits").getAsJsonObject().get("found").getAsInt();
-
-			totalPages = total / pageSize;
-			if (total % pageSize > 0) {
-				totalPages++;
-			}
-
-			List<Member> members = new ArrayList<>(hits.size());
-			Gson gson = new Gson();
-			for (int i = 0; i < hits.size(); i++) {
-				Member oneMember = gson.fromJson(hits.get(i).getAsJsonObject().get("fields").toString(), Member.class);
-				members.add(oneMember);
-			}
+			List<Member> members = getMembers();
 			beans.addAll(members);
 			grid.setContainerDataSource(beans);
 			grid.setColumns("memberid", "name", "state", "district");
@@ -325,5 +321,41 @@ public class VaadinUI extends UI {
 		}
 		pageLabel.setCaption(currentPage + "/ " + totalPages);
 	}
+	
+	public List<Member> getMembers() throws Exception{
+		List<Member> members = new ArrayList<>(pageSize);
+		String result = null;
+		String query = "q=yes&q.parser=simple&q.options=%7BdefaultOperator:%22and%22,fields:[%22member%22]%7D&return=_all_fields&size=" + pageSize + "&start=" + (currentPage * pageSize);
 
+		if ("STATE".equalsIgnoreCase(searchType)) {
+			query = "q="+selectedLocationId+"&q.parser=simple&q.options=%7BdefaultOperator:%22and%22,fields:[%22votingstateid%22,%22livingstateid%22]%7D&return=_all_fields&size=" + pageSize + "&start=" + (currentPage * pageSize);
+		}
+		if ("DISTRICT".equalsIgnoreCase(searchType)) {
+			query = "q="+selectedLocationId+"&q.parser=simple&q.options=%7BdefaultOperator:%22and%22,fields:[%22livingdistrictid%22,%22votingdistrictid%22]%7D&return=_all_fields&size=" + pageSize + "&start=" + (currentPage * pageSize);
+		}
+		if(sortBy == null){
+			query = query +"&sort=_score%20desc";
+		}else{
+			query = query +"&sort="+sortBy.toLowerCase()+"%20asc";
+		}
+		String url = "http://" + searchEndPoint + "/2013-01-01/search?" + query;
+		//url = "https://search-sa-users-vog5arqjslh4wkqhjcnncwia44.us-west-2.cloudsearch.amazonaws.com/2013-01-01/search?q=yes&q.parser=simple&q.options=%7BdefaultOperator:%22and%22,fields:[%22member%22]%7D&return=_all_fields,_score&sort=_score%20desc";
+		result = httpUtil.getResponse(url);
+
+		JsonObject resultObject = jsonParser.parse(result).getAsJsonObject();
+		JsonArray hits = resultObject.get("hits").getAsJsonObject().get("hit").getAsJsonArray();
+		int total = resultObject.get("hits").getAsJsonObject().get("found").getAsInt();
+
+		totalPages = total / pageSize;
+		if (total % pageSize > 0) {
+			totalPages++;
+		}
+
+		Gson gson = new Gson();
+		for (int i = 0; i < hits.size(); i++) {
+			Member oneMember = gson.fromJson(hits.get(i).getAsJsonObject().get("fields").toString(), Member.class);
+			members.add(oneMember);
+		}
+		return members;
+	}
 }
