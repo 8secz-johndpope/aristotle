@@ -43,6 +43,7 @@ public class Member implements Serializable{
 	private Resource profilepicResource;
 	private String memberid;
 	private String state;
+	private String district;
 	
 	public String getState(){
 		if(!StringUtils.isEmpty(livingstate)){
@@ -55,6 +56,15 @@ public class Member implements Serializable{
 	}
 	public void setState(String state) {
 		this.state = state;
+	}
+	public String getDistrict(){
+		if(!StringUtils.isEmpty(livingdistrict)){
+			return livingdistrict;
+		}
+		if(!StringUtils.isEmpty(votingdistrict)){
+			return votingdistrict;
+		}
+		return "";
 	}
 	public String getNri() {
 		return nri;
