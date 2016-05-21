@@ -429,6 +429,9 @@ public class UserServiceImpl implements UserService {
     }
 
     private Phone getOrCreateMobile(String mobileNumber, String countryCode, String fieldName) throws AppException {
+        return getOrCreateMobile(mobileNumber, countryCode, fieldName, true);
+    }
+    private Phone getOrCreateMobile(String mobileNumber, String countryCode, String fieldName, boolean failIfExists) throws AppException {
         if (StringUtils.isBlank(mobileNumber)) {
             return null;
         }
@@ -448,7 +451,7 @@ public class UserServiceImpl implements UserService {
 
             mobile = phoneRepository.save(mobile);
         }
-        if (mobile.getUser() != null || mobile.isConfirmed()) {
+        if (failIfExists && (mobile.getUser() != null || mobile.isConfirmed())) {
             throwFieldAppException(fieldName, "Mobile ["+mobile.getPhoneNumber()+"] already registered");
         }
         return mobile;
@@ -1352,7 +1355,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveMember(UserUploadDto oneUserUploadDto, boolean createUserNamePassword, Location state, Location district, Location pc, Location ac) throws AppException {
         Email email = getOrCreateEmail(oneUserUploadDto.getEmail());
-        Phone phone = getOrCreateMobile(oneUserUploadDto.getPhone(), "91", "mobile");
+        Phone phone = getOrCreateMobile(oneUserUploadDto.getPhone(), "91", "mobile", false);
 
         if (phone != null && phone.getUser() != null && email != null && email.getUser() != null) {
             throw new AppException("Two Different User already exists for phone " + oneUserUploadDto.getPhone()+ " and email :" + oneUserUploadDto.getEmail());
