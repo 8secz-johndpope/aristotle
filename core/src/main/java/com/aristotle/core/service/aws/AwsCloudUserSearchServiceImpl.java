@@ -193,7 +193,7 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
     			livingStateAvailable = true;
     		}
     		if(oneUserLocation.getUserLocationType().equalsIgnoreCase("Voting") && oneUserLocation.getLocation().getLocationType().getName().equalsIgnoreCase("State")){
-    			livingStateAvailable = true;
+    			votingStateAvailable = true;
     		}
     	}
     	
