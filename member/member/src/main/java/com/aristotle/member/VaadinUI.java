@@ -55,6 +55,7 @@ public class VaadinUI extends UI {
 	private int pageSize = 20;
 	private int currentPage = 0;
 	private int totalPages = 0;
+	private int totalRecords = 0;
 	Grid grid = new Grid();
 	VerticalLayout layout;
 	Button start;
@@ -65,6 +66,7 @@ public class VaadinUI extends UI {
 	String selectedLocationName;
 	Long selectedLocationId;
 	Label pageLabel;
+	Label totalMemberLabel;
 	String sortBy;
 
 	public VaadinUI() {
@@ -105,6 +107,7 @@ public class VaadinUI extends UI {
 		sortByComboBox.setNullSelectionAllowed(false);
 		sortByComboBox.setPageLength(0);
 		
+		totalMemberLabel = new Label();
 		// suggestingContainer = new SuggestingContainer();
 	}
 
@@ -140,7 +143,7 @@ public class VaadinUI extends UI {
 		HorizontalLayout locationLayout = new HorizontalLayout(stateCombobox, districtCombobox, sortByComboBox);
 		HorizontalLayout pagingLayout = new HorizontalLayout(start, previous, pageLabel, next, end);
 
-		VerticalLayout layout = new VerticalLayout(locationLayout, grid, pagingLayout);
+		VerticalLayout layout = new VerticalLayout(locationLayout, totalMemberLabel, grid, pagingLayout);
 		layout.setWidth("100%");
 
 		setContent(layout);
@@ -258,6 +261,7 @@ public class VaadinUI extends UI {
 			memberIdColumn.setHeaderCaption("Membership ID");
 			// Grid.Column bornColumn = grid.getColumn("profilepicResource");
 			// bornColumn.setRenderer(new ImageRenderer());
+			totalMemberLabel.setCaption("Total Members : "+totalRecords);
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -344,10 +348,10 @@ public class VaadinUI extends UI {
 
 		JsonObject resultObject = jsonParser.parse(result).getAsJsonObject();
 		JsonArray hits = resultObject.get("hits").getAsJsonObject().get("hit").getAsJsonArray();
-		int total = resultObject.get("hits").getAsJsonObject().get("found").getAsInt();
+		totalRecords = resultObject.get("hits").getAsJsonObject().get("found").getAsInt();
 
-		totalPages = total / pageSize;
-		if (total % pageSize > 0) {
+		totalPages = totalRecords / pageSize;
+		if (totalRecords % pageSize > 0) {
 			totalPages++;
 		}
 
