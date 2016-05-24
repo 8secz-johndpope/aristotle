@@ -74,11 +74,13 @@ import com.aristotle.core.persistance.Donation;
 import com.aristotle.core.persistance.Email;
 import com.aristotle.core.persistance.FacebookAccount;
 import com.aristotle.core.persistance.Interest;
+import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.Membership;
 import com.aristotle.core.persistance.Phone;
 import com.aristotle.core.persistance.TwitterAccount;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.UserLocation;
+import com.aristotle.core.persistance.repo.LocationRepository;
 import com.aristotle.core.persistance.repo.MembershipRepository;
 import com.aristotle.core.persistance.repo.UserLocationRepository;
 import com.aristotle.core.persistance.repo.UserRepository;
@@ -95,6 +97,9 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
     
     @Autowired
     private UserLocationRepository userLocationRepository;
+    
+    @Autowired
+    private LocationRepository locationRepository;
 
     @Autowired
     private MembershipRepository membershipRepository;
@@ -170,9 +175,46 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
         if(user == null){
             return;
         }
+        updateIvrUserState(user);
         List<User> users = new ArrayList<>();
         users.add(user);
         indexUsers(users);
+    }
+    private void updateIvrUserState(User user){
+    	if(StringUtils.isEmpty(user.getIvrState())){
+    		return;
+    	}
+    	List<UserLocation> userLocations = userLocationRepository.getUserLocationByUserId(user.getId());
+    	boolean livingStateAvailable = false;
+    	boolean votingStateAvailable = false;
+    	
+    	for(UserLocation oneUserLocation : userLocations){
+    		if(oneUserLocation.getUserLocationType().equalsIgnoreCase("Living") && oneUserLocation.getLocation().getLocationType().getName().equalsIgnoreCase("State")){
+    			livingStateAvailable = true;
+    		}
+    		if(oneUserLocation.getUserLocationType().equalsIgnoreCase("Voting") && oneUserLocation.getLocation().getLocationType().getName().equalsIgnoreCase("State")){
+    			livingStateAvailable = true;
+    		}
+    	}
+    	
+    	if(!livingStateAvailable){
+    		createUserLocationState(user.getIvrState(), "Living", user);
+    	}
+    	if(!votingStateAvailable){
+    		createUserLocationState(user.getIvrState(), "Voting", user);
+    	}
+    }
+    private UserLocation createUserLocationState(String locationName, String userLocationType, User user){
+    	Location location = locationRepository.getLocationByNameUpAndLocationTypeId(locationName.toUpperCase(), 4L);
+		if(location != null){
+			UserLocation userLocation = new UserLocation();
+			userLocation.setUser(user);
+			userLocation.setLocation(location);
+			userLocation.setUserLocationType(userLocationType);
+			userLocation = userLocationRepository.save(userLocation);
+			return userLocation;
+		}
+		return null;
     }
 
     @Override
