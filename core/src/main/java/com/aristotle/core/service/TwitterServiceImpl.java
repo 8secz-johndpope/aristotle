@@ -194,7 +194,7 @@ public class TwitterServiceImpl implements TwitterService {
 
     @Override
     public Tweet getNextPendingTweet() throws AppException {
-        int delayInSeconds = 60 + random.nextInt(16);// minimum 60 seconds max 75 seconds as per twitter rate limit
+        int delayInSeconds = 180 + random.nextInt(16);// minimum 60 seconds max 75 seconds as per twitter rate limit
         Calendar now = Calendar.getInstance();
         now.add(Calendar.SECOND, 0 - delayInSeconds);
         PageRequest pageRequest = new PageRequest(0, 1);
