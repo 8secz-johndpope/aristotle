@@ -87,7 +87,7 @@ public class VaadinUI extends UI {
 		next.setEnabled(false);
 
 		grid.setWidth("800px");
-		grid.setHeight("800px");
+		grid.setHeight("900px");
 
 		// nameSuggestBox = new NameSuggestBox();
 		suggestingComboBox = new SuggestingComboBox();
