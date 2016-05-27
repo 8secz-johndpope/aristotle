@@ -32,6 +32,10 @@
 				<ref bean="RefreshYoutubeVideoSpoutBean" />
 				<ref bean="DonationRefreshSpoutBean" />
 				<ref bean="MemberRefreshSpoutBean" />
+				<ref bean="SmsThirtySecondTimerSpoutBean" />
+				<ref bean="PlannedTweetThirtySecondTimerSpoutBean" />
+				<ref bean="SmsSendThirtySecondTimerSpoutBean" />
+			
 				
 			</list>
 		</property>
@@ -63,6 +67,39 @@
 		<property name="outputStream">
 			<bean class="com.aristotle.task.topology.beans.Stream">
 				<property name="streamId" value="ThirtySecondTimerStream" />
+			</bean>
+		</property>
+	</bean>
+	<bean id="SmsThirtySecondTimerSpoutBean" class="com.aristotle.task.spout.TimerSpout">
+		<property name="componentId" value="SmsThirtySecondTimerSpout" />
+		<property name="onStart" value="true" />
+		<property name="durationMs" value="30000" />
+
+		<property name="outputStream">
+			<bean class="com.aristotle.task.topology.beans.Stream">
+				<property name="streamId" value="SmsThirtySecondTimerStream" />
+			</bean>
+		</property>
+	</bean>
+	<bean id="SmsSendThirtySecondTimerSpoutBean" class="com.aristotle.task.spout.TimerSpout">
+		<property name="componentId" value="SmsSendThirtySecondTimerSpout" />
+		<property name="onStart" value="true" />
+		<property name="durationMs" value="30000" />
+
+		<property name="outputStream">
+			<bean class="com.aristotle.task.topology.beans.Stream">
+				<property name="streamId" value="SmsSendThirtySecondTimerStream" />
+			</bean>
+		</property>
+	</bean>
+	<bean id="PlannedTweetThirtySecondTimerSpoutBean" class="com.aristotle.task.spout.TimerSpout">
+		<property name="componentId" value="PlannedTweetThirtySecondTimerSpout" />
+		<property name="onStart" value="true" />
+		<property name="durationMs" value="30000" />
+
+		<property name="outputStream">
+			<bean class="com.aristotle.task.topology.beans.Stream">
+				<property name="streamId" value="PlannedTweetThirtySecondTimerStream" />
 			</bean>
 		</property>
 	</bean>
@@ -167,7 +204,7 @@
         <property name="componentId" value="SmsListener" />
         <property name="sourceComponentStreams">
             <map>
-                <entry key="ThirtySecondTimerSpout" value="ThirtySecondTimerStream" />
+                <entry key="SmsThirtySecondTimerSpout" value="SmsThirtySecondTimerStream" />
             </map>
         </property>
         <property name="outputStream">
@@ -180,7 +217,7 @@
         <property name="componentId" value="SendSms" />
         <property name="sourceComponentStreams">
             <map>
-                <entry key="ThirtySecondTimerSpout" value="ThirtySecondTimerStream" />
+                <entry key="SmsSendThirtySecondTimerSpout" value="SmsSendThirtySecondTimerStream" />
             </map>
         </property>
     </bean>
@@ -188,7 +225,7 @@
 		<property name="componentId" value="PlannedTweetReaderBolt" />
 		<property name="sourceComponentStreams">
 			<map>
-				<entry key="ThirtySecondTimerSpout" value="ThirtySecondTimerStream" />
+				<entry key="PlannedTweetThirtySecondTimerSpout" value="PlannedTweetThirtySecondTimerStream" />
 			</map>
 		</property>
 		<property name="outputStream">
