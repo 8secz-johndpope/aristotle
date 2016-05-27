@@ -321,7 +321,7 @@ public class SmsServiceImpl implements SmsService {
     public boolean sendNextSms() throws AppException {
         Pageable pageable = new PageRequest(0, 1);
         Page<Sms> smses = smsRepository.getPendingSms(pageable);
-        if (smses == null || smses.getSize() <= 0) {
+        if (smses == null || smses.getContent() == null || smses.getContent().isEmpty()) {
             return false;
         }
         Sms sms = smses.getContent().get(0);
