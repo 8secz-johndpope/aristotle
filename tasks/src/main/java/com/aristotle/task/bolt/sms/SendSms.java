@@ -22,8 +22,8 @@ public class SendSms extends SpringAwareBaseBolt {
         logInfo("Message Recieved to send Sms");
         while (smsService.sendNextSms()) {
             // Keep processing
-            logInfo("More Sms to process, waiting for 5 seconds before send next one");
-            Thread.sleep(5000);
+            logInfo("More Sms to process, waiting for 1 seconds before send next one");
+            Thread.sleep(1000);
         }
         return Result.Success;
     }
