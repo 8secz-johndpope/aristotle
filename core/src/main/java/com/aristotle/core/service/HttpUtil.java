@@ -52,7 +52,8 @@ public class HttpUtil {
     public String getResponse(String url) throws ClientProtocolException, IOException {
 		logger.info("Hitting Url = {}", url);
 		HttpGet httpGet = new HttpGet(url);
-		CloseableHttpClient httpClient = (CloseableHttpClient)getHttpClient();
+		CloseableHttpClient httpClient = (CloseableHttpClient)HttpClients.custom().setConnectionManager
+			    (poolingHttpClientConnectionManager).build();;
 		printPoolStats("During Http Call");
         HttpResponse httpResponse = httpClient.execute(httpGet);
 		//System.out.println("Got Response= "+ httpResponse);
@@ -65,7 +66,6 @@ public class HttpUtil {
 		logger.info("response = {}", response);
 		try{
 			EntityUtils.consume(httpEntity);
-			httpClient.close();
 		}catch(Exception ex){
 			System.out.println(ex.getMessage());
 		}
