@@ -330,7 +330,7 @@ public class SmsServiceImpl implements SmsService {
         } else {
             sendTransactionalSms(sms);
         }
-        return false;
+        return true;
     }
 
     @Override
