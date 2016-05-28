@@ -45,8 +45,12 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
 
     private Location selectedState;
     private Location selectedDistrict;
+    private Location selectedAc;
+    private Location selectedPc;
     private List<Location> states;
     private List<Location> districts;
+    private List<Location> acs;
+    private List<Location> pcs;
 
     @Autowired
     private UserService userService;
@@ -56,6 +60,10 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
     private LocationConvertor stateLocationConvertor;
     @Autowired
     private LocationConvertor districtLocationConvertor;
+    @Autowired
+    private LocationConvertor acLocationConvertor;
+    @Autowired
+    private LocationConvertor pcLocationConvertor;
 	public AdminMemberUploadBean() {
         super("/admin/member-upload", AppPermission.ADMIN_EVENT);
 	}
@@ -94,7 +102,7 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
             int totalFailed = 0;
             for (UserUploadDto oneUserUploadDto : userBeingUploaded) {
             	try{
-            		userService.saveMember(oneUserUploadDto, false, selectedState, selectedDistrict, null, null);
+            		userService.saveMember(oneUserUploadDto, false, selectedState, selectedDistrict, selectedPc, selectedAc);
             		oneUserUploadDto.setUserCreated(true);	
             	}catch(Exception ex){
             		oneUserUploadDto.setUserCreated(false);
@@ -182,6 +190,7 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
         try {
         	if(selectedState.getId() == 0L){
         		districts = Collections.emptyList();
+        		pcs = Collections.emptyList();
         		return;
         	}
             districts = locationService.getAllDistrictOfState(selectedState.getId());
@@ -191,6 +200,15 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
             districts.add(0, district);
             districtLocationConvertor.setLocations(districts);
             selectedDistrict = districts.get(0);
+            
+            
+            pcs = locationService.getAllParliamentConstituenciesOfState(selectedState.getId());
+            Location pc = new Location();
+            pc.setId(0L);
+            pc.setName("Select Parliament Constituency");
+            pcs.add(0, pc);
+            pcLocationConvertor.setLocations(pcs);
+            selectedPc = pcs.get(0);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -198,6 +216,29 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
 
     public void handleDistrictChange() {
         System.out.println("Location Select : " + selectedDistrict);
+        try {
+        	if(selectedDistrict.getId() == 0L){
+        		acs = Collections.emptyList();
+        		return;
+        	}
+            acs = locationService.getAllAssemblyConstituenciesOfDistrict(selectedDistrict.getId());
+            Location ac = new Location();
+            ac.setId(0L);
+            ac.setName("Select Assembley Constituency");
+            acs.add(0, ac);
+            acLocationConvertor.setLocations(acs);
+            selectedAc = acs.get(0);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    public void handleAcChange() {
+        System.out.println("Location Select : " + selectedAc);
+        
+    }
+    public void handlePcChange() {
+        System.out.println("Location Select : " + selectedPc);
+        
     }
 
     public List<UserUploadDto> getUserBeingUploaded() {
@@ -262,6 +303,54 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
     public void setDistricts(List<Location> districts) {
         this.districts = districts;
     }
+
+	public List<Location> getAcs() {
+		return acs;
+	}
+
+	public void setAcs(List<Location> acs) {
+		this.acs = acs;
+	}
+
+	public List<Location> getPcs() {
+		return pcs;
+	}
+
+	public void setPcs(List<Location> pcs) {
+		this.pcs = pcs;
+	}
+
+	public LocationConvertor getAcLocationConvertor() {
+		return acLocationConvertor;
+	}
+
+	public void setAcLocationConvertor(LocationConvertor acLocationConvertor) {
+		this.acLocationConvertor = acLocationConvertor;
+	}
+
+	public LocationConvertor getPcLocationConvertor() {
+		return pcLocationConvertor;
+	}
+
+	public void setPcLocationConvertor(LocationConvertor pcLocationConvertor) {
+		this.pcLocationConvertor = pcLocationConvertor;
+	}
+
+	public Location getSelectedAc() {
+		return selectedAc;
+	}
+
+	public void setSelectedAc(Location selectedAc) {
+		this.selectedAc = selectedAc;
+	}
+
+	public Location getSelectedPc() {
+		return selectedPc;
+	}
+
+	public void setSelectedPc(Location selectedPc) {
+		this.selectedPc = selectedPc;
+	}
 
 
 }

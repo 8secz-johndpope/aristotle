@@ -76,6 +76,26 @@
 								<p:ajax event="change" update="@form:locationSelectionPanel"
 									listener="#{adminMemberUploadBean.handleDistrictChange}" />
 							</p:selectOneMenu>
+							<h:outputLabel for="pc" value="Parliament Constituency*" />
+							<p:selectOneMenu id="pc" effect="fold" editable="false"
+								value="#{adminMemberUploadBean.selectedPc}"
+								converter="#{adminMemberUploadBean.pcLocationConvertor}" >
+								<f:selectItems value="#{adminMemberUploadBean.pcs}"
+									var="onePc" itemLabel="#{onePc.name}"
+									itemValue="#{onePc}" />
+								<p:ajax event="change" update="@form:locationSelectionPanel"
+									listener="#{adminMemberUploadBean.handlePcChange}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="ac" value="Assemble Constituency" />
+							<p:selectOneMenu id="ac" effect="fold" editable="false"
+								value="#{adminMemberUploadBean.selectedAc}"
+								converter="#{adminMemberUploadBean.acLocationConvertor}">
+								<f:selectItems value="#{adminMemberUploadBean.acs}"
+									var="oneAc" itemLabel="#{oneAc.name}"
+									itemValue="#{oneAc}" />
+								<p:ajax event="change" update="@form:locationSelectionPanel"
+									listener="#{adminMemberUploadBean.handleAcChange}" />
+							</p:selectOneMenu>
 					</p:panel>
 				</p:outputPanel>
                 Select CSV file
