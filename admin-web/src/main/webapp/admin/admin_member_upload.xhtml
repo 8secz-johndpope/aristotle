@@ -9,11 +9,11 @@
 <h:head>
 	<title>Upload Member Data - Admin Panel</title>
 	<style>
-	.error-row {
+.error-row {
 	color: red;
 	background-color: #FFFF00;
 }
-	
+
 .topAlignPanelColumns td {
 	vertical-align: top;
 }
@@ -46,7 +46,8 @@
 	<!-- menu ends -->
 	<div style="width: 90%; margin: 0 auto;">
 		<div style="width: 100%; margin: 0;">
-			<p:blockUI block="adminMemberUploadForm" widgetVar="adminMemberUploadFormBlocker"
+			<p:blockUI block="adminMemberUploadForm"
+				widgetVar="adminMemberUploadFormBlocker"
 				trigger=":adminMemberUploadForm:csvFileUpload,:adminMemberUploadForm:uploadDataButton,:adminMemberUploadForm:state,:adminMemberUploadForm:district">
 			Loading...<br />
 				<p:graphicImage width="80"
@@ -56,10 +57,11 @@
 				<p:messages id="messages" autoUpdate="true" closable="true" />
 				<p:outputPanel id="locationSelectionPanel">
 					<p:panel header="Location Selection" style="margin-bottom:20px">
+						<p:panelGrid columns="4">
 							<h:outputLabel for="state" value="State*" />
 							<p:selectOneMenu id="state" effect="fold" editable="false"
 								value="#{adminMemberUploadBean.selectedState}"
-								converter="#{adminMemberUploadBean.stateLocationConvertor}" >
+								converter="#{adminMemberUploadBean.stateLocationConvertor}">
 								<f:selectItems value="#{adminMemberUploadBean.states}"
 									var="oneState" itemLabel="#{oneState.name}"
 									itemValue="#{oneState}" />
@@ -79,10 +81,9 @@
 							<h:outputLabel for="pc" value="Parliament Constituency*" />
 							<p:selectOneMenu id="pc" effect="fold" editable="false"
 								value="#{adminMemberUploadBean.selectedPc}"
-								converter="#{adminMemberUploadBean.pcLocationConvertor}" >
-								<f:selectItems value="#{adminMemberUploadBean.pcs}"
-									var="onePc" itemLabel="#{onePc.name}"
-									itemValue="#{onePc}" />
+								converter="#{adminMemberUploadBean.pcLocationConvertor}">
+								<f:selectItems value="#{adminMemberUploadBean.pcs}" var="onePc"
+									itemLabel="#{onePc.name}" itemValue="#{onePc}" />
 								<p:ajax event="change" update="@form:locationSelectionPanel"
 									listener="#{adminMemberUploadBean.handlePcChange}" />
 							</p:selectOneMenu>
@@ -90,26 +91,28 @@
 							<p:selectOneMenu id="ac" effect="fold" editable="false"
 								value="#{adminMemberUploadBean.selectedAc}"
 								converter="#{adminMemberUploadBean.acLocationConvertor}">
-								<f:selectItems value="#{adminMemberUploadBean.acs}"
-									var="oneAc" itemLabel="#{oneAc.name}"
-									itemValue="#{oneAc}" />
+								<f:selectItems value="#{adminMemberUploadBean.acs}" var="oneAc"
+									itemLabel="#{oneAc.name}" itemValue="#{oneAc}" />
 								<p:ajax event="change" update="@form:locationSelectionPanel"
 									listener="#{adminMemberUploadBean.handleAcChange}" />
 							</p:selectOneMenu>
+						</p:panelGrid>
 					</p:panel>
 				</p:outputPanel>
                 Select CSV file
 				<p:fileUpload id="csvFileUpload"
 					fileUploadListener="#{adminMemberUploadBean.handleFileUpload}"
 					mode="advanced" update="messages,:adminMemberUploadForm:mainPanel"
-					auto="true" sizeLimit="1000000" allowTypes="/(\.|\/)(csv)$/" 
-					onstart="PF('adminMemberUploadFormBlocker').show();" oncomplete="PF('adminMemberUploadFormBlocker').hide();"/>
+					auto="true" sizeLimit="1000000" allowTypes="/(\.|\/)(csv)$/"
+					onstart="PF('adminMemberUploadFormBlocker').show();"
+					oncomplete="PF('adminMemberUploadFormBlocker').hide();" />
 
 
 				<p:outputPanel id="mainPanel">
 					<p:outputPanel id="listView">
 
-						<p:dataTable id="userList" var="oneUser" rowStyleClass="#{empty oneUser.errorMessage ? null : 'error-row'}"
+						<p:dataTable id="userList" var="oneUser"
+							rowStyleClass="#{empty oneUser.errorMessage ? null : 'error-row'}"
 							value="#{adminMemberUploadBean.userBeingUploaded}"
 							emptyMessage="Please upoada a csv file with email, mobile and name columns"
 							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
@@ -165,7 +168,7 @@
 								</f:facet>
 								<h:outputText value="#{oneUser.txnId}" />
 							</p:column>
-							
+
 							<p:column>
 								<f:facet name="header">
 									<h:outputText value="Creation Status" />
