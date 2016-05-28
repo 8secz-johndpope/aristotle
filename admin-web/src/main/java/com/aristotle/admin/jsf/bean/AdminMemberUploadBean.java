@@ -107,6 +107,7 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
             	}catch(Exception ex){
             		oneUserUploadDto.setUserCreated(false);
             		oneUserUploadDto.setErrorMessage(ex.getMessage());
+            		ex.printStackTrace();
             	}
             	if (oneUserUploadDto.isUserCreated()) {
                     totalSuccess++;
