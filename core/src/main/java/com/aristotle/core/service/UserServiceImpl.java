@@ -1462,7 +1462,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void addUserLocation(User dbuser, Location location, String userLocationType) {
-        if (location == null) {
+        if (location == null || location.getId() <= 0) {
             return;
         }
         location = locationRepository.findOne(location.getId());
