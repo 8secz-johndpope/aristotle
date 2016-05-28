@@ -761,7 +761,7 @@ public class UserServiceImpl implements UserService {
         }
     }
     private String generateUserLoginAccountForMobileAndMembershipId(Phone phone, String membershipid) throws AppException {
-    	String password = "*****";
+    	String password = null;
         if (phone == null) {
             throw new AppException("Mobile Is not registered");
         }
@@ -778,8 +778,6 @@ public class UserServiceImpl implements UserService {
             loginAccount.setUserName(membershipid);
             loginAccount = loginAccountRepository.save(loginAccount);
             //sendLoginAccountDetails(loginAccount, password);
-        } else {
-            throw new AppException("Login Account already Exists");
         }
         return password;
     }
@@ -1446,17 +1444,19 @@ public class UserServiceImpl implements UserService {
 
         if(email == null && phone != null){
         	String password = generateUserLoginAccountForMobileAndMembershipId(phone, dbUser.getMembershipNumber());
-        	Sms sms = new Sms();
-        	String message = "Dear ##MemberName##, your membership id for swaraj abhiyan is ##ID## and your password is ##password##. You can login to swarajabhiyan.org to view your details. Thanks, Swaraj Abhiyan.";
-        	message = message.replace("##MemberName##", dbUser.getName());
-        	message = message.replace("##ID##", dbUser.getMembershipNumber());
-        	message = message.replace("##password##", password);
-        	sms.setMessage(message);
-        	sms.setPhone(phone);
-        	sms.setPromotional(false);
-        	sms.setStatus("PENDING");
-        	sms.setUser(dbUser);
-        	smsService.sendSmsAsync(sms);
+        	if(password != null){
+        		Sms sms = new Sms();
+            	String message = "Dear ##MemberName##, your membership id for swaraj abhiyan is ##ID## and your password is ##password##. You can login to swarajabhiyan.org to view your details. Thanks, Swaraj Abhiyan.";
+            	message = message.replace("##MemberName##", dbUser.getName());
+            	message = message.replace("##ID##", dbUser.getMembershipNumber());
+            	message = message.replace("##password##", password);
+            	sms.setMessage(message);
+            	sms.setPhone(phone);
+            	sms.setPromotional(false);
+            	sms.setStatus("PENDING");
+            	sms.setUser(dbUser);
+            	smsService.sendSmsAsync(sms);
+        	}
         }
         sendMemberForIndexing(dbUser);
     }
