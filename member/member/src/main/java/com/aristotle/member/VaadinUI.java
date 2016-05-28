@@ -174,15 +174,16 @@ public class VaadinUI extends UI {
 				// This is necessary to ensure that the
 				// selected value is displayed by the ComboBox
 				Location selecteState = (Location) event.getProperty().getValue();
-				selectedLocationName = selecteState.getName();
-				selectedLocationId = selecteState.getId();
-				stateCombobox.setValue(selectedLocationName);
-				searchType = "State";
-				currentPage = 0;
-				reloadTable();
-				enableDisableButtons();
-				buildDistrictComoboBox(selecteState.getId());
-
+				if(selecteState != null){
+					selectedLocationName = selecteState.getName();
+					selectedLocationId = selecteState.getId();
+					stateCombobox.setValue(selectedLocationName);
+					searchType = "State";
+					currentPage = 0;
+					reloadTable();
+					enableDisableButtons();
+					buildDistrictComoboBox(selecteState.getId());
+				}
 			}
 		});
 	}
@@ -216,14 +217,15 @@ public class VaadinUI extends UI {
 				// This is necessary to ensure that the
 				// selected value is displayed by the ComboBox
 				Location selecteDistrict = (Location) event.getProperty().getValue();
-				selectedLocationName = selecteDistrict.getName();
-				selectedLocationId = selecteDistrict.getId();
-				districtCombobox.setValue(selectedLocationName);
-				searchType = "District";
-				currentPage = 0;
-				reloadTable();
-				enableDisableButtons();
-
+				if(selecteDistrict != null){
+					selectedLocationName = selecteDistrict.getName();
+					selectedLocationId = selecteDistrict.getId();
+					districtCombobox.setValue(selectedLocationName);
+					searchType = "District";
+					currentPage = 0;
+					reloadTable();
+					enableDisableButtons();
+				}
 			}
 		});
 	}
