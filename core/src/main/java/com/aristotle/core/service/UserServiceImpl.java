@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.neo4j.cypher.internal.compiler.v2_1.functions.E;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,6 +41,7 @@ import com.aristotle.core.persistance.MembershipTransaction;
 import com.aristotle.core.persistance.PasswordResetRequest;
 import com.aristotle.core.persistance.Phone;
 import com.aristotle.core.persistance.Phone.PhoneType;
+import com.aristotle.core.persistance.Sms;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.UserLocation;
 import com.aristotle.core.persistance.Volunteer;
@@ -96,6 +98,8 @@ public class UserServiceImpl implements UserService {
     private AwsFileManager awsFileManager;
     @Autowired
     private UserSearchService userSearchService;
+    @Autowired
+    private SmsService smsService;
     
     @Value("${aws_access_key}")
     private String awsKey;
@@ -425,6 +429,9 @@ public class UserServiceImpl implements UserService {
     }
 
     private Phone getOrCreateMobile(String mobileNumber, String countryCode, String fieldName) throws AppException {
+        return getOrCreateMobile(mobileNumber, countryCode, fieldName, true);
+    }
+    private Phone getOrCreateMobile(String mobileNumber, String countryCode, String fieldName, boolean failIfExists) throws AppException {
         if (StringUtils.isBlank(mobileNumber)) {
             return null;
         }
@@ -444,8 +451,8 @@ public class UserServiceImpl implements UserService {
 
             mobile = phoneRepository.save(mobile);
         }
-        if (mobile.getUser() != null || mobile.isConfirmed()) {
-            throwFieldAppException(fieldName, "Mobile already registered");
+        if (failIfExists && (mobile.getUser() != null || mobile.isConfirmed())) {
+            throwFieldAppException(fieldName, "Mobile ["+mobile.getPhoneNumber()+"] already registered");
         }
         return mobile;
     }
@@ -616,6 +623,9 @@ public class UserServiceImpl implements UserService {
             }
         } else {
             Location location = locationRepository.findOne(locationId);
+            if(location == null){
+            	return;
+            }
             if (userLocation == null) {
                 userLocation = new UserLocation();
                 userLocation.setUser(user);
@@ -749,6 +759,27 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new AppException("Login Account already Exists");
         }
+    }
+    private String generateUserLoginAccountForMobileAndMembershipId(Phone phone, String membershipid) throws AppException {
+    	String password = null;
+        if (phone == null) {
+            throw new AppException("Mobile Is not registered");
+        }
+        User user = phone.getUser();
+        if (user == null) {
+            throw new AppException("Phone(user) Is not registered");
+        }
+        LoginAccount loginAccount = loginAccountRepository.getLoginAccountByUserId(user.getId());
+        if (loginAccount == null) {
+            loginAccount = new LoginAccount();
+            password = generateRandompassword();
+            loginAccount.setPassword(passwordUtil.encryptPassword(password));
+            loginAccount.setUser(user);
+            loginAccount.setUserName(membershipid);
+            loginAccount = loginAccountRepository.save(loginAccount);
+            //sendLoginAccountDetails(loginAccount, password);
+        }
+        return password;
     }
 
 
@@ -896,6 +927,62 @@ public class UserServiceImpl implements UserService {
         }
         System.out.println("Total Success : " + totalSuccess);
         System.out.println("Total Failed : " + totalFailed);
+    }
+    @Override
+    public void sendMembershipConfirmtionEmail(String emailId) throws AppException {
+        if ("all".equals(emailId)) {
+            //confirmAllEmail();
+            return;
+        }
+        Email email = emailRepository.getEmailByEmailUp(emailId.toUpperCase());
+        if (email == null) {
+            throw new AppException("No accounts exists for email " + emailId);
+        }
+        EmailConfirmationRequest emailConfirmationRequest = emailConfirmationRequestRepository.getEmailConfirmationRequestByEmail(emailId.toLowerCase());
+        if (emailConfirmationRequest == null) {
+            emailConfirmationRequest = new EmailConfirmationRequest();
+        }
+        emailConfirmationRequest.setEmail(emailId.toLowerCase());
+        emailConfirmationRequest.setToken(UUID.randomUUID().toString());
+        emailConfirmationRequest = emailConfirmationRequestRepository.save(emailConfirmationRequest);
+        sendMembershipConfirmationEmail(emailId.toLowerCase(), email.getUser(), emailConfirmationRequest);
+
+    }
+    private void sendMembershipConfirmationEmail(String emailId, User user,EmailConfirmationRequest emailConfirmationRequest) throws AppException {
+        String emailValidationUrl = "http://www.swarajabhiyan.org/email/verify?email=" + emailId + "&token=" + emailConfirmationRequest.getToken();
+        StringBuilder sb = new StringBuilder();
+        sb.append("Hello "+user.getName());
+        sb.append("<br>");
+        sb.append("<br>");
+        sb.append("<p>Thankyou for registering at <a href=\"http://www.swarajabhiyan.org\">Swaraj Abhiyan</a> and becoming its valuable member</p>");
+        sb.append("<br>");
+        sb.append("<p>Your Membership ID is : "+ user.getMembershipNumber()+"</p>");
+        sb.append("<br>");
+        sb.append("<p>Also as part of registration process you need to validate your email by clicking <a href=\"" + emailValidationUrl + "\" >here</a> or copy following url and open it in a browser.</p>");
+        sb.append("<br>");
+        sb.append("<p>" + emailValidationUrl + "</p>");
+        sb.append("<br>");
+        sb.append("<br>");
+        sb.append("<br>");
+        sb.append("<br>Thanks");
+        sb.append("<br>Swaraj Abhiyan Team");
+        sb.append("<br><br>++++++++++++++++++++++++++++");
+        sb.append("<br>Website : www.swarajabhiyan.org");
+        sb.append("<br>Email Id: contact@swarajabhiyan.org");
+        sb.append("<br>Helpline no : +91-7210222333");
+        sb.append("<br>Twitter Handle : https://twitter.com/swaraj_abhiyan");
+        sb.append("<br>Facebook Pages : https://www.facebook.com/swarajabhiyan");
+        sb.append("<br>Facebook group : https://www.facebook.com/groups/swarajabhiyan/");
+        sb.append("<br>Volunteer Registration : http://www.swarajabhiyan.org/register");
+        sb.append("<br>Swaraj Abhiyan Channel https://www.youtube.com/SwarajAbhiyanTV");
+        sb.append("<br>Head Office : A-189, Sec-43, Noida UP");
+
+        // now send Email
+        String contentWithOutHtml = sb.toString();
+        contentWithOutHtml = contentWithOutHtml.replaceAll("<br>", "\n");
+        contentWithOutHtml = contentWithOutHtml.replaceAll("\\<[^>]*>", "");
+        emailManager.sendEmail(emailId, "Member Registration", regsitrationEmailId, "Welcome to Swaraj Abhiyan", contentWithOutHtml, sb.toString());
+
     }
     @Override
     public void sendEmailConfirmtionEmail(String emailId) throws AppException {
@@ -1205,9 +1292,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void checkUserStatus(List<UserUploadDto> users) throws AppException {
+    	Email email = null;
+    	Phone phone =  null;
+        Phone referenceMobile = null;
+
         for(UserUploadDto oneUserUploadDto : users){
+        	email = null;
+        	phone =  null;
+        	referenceMobile = null;
+        	if (StringUtils.isBlank(oneUserUploadDto.getEmail()) && StringUtils.isBlank(oneUserUploadDto.getPhone().trim()) && StringUtils.isEmpty(oneUserUploadDto.getReferencePhone())) {
+            	oneUserUploadDto.setErrorMessage("either email or phone or reference mobile must be provided");
+            }
+            if(StringUtils.isEmpty(oneUserUploadDto.getName())){
+        		oneUserUploadDto.setErrorMessage("Name can not be empty");
+            }
             if (!StringUtils.isBlank(oneUserUploadDto.getEmail())) {
-                Email email = emailRepository.getEmailByEmailUp(oneUserUploadDto.getEmail().toUpperCase());
+                email = emailRepository.getEmailByEmailUp(oneUserUploadDto.getEmail().toUpperCase());
                 if (email != null) {
                     oneUserUploadDto.setEmailAlreadyExists(true);
                     oneUserUploadDto.setUserIdForEmail(email.getUserId());
@@ -1216,66 +1316,112 @@ public class UserServiceImpl implements UserService {
             System.out.println("checking Phone number [" + oneUserUploadDto.getPhone() + "]");
             if (!StringUtils.isBlank(oneUserUploadDto.getPhone().trim())) {
                 System.out.println("Get Phone by Phone number [" + oneUserUploadDto.getPhone() + "] and countryCode [91]");
-                Phone phone = phoneRepository.getPhoneByPhoneNumberAndCountryCode(oneUserUploadDto.getPhone(), "91");
+                phone = phoneRepository.getPhoneByPhoneNumberAndCountryCode(oneUserUploadDto.getPhone(), "91");
                 System.out.println("Found Phone " + phone);
                 if (phone != null) {
                     oneUserUploadDto.setPhoneAlreadyExists(true);
                     oneUserUploadDto.setUserIdForPhone(phone.getUserId());
                 }
             }
+            if (phone != null && phone.getUser() != null && email != null && email.getUser() != null) {
+            	oneUserUploadDto.setErrorMessage("Two Different User already exists for phone " + oneUserUploadDto.getPhone()+ " and email :" + oneUserUploadDto.getEmail());
+            }
+            if(!StringUtils.isEmpty(oneUserUploadDto.getReferencePhone())){
+            	referenceMobile = phoneRepository.getPhoneByPhoneNumberAndCountryCode(oneUserUploadDto.getReferencePhone(), "91");
+            	if (referenceMobile == null) {
+            		oneUserUploadDto.setErrorMessage("No Such mobile registered :" + oneUserUploadDto.getReferencePhone());
+                }
+            }
+            
         }
 
     }
 
     @Override
-    public void saveUsers(List<UserUploadDto> users, boolean createUserNamePassword, Location state, Location district, Location pc, Location ac) throws AppException {
+    public void saveMembers(List<UserUploadDto> users, boolean createUserNamePassword, Location state, Location district, Location pc, Location ac) throws AppException {
         for (UserUploadDto oneUserUploadDto : users) {
             try {
-                saveUser(oneUserUploadDto, createUserNamePassword, state, district, pc, ac);
+                saveMember(oneUserUploadDto, createUserNamePassword, state, district, pc, ac);
                 oneUserUploadDto.setUserCreated(true);
             } catch (Exception ex) {
-                oneUserUploadDto.setErrorMessage(ex.getMessage());
+            	ex.printStackTrace();
+                oneUserUploadDto.setErrorMessage("Failed:"+ex.getMessage());
                 oneUserUploadDto.setUserCreated(false);
             }
         }
     }
-
-    private void saveUser(UserUploadDto oneUserUploadDto, boolean createUserNamePassword, Location state, Location district, Location pc, Location ac) throws AppException {
+    @Override
+    public void saveMember(UserUploadDto oneUserUploadDto, boolean createUserNamePassword, Location state, Location district, Location pc, Location ac) throws AppException {
         Email email = getOrCreateEmail(oneUserUploadDto.getEmail());
-        if (email != null && email.getUser() != null) {
-            throw new AppException("User already exists for email " + oneUserUploadDto.getEmail());
-        }
+        Phone phone = getOrCreateMobile(oneUserUploadDto.getPhone(), "91", "mobile", false);
 
-        Phone phone = getOrCreateMobile(oneUserUploadDto.getPhone(), "91", "mobile");
-        if (phone != null && phone.getUser() != null) {
-            throw new AppException("User already exists for phone " + oneUserUploadDto.getPhone());
+        if (phone != null && phone.getUser() != null && email != null && email.getUser() != null) {
+            throw new AppException("Two Different User already exists for phone " + oneUserUploadDto.getPhone()+ " and email :" + oneUserUploadDto.getEmail());
+        }
+        
+        Phone referenceMobile = null;
+        if(!StringUtils.isEmpty(oneUserUploadDto.getReferencePhone())){
+        	referenceMobile = phoneRepository.getPhoneByPhoneNumberAndCountryCode(oneUserUploadDto.getReferencePhone(), "91");
+        	if (referenceMobile == null) {
+                throw new AppException("No Such mobile registered " + oneUserUploadDto.getReferencePhone());
+            }
+        }
+        if(StringUtils.isEmpty(oneUserUploadDto.getName())){
+        	throw new AppException("Name can not be empty");
         }
 
         if (email != null && phone != null) {
             email.setPhone(phone);
         }
-        if (email == null && phone == null) {
-            throw new AppException("either email or phone must be provided");
+        if (email == null && phone == null && referenceMobile == null) {
+            throw new AppException("either email or phone or reference mobile must be provided");
         }
-        User dbUser = new User();
+        User dbUser = null;
+        if(email != null){
+        	dbUser = email.getUser();
+        }
+        if(phone != null){
+        	dbUser = phone.getUser();
+        }
+        if(dbUser == null){
+        	dbUser = new User();
+            dbUser.setCreationType(CreationType.Admin_Imported_Via_Csv);
+        }else{
+        	System.out.println("Existing User found");
+        }
         dbUser.setName(oneUserUploadDto.getName());
-        dbUser.setCreationType(CreationType.Admin_Imported_Via_Csv);
+        dbUser.setMember(true);
+        if(referenceMobile != null){
+        	dbUser.setReferenceUser(referenceMobile.getUser());
+        	dbUser.setReferenceMobileNumber(referenceMobile.getPhoneNumber());
+        }
 
         dbUser = userRepository.save(dbUser);
-
-        if (email != null) {
-            email.setUser(dbUser);
-            if (createUserNamePassword) {
-                sendEmailConfirmtionEmail(email.getEmail());
-                generateUserLoginAccount(email.getEmail());
+        
+        //create Membership
+        Membership membership = membershipRepository.getMembershipByUserId(dbUser.getId());
+        if(membership == null){
+        	membership = new Membership();
+            membership.setStartDate(new Date());
+            membership.setSource("ADMIN");
+            membership.setUser(dbUser);
+            
+            MembershipTransaction membershipTransaction = new MembershipTransaction();
+            membershipTransaction.setMembership(membership);
+            membershipTransaction.setSource("ADMIN");
+            Calendar calendar = Calendar.getInstance();
+            if(StringUtils.isEmpty(oneUserUploadDto.getTxnId())){
+            	membershipTransaction.setSourceTransactionId(dbUser.getId()+"_"+50+"_"+calendar.get(Calendar.YEAR)+(calendar.get(Calendar.MONTH)+1)+calendar.get(Calendar.DATE));
+            }else{
+            	membershipTransaction.setSourceTransactionId(oneUserUploadDto.getTxnId());
             }
+            membershipTransaction.setTransactionDate(new Date());
+            membershipTransaction.setAmount("50");
+            membershipTransaction = membershipTransactionRepository.save(membershipTransaction);
+            membership.setEndDate(getMembershipEndDate());
+            membership = membershipRepository.save(membership);
         }
-        if (phone != null) {
-            phone.setUser(dbUser);
-            if (createUserNamePassword) {
-                generateUserLoginAccountForMobile(phone);
-            }
-        }
+        
 
         addUserLocation(dbUser, state, "Living");
         addUserLocation(dbUser, state, "Voting");
@@ -1285,15 +1431,45 @@ public class UserServiceImpl implements UserService {
         addUserLocation(dbUser, ac, "Voting");
         addUserLocation(dbUser, pc, "Living");
         addUserLocation(dbUser, pc, "Voting");
+        
+        if (email != null) {
+            email.setUser(dbUser);
+        	sendMembershipConfirmtionEmail(email.getEmail());
+            generateUserLoginAccount(email.getEmail());
+        }
+        if (phone != null) {
+            phone.setUser(dbUser);
+        }
+        membership.setMembershipId(getMembershipId(dbUser, membership));
+
+        if(email == null && phone != null){
+        	String password = generateUserLoginAccountForMobileAndMembershipId(phone, dbUser.getMembershipNumber());
+        	if(password != null){
+        		Sms sms = new Sms();
+            	String message = "Dear ##MemberName##, your membership id for swaraj abhiyan is ##ID## and your password is ##password##. You can login to swarajabhiyan.org to view your details. Thanks, Swaraj Abhiyan.";
+            	message = message.replace("##MemberName##", dbUser.getName());
+            	message = message.replace("##ID##", dbUser.getMembershipNumber());
+            	message = message.replace("##password##", password);
+            	sms.setMessage(message);
+            	sms.setPhone(phone);
+            	sms.setPromotional(false);
+            	sms.setStatus("PENDING");
+            	sms.setUser(dbUser);
+            	smsService.sendSmsAsync(sms);
+        	}
+        }
         sendMemberForIndexing(dbUser);
     }
 
     private void addUserLocation(User dbuser, Location location, String userLocationType) {
-        if (location == null) {
+        if (location == null || location.getId() <= 0) {
             return;
         }
         location = locationRepository.findOne(location.getId());
-        UserLocation userLocation = new UserLocation();
+        UserLocation userLocation = userLocationRepository.getUserLocationByUserIdAndLocationTypesAndUserLocationType(dbuser.getId(), userLocationType, location.getLocationType().getName());
+        if(userLocation == null){
+        	userLocation = new UserLocation();
+        }
         userLocation.setLocation(location);
         userLocation.setUser(dbuser);
         userLocation.setUserLocationType(userLocationType);
@@ -1367,6 +1543,4 @@ public class UserServiceImpl implements UserService {
 		
 		}
 	}
-
-
 }

@@ -113,6 +113,7 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
         }
         locationTypeConvertor.setLocationTypes(locationTypes);
         selectedLocationType = locationTypes.get(0);
+
         if (selectedLocationType.getName().equalsIgnoreCase("State")) {
             loadStates(menuBean.getSelectedLocation());
         }
@@ -154,12 +155,14 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
     }
 
     private void loadStates(Location location) throws AppException {
+    	System.out.println("load States for "+location);
         districts = locationService.getAllDistrictOfState(location.getId());
         districtLocationConvertor.setLocations(districts);
         pcs = locationService.getAllParliamentConstituenciesOfState(location.getId());
         pcLocationConvertor.setLocations(pcs);
 
         states = locationService.getAllLocationsOfType(location.getLocationTypeId(), location.getParentLocationId());
+        System.out.println("States = "+states);
         stateLocationConvertor.setLocations(states);
         selectedState = location;
         showStateLocationSelectionOption = true;
@@ -174,7 +177,7 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
                 return;
             }
             userNamePassword = false;
-            userService.saveUsers(userBeingUploaded, userNamePassword, selectedState, selectedDistrict, selectedPc, selectedAc);
+            userService.saveMembers(userBeingUploaded, userNamePassword, selectedState, selectedDistrict, selectedPc, selectedAc);
             int totalSuccess = 0;
             int totalFailed = 0;
             for (UserUploadDto oneUserUploadDto : userBeingUploaded) {
@@ -362,6 +365,7 @@ public class AdminDataUploadBean extends BaseMultiPermissionAdminJsfBean {
         System.out.println("Location Select : " + selectedDistrict);
         try {
             selectedAc = null;
+            
             if (isShowAcLocationSelectionOption()) {
                 acs = locationService.getAllAssemblyConstituenciesOfDistrict(selectedDistrict.getId());
                 acLocationConvertor.setLocations(acs);

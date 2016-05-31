@@ -13,9 +13,12 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.pool.PoolStats;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -24,9 +27,10 @@ import org.springframework.stereotype.Component;
 public class HttpUtil {
 
     private HttpClientBuilder httpClientBuilder;
+    PoolingHttpClientConnectionManager poolingHttpClientConnectionManager;
 	
 	public HttpUtil(){
-        PoolingHttpClientConnectionManager poolingHttpClientConnectionManager = new PoolingHttpClientConnectionManager();
+		poolingHttpClientConnectionManager = new PoolingHttpClientConnectionManager();
         // Increase max total connection to 200
         poolingHttpClientConnectionManager.setMaxTotal(5);
         // Increase default max connection per route to 20
@@ -41,10 +45,17 @@ public class HttpUtil {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
+	private void printPoolStats(String prefix){
+		PoolStats poolStats = poolingHttpClientConnectionManager.getTotalStats();
+		System.out.println(prefix +":" +poolStats.toString());
+	}
     public String getResponse(String url) throws ClientProtocolException, IOException {
 		logger.info("Hitting Url = {}", url);
 		HttpGet httpGet = new HttpGet(url);
-        HttpResponse httpResponse = getHttpClient().execute(httpGet);
+		CloseableHttpClient httpClient = (CloseableHttpClient)HttpClients.custom().setConnectionManager
+			    (poolingHttpClientConnectionManager).build();;
+		printPoolStats("During Http Call");
+        HttpResponse httpResponse = httpClient.execute(httpGet);
 		//System.out.println("Got Response= "+ httpResponse);
 		HttpEntity httpEntity = httpResponse.getEntity();
 		//System.out.println("Converting to String= "+ httpEntity);
@@ -53,6 +64,12 @@ public class HttpUtil {
 		IOUtils.copy(httpEntity.getContent(), byteArrayOutputStream);
 		String response = byteArrayOutputStream.toString();
 		logger.info("response = {}", response);
+		try{
+			EntityUtils.consume(httpEntity);
+		}catch(Exception ex){
+			System.out.println(ex.getMessage());
+		}
+		printPoolStats("After Http Call");
 		return response;
 	}
 

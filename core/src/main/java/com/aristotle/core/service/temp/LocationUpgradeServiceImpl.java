@@ -256,7 +256,7 @@ public class LocationUpgradeServiceImpl implements LocationUpgradeService {
     public void copyUserLocations() throws Exception {
         List<User> users = userRepository.findAll();
         for (User oneuser : users) {
-
+/*
             addLocationsTouser(oneuser, oneuser.getAssemblyConstituencyLiving().getLocationId(), "Living");
             addLocationsTouser(oneuser, oneuser.getAssemblyConstituencyVoting().getLocationId(), "Voting");
             addLocationsTouser(oneuser, oneuser.getDistrictLiving().getLocationId(), "Living");
@@ -268,6 +268,7 @@ public class LocationUpgradeServiceImpl implements LocationUpgradeService {
             addLocationsTouser(oneuser, oneuser.getParliamentConstituencyVoting().getLocationId(), "Voting");
             addLocationsTouser(oneuser, oneuser.getStateLiving().getLocationId(), "Living");
             addLocationsTouser(oneuser, oneuser.getStateVoting().getLocationId(), "Voting");
+            */
         }
     }
 

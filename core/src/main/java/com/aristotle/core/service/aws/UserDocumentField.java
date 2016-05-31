@@ -42,6 +42,7 @@ public class UserDocumentField {
     public static final String INTEREST_FIELD = "interests";
     public static final String PROFILE_PIC_FIELD = "profilepic";
     public static final String MEMBER_FIELD = "member";
+    public static final String MEMBERSHIP_ID = "memberid";
     public static final String MEMBER_START_DATE_FIELD = "mstartdate";
     public static final String MEMBER_END_DATE_FIELD = "menddate";
     public static final String DONOR_FIELD = "donor";
