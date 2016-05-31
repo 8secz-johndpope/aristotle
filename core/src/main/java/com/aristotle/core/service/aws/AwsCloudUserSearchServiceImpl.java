@@ -18,11 +18,11 @@ import static com.aristotle.core.service.aws.UserDocumentField.LIVING_PC_FIELD;
 import static com.aristotle.core.service.aws.UserDocumentField.LIVING_PC_ID_FIELD;
 import static com.aristotle.core.service.aws.UserDocumentField.LIVING_STATE_FIELD;
 import static com.aristotle.core.service.aws.UserDocumentField.LIVING_STATE_ID_FIELD;
+import static com.aristotle.core.service.aws.UserDocumentField.MEMBERSHIP_ID;
 import static com.aristotle.core.service.aws.UserDocumentField.MEMBER_END_DATE_FIELD;
 import static com.aristotle.core.service.aws.UserDocumentField.MEMBER_FIELD;
 import static com.aristotle.core.service.aws.UserDocumentField.MEMBER_START_DATE_FIELD;
 import static com.aristotle.core.service.aws.UserDocumentField.MOTHER_NAME_FIELD;
-import static com.aristotle.core.service.aws.UserDocumentField.MEMBERSHIP_ID;
 import static com.aristotle.core.service.aws.UserDocumentField.NAME_FIELD;
 import static com.aristotle.core.service.aws.UserDocumentField.NRI_COUNTRY_FIELD;
 import static com.aristotle.core.service.aws.UserDocumentField.NRI_COUNTRY_ID_FIELD;
@@ -53,6 +53,7 @@ import java.util.List;
 import org.omg.CORBA.portable.ApplicationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -61,13 +62,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-
-import aws.services.cloudsearchv2.AmazonCloudSearchInternalServerException;
-import aws.services.cloudsearchv2.AmazonCloudSearchRequestException;
-import aws.services.cloudsearchv2.documents.AmazonCloudSearchAddRequest;
-import aws.services.cloudsearchv2.search.AmazonCloudSearchQuery;
-import aws.services.cloudsearchv2.search.AmazonCloudSearchResult;
-import aws.services.cloudsearchv2.search.Hit;
 
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Donation;
@@ -87,8 +81,11 @@ import com.aristotle.core.persistance.repo.UserRepository;
 import com.aristotle.core.service.HttpUtil;
 import com.google.gson.JsonObject;
 
+import aws.services.cloudsearchv2.documents.AmazonCloudSearchAddRequest;
+
 @Service
 @Transactional
+@Lazy
 public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService implements UserSearchService {
 
 
