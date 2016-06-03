@@ -20,5 +20,7 @@ public interface SmsRepository extends JpaRepository<Sms, Long> {
 
     @Query("select sms from Sms sms where status='PENDING'")
     public abstract Page<Sms> getPendingSms(Pageable pageable);
+    
+    public abstract List<Sms> getSmsByUserId(Long userId);
 
 }

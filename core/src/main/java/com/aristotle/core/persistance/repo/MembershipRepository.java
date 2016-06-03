@@ -8,5 +8,10 @@ import com.aristotle.core.persistance.Membership;
 public interface MembershipRepository extends JpaRepository<Membership, Long> {
 
     Membership getMembershipByUserId(Long userId);
+    
+    Membership getMembershipByMembershipId(String membershipId);
+
+    
+    
 
 }

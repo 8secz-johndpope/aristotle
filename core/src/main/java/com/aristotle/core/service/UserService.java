@@ -89,4 +89,6 @@ public interface UserService {
     
     List<UserSearchResult> getUsersCreatedBy(Long userId) throws AppException;
     
+    List<String> deleteUserByMemberId(String memberId) throws AppException;
+    
 }
