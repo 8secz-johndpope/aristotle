@@ -1565,10 +1565,11 @@ public class UserServiceImpl implements UserService {
 		returnList.add(deleteMembershipTransactionRecord(membership));
 		returnList.add(deleteMembershipRecord(membership));
 		returnList.add(deleteUserRecord(user));
+		userSearchService.deleteUser(user.getId());
 		return returnList;
 	}
 	private String deleteUserRecord(User user){
-		//userRepository.delete(user);
+		userRepository.delete(user);
 		return "Deleted User : "+user.getId()+" ("+user.getName()+")";
 	}
 	private String deleteLoginAccountRecord(User user){
@@ -1576,7 +1577,7 @@ public class UserServiceImpl implements UserService {
 		if(loginAccount == null){
 			return "No Login Account Deleted";
 		}
-		//loginAccountRepository.delete(loginAccount);
+		loginAccountRepository.delete(loginAccount);
 		return "Deleted Login Record Record : "+loginAccount.getId()+", "+loginAccount.getUserName();
 	}
 	private String deleteUserLocationRecord(User user){
@@ -1593,7 +1594,7 @@ public class UserServiceImpl implements UserService {
 			sb.append(oneUserLocation.getUserLocationType());
 			sb.append(")");
 			sb.append(", ");
-			//userLocationRepository.delete(oneUserLocation);
+			userLocationRepository.delete(oneUserLocation);
 		}
 		return sb.toString();
 	}
@@ -1604,7 +1605,7 @@ public class UserServiceImpl implements UserService {
 		}
 		StringBuilder sb = new StringBuilder("Deleted SMS Record : ");
 		for(Sms oneSms : list){
-			//smsRepository.delete(oneSms);
+			smsRepository.delete(oneSms);
 			sb.append(oneSms.getId());
 			sb.append("(");
 			sb.append(oneSms.getMessage());
@@ -1620,7 +1621,7 @@ public class UserServiceImpl implements UserService {
 		}
 		StringBuilder sb = new StringBuilder("Deleted Email Record : ");
 		for(Email oneEmail : list){
-			//emailRepository.delete(oneEmail);
+			emailRepository.delete(oneEmail);
 			sb.append(oneEmail.getId());
 			sb.append("(");
 			sb.append(oneEmail.getEmail());
@@ -1636,14 +1637,14 @@ public class UserServiceImpl implements UserService {
 		}
 		StringBuilder sb = new StringBuilder("Deleted Membership Transactions : ");
 		for(MembershipTransaction oneMemebrshipTransaction : list){
-			//membershipTransactionRepository.delete(oneMemebrshipTransaction);
+			membershipTransactionRepository.delete(oneMemebrshipTransaction);
 			sb.append(oneMemebrshipTransaction.getId());
 			sb.append(", ");
 		}
 		return sb.toString();
 	}
 	private String deleteMembershipRecord(Membership membership){
-		//membershipRepository.delete(membership);
+		membershipRepository.delete(membership);
 		return "Deleted Membership : "+membership.getId()+" ("+membership.getMembershipId()+")";
 	}
 	private String deletePhoneRecord(User user){
@@ -1653,7 +1654,7 @@ public class UserServiceImpl implements UserService {
 		}
 		StringBuilder sb = new StringBuilder("Deleted Phone Record : ");
 		for(Phone onePhone : list){
-			//phoneRepository.delete(onePhone);
+			phoneRepository.delete(onePhone);
 			sb.append(onePhone.getId());
 			sb.append("(");
 			sb.append(onePhone.getPhoneNumber());

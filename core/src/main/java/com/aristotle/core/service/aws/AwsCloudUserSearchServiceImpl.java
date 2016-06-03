@@ -474,4 +474,7 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
     	jsonObject.addProperty("userId", userId);
     	return jsonObject.toString();
     }
+	public void deleteUser(Long userId) throws AppException{
+		super.deleteDocument(userId.toString());
+	}
 }

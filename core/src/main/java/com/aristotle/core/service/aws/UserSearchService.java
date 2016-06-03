@@ -15,5 +15,7 @@ public interface UserSearchService {
     String searchMembers(String query) throws AppException;
     
     void sendUserForIndexing(String userId) throws AppException;
+    
+    public void deleteUser(Long userId) throws AppException;
 
 }
