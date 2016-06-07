@@ -1328,7 +1328,7 @@
  */
 
 .v-vaadin-version:after {
-	content: "7.6.4";
+	content: "7.6.6";
 }
 
 .v-widget {
@@ -1889,6 +1889,208 @@ div.v-layout.v-horizontal.v-widget {
 .v-label .error {
 	background: #ffffc0;
 	color: #FF0000;
+}
+
+.mytheme .v-contexthelp-bubble {
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 12px;
+	line-height: normal;
+}
+
+.mytheme .v-contexthelp-bubble .popupContent {
+	background-repeat: no-repeat;
+	max-width: 400px;
+}
+
+.mytheme .v-contexthelp-bubble.right {
+	margin-left: 6px;
+}
+
+.mytheme .v-contexthelp-bubble.right .popupContent:after, .mytheme .v-contexthelp-bubble.right .popupContent:before {
+	right: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	background-color: transparent;
+}
+
+.mytheme .v-contexthelp-bubble.right .popupContent:after {
+	background-color: transparent;
+	border: 1px solid #d0d0d0;
+	border-left-color: transparent;
+	border-top-color: transparent;
+	border-bottom-color: transparent;
+	border-width: 2px;
+	margin-top: -2px;
+}
+
+.mytheme .v-contexthelp-bubble.right .popupContent:before {
+	background-color: transparent;
+	border: 1px solid #d0d0d0;
+	border-left-color: transparent;
+	border-top-color: transparent;
+	border-bottom-color: transparent;
+	border-width: 6px;
+	margin-top: -6px;
+}
+
+.mytheme .v-contexthelp-bubble.left {
+	margin-left: -6px;
+}
+
+.mytheme .v-contexthelp-bubble.left .popupContent:after, .mytheme .v-contexthelp-bubble.left .popupContent:before {
+	left: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	background-color: transparent;
+}
+
+.mytheme .v-contexthelp-bubble.left .popupContent:after {
+	background-color: transparent;
+	border: 1px solid #d0d0d0;
+	border-right-color: transparent;
+	border-top-color: transparent;
+	border-bottom-color: transparent;
+	border-width: 2px;
+	margin-top: -2px;
+}
+
+.mytheme .v-contexthelp-bubble.left .popupContent:before {
+	background-color: transparent;
+	border: 1px solid #d0d0d0;
+	border-right-color: transparent;
+	border-top-color: transparent;
+	border-bottom-color: transparent;
+	border-width: 6px;
+	margin-top: -6px;
+}
+
+.mytheme .v-contexthelp-bubble.above {
+	margin-top: -6px;
+}
+
+.mytheme .v-contexthelp-bubble.above .popupContent:after, .mytheme .v-contexthelp-bubble.above .popupContent:before {
+	top: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	background-color: transparent;
+}
+
+.mytheme .v-contexthelp-bubble.above .popupContent:after {
+	background-color: transparent;
+	border: 1px solid #d0d0d0;
+	border-right-color: transparent;
+	border-left-color: transparent;
+	border-bottom-color: transparent;
+	border-width: 2px;
+	margin-left: -2px;
+}
+
+.mytheme .v-contexthelp-bubble.above .popupContent:before {
+	background-color: transparent;
+	border: 1px solid #d0d0d0;
+	border-right-color: transparent;
+	border-left-color: transparent;
+	border-bottom-color: transparent;
+	border-width: 6px;
+	margin-left: -6px;
+}
+
+.mytheme .v-contexthelp-bubble.below {
+	margin-top: 6px;
+}
+
+.mytheme .v-contexthelp-bubble.below .popupContent:after, .mytheme .v-contexthelp-bubble.below .popupContent:before {
+	bottom: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	background-color: transparent;
+}
+
+.mytheme .v-contexthelp-bubble.below .popupContent:after {
+	background-color: transparent;
+	border: 1px solid #d0d0d0;
+	border-right-color: transparent;
+	border-left-color: transparent;
+	border-top-color: transparent;
+	border-width: 2px;
+	margin-left: -2px;
+}
+
+.mytheme .v-contexthelp-bubble.below .popupContent:before {
+	background-color: transparent;
+	border: 1px solid #d0d0d0;
+	border-right-color: transparent;
+	border-left-color: transparent;
+	border-top-color: transparent;
+	border-width: 6px;
+	margin-left: -6px;
+}
+
+.mytheme .v-contexthelp-bubble .popupContent .helpText {
+	background: white;
+	border: 1px solid #d0d0d0;
+	border-width: 4px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	padding: 2em;
+	text-shadow: #FFF 0px 1px 0px;
+	font-size: 11pt;
+}
+
+.mytheme .v-contexthelp-bubble.right .popupContent .helpText {
+	-moz-box-shadow: 2px 0px 8px #999;
+	-webkit-box-shadow: 2px 0px 8px #999;
+	box-shadow: 2px 0px 8px #999;
+}
+
+.mytheme .v-contexthelp-bubble.below .popupContent .helpText {
+	-moz-box-shadow: 0px 2px 8px #999;
+	-webkit-box-shadow: 0px 2px 8px #999;
+	box-shadow: 0px 2px 8px #999;
+}
+
+.mytheme .v-contexthelp-bubble.left .popupContent .helpText {
+	-moz-box-shadow: -2px 0px 8px #999;
+	-webkit-box-shadow: -2px 0px 8px #999;
+	box-shadow: -2px 0px 8px #999;
+}
+
+.mytheme .v-contexthelp-bubble.above .popupContent .helpText {
+	-moz-box-shadow: 0px -2px 8px #999;
+	-webkit-box-shadow: 0px -2px 8px #999;
+	box-shadow: 0px -2px 8px #999;
+}
+
+.mytheme .v-button.v-button-link.v-button-context-help, .mytheme .v-button.v-button-link.v-button-context-help.v-pressed {
+	margin-left: 0.5em;
+	background: url(../../../VAADIN/addons/contexthelp/images/info.png) no-repeat 50% 50%;
+	background-size: 1em 1em;
+	cursor: hand;
+	height: 2em;
+	width: 1em;
 }
 
 .mytheme.v-app, .mytheme.v-app-loading {
@@ -4684,6 +4886,8 @@ div.v-layout.v-horizontal.v-widget {
 
 .mytheme .v-grid-sidebar.v-contextmenu .v-grid-sidebar-content {
 	padding: 4px 0;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 .mytheme .v-grid-sidebar.v-contextmenu .v-grid-sidebar-content .gwt-MenuBar .gwt-MenuItem .column-hiding-toggle {
@@ -5231,6 +5435,8 @@ div.v-layout.v-horizontal.v-widget {
 .mytheme .v-grid-sidebar.v-contextmenu.open .v-grid-sidebar-content {
 	margin: 0 0 2px;
 	padding: 4px 4px 2px;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 .mytheme .v-grid-sidebar.v-contextmenu.closed {

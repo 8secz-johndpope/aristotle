@@ -3,6 +3,8 @@ package com.aristotle.core.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import com.aristotle.core.persistance.repo.LocationRepository;
 import com.aristotle.core.persistance.repo.LocationTypeRepository;
 
 @Service
+@Transactional
 public class LocationServiceImpl implements LocationService {
 
     @Autowired
@@ -95,5 +98,21 @@ public class LocationServiceImpl implements LocationService {
     public Location findLocationById(Long locationId) throws AppException {
         return locationRepository.findOne(locationId);
     }
+
+	@Override
+	public LocationType saveLocationType(LocationType locationType) throws AppException {
+		return locationTypeRepository.save(locationType);
+	}
+	
+	@Override
+	public Location saveLocation(Location location) throws AppException {
+		if(location.getLocationType() == null){
+			throw new AppException("Location Type can not be null");
+		}
+		LocationType locationType = locationTypeRepository.findOne(location.getLocationType().getId());
+		location.setLocationType(locationType);
+		location.setNameUp(location.getName().toUpperCase());
+		return locationRepository.save(location);
+	}
 
 }

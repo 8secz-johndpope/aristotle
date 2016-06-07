@@ -12,13 +12,11 @@ import com.aristotle.member.ui.util.ViewHelper;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.UserError;
-import com.vaadin.server.VaadinService;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
@@ -55,7 +53,8 @@ public class LoginView extends VerticalLayout implements NavigableView{
 	}
 
 	public void init() {
-		
+		this.setWidth("400px");
+
 	}
 
 	@Override
@@ -64,6 +63,10 @@ public class LoginView extends VerticalLayout implements NavigableView{
 	}
 	
 	private void buildUiScreen(){
+		this.addStyleName(ValoTheme.LAYOUT_CARD);
+		MarginInfo marginInfo = new MarginInfo(true);
+		this.setMargin(marginInfo);
+		
 		userName = new TextField("User Name");
 		userName.setIcon(FontAwesome.USER);
 		//userName.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);

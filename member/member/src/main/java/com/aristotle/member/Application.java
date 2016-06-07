@@ -9,9 +9,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 import com.aristotle.core.config.DatabaseConfig;
 
@@ -33,6 +35,7 @@ public class Application{
             System.out.println(beanName);
         }
 	}
+	//		BeanFieldGroup.bindFieldsUnbuffered(domain, this);
 
 	@Bean
 	public CommandLineRunner loadData() {

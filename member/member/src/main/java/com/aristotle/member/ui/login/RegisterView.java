@@ -3,28 +3,36 @@ package com.aristotle.member.ui.login;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.vaadin.jonatan.contexthelp.ContextHelp;
 
+import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Location;
 import com.aristotle.core.service.LocationService;
+import com.aristotle.member.service.MemberService;
 import com.aristotle.member.ui.NavigableView;
+import com.aristotle.member.ui.util.TextFieldUtil;
 import com.aristotle.member.ui.util.ViewHelper;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.PasswordField;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+import com.wcs.wcslib.vaadin.widget.recaptcha.ReCaptcha;
+import com.wcs.wcslib.vaadin.widget.recaptcha.shared.ReCaptchaOptions;
 
 //@SpringComponent
 //@UIScope
@@ -48,9 +56,24 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 	private VerticalLayout page1;
 	private VerticalLayout page2;
 	private volatile boolean initialized = false;
+	private ReCaptcha captcha;
+	private String selectedCountryIsdCode;
+	private Label errorLabel;
+	private Label successLabel;
+
+	private ContextHelp contextHelp;
+
 	
 	@Autowired
 	private LocationService locationService;
+	@Autowired
+	private MemberService memberService;
+	@Autowired
+	private TextFieldUtil textFieldUtil;
+	@Value("${captcha_site_key}")
+	private String captchaSiteKey;
+	@Value("${captcha_site_secret}")
+	private String captchSiteSecret;
 
 
 	public RegisterView() {
@@ -58,9 +81,19 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 
 	public void init() {
 		if(!initialized){
+			contextHelp = new ContextHelp();
+			contextHelp.extend(UI.getCurrent());
+			contextHelp.setFollowFocus(true);
+			
 			buildPageOne();
+			addListners();
+			
+			
+			
 			this.addComponent(page1);
 			initialized = true;
+    		this.setWidth("500px");
+
 		}
 	}
 
@@ -76,59 +109,67 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 	
 	private void buildPageOne(){
 		try{
-			userName = new TextField("User Name");
-			userName.setIcon(FontAwesome.USER);
-			userName.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
 			
-			email = new TextField("Email");
+			this.addStyleName(ValoTheme.LAYOUT_CARD);
+			MarginInfo marginInfo = new MarginInfo(true);
+			this.setMargin(marginInfo);
 			
-			countryCombobox = new ComboBox();
+			userName = textFieldUtil.buildTextField(contextHelp, FontAwesome.USER, "Name", "Enter Your Full Name");
+			
+			email = textFieldUtil.buildTextField(contextHelp, FontAwesome.ENVELOPE, "Email", "Enter your email, where we will send you your registration details");
+
+			HorizontalLayout nameEmailLayout = new HorizontalLayout(userName, email);
+
+			password = textFieldUtil.buildPasswordField(contextHelp, FontAwesome.LOCK, "Password", "Enter a hard to guesss password to keep your account secure");	
+
+			passwordConfirm = textFieldUtil.buildPasswordField(contextHelp, FontAwesome.LOCK, "Confirm Password", "Re-Enter same password");	
+
+			HorizontalLayout passwordLayout = new HorizontalLayout(password, passwordConfirm);
+			
+			
 			List<Location> countries = locationService.getAllCountries();
 			for(Location oneLocation : countries){
 				oneLocation.setName(oneLocation.getName() +"("+oneLocation.getIsdCode()+")");
 			}
-			BeanItemContainer<Location> countryContainer = new BeanItemContainer<Location>(Location.class);
-			countryContainer.addAll(countries);
-			countryCombobox.setCaption("Country Code");
-			countryCombobox.setContainerDataSource(countryContainer);
-			countryCombobox.setItemCaptionMode(ItemCaptionMode.PROPERTY);
-			countryCombobox.setItemCaptionPropertyId("name");
-			countryCombobox.setVisible(false);
+			countryCombobox = textFieldUtil.buildCountryComboBox(contextHelp, FontAwesome.FLAG, "Country Code", "Select your country where you live");
 
-			
-			phoneNumber = new TextField("Mobile Number");
+			phoneNumber = textFieldUtil.buildTextField(contextHelp, FontAwesome.MOBILE, "Mobile Number", "Enter your mobile number <b>WITHOUT</b> country code<br> i.e. 9876543210");
 
-			password = new PasswordField("Password");
-			password.setIcon(FontAwesome.LOCK);
-			password.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
-			
-			passwordConfirm = new PasswordField("Confirm Password");
-			passwordConfirm.setIcon(FontAwesome.LOCK);
-			passwordConfirm.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
-			
-			
+			HorizontalLayout phoneLayout = new HorizontalLayout(countryCombobox, phoneNumber);
+
 			loginButton = new Button("Already Registered? Login Now", FontAwesome.SIGN_IN);
 			loginButton.setStyleName(ValoTheme.BUTTON_LINK);
+			loginButton.setId("login_button");
 			
 			registerButton = new Button("Register", FontAwesome.REGISTERED);
 			registerButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+			registerButton.setId("register_button");
+			registerButton.setDisableOnClick(true);
+
+			captcha = new ReCaptcha(
+					captchSiteSecret, captchaSiteKey,
+				    new ReCaptchaOptions() {{//your options
+				        theme = "white";
+				    }}
+				);
+			captcha.setId("captcha");
 			
 			nri = new CheckBox("I am NRI");
-			nri.addValueChangeListener(new Property.ValueChangeListener() {
-				
-				@Override
-				public void valueChange(ValueChangeEvent event) {
-					Boolean selection = (Boolean)event.getProperty().getValue();
-					countryCombobox.setVisible(selection);
-				}
-			});
+			nri.setId("nri");
+			
+			errorLabel = new Label();
+			errorLabel.setVisible(false);
+			errorLabel.addStyleName(ValoTheme.NOTIFICATION_FAILURE);
+			errorLabel.setId("error_label");
 			
 			
-			ViewHelper.addNaviagationClickListener(this, loginButton, LoginView.NAVIAGATION_NAME);
-			
-			HorizontalLayout horizontalLayout = new HorizontalLayout(countryCombobox, phoneNumber);
+			successLabel = new Label();
+			successLabel.setVisible(false);
+			successLabel.addStyleName(ValoTheme.NOTIFICATION_SUCCESS);
+			successLabel.setId("success_label");
 
-			page1 = new VerticalLayout(userName, password, passwordConfirm, email, nri, horizontalLayout, registerButton, loginButton);
+
+			page1 = new VerticalLayout(errorLabel, successLabel, nameEmailLayout, passwordLayout, nri, phoneLayout, captcha, registerButton, loginButton);
 			
 			page1.setSizeFull();
 		}catch(Exception ex){
@@ -136,36 +177,77 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 		}
 		
 	}
-	private void buildPageTwo(){
-		userName = new TextField("User Name");
-		userName.setIcon(FontAwesome.USER);
-		userName.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
-		
-		email = new TextField("Email");
-		phoneNumber = new TextField("Mobile Number");
-
-		password = new PasswordField("Password");
-		password.setIcon(FontAwesome.LOCK);
-		password.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
-		
-		passwordConfirm = new PasswordField("Confirm Password");
-		passwordConfirm.setIcon(FontAwesome.LOCK);
-		passwordConfirm.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
-		
-		
-		loginButton = new Button("Already Registered? Login Now", FontAwesome.SIGN_IN);
-		loginButton.setStyleName(ValoTheme.BUTTON_LINK);
-		
-		registerButton = new Button("Register", FontAwesome.REGISTERED);
-		registerButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
-		
+	
+	private void addListners(){
 		ViewHelper.addNaviagationClickListener(this, loginButton, LoginView.NAVIAGATION_NAME);
+		nri.addValueChangeListener(new Property.ValueChangeListener() {
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				Boolean selection = (Boolean)event.getProperty().getValue();
+				countryCombobox.setVisible(selection);
+				if(selection){
+					selectedCountryIsdCode = "91";
+				}
+			}
+		});
+		
+		countryCombobox.addValueChangeListener(new Property.ValueChangeListener() {
 
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				Location selectedCountry = (Location) event.getProperty().getValue();
+				if(selectedCountry != null){
+					selectedCountryIsdCode = selectedCountry.getIsdCode();
+				}
+			}
+		});
 		
-		page1 = new VerticalLayout(userName, password, passwordConfirm, email, phoneNumber, registerButton, loginButton);
-		page1.addStyleName("login-panel");
+		registerButton.addClickListener(new Button.ClickListener() {
+			
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				errorLabel.setVisible(false);
+				successLabel.setVisible(false);
+				
+				boolean isNri = nri.getValue();
+				String selectedCountryIsdCode = "91";
+				if(isNri){
+					Location selectedCountry = (Location) countryCombobox.getValue();
+					if(selectedCountry != null){
+						selectedCountryIsdCode = selectedCountry.getIsdCode();
+					}	
+				}
+				
+				try {
+					if(!isValidCaptcha()){
+						throw new AppException("Captcha is not valid");
+						
+					}
+					memberService.register(userName.getValue(), password.getValue(), passwordConfirm.getValue(), email.getValue(), selectedCountryIsdCode, phoneNumber.getValue(), nri.getValue());
+					successLabel.setVisible(true);
+					successLabel.setValue("Member Registered Succesfully");
+				} catch (Exception e) {
+					Notification.show(e.getMessage(), Notification.Type.ERROR_MESSAGE);
+				    captcha.reload();
+					errorLabel.setValue(e.getMessage());
+					errorLabel.setVisible(true);
+					e.printStackTrace();
+				}finally {
+					registerButton.setEnabled(true);
+				}
+				
+			}
+		});
 		
-		page1.setSizeFull();
+
+	}
+	private boolean isValidCaptcha(){
+		if(captchaSiteKey.equals("6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI")){//Test Key
+			return true;
+		}
+		return captcha.validate();
 	}
 
 }

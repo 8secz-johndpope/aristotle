@@ -74,7 +74,6 @@ public class MainLayout extends MainLayoutDesign implements ViewDisplay {
         	if(view instanceof LoginView || view instanceof RegisterView){
         		root_layout_main.removeAllComponents();
         		root_layout_main.addComponent((Component)view);
-        		((Component)view).setWidth("400px");
         		root_layout_main.setComponentAlignment((Component)view, Alignment.MIDDLE_CENTER);
 
         	}else{
