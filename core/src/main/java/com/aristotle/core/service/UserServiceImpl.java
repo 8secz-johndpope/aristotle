@@ -463,6 +463,9 @@ public class UserServiceImpl implements UserService {
     }
 
     private Email getOrCreateEmail(String emailId) throws AppException {
+        return getOrCreateEmail(emailId, true);
+    }
+    private Email getOrCreateEmail(String emailId, boolean failIfExists) throws AppException {
         if (StringUtils.isBlank(emailId)) {
             return null;
         }
@@ -480,7 +483,7 @@ public class UserServiceImpl implements UserService {
             email.setConfirmationType(ConfirmationType.UN_CONFIRNED);
             email = emailRepository.save(email);
         }
-        if (email.isConfirmed() || email.getUser() != null) {
+        if (failIfExists && (email.isConfirmed() || email.getUser() != null)) {
             throwFieldAppException("email", "Email is already registered");
         }
         email.setNewsLetter(true);
@@ -1357,7 +1360,7 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public void saveMember(UserUploadDto oneUserUploadDto, boolean createUserNamePassword, Location state, Location district, Location pc, Location ac) throws AppException {
-        Email email = getOrCreateEmail(oneUserUploadDto.getEmail());
+        Email email = getOrCreateEmail(oneUserUploadDto.getEmail(), false);
         Phone phone = getOrCreateMobile(oneUserUploadDto.getPhone(), "91", "mobile", false);
 
         if (phone != null && phone.getUser() != null && email != null && email.getUser() != null) {
