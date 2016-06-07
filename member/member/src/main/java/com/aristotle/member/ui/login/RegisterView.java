@@ -11,7 +11,7 @@ import com.aristotle.core.persistance.Location;
 import com.aristotle.core.service.LocationService;
 import com.aristotle.member.service.MemberService;
 import com.aristotle.member.ui.NavigableView;
-import com.aristotle.member.ui.util.TextFieldUtil;
+import com.aristotle.member.ui.util.UiComponentsUtil;
 import com.aristotle.member.ui.util.ViewHelper;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -69,7 +69,7 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 	@Autowired
 	private MemberService memberService;
 	@Autowired
-	private TextFieldUtil textFieldUtil;
+	private UiComponentsUtil textFieldUtil;
 	@Value("${captcha_site_key}")
 	private String captchaSiteKey;
 	@Value("${captcha_site_secret}")
