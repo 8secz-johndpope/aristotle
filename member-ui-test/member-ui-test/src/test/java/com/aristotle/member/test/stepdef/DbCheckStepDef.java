@@ -32,7 +32,11 @@ public class DbCheckStepDef extends BaseStepDef{
 		User expectedUser = users.get(0);
 		User dbUser = dbUsers.get(0);
 		assertUserEquals(expectedUser, dbUser);
-
+    }
+	@Given("Check no user exists")
+    public void checkNoUserExists() throws FieldDoNotExistsException, AppException {
+		List<User> dbUsers = userRepository.findAll();
+		Assert.assertEquals(0, dbUsers.size());
     }
 	@Given("Check one email exists")
     public void checkOneEmailExists(List<Email> emails) throws FieldDoNotExistsException, AppException {
@@ -40,11 +44,21 @@ public class DbCheckStepDef extends BaseStepDef{
 		Assert.assertEquals(1, dbEmails.size());
 		assertEmailEquals(emails.get(0), dbEmails.get(0));
     }
+	@Given("Check no email exists")
+    public void checkNoEmailExists() throws FieldDoNotExistsException, AppException {
+		List<Email> dbEmails = emailRepository.findAll();
+		Assert.assertEquals(0, dbEmails.size());
+    }
 	@Given("Check one phone exists")
     public void checkOnePhoneExists(List<Phone> phones) throws FieldDoNotExistsException, AppException {
 		List<Phone> dbPhones = phoneRepository.findAll();
 		Assert.assertEquals(1, dbPhones.size());
 		assertPhoneEquals(phones.get(0), dbPhones.get(0));
+    }
+	@Given("Check no phone exists")
+    public void checkNoPhoneExists() throws FieldDoNotExistsException, AppException {
+		List<Phone> dbPhones = phoneRepository.findAll();
+		Assert.assertEquals(0, dbPhones.size());
     }
 	@Given("Check email and user are connected")
     public void checkEmailAndUserAreConnected() throws FieldDoNotExistsException, AppException {

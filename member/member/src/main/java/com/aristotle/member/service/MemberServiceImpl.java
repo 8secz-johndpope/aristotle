@@ -3,11 +3,10 @@ package com.aristotle.member.service;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.transaction.Transactional;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aristotle.core.enums.CreationType;
 import com.aristotle.core.exception.AppException;
@@ -25,7 +24,7 @@ import com.aristotle.core.persistance.repo.UserRepository;
 import com.aristotle.core.service.PasswordUtil;
 
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class MemberServiceImpl implements MemberService{
 
 	@Autowired
@@ -63,13 +62,16 @@ public class MemberServiceImpl implements MemberService{
         email = getOrCreateEmail(emailId);
         phone = getOrCreateMobile(mobileNumber, countryCode, "mobile");
         if (email == null) {
-            throw new AppException("Email id must be provided");
+            throw new AppException("Email must be provided");
         }
         LoginAccount loginAccount = loginAccountRepository.getLoginAccountByUserName(emailId.toString());
         if(loginAccount != null){
         	throwFieldAppException("userName", "Email ["+emailId+"] already regsitered, please try some other user name");
         }
-        
+        if(nri && phone == null){
+        	throwFieldAppException("phone", "Phone Number must be provided");
+
+        }
         User user = new User();
         user.setCreationType(CreationType.SelfServiceUser);
         user.setName(name);

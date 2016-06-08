@@ -64,7 +64,14 @@ public class UiStepDefs extends BaseStepDef{
 		WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
 		getElement(webDriver, By.id(fieldId));
 	}
-	
+    
+    @Given("Check For Error \"([^\"]*)\" to appear")
+	public void checkForError(String error) throws FieldDoNotExistsException {
+		WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
+		WebElement errorLabelWebElement = getElement(webDriver, By.id(FieldIds.RegistrationPage.ERROR_LABEL_FIELD));
+		Assert.assertEquals(error, errorLabelWebElement.getText());
+	}
+    
 	@Given("Check Field do not exists \"([^\"]*)\"")
 	public void checkFieldDoNotExists(String fieldId) {
 		WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
