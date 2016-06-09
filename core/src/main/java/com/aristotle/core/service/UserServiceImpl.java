@@ -71,7 +71,7 @@ import com.aristotle.core.service.dto.UserUploadDto;
 import com.aristotle.core.service.dto.UserVolunteerBean;
 
 @Service
-@Transactional
+@Transactional(rollbackOn=Exception.class)
 @Lazy
 public class UserServiceImpl implements UserService {
 
@@ -737,7 +737,7 @@ public class UserServiceImpl implements UserService {
             loginAccount = loginAccountRepository.save(loginAccount);
             sendLoginAccountDetails(loginAccount, password);
         } else {
-            throw new AppException("Login Account already Exists");
+            //throw new AppException("Login Account already Exists");
         }
     }
 
