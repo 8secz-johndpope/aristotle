@@ -447,7 +447,7 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
 		int count = 0;
 		while(true){
 			System.out.println("Requesting page : "+pageable.getPageNumber());
-			members = membershipRepository.findAll(pageable);	
+			members = membershipRepository.searchLocationMember(districtIdLong, pageable);	
 			if(members.getContent().isEmpty()){
 				System.out.println("No More Content So Braking the loop");
 				break;
