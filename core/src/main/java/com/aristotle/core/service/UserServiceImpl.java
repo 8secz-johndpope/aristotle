@@ -1331,7 +1331,7 @@ public class UserServiceImpl implements UserService {
                     oneUserUploadDto.setUserIdForPhone(phone.getUserId());
                 }
             }
-            if (phone != null && phone.getUser() != null && email != null && email.getUser() != null) {
+            if (phone != null && phone.getUser() != null && email != null && email.getUser() != null && phone.getUser().getId() != email.getUser().getId()) {
             	oneUserUploadDto.setErrorMessage("Two Different User already exists for phone " + oneUserUploadDto.getPhone()+ " and email :" + oneUserUploadDto.getEmail());
             }
             if(!StringUtils.isEmpty(oneUserUploadDto.getReferencePhone())){
@@ -1363,7 +1363,7 @@ public class UserServiceImpl implements UserService {
         Email email = getOrCreateEmail(oneUserUploadDto.getEmail(), false);
         Phone phone = getOrCreateMobile(oneUserUploadDto.getPhone(), "91", "mobile", false);
 
-        if (phone != null && phone.getUser() != null && email != null && email.getUser() != null) {
+        if (phone != null && phone.getUser() != null && email != null && email.getUser() != null && phone.getUser().getId() != email.getUser().getId()) {
             throw new AppException("Two Different User already exists for phone " + oneUserUploadDto.getPhone()+ " and email :" + oneUserUploadDto.getEmail());
         }
         
