@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aristotle.core.enums.ContentStatus;
 import com.aristotle.core.exception.AppException;
@@ -20,6 +21,7 @@ import com.aristotle.core.persistance.repo.BlogRepository;
 import com.aristotle.core.persistance.repo.LocationRepository;
 
 @Service
+@Transactional(rollbackFor=Exception.class)
 public class BlogServiceImpl implements BlogService {
 
     @Autowired

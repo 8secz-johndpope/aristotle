@@ -16,6 +16,9 @@ public interface UserSearchService {
     
     void sendUserForIndexing(String userId) throws AppException;
     
+    String sendDistrictMemberForIndexing(String districtId) throws AppException;
+
+    
     public void deleteUser(Long userId) throws AppException;
 
 }

@@ -249,6 +249,14 @@ public class SetupController {
         return "done";
     }
     
+    @RequestMapping("/sc/admin/district/memberrefresh")
+    @ResponseBody
+    public String refreshDistrictMembers(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
+        String districtId = httpServletRequest.getParameter("districtId");
+        userSearchService.sendDistrictMemberForIndexing(districtId);
+        return "done";
+    }
+    
     @RequestMapping("/sc/admin/delete/member")
     @ResponseBody
     public List<String> deleteMemberMembers(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {

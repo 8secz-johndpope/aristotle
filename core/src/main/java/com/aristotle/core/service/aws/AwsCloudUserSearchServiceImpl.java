@@ -438,6 +438,45 @@ public class AwsCloudUserSearchServiceImpl extends AwsCloudBaseSearchService imp
 		}
 	}
 
+	@Override
+    public String sendDistrictMemberForIndexing(String districtId) throws AppException{
+		Sort sort = new Sort(new Sort.Order(Direction.ASC, "id"));
+		Pageable pageable = new PageRequest(0, 100, sort);
+		Page<Membership> members;
+		Long districtIdLong = Long.parseLong(districtId);
+		int count = 0;
+		while(true){
+			System.out.println("Requesting page : "+pageable.getPageNumber());
+			members = membershipRepository.findAll(pageable);	
+			if(members.getContent().isEmpty()){
+				System.out.println("No More Content So Braking the loop");
+				break;
+			}
+			for(Membership oneMembership : members.getContent()){
+				if(isUserFromDistrict(oneMembership.getUser(), districtIdLong)){
+					sendMessage(oneMembership.getUserId().toString());
+					count++;
+				}
+				
+			}
+			pageable = pageable.next();
+		}
+		return "Total "+ count+" members refreshed";
+	}
+	private boolean isUserFromDistrict(User user, Long districtId){
+		boolean returnValue = false;
+		List<UserLocation> userLocations = userLocationRepository.getUserLocationByUserId(user.getId());
+		if(userLocations == null || userLocations.isEmpty()){
+			return returnValue;
+		}
+		for(UserLocation oneUserLocation : userLocations){
+			if(oneUserLocation.getLocationId().equals(districtId)){
+				returnValue = true;
+				break;
+			}
+		}
+		return returnValue;
+	}
 
 	@Override
 	public void sendUserForIndexing(String userId) throws AppException {

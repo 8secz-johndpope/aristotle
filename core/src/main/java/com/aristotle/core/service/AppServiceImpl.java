@@ -20,7 +20,7 @@ import com.aristotle.core.persistance.repo.OfficeRepository;
 import com.aristotle.core.persistance.repo.VolunteerRepository;
 
 @Service
-@Transactional
+@Transactional(rollbackFor=Exception.class)
 public class AppServiceImpl implements AppService {
 
     @Autowired
