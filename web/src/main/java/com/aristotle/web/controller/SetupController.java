@@ -253,8 +253,8 @@ public class SetupController {
     @ResponseBody
     public String refreshDistrictMembers(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
         String districtId = httpServletRequest.getParameter("districtId");
-        userSearchService.sendDistrictMemberForIndexing(districtId);
-        return "done";
+        String message = userSearchService.sendDistrictMemberForIndexing(districtId);
+        return message;
     }
     
     @RequestMapping("/sc/admin/delete/member")
