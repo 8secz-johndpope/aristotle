@@ -14,8 +14,9 @@ public interface MembershipRepository extends JpaRepository<Membership, Long> {
     
     Membership getMembershipByMembershipId(String membershipId);
 
-    @Query("select distinct member from Membership member, UserLocation ul where ul.locationId=?1 and ul.userId=member.userId")
+    @Query("select distinct membership from Membership membership, UserLocation ul where ul.locationId=?1 and ul.userId=membership.userId")
     Page<Membership> searchLocationMember(Long locationId, Pageable pageable);
     
 
 }
+
