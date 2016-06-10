@@ -33,6 +33,15 @@ public class BaseStepDef {
     	WebElement buttonWebElement = getElement(webDriver, By.id(buttonId));
     	buttonWebElement.click();
 	}
+	protected void clearTextFieldValue(String fieldId) throws FieldDoNotExistsException {
+    	WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
+    	clearTextFieldValue(webDriver, fieldId);
+	}
+	protected void clearTextFieldValue(WebDriver webDriver, String fieldId) throws FieldDoNotExistsException {
+		log.info("Clearing field : {}", fieldId);
+		WebElement textFieldWebElement = getElement(webDriver, By.id(fieldId));
+		textFieldWebElement.clear();
+	}
 	protected void enterTextFieldValue(String fieldId, String value) throws FieldDoNotExistsException {
 		log.info("Enetring value: {} into field : {}", value, fieldId);
     	WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();

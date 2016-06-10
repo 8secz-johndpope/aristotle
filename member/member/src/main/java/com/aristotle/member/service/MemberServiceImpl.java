@@ -113,7 +113,7 @@ public class MemberServiceImpl implements MemberService{
             email = emailRepository.save(email);
         }
         if (email.isConfirmed() || email.getUser() != null) {
-            throwFieldAppException("email", "Email is already registered");
+            throwFieldAppException("email", "Email ["+emailId+"] is already registered");
         }
         email.setNewsLetter(true);
         return email;

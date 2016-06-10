@@ -1,4 +1,4 @@
-Feature: Login page 
+Feature: Registration page 
 Scenario: UI Test : Check All Default Relevent Fields are on Registration page for User living in India that they exists and are empty/unchecked and enabled and visible
 	Given Create Location Type as "CountryLocationType"
 	| name      |
@@ -132,6 +132,78 @@ Scenario: Functional Test : Register an Indian User with Phone Number missing
 	Then Check no user exists
     Then Check no email exists
     Then Check no phone exists
+ 
+ Scenario: Functional Test : Register an Indian User with Email where that email already exists
+	Given Create Location Type as "CountryLocationType"
+	| name      |
+    | Country   | 
+	When Open Login page 
+	And Enter Registeration Name "Ravi Sharma"
+	And Enter Registeration Email "ping2ravi@gmail.com"
+	And Enter Registeration Password "password"
+	And Enter Registeration Confirm Password "password"
+	And Enter Registeration Mobile Number "9876543210"
+	And Click on Registration Button
+	#Then Registration Button should be disabled //Its very fast so unable to assert
+	Then Wait for field "success_label" to appear
+	Then Registration Button should be enabled
+	Then Check one user exists
+	| name          | creationType    |  nri  | superAdmin | donor | member |
+    | Ravi Sharma   | SelfServiceUser | false | false      | false | false  |
+    Then Check one email exists
+	| email                 | emailUp             | newsLetter | confirmationType | confirmed |
+    | ping2ravi@gmail.com   | PING2RAVI@GMAIL.COM | true       | UN_CONFIRNED     | false     |
+    Then Check one phone exists
+	| countryCode | phoneNumber | phoneType | confirmed |
+    | 91          | 9876543210  | MOBILE    | false     |
+    Then Check email and user are connected
+    Then Check email and phone are connected
+    Then Check phone and user are connected   
+    And Clear Registeration form
+	And Enter Registeration Name "Xyz"
+	And Enter Registeration Email "ping2ravi@gmail.com"
+	And Enter Registeration Password "password"
+	And Enter Registeration Confirm Password "password"
+	And Enter Registeration Mobile Number "1234567890"
+	And Click on Registration Button
+	Then Wait for field "error_label" to appear
+	Then Check For Error "Email [ping2ravi@gmail.com] is already registered" to appear
+	
+Scenario: Functional Test : Register an Indian User with Phone where that phone already exists
+	Given Create Location Type as "CountryLocationType"
+	| name      |
+    | Country   | 
+	When Open Login page 
+	And Enter Registeration Name "Ravi Sharma"
+	And Enter Registeration Email "ping2ravi@gmail.com"
+	And Enter Registeration Password "password"
+	And Enter Registeration Confirm Password "password"
+	And Enter Registeration Mobile Number "9876543210"
+	And Click on Registration Button
+	#Then Registration Button should be disabled //Its very fast so unable to assert
+	Then Wait for field "success_label" to appear
+	Then Registration Button should be enabled
+	Then Check one user exists
+	| name          | creationType    |  nri  | superAdmin | donor | member |
+    | Ravi Sharma   | SelfServiceUser | false | false      | false | false  |
+    Then Check one email exists
+	| email                 | emailUp             | newsLetter | confirmationType | confirmed |
+    | ping2ravi@gmail.com   | PING2RAVI@GMAIL.COM | true       | UN_CONFIRNED     | false     |
+    Then Check one phone exists
+	| countryCode | phoneNumber | phoneType | confirmed |
+    | 91          | 9876543210  | MOBILE    | false     |
+    Then Check email and user are connected
+    Then Check email and phone are connected
+    Then Check phone and user are connected   
+    And Clear Registeration form
+	And Enter Registeration Name "Xyz"
+	And Enter Registeration Email "ping2ravixyz@gmail.com"
+	And Enter Registeration Password "password"
+	And Enter Registeration Confirm Password "password"
+	And Enter Registeration Mobile Number "9876543210"
+	And Click on Registration Button
+	Then Wait for field "error_label" to appear
+	Then Check For Error "Mobile [9876543210] already registered" to appear	
     
  Scenario: Functional Test : Register an Indian User where passwords dont match
 	Given Create Location Type as "CountryLocationType"
@@ -268,4 +340,145 @@ Scenario: Functional Test : Register NRI user when Passwords do not match
     Then Check no email exists
     Then Check no phone exists
 	
-    
+Scenario: Functional Test : Register NRI user With email where that email already exists
+	Given Create Location Type as "CountryLocationType"
+	| name      |
+    | Country   | 
+    Given Create Location as "CountryLocationUk" with locationType "CountryLocationType"
+	| name | isdCode |
+    | UK   | 44      |
+    Given Create Location as "CountryLocationUsa" with locationType "CountryLocationType"
+	| name | isdCode |
+    | USA  | 1       |
+	When Open Login page 
+	And Enter Registeration Name "Ravi Sharma"
+	And Enter Registeration Email "ping2ravi@gmail.com"
+	And Enter Registeration Password "password"
+	And Enter Registeration Confirm Password "password"
+	And Select Registeration NRI checkbox
+	And Select Registration Country "UK(44)"
+	And Enter Registeration Mobile Number "9876543210"
+	And Click on Registration Button
+	#Then Registration Button should be disabled //Its very fast so unable to assert
+	Then Wait for field "success_label" to appear
+	Then Registration Button should be enabled
+	Then Check one user exists
+	| name          | creationType    |  nri  | superAdmin | donor | member |
+    | Ravi Sharma   | SelfServiceUser | true  | false      | false | false  |
+    Then Check one email exists
+	| email                 | emailUp             | newsLetter | confirmationType | confirmed |
+    | ping2ravi@gmail.com   | PING2RAVI@GMAIL.COM | true       | UN_CONFIRNED     | false     |
+    Then Check one phone exists
+	| countryCode | phoneNumber | phoneType     | confirmed |
+    | 44          | 9876543210  | NRI_MOBILE    | false     |
+    Then Check email and user are connected
+    Then Check email and phone are connected
+    Then Check phone and user are connected  
+    Then Clear Registeration form
+    And Enter Registeration Name "Kiyansh Sharma"
+	And Enter Registeration Email "ping2ravi@gmail.com"
+	And Enter Registeration Password "password"
+	And Enter Registeration Confirm Password "password"
+	And Select Registeration NRI checkbox
+	And Select Registration Country "UK(44)"
+	And Enter Registeration Mobile Number "1234567890"
+	And Click on Registration Button
+	#Then Registration Button should be disabled //Its very fast so unable to assert
+	Then Wait for field "error_label" to appear
+	Then Check For Error "Email [ping2ravi@gmail.com] is already registered" to appear
+
+@current	
+Scenario: Functional Test : Register NRI user With phone/countrycode where that phone/countrycode already exists
+	Given Create Location Type as "CountryLocationType"
+	| name      |
+    | Country   | 
+    Given Create Location as "CountryLocationUk" with locationType "CountryLocationType"
+	| name | isdCode |
+    | UK   | 44      |
+    Given Create Location as "CountryLocationUsa" with locationType "CountryLocationType"
+	| name | isdCode |
+    | USA  | 1       |
+	When Open Login page 
+	And Enter Registeration Name "Ravi Sharma"
+	And Enter Registeration Email "ping2ravi@gmail.com"
+	And Enter Registeration Password "password"
+	And Enter Registeration Confirm Password "password"
+	And Select Registeration NRI checkbox
+	And Select Registration Country "UK(44)"
+	And Enter Registeration Mobile Number "9876543210"
+	And Click on Registration Button
+	#Then Registration Button should be disabled //Its very fast so unable to assert
+	Then Wait for field "success_label" to appear
+	Then Registration Button should be enabled
+	Then Check one user exists
+	| name          | creationType    |  nri  | superAdmin | donor | member |
+    | Ravi Sharma   | SelfServiceUser | true  | false      | false | false  |
+    Then Check one email exists
+	| email                 | emailUp             | newsLetter | confirmationType | confirmed |
+    | ping2ravi@gmail.com   | PING2RAVI@GMAIL.COM | true       | UN_CONFIRNED     | false     |
+    Then Check one phone exists
+	| countryCode | phoneNumber | phoneType     | confirmed |
+    | 44          | 9876543210  | NRI_MOBILE    | false     |
+    Then Check email and user are connected
+    Then Check email and phone are connected
+    Then Check phone and user are connected  
+    Then Clear Registeration form
+    And Enter Registeration Name "Kiyansh Sharma"
+	And Enter Registeration Email "ping2ravi123@gmail.com"
+	And Enter Registeration Password "password"
+	And Enter Registeration Confirm Password "password"
+	And Select Registeration NRI checkbox
+	And Select Registration Country "UK(44)"
+	And Enter Registeration Mobile Number "9876543210"
+	And Click on Registration Button
+	#Then Registration Button should be disabled //Its very fast so unable to assert
+	Then Wait for field "error_label" to appear
+	Then Check For Error "Mobile [9876543210] already registered" to appear	
+ 
+ @current	
+Scenario: Functional Test : Register NRI user With phone/countrycode where that phone already exists but countrycode is diferent
+	Given Create Location Type as "CountryLocationType"
+	| name      |
+    | Country   | 
+    Given Create Location as "CountryLocationUk" with locationType "CountryLocationType"
+	| name | isdCode |
+    | UK   | 44      |
+    Given Create Location as "CountryLocationUsa" with locationType "CountryLocationType"
+	| name | isdCode |
+    | USA  | 1       |
+	When Open Login page 
+	And Enter Registeration Name "Ravi Sharma"
+	And Enter Registeration Email "ping2ravi@gmail.com"
+	And Enter Registeration Password "password"
+	And Enter Registeration Confirm Password "password"
+	And Select Registeration NRI checkbox
+	And Select Registration Country "UK(44)"
+	And Enter Registeration Mobile Number "9876543210"
+	And Click on Registration Button
+	#Then Registration Button should be disabled //Its very fast so unable to assert
+	Then Wait for field "success_label" to appear
+	Then Registration Button should be enabled
+	Then Check one user exists
+	| name          | creationType    |  nri  | superAdmin | donor | member |
+    | Ravi Sharma   | SelfServiceUser | true  | false      | false | false  |
+    Then Check one email exists
+	| email                 | emailUp             | newsLetter | confirmationType | confirmed |
+    | ping2ravi@gmail.com   | PING2RAVI@GMAIL.COM | true       | UN_CONFIRNED     | false     |
+    Then Check one phone exists
+	| countryCode | phoneNumber | phoneType     | confirmed |
+    | 44          | 9876543210  | NRI_MOBILE    | false     |
+    Then Check email and user are connected
+    Then Check email and phone are connected
+    Then Check phone and user are connected  
+    Then Clear Registeration form
+    And Enter Registeration Name "Kiyansh Sharma"
+	And Enter Registeration Email "ping2ravi123@gmail.com"
+	And Enter Registeration Password "password"
+	And Enter Registeration Confirm Password "password"
+	And Select Registeration NRI checkbox
+	And Select Registration Country "UK(1)"
+	And Enter Registeration Mobile Number "9876543210"
+	And Click on Registration Button
+	#Then Registration Button should be disabled //Its very fast so unable to assert
+	Then Wait for field "success_label" to appear
+       

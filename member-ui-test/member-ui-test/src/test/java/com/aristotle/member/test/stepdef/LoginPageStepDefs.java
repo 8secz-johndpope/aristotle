@@ -2,8 +2,10 @@ package com.aristotle.member.test.stepdef;
 
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import com.aristotle.member.test.TestContext;
 import com.aristotle.member.test.exception.FieldDoNotExistsException;
 
 import cucumber.api.java.en.Given;
@@ -11,6 +13,19 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class LoginPageStepDefs extends BaseStepDef{
+	
+	@Given("Clear Registeration form")
+    public void clearRegistrationForm() throws FieldDoNotExistsException {
+		WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
+		webDriver.navigate().refresh();
+		/*
+		clearTextFieldValue(FieldIds.RegistrationPage.NAME_TEXTBOX_FIELD);
+		clearTextFieldValue(FieldIds.RegistrationPage.CONFIRM_PASSWORD_TEXTBOX_FIELD);
+		clearTextFieldValue(FieldIds.RegistrationPage.EMAIL_TEXTBOX_FIELD);
+		clearTextFieldValue(FieldIds.RegistrationPage.MOBILE_NUMBER_TEXTBOX_FIELD);
+		clearTextFieldValue(FieldIds.RegistrationPage.MOBILE_NUMBER_TEXTBOX_FIELD);
+		*/
+    }
 	
     @Given("Enter Registeration Name \"([^\"]*)\"")
     public void enterUserName(String nameValue) throws FieldDoNotExistsException {
