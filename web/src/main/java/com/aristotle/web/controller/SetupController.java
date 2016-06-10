@@ -279,7 +279,7 @@ public class SetupController {
             }
             List<String> status = userService.deleteUserByMemberId(memberId);
             return status;
-        }catch(Exception ex){
+        }catch(Throwable ex){
         	ex.printStackTrace();
         	return Lists.newArrayList(ex.getMessage());
         }
