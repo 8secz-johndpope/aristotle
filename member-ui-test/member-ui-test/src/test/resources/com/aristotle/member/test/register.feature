@@ -313,6 +313,33 @@ Scenario: Functional Test : Register NRI user Without Email
     Then Check no email exists
     Then Check no phone exists
     
+Scenario: Functional Test : Register NRI user Without Country Code
+	Given Create Location Type as "CountryLocationType"
+	| name      |
+    | Country   | 
+    Given Create Location as "CountryLocationUk" with locationType "CountryLocationType"
+	| name | isdCode |
+    | UK   | 44      |
+    Given Create Location as "CountryLocationUsa" with locationType "CountryLocationType"
+	| name | isdCode |
+    | USA  | 1       |
+	When Open Login page 
+	And Enter Registeration Name "Ravi Sharma"
+	And Enter Registeration Email "ping2ravi@gmail.com"
+	And Enter Registeration Password "password"
+	And Enter Registeration Confirm Password "password"
+	And Select Registeration NRI checkbox
+	#And Select Registration Country "UK(44)"
+	And Enter Registeration Mobile Number "9876543210"
+	And Click on Registration Button
+	#Then Registration Button should be disabled //Its very fast so unable to assert
+	Then Wait for field "error_label" to appear
+	Then Check For Error "Country Code must be provided" to appear
+	Then Registration Button should be enabled
+	Then Check no user exists
+    Then Check no email exists
+    Then Check no phone exists    
+    
 Scenario: Functional Test : Register NRI user when Passwords do not match
 	Given Create Location Type as "CountryLocationType"
 	| name      |

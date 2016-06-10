@@ -217,7 +217,9 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 					Location selectedCountry = (Location) countryCombobox.getValue();
 					if(selectedCountry != null){
 						selectedCountryIsdCode = selectedCountry.getIsdCode();
-					}	
+					}	else{
+						selectedCountryIsdCode = null;
+					}
 				}
 				
 				try {
