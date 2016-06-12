@@ -9,17 +9,23 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+
+import com.aristotle.core.config.DatabaseConfig;
 
 
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
+@ComponentScan(basePackages = { "com.aristotle.member", "com.aristotle.core.service","com.aristotle.core.service.temp"})
 public class Application{
 
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
 
 	public static void main(String[] args) {
-		ApplicationContext ctx = SpringApplication.run(new Object[] { Application.class }, args);
+		ApplicationContext ctx = SpringApplication.run(new Object[] { Application.class, DatabaseConfig.class  }, args);
 
         System.out.println("Let's inspect the beans provided by Spring Boot:");
         String[] beanNames = ctx.getBeanDefinitionNames();
@@ -29,6 +35,7 @@ public class Application{
             System.out.println(beanName);
         }
 	}
+	//		BeanFieldGroup.bindFieldsUnbuffered(domain, this);
 
 	@Bean
 	public CommandLineRunner loadData() {

@@ -19,7 +19,7 @@ import javax.persistence.Table;
 public class LocationType extends BaseEntity {
 
 
-    @Column(name="name", nullable = false)
+    @Column(name="name", nullable = false, unique=true)
     private String name;
     
     @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )

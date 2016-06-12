@@ -22,6 +22,7 @@ import org.neo4j.cypher.internal.compiler.v2_1.functions.E;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -54,6 +55,7 @@ import com.aristotle.core.persistance.repo.MembershipRepository;
 import com.aristotle.core.persistance.repo.MembershipTransactionRepository;
 import com.aristotle.core.persistance.repo.PasswordResetRequestRepository;
 import com.aristotle.core.persistance.repo.PhoneRepository;
+import com.aristotle.core.persistance.repo.SmsRepository;
 import com.aristotle.core.persistance.repo.UserLocationRepository;
 import com.aristotle.core.persistance.repo.UserRepository;
 import com.aristotle.core.persistance.repo.VolunteerRepository;
@@ -69,7 +71,8 @@ import com.aristotle.core.service.dto.UserUploadDto;
 import com.aristotle.core.service.dto.UserVolunteerBean;
 
 @Service
-@Transactional
+@Transactional(rollbackOn=Exception.class)
+@Lazy
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -100,6 +103,8 @@ public class UserServiceImpl implements UserService {
     private UserSearchService userSearchService;
     @Autowired
     private SmsService smsService;
+    @Autowired
+    private SmsRepository smsRepository;
     
     @Value("${aws_access_key}")
     private String awsKey;
@@ -458,6 +463,9 @@ public class UserServiceImpl implements UserService {
     }
 
     private Email getOrCreateEmail(String emailId) throws AppException {
+        return getOrCreateEmail(emailId, true);
+    }
+    private Email getOrCreateEmail(String emailId, boolean failIfExists) throws AppException {
         if (StringUtils.isBlank(emailId)) {
             return null;
         }
@@ -475,7 +483,7 @@ public class UserServiceImpl implements UserService {
             email.setConfirmationType(ConfirmationType.UN_CONFIRNED);
             email = emailRepository.save(email);
         }
-        if (email.isConfirmed() || email.getUser() != null) {
+        if (failIfExists && (email.isConfirmed() || email.getUser() != null)) {
             throwFieldAppException("email", "Email is already registered");
         }
         email.setNewsLetter(true);
@@ -729,7 +737,7 @@ public class UserServiceImpl implements UserService {
             loginAccount = loginAccountRepository.save(loginAccount);
             sendLoginAccountDetails(loginAccount, password);
         } else {
-            throw new AppException("Login Account already Exists");
+            //throw new AppException("Login Account already Exists");
         }
     }
 
@@ -1323,7 +1331,7 @@ public class UserServiceImpl implements UserService {
                     oneUserUploadDto.setUserIdForPhone(phone.getUserId());
                 }
             }
-            if (phone != null && phone.getUser() != null && email != null && email.getUser() != null) {
+            if (phone != null && phone.getUser() != null && email != null && email.getUser() != null && phone.getUser().getId() != email.getUser().getId()) {
             	oneUserUploadDto.setErrorMessage("Two Different User already exists for phone " + oneUserUploadDto.getPhone()+ " and email :" + oneUserUploadDto.getEmail());
             }
             if(!StringUtils.isEmpty(oneUserUploadDto.getReferencePhone())){
@@ -1352,10 +1360,10 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public void saveMember(UserUploadDto oneUserUploadDto, boolean createUserNamePassword, Location state, Location district, Location pc, Location ac) throws AppException {
-        Email email = getOrCreateEmail(oneUserUploadDto.getEmail());
+        Email email = getOrCreateEmail(oneUserUploadDto.getEmail(), false);
         Phone phone = getOrCreateMobile(oneUserUploadDto.getPhone(), "91", "mobile", false);
 
-        if (phone != null && phone.getUser() != null && email != null && email.getUser() != null) {
+        if (phone != null && phone.getUser() != null && email != null && email.getUser() != null && phone.getUser().getId() != email.getUser().getId()) {
             throw new AppException("Two Different User already exists for phone " + oneUserUploadDto.getPhone()+ " and email :" + oneUserUploadDto.getEmail());
         }
         
@@ -1542,5 +1550,120 @@ public class UserServiceImpl implements UserService {
 			userSearchService.sendUserForIndexing(user.getId().toString());
 		
 		}
+	}
+
+	@Override
+	public List<String> deleteUserByMemberId(String memberId) throws AppException {
+		Membership membership = membershipRepository.getMembershipByMembershipId(memberId);
+		if(membership == null){
+			throw new AppException("No Membership found with Id "+memberId);
+		}
+		User user = membership.getUser();
+		List<String> returnList = new ArrayList<>();
+		returnList.add(deletePhoneRecord(user));
+		returnList.add(deleteEmailRecord(user));
+		returnList.add(deleteLoginAccountRecord(user));
+		returnList.add(deleteSmsRecord(user));
+		returnList.add(deleteUserLocationRecord(user));
+		returnList.add(deleteMembershipTransactionRecord(membership));
+		returnList.add(deleteMembershipRecord(membership));
+		returnList.add(deleteUserRecord(user));
+		userSearchService.deleteUser(user.getId());
+		return returnList;
+	}
+	private String deleteUserRecord(User user){
+		userRepository.delete(user);
+		return "Deleted User : "+user.getId()+" ("+user.getName()+")";
+	}
+	private String deleteLoginAccountRecord(User user){
+		LoginAccount loginAccount = loginAccountRepository.getLoginAccountByUserId(user.getId());
+		if(loginAccount == null){
+			return "No Login Account Deleted";
+		}
+		loginAccountRepository.delete(loginAccount);
+		return "Deleted Login Record Record : "+loginAccount.getId()+", "+loginAccount.getUserName();
+	}
+	private String deleteUserLocationRecord(User user){
+		List<UserLocation> list = userLocationRepository.getUserLocationByUserId(user.getId());
+		if(list == null || list.isEmpty()){
+			return "No User Location Deleted";
+		}
+		StringBuilder sb = new StringBuilder("Deleted UserLocation Record : ");
+		for(UserLocation oneUserLocation : list){
+			sb.append(oneUserLocation.getId());
+			sb.append("(");
+			sb.append(oneUserLocation.getLocation().getName());
+			sb.append(", ");
+			sb.append(oneUserLocation.getUserLocationType());
+			sb.append(")");
+			sb.append(", ");
+			userLocationRepository.delete(oneUserLocation);
+		}
+		return sb.toString();
+	}
+	private String deleteSmsRecord(User user){
+		List<Sms> list = smsRepository.getSmsByUserId(user.getId());
+		if(list == null || list.isEmpty()){
+			return "No SMS Deleted";
+		}
+		StringBuilder sb = new StringBuilder("Deleted SMS Record : ");
+		for(Sms oneSms : list){
+			smsRepository.delete(oneSms);
+			sb.append(oneSms.getId());
+			sb.append("(");
+			sb.append(oneSms.getMessage());
+			sb.append(")");
+			sb.append(", ");
+		}
+		return sb.toString();
+	}
+	private String deleteEmailRecord(User user){
+		List<Email> list = emailRepository.getEmailsByUserId(user.getId());
+		if(list == null || list.isEmpty()){
+			return "No EMAIL Deleted";
+		}
+		StringBuilder sb = new StringBuilder("Deleted Email Record : ");
+		for(Email oneEmail : list){
+			emailRepository.delete(oneEmail);
+			sb.append(oneEmail.getId());
+			sb.append("(");
+			sb.append(oneEmail.getEmail());
+			sb.append(")");
+			sb.append(", ");
+		}
+		return sb.toString();
+	}
+	private String deleteMembershipTransactionRecord(Membership membership){
+		List<MembershipTransaction> list = membershipTransactionRepository.getMembershipTransactionByMembershipId(membership.getId());
+		if(list == null || list.isEmpty()){
+			return "No Membership transaction Deleted";
+		}
+		StringBuilder sb = new StringBuilder("Deleted Membership Transactions : ");
+		for(MembershipTransaction oneMemebrshipTransaction : list){
+			membershipTransactionRepository.delete(oneMemebrshipTransaction);
+			sb.append(oneMemebrshipTransaction.getId());
+			sb.append(", ");
+		}
+		return sb.toString();
+	}
+	private String deleteMembershipRecord(Membership membership){
+		membershipRepository.delete(membership);
+		return "Deleted Membership : "+membership.getId()+" ("+membership.getMembershipId()+")";
+	}
+	private String deletePhoneRecord(User user){
+		List<Phone> list = phoneRepository.getPhonesByUserId(user.getId());
+		if(list == null || list.isEmpty()){
+			return "No Phone Number Deleted";
+		}
+		StringBuilder sb = new StringBuilder("Deleted Phone Record : ");
+		for(Phone onePhone : list){
+			phoneRepository.delete(onePhone);
+			sb.append(onePhone.getId());
+			sb.append("(");
+			sb.append(onePhone.getPhoneNumber());
+			sb.append(")");
+			sb.append(", ");
+		}
+		return sb.toString();
 	}
 }

@@ -3,11 +3,13 @@ package com.aristotle.core.service.aws;
 import org.omg.CORBA.portable.ApplicationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.services.sqs.model.Message;
 
 @Service
+@Lazy
 public class AwsQueueServiceImpl implements QueueService {
 
     @Autowired

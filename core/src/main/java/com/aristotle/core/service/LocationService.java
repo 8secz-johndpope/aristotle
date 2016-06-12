@@ -30,5 +30,10 @@ public interface LocationService {
     List<Location> getAllChildLocations(Long locationId) throws AppException;
 
     Location findLocationById(Long locationId) throws AppException;
+    
+    LocationType saveLocationType(LocationType locationType) throws AppException;
+    
+    Location saveLocation(Location location) throws AppException;
+
 
 }

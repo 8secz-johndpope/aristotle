@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import aws.services.cloudsearchv2.AmazonCloudSearchClient;
 import aws.services.cloudsearchv2.documents.AmazonCloudSearchAddRequest;
+import aws.services.cloudsearchv2.documents.AmazonCloudSearchDeleteRequest;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -50,7 +51,7 @@ public abstract class AwsCloudBaseSearchService {
         this.domainName = domainName;
 
     }
-
+    
     @PostConstruct
     public void init() {
         AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, accessSecret);
@@ -164,6 +165,15 @@ public abstract class AwsCloudBaseSearchService {
     protected void indexDocuments(List<AmazonCloudSearchAddRequest> addRequests) throws AppException {
         try {
             amazonCloudSearchClient.addDocuments(addRequests);
+        } catch (Exception ex) {
+            throw new AppException(ex);
+        }
+    }
+    protected void deleteDocument(String id) throws AppException {
+        try {
+        	AmazonCloudSearchDeleteRequest amazonCloudSearchDeleteRequest = new AmazonCloudSearchDeleteRequest();
+        	amazonCloudSearchDeleteRequest.id = id;
+            amazonCloudSearchClient.deleteDocument(amazonCloudSearchDeleteRequest);
         } catch (Exception ex) {
             throw new AppException(ex);
         }
