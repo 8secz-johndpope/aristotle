@@ -13,6 +13,7 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
@@ -63,7 +64,21 @@ public class UiComponentsUtil {
 		setId(countryCombobox, caption);
 		return countryCombobox;
 	}
-	private static void setId(Component component, String caption){
+	public Label buildErrorlabel(){
+		Label errorLabel = new Label();
+		errorLabel.setVisible(false);
+		errorLabel.addStyleName(ValoTheme.NOTIFICATION_FAILURE);
+		errorLabel.setId("error_label");
+		return errorLabel;
+	}
+	public Label buildSuccessLabel(){
+		Label successLabel = new Label();
+		successLabel.setVisible(false);
+		successLabel.addStyleName(ValoTheme.NOTIFICATION_SUCCESS);
+		successLabel.setId("success_label");
+		return successLabel;
+	}
+	private void setId(Component component, String caption){
 		String id  = caption.toLowerCase();
 		id = id.replaceAll(" ", "_");
 		component.setId(id);

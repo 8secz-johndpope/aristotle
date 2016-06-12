@@ -16,5 +16,8 @@
         <module>tasks</module>
         <module>admin-web</module>
         <module>donation</module>
+        <module>member/member</module>
+        <module>member-ui-test/member-ui-test</module>
+        
       </modules>
     </project>

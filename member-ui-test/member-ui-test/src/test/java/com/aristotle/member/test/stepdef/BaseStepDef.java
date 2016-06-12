@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.springframework.boot.test.SpringApplicationContextLoader;
 import org.springframework.test.annotation.DirtiesContext;
@@ -71,11 +72,23 @@ public class BaseStepDef {
 	}
 	private void selectCheckBoxTextFieldValue(WebDriver webDriver, String fieldId, boolean value) throws FieldDoNotExistsException {
 		WebElement checkBoxFieldWebElement = getElement(webDriver, By.id(fieldId));
-		if(value && !checkBoxFieldWebElement.isSelected()){
-			checkBoxFieldWebElement.click();
+		//Vaadin generate actual Input field with ID input inside checkbox id div
+		WebElement checkBoxFieldWebElementForCheckingSelection = checkBoxFieldWebElement.findElement(By.tagName("input"));
+		if(value && !checkBoxFieldWebElementForCheckingSelection.isSelected()){
+			if(webDriver instanceof PhantomJSDriver){
+				checkBoxFieldWebElementForCheckingSelection.click();
+			}else{
+				checkBoxFieldWebElement.click();
+			}
+			
 		}
-		if(!value && checkBoxFieldWebElement.isSelected()){
-			checkBoxFieldWebElement.click();
+		if(!value && checkBoxFieldWebElementForCheckingSelection.isSelected()){
+			if(webDriver instanceof PhantomJSDriver){
+				checkBoxFieldWebElementForCheckingSelection.click();
+			}else{
+				checkBoxFieldWebElement.click();
+			}
+
 		}
 	}
 	
@@ -83,12 +96,19 @@ public class BaseStepDef {
     	WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
     	selectComboBoxValue(webDriver, fieldId, value);
 	}
+	private void sleep(int ms){
+		try {
+			Thread.sleep(ms);
+		} catch (InterruptedException e) {
+		}
+	}
 	private void selectComboBoxValue(WebDriver webDriver, String fieldId, String value) throws FieldDoNotExistsException {
 		WebElement comboBoxFieldWebElement = getElement(webDriver, By.id(fieldId));
 		comboBoxFieldWebElement = comboBoxFieldWebElement.findElement(By.tagName("input"));
 		//final Select selectBox = new Select(comboBoxFieldWebElement);
 	    //selectBox.selectByValue(value);
 		comboBoxFieldWebElement.sendKeys(value);
+		sleep(100);
 		comboBoxFieldWebElement.sendKeys(Keys.ENTER);
 	}
 	

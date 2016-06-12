@@ -3,7 +3,7 @@ Scenario: UI Test : Check All Default Relevent Fields are on Registration page f
 	Given Create Location Type as "CountryLocationType"
 	| name      |
     | Country   | 
-	When Open Login page 
+	When Open Registration page 
 	Then Check Field exists "name" 
 	Then Check Field exists "email" 
 	Then Check Field exists "password" 
@@ -26,15 +26,16 @@ Scenario: UI Test : Check All Default Relevent Fields are on Registration page f
 	Then Check Field "password" is enabled and visible
 	Then Check Field "confirm_password" is enabled and visible 
 	Then Check Field "mobile_number" is enabled and visible
-	Then Check Field "nri" is enabled and visible
+	Then Check Checkbox Field "nri" is enabled and visible
 	Then Check Field "register_button" is enabled and visible
 	Then Check Field "login_button" is enabled and visible
+	Then Take Screen shot as "indian_registration.png"
 	
 Scenario: UI Test : Check All Default Relevent Fields are on Registration page for User living abroad/NRI that they exists and are empty/unchecked and enabled and visible
 	Given Create Location Type as "CountryLocationType"
 	| name      |
     | Country   | 
-	When Open Login page 
+	When Open Registration page 
 	And Select Registeration NRI checkbox
 	Then Check Field exists "name" 
 	Then Check Field exists "email" 
@@ -58,17 +59,17 @@ Scenario: UI Test : Check All Default Relevent Fields are on Registration page f
 	Then Check Field "password" is enabled and visible
 	Then Check Field "confirm_password" is enabled and visible 
 	Then Check Field "mobile_number" is enabled and visible
-	Then Check Field "nri" is enabled and visible
+	Then Check Checkbox Field "nri" is enabled and visible
 	Then Check Field "country_code" is enabled and visible
 	Then Check Field "register_button" is enabled and visible
 	Then Check Field "login_button" is enabled and visible
-		
-
+	Then Take Screen shot as "nri_registration.png"
+	
 Scenario: Functional Test : Register an Indian User with All Data
 	Given Create Location Type as "CountryLocationType"
 	| name      |
     | Country   | 
-	When Open Login page 
+	When Open Registration page 
 	And Enter Registeration Name "Ravi Sharma"
 	And Enter Registeration Email "ping2ravi@gmail.com"
 	And Enter Registeration Password "password"
@@ -90,12 +91,13 @@ Scenario: Functional Test : Register an Indian User with All Data
     Then Check email and user are connected
     Then Check email and phone are connected
     Then Check phone and user are connected
+	Then Take Screen shot as "indian_registration_all_data.png"
     
 Scenario: Functional Test : Register an Indian User with Phone Number missing
 	Given Create Location Type as "CountryLocationType"
 	| name      |
     | Country   | 
-	When Open Login page 
+	When Open Registration page 
 	And Enter Registeration Name "Ravi Sharma"
 	And Enter Registeration Email "ping2ravi@gmail.com"
 	And Enter Registeration Password "password"
@@ -113,12 +115,14 @@ Scenario: Functional Test : Register an Indian User with Phone Number missing
     | ping2ravi@gmail.com   | PING2RAVI@GMAIL.COM | true       | UN_CONFIRNED     | false     |
     Then Check no phone exists
     Then Check email and user are connected
+    Then Take Screen shot as "indian_registration_with_email.png"
+    
  
  Scenario: Functional Test : Register an Indian User with Email missing
 	Given Create Location Type as "CountryLocationType"
 	| name      |
     | Country   | 
-	When Open Login page 
+	When Open Registration page 
 	And Enter Registeration Name "Ravi Sharma"
 	#And Enter Registeration Email "ping2ravi@gmail.com"
 	And Enter Registeration Password "password"
@@ -132,12 +136,13 @@ Scenario: Functional Test : Register an Indian User with Phone Number missing
 	Then Check no user exists
     Then Check no email exists
     Then Check no phone exists
+    Then Take Screen shot as "indian_registration_without_email.png"
  
  Scenario: Functional Test : Register an Indian User with Email where that email already exists
 	Given Create Location Type as "CountryLocationType"
 	| name      |
     | Country   | 
-	When Open Login page 
+	When Open Registration page 
 	And Enter Registeration Name "Ravi Sharma"
 	And Enter Registeration Email "ping2ravi@gmail.com"
 	And Enter Registeration Password "password"
@@ -168,12 +173,13 @@ Scenario: Functional Test : Register an Indian User with Phone Number missing
 	And Click on Registration Button
 	Then Wait for field "error_label" to appear
 	Then Check For Error "Email [ping2ravi@gmail.com] is already registered" to appear
+    Then Take Screen shot as "indian_registration_with_email_already_exists.png"
 	
 Scenario: Functional Test : Register an Indian User with Phone where that phone already exists
 	Given Create Location Type as "CountryLocationType"
 	| name      |
     | Country   | 
-	When Open Login page 
+	When Open Registration page 
 	And Enter Registeration Name "Ravi Sharma"
 	And Enter Registeration Email "ping2ravi@gmail.com"
 	And Enter Registeration Password "password"
@@ -204,12 +210,13 @@ Scenario: Functional Test : Register an Indian User with Phone where that phone 
 	And Click on Registration Button
 	Then Wait for field "error_label" to appear
 	Then Check For Error "Mobile [9876543210] already registered" to appear	
+    Then Take Screen shot as "indian_registration_with_phone_already_exists.png"
     
  Scenario: Functional Test : Register an Indian User where passwords dont match
 	Given Create Location Type as "CountryLocationType"
 	| name      |
     | Country   | 
-	When Open Login page 
+	When Open Registration page 
 	And Enter Registeration Name "Ravi Sharma"
 	And Enter Registeration Email "ping2ravi@gmail.com"
 	And Enter Registeration Password "password"
@@ -223,7 +230,9 @@ Scenario: Functional Test : Register an Indian User with Phone where that phone 
 	Then Check no user exists
     Then Check no email exists
     Then Check no phone exists   
+    Then Take Screen shot as "indian_registration_with_password_do_not_match.png"
     
+ @current   
  Scenario: Functional Test : Register NRI user With all Details
 	Given Create Location Type as "CountryLocationType"
 	| name      |
@@ -234,7 +243,7 @@ Scenario: Functional Test : Register an Indian User with Phone where that phone 
     Given Create Location as "CountryLocationUsa" with locationType "CountryLocationType"
 	| name | isdCode |
     | USA  | 1       |
-	When Open Login page 
+	When Open Registration page 
 	And Enter Registeration Name "Ravi Sharma"
 	And Enter Registeration Email "ping2ravi@gmail.com"
 	And Enter Registeration Password "password"
@@ -258,6 +267,7 @@ Scenario: Functional Test : Register an Indian User with Phone where that phone 
     Then Check email and user are connected
     Then Check email and phone are connected
     Then Check phone and user are connected   
+    Then Take Screen shot as "nri_registration_with_all_data.png"
     
 Scenario: Functional Test : Register NRI user Without Phone Number
 	Given Create Location Type as "CountryLocationType"
@@ -269,7 +279,7 @@ Scenario: Functional Test : Register NRI user Without Phone Number
     Given Create Location as "CountryLocationUsa" with locationType "CountryLocationType"
 	| name | isdCode |
     | USA  | 1       |
-	When Open Login page 
+	When Open Registration page 
 	And Enter Registeration Name "Ravi Sharma"
 	And Enter Registeration Email "ping2ravi@gmail.com"
 	And Enter Registeration Password "password"
@@ -285,7 +295,8 @@ Scenario: Functional Test : Register NRI user Without Phone Number
 	Then Check no user exists
     Then Check no email exists
     Then Check no phone exists
-    
+ 
+@current   
 Scenario: Functional Test : Register NRI user Without Email
 	Given Create Location Type as "CountryLocationType"
 	| name      |
@@ -296,7 +307,7 @@ Scenario: Functional Test : Register NRI user Without Email
     Given Create Location as "CountryLocationUsa" with locationType "CountryLocationType"
 	| name | isdCode |
     | USA  | 1       |
-	When Open Login page 
+	When Open Registration page 
 	And Enter Registeration Name "Ravi Sharma"
 	#And Enter Registeration Email "ping2ravi@gmail.com"
 	And Enter Registeration Password "password"
@@ -323,7 +334,7 @@ Scenario: Functional Test : Register NRI user Without Country Code
     Given Create Location as "CountryLocationUsa" with locationType "CountryLocationType"
 	| name | isdCode |
     | USA  | 1       |
-	When Open Login page 
+	When Open Registration page 
 	And Enter Registeration Name "Ravi Sharma"
 	And Enter Registeration Email "ping2ravi@gmail.com"
 	And Enter Registeration Password "password"
@@ -350,7 +361,7 @@ Scenario: Functional Test : Register NRI user when Passwords do not match
     Given Create Location as "CountryLocationUsa" with locationType "CountryLocationType"
 	| name | isdCode |
     | USA  | 1       |
-	When Open Login page 
+	When Open Registration page 
 	And Enter Registeration Name "Ravi Sharma"
 	And Enter Registeration Email "ping2ravi@gmail.com"
 	And Enter Registeration Password "password"
@@ -377,7 +388,7 @@ Scenario: Functional Test : Register NRI user With email where that email alread
     Given Create Location as "CountryLocationUsa" with locationType "CountryLocationType"
 	| name | isdCode |
     | USA  | 1       |
-	When Open Login page 
+	When Open Registration page 
 	And Enter Registeration Name "Ravi Sharma"
 	And Enter Registeration Email "ping2ravi@gmail.com"
 	And Enter Registeration Password "password"
@@ -414,7 +425,6 @@ Scenario: Functional Test : Register NRI user With email where that email alread
 	Then Wait for field "error_label" to appear
 	Then Check For Error "Email [ping2ravi@gmail.com] is already registered" to appear
 
-@current	
 Scenario: Functional Test : Register NRI user With phone/countrycode where that phone/countrycode already exists
 	Given Create Location Type as "CountryLocationType"
 	| name      |
@@ -425,7 +435,7 @@ Scenario: Functional Test : Register NRI user With phone/countrycode where that 
     Given Create Location as "CountryLocationUsa" with locationType "CountryLocationType"
 	| name | isdCode |
     | USA  | 1       |
-	When Open Login page 
+	When Open Registration page 
 	And Enter Registeration Name "Ravi Sharma"
 	And Enter Registeration Email "ping2ravi@gmail.com"
 	And Enter Registeration Password "password"
@@ -462,8 +472,7 @@ Scenario: Functional Test : Register NRI user With phone/countrycode where that 
 	Then Wait for field "error_label" to appear
 	Then Check For Error "Mobile [9876543210] already registered" to appear	
  
- @current	
-Scenario: Functional Test : Register NRI user With phone/countrycode where that phone already exists but countrycode is diferent
+ Scenario: Functional Test : Register NRI user With phone/countrycode where that phone already exists but countrycode is diferent
 	Given Create Location Type as "CountryLocationType"
 	| name      |
     | Country   | 
@@ -473,7 +482,7 @@ Scenario: Functional Test : Register NRI user With phone/countrycode where that 
     Given Create Location as "CountryLocationUsa" with locationType "CountryLocationType"
 	| name | isdCode |
     | USA  | 1       |
-	When Open Login page 
+	When Open Registration page 
 	And Enter Registeration Name "Ravi Sharma"
 	And Enter Registeration Email "ping2ravi@gmail.com"
 	And Enter Registeration Password "password"
@@ -503,9 +512,16 @@ Scenario: Functional Test : Register NRI user With phone/countrycode where that 
 	And Enter Registeration Password "password"
 	And Enter Registeration Confirm Password "password"
 	And Select Registeration NRI checkbox
-	And Select Registration Country "UK(1)"
+	And Select Registration Country "USA(1)"
 	And Enter Registeration Mobile Number "9876543210"
 	And Click on Registration Button
 	#Then Registration Button should be disabled //Its very fast so unable to assert
 	Then Wait for field "success_label" to appear
        
+ Scenario: Functional Test : Open Register Page and then Click on 'Already Registered? Login Now' Link
+	Given Create Location Type as "CountryLocationType"
+	| name      |
+    | Country   | 
+	When Open Registration page 
+	And Click on Already Registerd Button
+	Then Check that login page has been opened

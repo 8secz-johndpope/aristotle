@@ -54,7 +54,6 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 	private Button loginButton;
 	private Button registerButton;
 	private VerticalLayout page1;
-	private VerticalLayout page2;
 	private volatile boolean initialized = false;
 	private ReCaptcha captcha;
 	private String selectedCountryIsdCode;
@@ -69,7 +68,7 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 	@Autowired
 	private MemberService memberService;
 	@Autowired
-	private UiComponentsUtil textFieldUtil;
+	private UiComponentsUtil uiComponentsUtil;
 	@Value("${captcha_site_key}")
 	private String captchaSiteKey;
 	@Value("${captcha_site_secret}")
@@ -114,15 +113,15 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 			MarginInfo marginInfo = new MarginInfo(true);
 			this.setMargin(marginInfo);
 			
-			userName = textFieldUtil.buildTextField(contextHelp, FontAwesome.USER, "Name", "Enter Your Full Name");
+			userName = uiComponentsUtil.buildTextField(contextHelp, FontAwesome.USER, "Name", "Enter Your Full Name");
 			
-			email = textFieldUtil.buildTextField(contextHelp, FontAwesome.ENVELOPE, "Email", "Enter your email, where we will send you your registration details");
+			email = uiComponentsUtil.buildTextField(contextHelp, FontAwesome.ENVELOPE, "Email", "Enter your email, where we will send you your registration details");
 
 			HorizontalLayout nameEmailLayout = new HorizontalLayout(userName, email);
 
-			password = textFieldUtil.buildPasswordField(contextHelp, FontAwesome.LOCK, "Password", "Enter a hard to guesss password to keep your account secure");	
+			password = uiComponentsUtil.buildPasswordField(contextHelp, FontAwesome.LOCK, "Password", "Enter a hard to guesss password to keep your account secure");	
 
-			passwordConfirm = textFieldUtil.buildPasswordField(contextHelp, FontAwesome.LOCK, "Confirm Password", "Re-Enter same password");	
+			passwordConfirm = uiComponentsUtil.buildPasswordField(contextHelp, FontAwesome.LOCK, "Confirm Password", "Re-Enter same password");	
 
 			HorizontalLayout passwordLayout = new HorizontalLayout(password, passwordConfirm);
 			
@@ -131,9 +130,9 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 			for(Location oneLocation : countries){
 				oneLocation.setName(oneLocation.getName() +"("+oneLocation.getIsdCode()+")");
 			}
-			countryCombobox = textFieldUtil.buildCountryComboBox(contextHelp, FontAwesome.FLAG, "Country Code", "Select your country where you live");
+			countryCombobox = uiComponentsUtil.buildCountryComboBox(contextHelp, FontAwesome.FLAG, "Country Code", "Select your country where you live");
 
-			phoneNumber = textFieldUtil.buildTextField(contextHelp, FontAwesome.MOBILE, "Mobile Number", "Enter your mobile number <b>WITHOUT</b> country code<br> i.e. 9876543210");
+			phoneNumber = uiComponentsUtil.buildTextField(contextHelp, FontAwesome.MOBILE, "Mobile Number", "Enter your mobile number <b>WITHOUT</b> country code<br> i.e. 9876543210");
 
 			HorizontalLayout phoneLayout = new HorizontalLayout(countryCombobox, phoneNumber);
 
@@ -157,16 +156,10 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 			nri = new CheckBox("I am NRI");
 			nri.setId("nri");
 			
-			errorLabel = new Label();
-			errorLabel.setVisible(false);
-			errorLabel.addStyleName(ValoTheme.NOTIFICATION_FAILURE);
-			errorLabel.setId("error_label");
+			errorLabel = uiComponentsUtil.buildErrorlabel();
 			
 			
-			successLabel = new Label();
-			successLabel.setVisible(false);
-			successLabel.addStyleName(ValoTheme.NOTIFICATION_SUCCESS);
-			successLabel.setId("success_label");
+			successLabel = uiComponentsUtil.buildSuccessLabel();
 
 
 			page1 = new VerticalLayout(errorLabel, successLabel, nameEmailLayout, passwordLayout, nri, phoneLayout, captcha, registerButton, loginButton);
@@ -231,7 +224,7 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 					successLabel.setVisible(true);
 					successLabel.setValue("Member Registered Succesfully");
 				} catch (Exception e) {
-					Notification.show(e.getMessage(), Notification.Type.ERROR_MESSAGE);
+					//Notification.show(e.getMessage(), Notification.Type.ERROR_MESSAGE);
 				    captcha.reload();
 					errorLabel.setValue(e.getMessage());
 					errorLabel.setVisible(true);

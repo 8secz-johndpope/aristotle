@@ -18,13 +18,6 @@ public class LoginPageStepDefs extends BaseStepDef{
     public void clearRegistrationForm() throws FieldDoNotExistsException {
 		WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
 		webDriver.navigate().refresh();
-		/*
-		clearTextFieldValue(FieldIds.RegistrationPage.NAME_TEXTBOX_FIELD);
-		clearTextFieldValue(FieldIds.RegistrationPage.CONFIRM_PASSWORD_TEXTBOX_FIELD);
-		clearTextFieldValue(FieldIds.RegistrationPage.EMAIL_TEXTBOX_FIELD);
-		clearTextFieldValue(FieldIds.RegistrationPage.MOBILE_NUMBER_TEXTBOX_FIELD);
-		clearTextFieldValue(FieldIds.RegistrationPage.MOBILE_NUMBER_TEXTBOX_FIELD);
-		*/
     }
 	
     @Given("Enter Registeration Name \"([^\"]*)\"")
@@ -56,6 +49,10 @@ public class LoginPageStepDefs extends BaseStepDef{
     @Given("Click on Registration Button")
     public void clickOnRegistrationButton() throws FieldDoNotExistsException {
     	clickOnButton(FieldIds.RegistrationPage.REGISTRATION_BUTTON_FIELD);
+    }
+    @Given("Click on Already Registerd Button")
+    public void clickOnAlreadyRegistredButton() throws FieldDoNotExistsException {
+    	clickOnButton(FieldIds.RegistrationPage.ALREAD_REGISTRED_BUTTON_FIELD);
     }
     @Given("Registration Button should be disabled")
     public void registrationButtonShouldBeDisabled() throws FieldDoNotExistsException {
