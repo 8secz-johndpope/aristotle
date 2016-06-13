@@ -14,6 +14,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
+import com.vaadin.spring.server.SpringVaadinServlet;
 import com.vaadin.ui.UI;
 
 @SpringUI(path = "/")
@@ -34,11 +35,12 @@ public class MemberUI extends UI {
 
 	@Override
     protected void init(VaadinRequest vaadinRequest) {
+		System.out.println("Creating UI , viewProvider = " + viewProvider);
         setContent(new MainLayout(viewProvider, vaadinSessionUtil));
     }
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = MemberUI.class, productionMode = true)
-    public static class MyUIServlet extends VaadinServlet {
+    public static class MyUIServlet extends SpringVaadinServlet {
     }
 }
