@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.SecurityFilterAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
@@ -19,7 +20,7 @@ import org.springframework.context.annotation.Import;
 import com.aristotle.core.config.DatabaseConfig;
 import com.vaadin.spring.navigator.SpringViewProvider;
 
-@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class, SecurityAutoConfiguration.class}, scanBasePackages = { "com.aristotle" })
+@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class, SecurityAutoConfiguration.class, SecurityFilterAutoConfiguration.class}, scanBasePackages = { "com.aristotle" })
 @ComponentScan(basePackages = { "com.aristotle.member", "com.aristotle.core.service", "com.aristotle.core.service.temp" })
 public class Application extends SpringBootServletInitializer {
 
