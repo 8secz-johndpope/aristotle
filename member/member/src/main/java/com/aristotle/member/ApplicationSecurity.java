@@ -7,15 +7,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-/**
- * Created by eladio on 3/24/15.
- */
-@Configuration
-@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
-@EnableWebSecurity
-public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
+//@Configuration
+//@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+//@EnableWebSecurity
+public class ApplicationSecurity {//extends WebSecurityConfigurerAdapter {
 
-	@Override
+	//@Override
     protected void configure( HttpSecurity http )
         throws Exception
     {
