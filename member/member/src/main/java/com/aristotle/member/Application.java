@@ -13,12 +13,14 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 
 import com.aristotle.core.config.DatabaseConfig;
 import com.vaadin.spring.navigator.SpringViewProvider;
 
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class }, scanBasePackages = { "com.aristotle" })
 @ComponentScan(basePackages = { "com.aristotle.member", "com.aristotle.core.service", "com.aristotle.core.service.temp" })
+@Import(ApplicationSecurity.class)
 public class Application extends SpringBootServletInitializer {
 
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
