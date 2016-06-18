@@ -1,5 +1,7 @@
 sudo: required
 
+language: java
+
 services:
   - docker
 
@@ -9,7 +11,3 @@ script:
 cache:
   directories:
   - $HOME/.m2
-  
-env:
-  global:
-  - TERM=dumb
