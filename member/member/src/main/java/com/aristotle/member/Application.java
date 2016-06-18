@@ -21,7 +21,8 @@ import com.aristotle.core.config.DatabaseConfig;
 import com.vaadin.spring.navigator.SpringViewProvider;
 
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class, SecurityAutoConfiguration.class, SecurityFilterAutoConfiguration.class}, scanBasePackages = { "com.aristotle" })
-@ComponentScan(basePackages = { "com.aristotle.member", "com.aristotle.core.service", "com.aristotle.core.service.temp" })
+@ComponentScan(basePackages = { "com.aristotle.member"})
+@Import(DatabaseConfig.class)
 public class Application extends SpringBootServletInitializer {
 
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
@@ -42,7 +43,7 @@ public class Application extends SpringBootServletInitializer {
 	@Override protected SpringApplicationBuilder configure(SpringApplicationBuilder 
 			application) { 
 		//This function generate relevant information for Tomcat or other containers 
-		return application.sources(Application.class, DatabaseConfig.class); 
+		return application.sources(Application.class); 
 	}
 
 	public static void mainw(String[] args) throws Exception {
