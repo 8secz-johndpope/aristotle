@@ -7,3 +7,7 @@ services:
 
 script:
 - ./build.sh
+
+cache:
+  directories:
+  - $HOME/.m2

@@ -26,11 +26,15 @@ public class TestContext {
 		if(firefox){
 			webDriver = new FirefoxDriver();
 		}else{
-			if(System.getProperties().get("phantomjsBinaryPath") == null ){
-				System.getProperties().put("phantomjs.binary.path", "/usr/local/software/phantomJS/current/bin/phantomjs");
-			}else{
-				System.getProperties().put("phantomjs.binary.path", System.getProperties().get("phantomjsBinaryPath"));
+			String phantomJsPath = (String)System.getProperties().get("phantomjsBinaryPath");
+			if(phantomJsPath == null){
+				phantomJsPath = System.getenv("phantomjsBinaryPath");
 			}
+			if(phantomJsPath == null){
+				throw new RuntimeException("phantomjsBinaryPath is nul.Test wont run");
+			}
+			System.getProperties().put("phantomjs.binary.path", phantomJsPath);
+
 			DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();
 			webDriver = new PhantomJSDriver(capabilities);
 			webDriver.manage().window().setSize(new Dimension(1600, 1200));

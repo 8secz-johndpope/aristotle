@@ -14,7 +14,7 @@ MVN_COMMAND=clean install -Dmaven.test.skip=true
 fi
 
 echo "Build Output Directory : " $HOST_JENKINS_HOME/workspace/${JOB_NAME}/build-output
-docker run -e GIT_REPO=https://github.com/ModernAristotle/aristotle.git -e MVN_COMMAND='clean install -Dmaven.test.skip=true' -e BUILD_OUTPUT=$BUILD_OUTPUT_DIRECTORY -v $HOST_JENKINS_HOME/workspace/${JOB_NAME}/build-output:$BUILD_OUTPUT_DIRECTORY -v ~/.m2:/root/.m2/ -v /var/run/docker.sock:/var/run/docker.sock -it ping2ravi/maven-selenium-build-docker
+docker run -e GIT_REPO=https://github.com/ModernAristotle/aristotle.git -e MVN_COMMAND='clean package -Dmaven.test.skip=true' -e BUILD_OUTPUT=$BUILD_OUTPUT_DIRECTORY -v $HOST_JENKINS_HOME/workspace/${JOB_NAME}/build-output:$BUILD_OUTPUT_DIRECTORY -v ~/.m2:/root/.m2/ -v /var/run/docker.sock:/var/run/docker.sock -it ping2ravi/maven-selenium-build-docker
 
 cd $HOST_JENKINS_HOME/workspace/${JOB_NAME}/build-output/member/member/
 
@@ -41,7 +41,7 @@ docker run --name=AristotleMemberBuild --net="host" -e user_search_end_point=${u
 #Run tests in Docker Image
 docker stop AristotleMemberTestBuild
 docker rm AristotleMemberTestBuild
-docker run --name=AristotleMemberTestBuild --net="host" -e GIT_REPO=https://github.com/ModernAristotle/aristotle.git -e MVN_COMMAND='clean install' -e BUILD_OUTPUT=$BUILD_OUTPUT_DIRECTORY -v $HOST_JENKINS_HOME/workspace/${JOB_NAME}/build-output:$BUILD_OUTPUT_DIRECTORY -v ~/.m2:/root/.m2/ -v /var/run/docker.sock:/var/run/docker.sock -it ping2ravi/maven-selenium-build-docker
+docker run --name=AristotleMemberTestBuild --net="host" -e GIT_REPO=https://github.com/ModernAristotle/aristotle.git -e MVN_COMMAND='test' -e BUILD_OUTPUT=$BUILD_OUTPUT_DIRECTORY -v $HOST_JENKINS_HOME/workspace/${JOB_NAME}/build-output:$BUILD_OUTPUT_DIRECTORY -v ~/.m2:/root/.m2/ -v /var/run/docker.sock:/var/run/docker.sock -it ping2ravi/maven-selenium-build-docker
 docker stop AristotleMemberTestBuild
 docker rm AristotleMemberTestBuild
 
