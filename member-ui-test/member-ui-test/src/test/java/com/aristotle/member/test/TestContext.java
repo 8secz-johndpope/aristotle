@@ -26,7 +26,11 @@ public class TestContext {
 		if(firefox){
 			webDriver = new FirefoxDriver();
 		}else{
-			System.getProperties().put("phantomjs.binary.path", "/usr/local/software/phantomJS/current/bin/phantomjs");
+			if(System.getProperties().get("phantomjsBinaryPath") == null ){
+				System.getProperties().put("phantomjs.binary.path", "/usr/local/software/phantomJS/current/bin/phantomjs");
+			}else{
+				System.getProperties().put("phantomjs.binary.path", System.getProperties().get("phantomjsBinaryPath"));
+			}
 			DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();
 			webDriver = new PhantomJSDriver(capabilities);
 			webDriver.manage().window().setSize(new Dimension(1600, 1200));
