@@ -18,12 +18,13 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import com.aristotle.core.DatabaseConfigForTest;
 import com.aristotle.core.persistance.Location;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
-
+/*
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class, TransactionalTestExecutionListener.class, DbUnitTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = DatabaseConfigForTest.class)
 @DirtiesContext
 @Transactional
+*/
 //@DatabaseSetup({ LocationRepositoryTest.COMMON_USER_SET })
 //@DatabaseTearDown(type = DatabaseOperation.DELETE_ALL, value = { LocationRepositoryTest.COMMON_USER_SET })
 public class LocationRepositoryTest extends BaseRepositoryTest {

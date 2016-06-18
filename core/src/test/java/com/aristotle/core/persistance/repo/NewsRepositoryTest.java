@@ -20,6 +20,7 @@ import com.github.springtestdbunit.annotation.DatabaseOperation;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
 
+/*
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class, TransactionalTestExecutionListener.class, DbUnitTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = DatabaseConfigForTest.class)
@@ -27,6 +28,7 @@ import com.github.springtestdbunit.annotation.DatabaseTearDown;
 @Transactional
 @DatabaseSetup(NewsRepositoryTest.DATASET)
 @DatabaseTearDown(type = DatabaseOperation.DELETE_ALL, value = { NewsRepositoryTest.DATASET })
+*/
 public class NewsRepositoryTest extends BaseRepositoryTest {
     protected static final String DATASET = "classpath:NewsRepository/test01.xml";
 
