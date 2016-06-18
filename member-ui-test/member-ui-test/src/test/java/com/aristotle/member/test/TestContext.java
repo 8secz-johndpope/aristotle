@@ -18,9 +18,25 @@ public class TestContext {
 	private TestContext(){
 		data = new HashMap<String, Object>();
 	}
+	private static boolean isFirefox(){
+		try{
+			String firefox = (String)System.getProperties().get("firefox");
+			if(firefox == null){
+				firefox = System.getenv("firefox");
+			}
+			if(firefox == null){
+				return false;
+			}
+			return Boolean.parseBoolean(firefox);
+		}catch(Exception ex){
+			ex.printStackTrace();
+			return false;
+		}
+		
+	}
 	public static void startTest(){
 		instance = new TestContext();
-		boolean firefox = false;
+		boolean firefox = isFirefox();
 		
 		WebDriver webDriver;
 		if(firefox){
