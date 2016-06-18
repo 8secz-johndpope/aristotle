@@ -31,8 +31,9 @@ public class TestContext {
 				phantomJsPath = System.getenv("phantomjsBinaryPath");
 			}
 			if(phantomJsPath == null){
-				throw new RuntimeException("phantomjsBinaryPath is nul.Test wont run");
+				throw new RuntimeException("phantomjsBinaryPath is null.Test wont run");
 			}
+			System.out.println("phantomJsPath = "+ phantomJsPath);
 			System.getProperties().put("phantomjs.binary.path", phantomJsPath);
 
 			DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();
