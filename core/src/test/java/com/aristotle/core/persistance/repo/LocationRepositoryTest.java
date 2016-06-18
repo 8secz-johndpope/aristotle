@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import com.github.springtestdbunit.DbUnitTestExecutionListener;
 */
 //@DatabaseSetup({ LocationRepositoryTest.COMMON_USER_SET })
 //@DatabaseTearDown(type = DatabaseOperation.DELETE_ALL, value = { LocationRepositoryTest.COMMON_USER_SET })
+@Ignore
 public class LocationRepositoryTest extends BaseRepositoryTest {
     // protected static final String DATASET = "classpath:common/user.xml";
 

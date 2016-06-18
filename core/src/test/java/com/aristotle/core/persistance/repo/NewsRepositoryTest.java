@@ -2,6 +2,7 @@ package com.aristotle.core.persistance.repo;
 
 import javax.transaction.Transactional;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import com.github.springtestdbunit.annotation.DatabaseTearDown;
 @DatabaseSetup(NewsRepositoryTest.DATASET)
 @DatabaseTearDown(type = DatabaseOperation.DELETE_ALL, value = { NewsRepositoryTest.DATASET })
 */
+@Ignore
 public class NewsRepositoryTest extends BaseRepositoryTest {
     protected static final String DATASET = "classpath:NewsRepository/test01.xml";
 
