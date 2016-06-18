@@ -13,22 +13,20 @@ import org.springframework.boot.autoconfigure.security.SecurityFilterAutoConfigu
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 
-import com.aristotle.core.config.DatabaseConfig;
-import com.vaadin.spring.navigator.SpringViewProvider;
+import com.aristotle.core.config.CoreConfig;
 
-@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class, SecurityAutoConfiguration.class, SecurityFilterAutoConfiguration.class}, scanBasePackages = { "com.aristotle" })
+@SpringBootApplication(exclude = { SecurityAutoConfiguration.class, SecurityFilterAutoConfiguration.class}, scanBasePackages = { "com.aristotle" })
 @ComponentScan(basePackages = { "com.aristotle.member"})
-@Import(DatabaseConfig.class)
+@Import(CoreConfig.class)
 public class Application extends SpringBootServletInitializer {
 
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
 
 	public static void main(String[] args) {
-		ApplicationContext ctx = SpringApplication.run(new Object[] { Application.class, DatabaseConfig.class }, args);
+		ApplicationContext ctx = SpringApplication.run(new Object[] { Application.class}, args);
 
 		System.out.println("Let's inspect the beans provided by Spring Boot:");
 		String[] beanNames = ctx.getBeanDefinitionNames();
