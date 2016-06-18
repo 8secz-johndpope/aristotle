@@ -10,14 +10,6 @@
       <packaging>pom</packaging>
      
       <modules>
-        <module>dto</module>
-        <module>core</module>
-        <module>web</module>
-        <module>tasks</module>
-        <module>admin-web</module>
-        <module>donation</module>
-        <module>member/member</module>
         <module>member-ui-test/member-ui-test</module>
-        
       </modules>
     </project>
