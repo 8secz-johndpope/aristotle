@@ -5,6 +5,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import com.github.springtestdbunit.annotation.DatabaseOperation;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
 
+/*
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class, TransactionalTestExecutionListener.class, DbUnitTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = DatabaseConfigForTest.class)
@@ -33,6 +35,8 @@ import com.github.springtestdbunit.annotation.DatabaseTearDown;
 @Transactional
 @DatabaseSetup({ DomainPageTemplateRepositoryTest.COMMON_USER_SET })
 @DatabaseTearDown(type = DatabaseOperation.DELETE_ALL, value = { DomainPageTemplateRepositoryTest.COMMON_USER_SET })
+*/
+@Ignore
 public class DomainPageTemplateRepositoryTest extends BaseRepositoryTest {
     // protected static final String DATASET = "classpath:DomainPageTemplateRepository/test01.xml";
 

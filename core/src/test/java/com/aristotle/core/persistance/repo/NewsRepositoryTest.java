@@ -2,6 +2,7 @@ package com.aristotle.core.persistance.repo;
 
 import javax.transaction.Transactional;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import com.github.springtestdbunit.annotation.DatabaseOperation;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
 
+/*
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class, TransactionalTestExecutionListener.class, DbUnitTestExecutionListener.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = DatabaseConfigForTest.class)
@@ -27,6 +29,8 @@ import com.github.springtestdbunit.annotation.DatabaseTearDown;
 @Transactional
 @DatabaseSetup(NewsRepositoryTest.DATASET)
 @DatabaseTearDown(type = DatabaseOperation.DELETE_ALL, value = { NewsRepositoryTest.DATASET })
+*/
+@Ignore
 public class NewsRepositoryTest extends BaseRepositoryTest {
     protected static final String DATASET = "classpath:NewsRepository/test01.xml";
 
