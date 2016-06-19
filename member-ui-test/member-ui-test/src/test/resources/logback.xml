@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN">
-  <Appenders>
-    <Console name="Console" target="SYSTEM_OUT">
-      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-    </Console>
-  </Appenders>
-  <Loggers>
-  	<Logger name="com.next" level="DEBUG">
-      <AppenderRef ref="Console"/>
-    </Logger>
-    <Logger name="org.hibernate" level="WARN">
-      <AppenderRef ref="Console"/>
-    </Logger>
-    <Logger name="org.springframework" level="WARN">
-      <AppenderRef ref="Console"/>
-    </Logger>
-    
-    <Root level="ERROR">
-      <AppenderRef ref="Console"/>
-    </Root>
-  </Loggers>
-</Configuration>
+<configuration status="WARN" debug="tru">
+	<appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+	
+	<loggers>
+		<logger name="com.next" level="DEBUG">
+			<appender-ref ref="Console" />
+		</logger>
+		<logger name="org.hibernate" level="WARN">
+			<appender-ref ref="Console" />
+		</logger>
+		<logger name="org.springframework" level="WARN">
+			<appender-ref ref="Console" />
+		</logger>
+
+		<root level="ERROR">
+			<AppenderRef ref="Console" />
+		</root>
+	</loggers>
+</configuration>
