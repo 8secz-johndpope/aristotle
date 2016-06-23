@@ -3,6 +3,8 @@ package com.aristotle.member.ui;
 import java.util.Iterator;
 
 import com.aristotle.core.persistance.User;
+import com.aristotle.member.ui.account.PersonalDetailView;
+import com.aristotle.member.ui.account.SecurityView;
 import com.aristotle.member.ui.login.LoginView;
 import com.aristotle.member.ui.login.RegisterView;
 import com.aristotle.member.ui.util.NavigatorUtil;
@@ -36,6 +38,11 @@ public class MainLayout extends MainLayoutDesign implements ViewDisplay {
         nativeButton.setCaption("Manual");
         nativeButton.setWidth("100%");
         side_bar.addComponent(nativeButton);
+        addNavigatorView(PersonalDetailView.NAVIAGATION_NAME, personDetailNativeButton);
+        addNavigatorView(HomeView.NAVIAGATION_NAME, volunteerDetailNativeButton);
+        addNavigatorView(SecurityView.NAVIAGATION_NAME, securirtyNativeButton);
+
+
         //addNavigatorView(domainPage.getNaviagationName(), menuButton1);
         
         //addNavigatorView(OrderView.VIEW_NAME, OrderView.class, menuButton2);
@@ -54,7 +61,10 @@ public class MainLayout extends MainLayoutDesign implements ViewDisplay {
     }
 
     private void addNavigatorView(String viewName, Button menuButton) {
-        menuButton.addClickListener(event -> doNavigate(viewName));
+        menuButton.addClickListener(event -> {
+        	doNavigate(viewName);
+        	menuButton.addStyleName("selected");
+        });
         //menuButton.setData(viewClass.getName());
     }
 
@@ -90,7 +100,7 @@ public class MainLayout extends MainLayoutDesign implements ViewDisplay {
                 //Load USer Detail
                 User user = vaadinSessionUtil.getLoggedInUserFromSession();
                 if(user != null){
-                	user_name_label.setValue(user.getName());	
+                	userNameLabel.setValue(user.getName());	
                 }
         	}
             

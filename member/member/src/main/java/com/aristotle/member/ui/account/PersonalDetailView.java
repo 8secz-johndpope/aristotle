@@ -1,4 +1,4 @@
-package com.aristotle.member.ui.login;
+package com.aristotle.member.ui.account;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.jonatan.contexthelp.ContextHelp;
@@ -30,11 +30,11 @@ import com.vaadin.ui.themes.ValoTheme;
 
 //@SpringComponent
 //@UIScope
-@SpringView(name = LoginView.NAVIAGATION_NAME)
-public class LoginView extends VerticalLayout implements NavigableView{
+@SpringView(name = PersonalDetailView.NAVIAGATION_NAME)
+public class PersonalDetailView extends VerticalLayout implements NavigableView{
 
 	private static final long serialVersionUID = 1L;
-	public static final String NAVIAGATION_NAME = "login";
+	public static final String NAVIAGATION_NAME = "personal";
 
 	private PasswordField password;
 	private TextField userName;
@@ -54,7 +54,7 @@ public class LoginView extends VerticalLayout implements NavigableView{
 	private volatile boolean initialized = false;
 
 
-	public LoginView() {
+	public PersonalDetailView() {
 	}
 
 	public void init() {
@@ -103,7 +103,6 @@ public class LoginView extends VerticalLayout implements NavigableView{
 	}
 	
 	private void addListeners(){
-		ViewHelper.addNaviagationClickListener(this, registerButton, RegisterView.NAVIAGATION_NAME);
 		loginButton.addClickListener(new ClickListener() {
 			private static final long serialVersionUID = 1L;
 
@@ -114,11 +113,11 @@ public class LoginView extends VerticalLayout implements NavigableView{
 					User user = memberService.login(userName.getValue(), password.getValue());
 	            	vaadinSessionUtil.setLoggedInUserinSession(user);
 					Notification.show("Welcome "+userName.getValue()+", login succesfull", Type.HUMANIZED_MESSAGE);
-					NavigatorUtil.goToHomePage(LoginView.this);
+					NavigatorUtil.goToHomePage(PersonalDetailView.this);
 				} catch (AppException e) {
 					errorLabel.setValue(e.getMessage());
 					errorLabel.setVisible(true);
-					LoginView.this.userName.setComponentError(new UserError(e.getMessage()));
+					PersonalDetailView.this.userName.setComponentError(new UserError(e.getMessage()));
 				}
 			}
 		});
@@ -126,7 +125,7 @@ public class LoginView extends VerticalLayout implements NavigableView{
 
 	@Override
 	public String getNaviagationName() {
-		return LoginView.NAVIAGATION_NAME;
+		return PersonalDetailView.NAVIAGATION_NAME;
 	}
 
 }

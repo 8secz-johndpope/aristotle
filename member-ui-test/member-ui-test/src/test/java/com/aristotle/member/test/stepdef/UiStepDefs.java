@@ -28,9 +28,19 @@ public class UiStepDefs extends BaseStepDef{
 	private UserService userService;
 	
     @Given("Open Registration page")
-    public void opne_login_page() throws IOException {
+    public void open_registeration_page() throws IOException {
     	WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
     	openUrl(webDriver, Urls.REGISTER_URL);
+    }
+    @Given("Open Login page")
+    public void open_login_page() throws IOException {
+    	WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
+    	openUrl(webDriver, Urls.LOGIN_URL);
+    }
+    @Given("Open Security page")
+    public void open_security_page() throws IOException {
+    	WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
+    	openUrl(webDriver, Urls.SECURITY_URL);
     }
     @Given("Check Field exists \"([^\"]*)\"")
 	public void checkFieldExists(String fieldId) throws FieldDoNotExistsException {
@@ -90,6 +100,11 @@ public class UiStepDefs extends BaseStepDef{
 	public void waitForLoginPage() throws FieldDoNotExistsException {
 		WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
 		webDriver.getCurrentUrl().contains(Urls.LOGIN_URL);
+	}
+    @Given("Check that home page has been opened")
+	public void waitForHomePage() throws FieldDoNotExistsException {
+		WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
+		webDriver.getCurrentUrl().contains(Urls.HOME_URL);
 	}
     
     @Given("Check For Error \"([^\"]*)\" to appear")

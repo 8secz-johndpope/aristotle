@@ -29,7 +29,9 @@ $v-gradient: false;
 	.scroll-panel{
 		background-color: $root-background-color;
         border: none;
-        border-radius: 0;		
+        border-radius: 0;	
+        padding-left: 50px;
+        padding-top: 50px;
 	}
 				
 	.header-bar{
@@ -69,7 +71,7 @@ $v-gradient: false;
 	.side-bar {
 	
 		background-color: #000;
-		width: 100px;
+		width: 150px;
 		
 		> .menu-button{
 			position: relative;
@@ -191,23 +193,23 @@ $v-gradient: false;
   <v-vertical-layout style-name="root-layout navigation-template-vaadin" responsive="true" id="layoutWithMenu" size-full="true" _id="layoutWithMenu"> 
    <v-css-layout style-name="header-bar" width-full="true" _id="header_bar"> 
     <v-native-button icon="fonticon://FontAwesome/f078" style-name="user-menu" width="20px" height="20px" plain-text="" _id="user_menu"></v-native-button> 
-    <v-label style-name="user-name-label" width="79px" plain-text="" _id="user_name_label">
+    <v-label style-name="user-name-label" width="79px" plain-text="" _id="userNameLabel">
       Ravi Sharma
     </v-label> 
    </v-css-layout> 
    <v-horizontal-layout style-name="main-area-layout" size-full="true" _id="main_area" :expand=""> 
     <v-css-layout style-name="side-bar" height-full="true" _id="side_bar"> 
-     <v-native-button icon="fonticon://FontAwesome/f080" style-name="menu-button selected" width-full="true" plain-text="" _id="menuButton1">
-       Dashboard 
+     <v-native-button icon="fonticon://FontAwesome/F0C0" style-name="menu-button selected" width-full="true" plain-text="" _id="personDetailNativeButton">
+       Personal Details 
      </v-native-button> 
-     <v-native-button icon="fonticon://FontAwesome/f0f6" style-name="menu-button" width-full="true" plain-text="" _id="menuButton2">
-       Order 
+     <v-native-button icon="fonticon://FontAwesome/F0E5" style-name="menu-button" width-full="true" plain-text="" _id="volunteerDetailNativeButton">
+       Volunteer Details 
      </v-native-button> 
-     <v-native-button icon="fonticon://FontAwesome/f05a" style-name="menu-button" width-full="true" plain-text="" _id="menuButton3">
-       About 
+     <v-native-button icon="fonticon://FontAwesome/F023" style-name="menu-button" width-full="true" plain-text="" _id="securirtyNativeButton">
+       Security 
      </v-native-button> 
-     <v-native-button icon="fonticon://FontAwesome/f03a" style-name="menu-button" width-full="true" plain-text="" _id="menuButton4">
-       Test 
+     <v-native-button icon="fonticon://FontAwesome/F0C0" style-name="menu-button" width-full="true" plain-text="" _id="membershipNativeButton">
+       Membership 
      </v-native-button> 
     </v-css-layout> 
     <v-panel style-name="scroll-panel" size-full="true" _id="scroll_panel" :expand=""></v-panel> 

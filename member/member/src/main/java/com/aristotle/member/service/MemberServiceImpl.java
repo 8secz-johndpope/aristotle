@@ -44,6 +44,12 @@ public class MemberServiceImpl implements MemberService{
 	public User login(String userName, String password) throws AppException {
         LoginAccount loginAccount = loginAccountRepository.getLoginAccountByUserName(userName.toLowerCase());
         if (loginAccount == null) {
+        	loginAccount = loginAccountRepository.getLoginAccountByEmail(userName.toLowerCase());
+        }
+        if (loginAccount == null) {
+        	loginAccount = loginAccountRepository.getLoginAccountByPhone(userName.toLowerCase());
+        }
+        if (loginAccount == null) {
             throw new AppException("Invalid user name/password");
         }
         if (!passwordUtil.checkPassword(password, loginAccount.getPassword())) {
@@ -79,8 +85,9 @@ public class MemberServiceImpl implements MemberService{
         user = userRepository.save(user);
         
         loginAccount = new LoginAccount();
-        loginAccount.setEmail(emailId);
-        loginAccount.setPassword(password);
+        loginAccount.setEmail(emailId.toLowerCase());
+        loginAccount.setPhone(mobileNumber);
+        loginAccount.setPassword(passwordUtil.encryptPassword(password));
         loginAccount.setUserName(emailId);
         loginAccount.setUser(user);
 
@@ -93,6 +100,19 @@ public class MemberServiceImpl implements MemberService{
         }
 		return user;
 	}
+	
+	@Override
+    public void changePassword(Long userId, String oldPassword, String newPassword, String newConfirmedPassword) throws AppException {
+		if(!newPassword.equals(newConfirmedPassword)){
+            throw new AppException("Password Do not match");
+		}
+        LoginAccount loginAccount = loginAccountRepository.getLoginAccountByUserId(userId);
+        if (!passwordUtil.checkPassword(oldPassword, loginAccount.getPassword())) {
+            throw new AppException("Old password Do not match");
+        }
+        loginAccount.setPassword(passwordUtil.encryptPassword(newPassword));
+        loginAccount = loginAccountRepository.save(loginAccount);
+    }
 	
 	private Email getOrCreateEmail(String emailId) throws AppException {
         if (StringUtils.isBlank(emailId)) {

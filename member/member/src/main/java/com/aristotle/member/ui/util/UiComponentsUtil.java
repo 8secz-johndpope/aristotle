@@ -11,6 +11,7 @@ import com.aristotle.core.persistance.Location;
 import com.aristotle.core.service.LocationService;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
@@ -78,9 +79,16 @@ public class UiComponentsUtil {
 		successLabel.setId("success_label");
 		return successLabel;
 	}
+	public Button buildButton(String valotheme, FontAwesome icon, String caption){
+		Button button = new Button(caption, icon);
+		button.setStyleName(valotheme);
+		setId(button, caption+" button");
+		return button;
+	}
 	private void setId(Component component, String caption){
 		String id  = caption.toLowerCase();
 		id = id.replaceAll(" ", "_");
+		id = id.replaceAll("/", "_");
 		component.setId(id);
 	}
 }

@@ -27,13 +27,19 @@ public class LocationStepDef extends BaseStepDef{
 		}
     }
 	@Given("Create Location as \"([^\"]*)\" with locationType \"([^\"]*)\"")
-    public void createNewLocation(String locationTestId, String locationTypeTestId, List<Location> list) throws FieldDoNotExistsException, AppException {
+    public void createNewLocationAs(String locationTestId, String locationTypeTestId, List<Location> list) throws FieldDoNotExistsException, AppException {
 		TestContext testContext = TestContext.getCurrentContext();
 		LocationType locationType = testContext.getData(locationTypeTestId, LocationType.class);
 		for(Location oneLocation : list){
 			oneLocation.setLocationType(locationType);
 			oneLocation = locationService.saveLocation(oneLocation);
-			testContext.setData(locationTestId, oneLocation);
+			if(locationTestId != null){
+				testContext.setData(locationTestId, oneLocation);
+			}
 		}
+    }
+	@Given("Create Location with locationType \"([^\"]*)\"")
+    public void createNewLocation(String locationTypeTestId, List<Location> list) throws FieldDoNotExistsException, AppException {
+		createNewLocationAs(null, locationTypeTestId, list);
     }
 }

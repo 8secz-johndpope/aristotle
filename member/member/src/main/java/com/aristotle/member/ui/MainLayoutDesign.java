@@ -7,7 +7,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.declarative.Design;
 
@@ -19,13 +18,13 @@ public class MainLayoutDesign extends VerticalLayout {
 	protected VerticalLayout layoutWithMenu;
     protected CssLayout header_bar;
     protected NativeButton user_menu;
-    protected Label user_name_label;
+    protected Label userNameLabel;
     protected HorizontalLayout main_area;
     protected CssLayout side_bar;
-    protected NativeButton menuButton1;
-    protected NativeButton menuButton2;
-    protected NativeButton menuButton3;
-    protected NativeButton menuButton4;
+    protected NativeButton personDetailNativeButton;
+    protected NativeButton volunteerDetailNativeButton;
+    protected NativeButton securirtyNativeButton;
+    protected NativeButton membershipNativeButton;
     protected Panel scroll_panel;
 
     public MainLayoutDesign() {

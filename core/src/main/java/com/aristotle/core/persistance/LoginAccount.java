@@ -20,6 +20,9 @@ public class LoginAccount extends BaseEntity {
 
 	@Column(name = "email", nullable = true)
 	private String email;
+	
+	@Column(name = "phone", nullable = true)
+	private String phone;
 
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="user_id")
@@ -57,6 +60,12 @@ public class LoginAccount extends BaseEntity {
 	}
 	public void setUserId(Long userId) {
 		this.userId = userId;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 	
 	

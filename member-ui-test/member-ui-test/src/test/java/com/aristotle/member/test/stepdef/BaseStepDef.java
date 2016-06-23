@@ -44,6 +44,9 @@ public class BaseStepDef {
 		textFieldWebElement.clear();
 	}
 	protected void enterTextFieldValue(String fieldId, String value) throws FieldDoNotExistsException {
+		if(value == null){
+			return;
+		}
 		log.info("Enetring value: {} into field : {}", value, fieldId);
     	WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
 		enterTextFieldValue(webDriver, fieldId, value);
@@ -69,6 +72,16 @@ public class BaseStepDef {
 	protected void unselectCheckBoxTextFieldValue(WebDriver webDriver, String fieldId) throws FieldDoNotExistsException {
 		log.info("UnSelecting checbox field : {}", fieldId);
 		selectCheckBoxTextFieldValue(webDriver, fieldId, false);
+	}
+	protected void setCheckBoxFieldValue(String fieldId, String value) throws FieldDoNotExistsException {
+    	WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
+    	boolean checkBoxValue = false;
+    	try{
+    		checkBoxValue = Boolean.parseBoolean(value);
+    	}catch(Exception ex){
+    		
+    	}
+		selectCheckBoxTextFieldValue(webDriver, fieldId, checkBoxValue);
 	}
 	private void selectCheckBoxTextFieldValue(WebDriver webDriver, String fieldId, boolean value) throws FieldDoNotExistsException {
 		WebElement checkBoxFieldWebElement = getElement(webDriver, By.id(fieldId));

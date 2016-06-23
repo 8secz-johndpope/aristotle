@@ -4,8 +4,9 @@ import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.User;
 
 public interface MemberService {
-	public User login(String userName, String password) throws AppException;
+	User login(String userName, String password) throws AppException;
 	
-	public User register(String userName, String password, String passwordConfirm, String email, String countryCode, String mobileNumber, boolean nri) throws AppException;
+	User register(String userName, String password, String passwordConfirm, String email, String countryCode, String mobileNumber, boolean nri) throws AppException;
 
+	void changePassword(Long userId, String oldPassword, String newPassword, String newConfirmedPassword) throws AppException;
 }

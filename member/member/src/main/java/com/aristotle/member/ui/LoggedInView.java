@@ -9,7 +9,6 @@ import com.vaadin.ui.VerticalLayout;
 public abstract class LoggedInView extends VerticalLayout implements NavigableView{
 
 	private static final long serialVersionUID = 1L;
-	public static final String NAVIAGATION_NAME = "home";
 	
 	@Autowired
 	protected VaadinSessionUtil vaadinSessionUtil;
@@ -20,8 +19,6 @@ public abstract class LoggedInView extends VerticalLayout implements NavigableVi
 		
 	}
 	
-	public String getNaviagationName() {
-		return LoggedInView.NAVIAGATION_NAME;
-	}
+	public abstract String getNaviagationName();
 
 }

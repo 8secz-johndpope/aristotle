@@ -7,7 +7,7 @@ import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(plugin = {"pretty"}
-//,tags = {"@current"}
+,tags = {"@current"}
 )
 public class MainTest {
 

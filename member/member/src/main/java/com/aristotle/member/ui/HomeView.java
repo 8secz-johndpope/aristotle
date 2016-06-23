@@ -25,12 +25,9 @@ public class HomeView extends LoggedInView{
 	private static final long serialVersionUID = 1L;
 	public static final String NAVIAGATION_NAME = "home";
 
-	private PasswordField password;
-	private TextField userName;
 	private VerticalLayout content;
-	private Button loginButton;
-	private Button registerButton;
 	private Label errorLabel;
+	private Label successLabel;
 	
 	@Autowired
 	private MemberService memberService;
@@ -53,25 +50,11 @@ public class HomeView extends LoggedInView{
 	}
 	
 	private void buildUiScreen(){
-		userName = new TextField("User Name");
-		userName.setIcon(FontAwesome.USER);
-		//userName.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
-		
-		password = new PasswordField("Password");
-		password.setIcon(FontAwesome.LOCK);
-		//password.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
-		
-		loginButton = new Button("Login", FontAwesome.SIGN_IN);
-		loginButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
-		
-		registerButton = new Button("Not Registered Yet? Register Now", FontAwesome.REGISTERED);
-		registerButton.setStyleName(ValoTheme.BUTTON_LINK);
-		
 		errorLabel = new Label();
 		errorLabel.setStyleName("error");
 		errorLabel.setVisible(false);
 		
-		content = new VerticalLayout(errorLabel, userName, password, loginButton, registerButton);
+		content = new VerticalLayout(errorLabel);//
 		content.addStyleName("login-panel");
 		
 		content.setSizeFull();
@@ -80,23 +63,7 @@ public class HomeView extends LoggedInView{
 	}
 	
 	private void addListeners(){
-		loginButton.addClickListener(new ClickListener() {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void buttonClick(ClickEvent event) {
-				try {
-					errorLabel.setVisible(false);
-					memberService.login(userName.getValue(), password.getValue());
-					Notification.show("Welcome "+userName.getValue()+", login succesfull", Type.HUMANIZED_MESSAGE);
-					getUI().getNavigator().navigateTo("home");
-				} catch (AppException e) {
-					errorLabel.setValue(e.getMessage());
-					errorLabel.setVisible(true);
-					HomeView.this.userName.setComponentError(new UserError(e.getMessage()));
-				}
-			}
-		});
+		
 	}
 
 	@Override
