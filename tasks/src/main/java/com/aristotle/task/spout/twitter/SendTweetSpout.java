@@ -41,7 +41,7 @@ public class SendTweetSpout extends SpringAwareBaseSpout {
             } else {
                 sendProcessTweetMessage(tweet);
             }
-            logInfo("Getting Next message");
+            logDebug("Getting Next message");
         } catch (Exception e) {
             logError("Unable to receive Location File message from AWS Quque", e);
         }

@@ -121,7 +121,7 @@ public class TwitterServiceImpl implements TwitterService {
                     e.printStackTrace();
                 }
             } else {
-                logger.info("Ignoring as not in last 5 minutes oneTweet.getCreatedAt()=" + oneTweet.getCreatedAt() + ", now.getTime()=" + now.getTime());
+                logger.debug("Ignoring as not in last 5 minutes oneTweet.getCreatedAt()={}, now.getTime()= {}" ,oneTweet.getCreatedAt(), now.getTime());
             }
         }
         return tweets;
