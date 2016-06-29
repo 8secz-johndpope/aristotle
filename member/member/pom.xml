@@ -61,6 +61,11 @@
 			<version>2.0.1</version>
 		</dependency>
 		<dependency>
+			<groupId>org.vaadin.addon</groupId>
+			<artifactId>easyuploads</artifactId>
+			<version>7.4.5</version>
+		</dependency>
+		<dependency>
 			<groupId>com.wcs.wcslib</groupId>
 			<artifactId>wcslib-vaadin-widget-recaptcha</artifactId>
 			<version>1.2.0</version>
@@ -92,12 +97,8 @@
 
 	<build>
 		<plugins>
-			<!-- 
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			 -->
+			<!-- <plugin> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-maven-plugin</artifactId> 
+				</plugin> -->
 			<plugin>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-maven-plugin</artifactId>
