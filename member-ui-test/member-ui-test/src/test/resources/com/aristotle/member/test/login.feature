@@ -1,5 +1,4 @@
-@current
-Feature: Registration page 
+Feature: Login page 
 Background:
     Given Create Location Type as "CountryLocationType"
 	| name      |

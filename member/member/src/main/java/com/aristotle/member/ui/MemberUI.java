@@ -4,7 +4,9 @@ import javax.servlet.annotation.WebServlet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.aristotle.core.persistance.User;
 import com.aristotle.core.service.UserService;
+import com.aristotle.member.service.MemberService;
 import com.aristotle.member.ui.util.VaadinSessionUtil;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.Theme;
@@ -28,7 +30,7 @@ public class MemberUI extends UI {
 	private SpringViewProvider viewProvider;
 	
 	@Autowired
-	private UserService userService;
+	private MemberService memberService;
 	
 	@Autowired
 	private VaadinSessionUtil vaadinSessionUtil;
@@ -36,9 +38,20 @@ public class MemberUI extends UI {
 	@Override
     protected void init(VaadinRequest vaadinRequest) {
 		System.out.println("Creating UI , viewProvider = " + viewProvider);
+		setupLoggedInuserForDevMachine();
         setContent(new MainLayout(viewProvider, vaadinSessionUtil));
     }
-
+	private void setupLoggedInuserForDevMachine(){
+		try{
+			User loggedinUser = vaadinSessionUtil.getLoggedInUserFromSession();
+	        if(loggedinUser == null && "DEV_MACHINE".equalsIgnoreCase(System.getProperty("ENV"))){
+	        	loggedinUser = memberService.login(System.getProperty("USER"), System.getProperty("PASSWORD"));
+	        	vaadinSessionUtil.setLoggedInUserinSession(loggedinUser);
+	        }
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+	}
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = MemberUI.class, productionMode = true)
     public static class MyUIServlet extends SpringVaadinServlet {

@@ -109,7 +109,8 @@ public class SecurityView extends VerticalLayout implements NavigableView{
 				try {
 					errorLabel.setVisible(false);
 					successLabel.setVisible(false);
-					memberService.changePassword(1L, currentPassword.getValue(), newPassword.getValue(), newConfirmPassword.getValue());
+					User loggedInUser = vaadinSessionUtil.getLoggedInUserFromSession();
+					memberService.changePassword(loggedInUser.getId(), currentPassword.getValue(), newPassword.getValue(), newConfirmPassword.getValue());
 					successLabel.setValue("Password updated successfully");
 					successLabel.setVisible(true);
 

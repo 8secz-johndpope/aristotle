@@ -10923,8 +10923,8 @@ div.v-layout.v-horizontal.v-widget {
 	color: #474747;
 	border-radius: 0;
 	border: 1px solid #d5d5d5;
-	
-	
+	padding-left:20px;
+	padding-right:20px;	
 	overflow: visible !important;
 }
 
@@ -10935,7 +10935,7 @@ div.v-layout.v-horizontal.v-widget {
 	padding: 0 12px;
 	line-height: 36px;
 	border-bottom: 1px solid #d5d5d5;
-	background-color: #fafafa;
+	background-color: #aaaafa;
 	background-image: -webkit-linear-gradient(top, #fafafa 0%, #fafafa 100%);
 	background-image: linear-gradient(to bottom,#fafafa 0%, #fafafa 100%);
 	color: #464646;

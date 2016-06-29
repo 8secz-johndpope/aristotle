@@ -59,7 +59,7 @@ public class LoginView extends VerticalLayout implements NavigableView{
 
 	public void init() {
 		if(!initialized){
-			this.setWidth("400px");
+			this.setWidth("450px");
 			buildUiScreen();
 			addListeners();
 			initialized = true;
@@ -81,8 +81,9 @@ public class LoginView extends VerticalLayout implements NavigableView{
 		contextHelp.setFollowFocus(true);
 		
 		userName = uiComponentsUtil.buildTextField(contextHelp, FontAwesome.USER, "Email/Mobile Number", "Enter your email or phone number with which you registered");
-		
+		userName.setWidth("350px");
 		password = uiComponentsUtil.buildPasswordField(contextHelp, FontAwesome.LOCK, "Password" , "Enter your password, its case senstive. Means 'Password' and 'PASSWORD' will not match");
+		password.setWidth("350px");
 		
 		loginButton = new Button("Login", FontAwesome.SIGN_IN);
 		loginButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);

@@ -192,15 +192,18 @@ $v-gradient: false;
     <v-vertical-layout responsive="true" id="root_layout_main" size-full="true" _id="root_layout_main"> 
   <v-vertical-layout style-name="root-layout navigation-template-vaadin" responsive="true" id="layoutWithMenu" size-full="true" _id="layoutWithMenu"> 
    <v-css-layout style-name="header-bar" width-full="true" _id="header_bar"> 
-    <v-native-button icon="fonticon://FontAwesome/f078" style-name="user-menu" width="20px" height="20px" plain-text="" _id="user_menu"></v-native-button> 
-    <v-label style-name="user-name-label" width="79px" plain-text="" _id="userNameLabel">
-      Ravi Sharma
+    <v-native-button icon="fonticon://FontAwesome/F08B" height="20px" plain-text="Logout" _id="logoutButton"></v-native-button> 
+    <v-label style-name="user-name-label" width="200px" plain-text="" _id="userNameLabel">
+      
     </v-label> 
    </v-css-layout> 
    <v-horizontal-layout style-name="main-area-layout" size-full="true" _id="main_area" :expand=""> 
     <v-css-layout style-name="side-bar" height-full="true" _id="side_bar"> 
      <v-native-button icon="fonticon://FontAwesome/F0C0" style-name="menu-button selected" width-full="true" plain-text="" _id="personDetailNativeButton">
        Personal Details 
+     </v-native-button> 
+     <v-native-button icon="fonticon://FontAwesome/F10B" style-name="menu-button" width-full="true" plain-text="" _id="contactDetailNativeButton">
+       Contact Details 
      </v-native-button> 
      <v-native-button icon="fonticon://FontAwesome/F0E5" style-name="menu-button" width-full="true" plain-text="" _id="volunteerDetailNativeButton">
        Volunteer Details 

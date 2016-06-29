@@ -1,5 +1,7 @@
 package com.aristotle.member.service;
 
+import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,6 +24,7 @@ import com.aristotle.core.persistance.repo.LoginAccountRepository;
 import com.aristotle.core.persistance.repo.PhoneRepository;
 import com.aristotle.core.persistance.repo.UserRepository;
 import com.aristotle.core.service.PasswordUtil;
+import com.google.gdata.util.common.base.StringUtil;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -173,4 +176,60 @@ public class MemberServiceImpl implements MemberService{
         throw fieldsAppException;
     }
 
+	@Override
+	public Email getUserEmail(Long userId) throws AppException {
+		List<Email> userEmails = emailRepository.getEmailsByUserId(userId);
+		if(userEmails == null || userEmails.isEmpty()){
+			return null;
+		}
+		return userEmails.get(0);
+	}
+
+	@Override
+	public Email updateEmail(Long emailId, String newEmailId, String confirmNewEmailId) throws AppException {
+		if(StringUtil.isEmpty(newEmailId) || StringUtil.isEmpty(confirmNewEmailId)){
+            throw new AppException("Please enter new email");
+		}
+		if(!newEmailId.equals(confirmNewEmailId)){
+            throw new AppException("Emails do not match");
+		}
+		Matcher matcher = pattern.matcher(newEmailId);
+        if (!matcher.matches()) {
+        	throw new AppException("Invalid new Email Id, must be in format email@website.domain");
+        }
+        matcher = pattern.matcher(confirmNewEmailId);
+        if (!matcher.matches()) {
+        	throw new AppException("Invalid new confirmed email Id, must be in format email@website.domain");
+        }
+		Email existingEmail = emailRepository.getEmailByEmailUp(newEmailId.toUpperCase());
+		if(existingEmail != null && existingEmail.getUser() != null ){
+			throw new AppException("Email["+  newEmailId + "] is already registered");
+		}
+		Email email = emailRepository.findOne(emailId);
+		email.setEmail(newEmailId);
+		email.setEmailUp(newEmailId.toUpperCase());
+		email.setConfirmed(false);
+		email.setConfirmationType(ConfirmationType.UN_CONFIRNED);
+		email.setConfirmationDate(null);
+		return emailRepository.save(email);
+	}
+
+	@Override
+	public User getUserById(long userId) throws AppException {
+		return userRepository.findOne(userId);
+	}
+
+	@Override
+	public User updateUserPersonalDetails(Long userId, String name, String gender, Date dob, String idCardType, String idCardNumber, String fatherName, String motherName) {
+		User user = userRepository.findOne(userId);
+		user.setName(name);
+		user.setGender(gender);
+		user.setDateOfBirth(dob);
+		user.setIdentityType(idCardType);
+		user.setIdentityNumber(idCardNumber);
+		user.setFatherName(fatherName);
+		user.setMotherName(motherName);
+		user = userRepository.save(user);
+		return user;
+	}
 }

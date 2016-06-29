@@ -113,7 +113,7 @@ public class TwitterServiceImpl implements TwitterService {
         Calendar now = Calendar.getInstance();
         now.add(Calendar.MINUTE, -5);
         for (org.springframework.social.twitter.api.Tweet oneTweet : tweets) {
-            logger.info("Tweet : " + oneTweet.getId() + ", " + oneTweet.getCreatedAt() + " : " + oneTweet.getText());
+            logger.debug("Tweet : {}, {} : {}" , oneTweet.getId(),  oneTweet.getCreatedAt(), oneTweet.getText());
             if (oneTweet.getCreatedAt().after(now.getTime())) {
                 try {
                     planRetweet(oneTweet, twitterAccount);

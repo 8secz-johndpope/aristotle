@@ -1,4 +1,5 @@
-Feature: Registration page 
+@current
+Feature: Change Password page 
 Background:
     Given Create Location Type as "CountryLocationType"
 	| name      |

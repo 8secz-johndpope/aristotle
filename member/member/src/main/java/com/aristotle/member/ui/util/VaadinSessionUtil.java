@@ -24,4 +24,10 @@ public class VaadinSessionUtil {
         WrappedHttpSession wrappedSession = (WrappedHttpSession)VaadinService.getCurrentRequest().getWrappedSession(true);
         return (User) wrappedSession.getAttribute(LOGGED_IN_USER_SESSION_PARAM);
     }
+    
+    public void logout() {
+        logger.info("Logging out User from Session");
+        WrappedHttpSession wrappedSession = (WrappedHttpSession)VaadinService.getCurrentRequest().getWrappedSession(true);
+        wrappedSession.removeAttribute(LOGGED_IN_USER_SESSION_PARAM);
+    }
 }
