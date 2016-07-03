@@ -38,7 +38,7 @@ public class MemberUI extends UI {
 	@Override
     protected void init(VaadinRequest vaadinRequest) {
 		System.out.println("Creating UI , viewProvider = " + viewProvider);
-		setupLoggedInuserForDevMachine();
+		//setupLoggedInuserForDevMachine();
         setContent(new MainLayout(viewProvider, vaadinSessionUtil));
     }
 	private void setupLoggedInuserForDevMachine(){

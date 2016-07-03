@@ -69,7 +69,7 @@ public class MainLayout extends MainLayoutDesign implements ViewDisplay {
         
         User loggedinUser = vaadinSessionUtil.getLoggedInUserFromSession();
        
-        if(loggedinUser == null){
+        if(loggedinUser == null && !navigator.getState().equals(RegisterView.NAVIAGATION_NAME)){
         	navigator.navigateTo(LoginView.NAVIAGATION_NAME);
         }else
         if (navigator.getState().isEmpty()) {
