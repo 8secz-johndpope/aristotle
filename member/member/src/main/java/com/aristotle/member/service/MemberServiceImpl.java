@@ -6,6 +6,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.mortbay.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,11 +20,15 @@ import com.aristotle.core.persistance.Email;
 import com.aristotle.core.persistance.LoginAccount;
 import com.aristotle.core.persistance.Phone;
 import com.aristotle.core.persistance.User;
+import com.aristotle.core.persistance.UserLocation;
 import com.aristotle.core.persistance.Email.ConfirmationType;
+import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.Phone.PhoneType;
 import com.aristotle.core.persistance.repo.EmailRepository;
+import com.aristotle.core.persistance.repo.LocationRepository;
 import com.aristotle.core.persistance.repo.LoginAccountRepository;
 import com.aristotle.core.persistance.repo.PhoneRepository;
+import com.aristotle.core.persistance.repo.UserLocationRepository;
 import com.aristotle.core.persistance.repo.UserRepository;
 import com.aristotle.core.service.PasswordUtil;
 import com.google.gdata.util.common.base.StringUtil;
@@ -39,9 +46,15 @@ public class MemberServiceImpl implements MemberService{
 	@Autowired
 	private PhoneRepository phoneRepository;
 	@Autowired
+	private UserLocationRepository userLocationRepository;
+	@Autowired
+	private LocationRepository locationRepository;
+	@Autowired
 	private PasswordUtil passwordUtil;
 	private final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+    
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Override
 	public User login(String userName, String password) throws AppException {
@@ -220,7 +233,7 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
-	public User updateUserPersonalDetails(Long userId, String name, String gender, Date dob, String idCardType, String idCardNumber, String fatherName, String motherName) {
+	public User updateUserPersonalDetails(Long userId, String name, String gender, Date dob, String idCardType, String idCardNumber, String fatherName, String motherName) throws AppException{
 		User user = userRepository.findOne(userId);
 		user.setName(name);
 		user.setGender(gender);
@@ -230,6 +243,81 @@ public class MemberServiceImpl implements MemberService{
 		user.setFatherName(fatherName);
 		user.setMotherName(motherName);
 		user = userRepository.save(user);
+		return user;
+	}
+
+	@Override
+	public User updateNriUserLocations(Long userId, Long countryId, Long countryRegionId, Long countryRegionAreadId, Long stateId, Long districtId, Long pcId, Long acId) throws AppException {
+		User user = userRepository.findOne(userId);
+		if(user == null){
+			throw new AppException("No such user found ["+userId+"]");
+		}
+		user.setNri(true);
+		//First Delete India Living Location If exists
+		deleteUserLocation(user, UserLocation.LIVING, "State");
+		deleteUserLocation(user, UserLocation.LIVING, "District");
+		deleteUserLocation(user, UserLocation.LIVING, "ParliamentConstituency");
+		deleteUserLocation(user, UserLocation.LIVING, "AssemblyConstituency");
+
+		updateUserLocation(user, UserLocation.LIVING, "Country", countryId);
+		updateUserLocation(user, UserLocation.LIVING, "CountryRegion", countryRegionId);
+		updateUserLocation(user, UserLocation.LIVING, "CountryRegionArea", countryRegionAreadId);
+		updateUserLocation(user, UserLocation.VOTING, "State", stateId);
+		updateUserLocation(user, UserLocation.VOTING, "District", districtId);
+		updateUserLocation(user, UserLocation.VOTING, "ParliamentConstituency", pcId);
+		updateUserLocation(user, UserLocation.VOTING, "AssemblyConstituency", acId);
+		
+		return user;
+	}
+	private void deleteUserLocation(User user, String userLocationType, String locationType){
+		UserLocation currentUserLocation = userLocationRepository.getUserLocationByUserIdAndLocationTypesAndUserLocationType(user.getId(), userLocationType, locationType);
+		if(currentUserLocation !=null){
+			userLocationRepository.delete(currentUserLocation);
+		}
+	}
+	private void updateUserLocation(User user, String userLocationType, String locationType, Long locationId){
+		logger.info("Updating User Location for User :{}, userLocationType:{}, locationType:{}, locationId:{}", user.getId(), userLocationType, locationType, locationId);
+		UserLocation currentUserLocation = userLocationRepository.getUserLocationByUserIdAndLocationTypesAndUserLocationType(user.getId(), userLocationType, locationType);
+		if(locationId == null){
+			if(currentUserLocation !=null){
+				userLocationRepository.delete(currentUserLocation);
+			}
+			return;
+		}
+		
+		Location location = locationRepository.findOne(locationId);
+		if(currentUserLocation == null){
+			currentUserLocation = new UserLocation();
+		}
+		currentUserLocation.setLocation(location);
+		currentUserLocation.setUser(user);
+		currentUserLocation.setUserLocationType(userLocationType);
+		currentUserLocation = userLocationRepository.save(currentUserLocation);
+	}
+
+	@Override
+	public User updateUserLocations(Long userId, Long livingStateId, Long livingDistrictId, Long livingPcId, Long livingAcId, Long votingStateId, Long votingDistrictId, Long votingPcId, Long votingAcId)
+			throws AppException {
+		User user = userRepository.findOne(userId);
+		if(user == null){
+			throw new AppException("No such user found ["+userId+"]");
+		}
+		user.setNri(false);
+		//First Delete NRI Living Location If exists
+		deleteUserLocation(user, UserLocation.LIVING, "Country");
+		deleteUserLocation(user, UserLocation.LIVING, "CountryRegion");
+		deleteUserLocation(user, UserLocation.LIVING, "CountryRegionArea");
+
+		updateUserLocation(user, UserLocation.LIVING, "State", livingStateId);
+		updateUserLocation(user, UserLocation.LIVING, "District", livingDistrictId);
+		updateUserLocation(user, UserLocation.LIVING, "ParliamentConstituency", livingPcId);
+		updateUserLocation(user, UserLocation.LIVING, "AssemblyConstituency", livingAcId);
+
+		updateUserLocation(user, UserLocation.VOTING, "State", votingStateId);
+		updateUserLocation(user, UserLocation.VOTING, "District", votingDistrictId);
+		updateUserLocation(user, UserLocation.VOTING, "ParliamentConstituency", votingPcId);
+		updateUserLocation(user, UserLocation.VOTING, "AssemblyConstituency", votingAcId);
+		
 		return user;
 	}
 }

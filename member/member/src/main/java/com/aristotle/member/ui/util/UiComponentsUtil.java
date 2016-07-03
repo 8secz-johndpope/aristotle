@@ -62,35 +62,40 @@ public class UiComponentsUtil {
 		return buildComboBox(contextHelp, icon, caption, help, countryContainer, "name");
 	}
 	public <T> ComboBox buildComboBox(ContextHelp contextHelp, FontAwesome icon, String caption, String help, BeanItemContainer<T> countryContainer, String itemCaptionPropertyId){
-		ComboBox countryCombobox = new ComboBox();
+		ComboBox comboBox = new ComboBox();
 		if(icon != null){
-			countryCombobox.setIcon(icon);
+			comboBox.setIcon(icon);
 		}
-		countryCombobox.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
-		countryCombobox.setCaption(caption);
-		countryCombobox.setContainerDataSource(countryContainer);
-		countryCombobox.setItemCaptionMode(ItemCaptionMode.PROPERTY);
-		countryCombobox.setItemCaptionPropertyId(itemCaptionPropertyId);
-		countryCombobox.setVisible(false);
-		countryCombobox.setInvalidAllowed(false);
-		setId(countryCombobox, caption);
-		return countryCombobox;
+		comboBox.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
+		comboBox.setCaption(caption);
+		comboBox.setContainerDataSource(countryContainer);
+		comboBox.setItemCaptionMode(ItemCaptionMode.PROPERTY);
+		comboBox.setItemCaptionPropertyId(itemCaptionPropertyId);
+		comboBox.setVisible(true);
+		comboBox.setInvalidAllowed(false);
+		setId(comboBox, caption);
+		
+		contextHelp.addHelpForComponent(comboBox, help, Placement.RIGHT);
+
+		return comboBox;
 	}
 	public ComboBox buildComboBox(ContextHelp contextHelp, String caption, String help, String...items){
-		ComboBox countryCombobox = new ComboBox();
-		countryCombobox.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
-		countryCombobox.setCaption(caption);
+		ComboBox comboBox = new ComboBox();
+		comboBox.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
+		comboBox.setCaption(caption);
 		for(String oneItem : items){
-			countryCombobox.addItem(oneItem);
+			comboBox.addItem(oneItem);
 		}
-		setId(countryCombobox, caption);
-		countryCombobox.setInvalidAllowed(false);
+		setId(comboBox, caption);
+		comboBox.setInvalidAllowed(false);
+		contextHelp.addHelpForComponent(comboBox, help, Placement.RIGHT);
 
-		return countryCombobox;
+		return comboBox;
 	}
-	public PopupDateField buildPopupDateField(String caption){
+	public PopupDateField buildPopupDateField(ContextHelp contextHelp, String caption, String help){
 		PopupDateField popupDateField = new PopupDateField(caption);
 		popupDateField.setDateFormat("dd-MMM-yyyy");
+		contextHelp.addHelpForComponent(popupDateField, help, Placement.RIGHT);
 		return popupDateField;
 	}
 	public Label buildErrorlabel(){
@@ -127,7 +132,10 @@ public class UiComponentsUtil {
 		return button;
 	}
 	public void setLabelError(Label errorLabel, Exception ex){
-		errorLabel.setValue(ex.getMessage());
+		setLabelError(errorLabel, ex.getMessage());
+	}
+	public void setLabelError(Label errorLabel, String error){
+		errorLabel.setValue(error);
 		errorLabel.setVisible(true);
 	}
 	private void setId(Component component, String caption){

@@ -13,4 +13,5 @@ public interface UserLocationRepository extends JpaRepository<UserLocation, Long
 
     @Query("select userLocation from UserLocation userLocation where userLocation.userId=?1 and userLocation.userLocationType=?2 and userLocation.location.locationType.name=?3 order by dateCreated desc")
     UserLocation getUserLocationByUserIdAndLocationTypesAndUserLocationType(Long userId, String userLocationType, String locationType);
+    
 }

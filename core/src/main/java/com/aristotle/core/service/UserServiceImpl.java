@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
 import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.neo4j.cypher.internal.compiler.v2_1.functions.E;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,6 +44,8 @@ import com.aristotle.core.persistance.Phone.PhoneType;
 import com.aristotle.core.persistance.Sms;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.UserLocation;
+import static com.aristotle.core.persistance.UserLocation.LIVING;
+import static com.aristotle.core.persistance.UserLocation.VOTING;
 import com.aristotle.core.persistance.Volunteer;
 import com.aristotle.core.persistance.repo.EmailConfirmationRequestRepository;
 import com.aristotle.core.persistance.repo.EmailRepository;
@@ -75,7 +76,8 @@ import com.aristotle.core.service.dto.UserVolunteerBean;
 @Lazy
 public class UserServiceImpl implements UserService {
 
-    @Autowired
+    
+	@Autowired
     private UserLocationRepository userLocationRepository;
     @Autowired
     private LocationRepository locationRepository;
@@ -245,28 +247,28 @@ public class UserServiceImpl implements UserService {
         List<UserLocation> userLocations = userLocationRepository.getUserLocationByUserId(user.getId());
         for (UserLocation oneUserLocation : userLocations) {
             if (oneUserLocation.getLocation().getLocationType().getName().equalsIgnoreCase("State")) {
-                if (oneUserLocation.getUserLocationType().equalsIgnoreCase("Living")) {
+                if (oneUserLocation.getUserLocationType().equalsIgnoreCase(LIVING)) {
                     userSearchResult.setLivingState(oneUserLocation.getLocation());
                 } else {
                     userSearchResult.setVotingState(oneUserLocation.getLocation());
                 }
             }
             if (oneUserLocation.getLocation().getLocationType().getName().equalsIgnoreCase("District")) {
-                if (oneUserLocation.getUserLocationType().equalsIgnoreCase("Living")) {
+                if (oneUserLocation.getUserLocationType().equalsIgnoreCase(LIVING)) {
                     userSearchResult.setLivingDistrict(oneUserLocation.getLocation());
                 } else {
                     userSearchResult.setVotingDistrict(oneUserLocation.getLocation());
                 }
             }
             if (oneUserLocation.getLocation().getLocationType().getName().equalsIgnoreCase("AssemblyConstituency")) {
-                if (oneUserLocation.getUserLocationType().equalsIgnoreCase("Living")) {
+                if (oneUserLocation.getUserLocationType().equalsIgnoreCase(LIVING)) {
                     userSearchResult.setLivingAssemblyConstituency(oneUserLocation.getLocation());
                 } else {
                     userSearchResult.setVotingAssemblyConstituency(oneUserLocation.getLocation());
                 }
             }
             if (oneUserLocation.getLocation().getLocationType().getName().equalsIgnoreCase("ParliamentConstituency")) {
-                if (oneUserLocation.getUserLocationType().equalsIgnoreCase("Living")) {
+                if (oneUserLocation.getUserLocationType().equalsIgnoreCase(LIVING)) {
                     userSearchResult.setLivingParliamentConstituency(oneUserLocation.getLocation());
                 } else {
                     userSearchResult.setVotingParliamentConstituency(oneUserLocation.getLocation());
@@ -347,17 +349,17 @@ public class UserServiceImpl implements UserService {
         // Update Locations
         // Map<Long, String> locationMap = getLocationMap(userRegisterBean);
         // Currently its only create and no updates as user is only submititng details and no way to update details until login is provided
-        addLocationsTouser(dbUser, userRegisterBean.getAssemblyConstituencyLivingId(), "Living");
-        addLocationsTouser(dbUser, userRegisterBean.getAssemblyConstituencyVotingId(), "Voting");
-        addLocationsTouser(dbUser, userRegisterBean.getDistrictLivingId(), "Living");
-        addLocationsTouser(dbUser, userRegisterBean.getDistrictLivingId(), "Voting");
-        addLocationsTouser(dbUser, userRegisterBean.getNriCountryId(), "Living");
-        addLocationsTouser(dbUser, userRegisterBean.getNriCountryRegionAreaId(), "Living");
-        addLocationsTouser(dbUser, userRegisterBean.getNriCountryRegionId(), "Living");
-        addLocationsTouser(dbUser, userRegisterBean.getParliamentConstituencyLivingId(), "Living");
-        addLocationsTouser(dbUser, userRegisterBean.getParliamentConstituencyVotingId(), "Voting");
-        addLocationsTouser(dbUser, userRegisterBean.getStateLivingId(), "Living");
-        addLocationsTouser(dbUser, userRegisterBean.getStateVotingId(), "Voting");
+        addLocationsTouser(dbUser, userRegisterBean.getAssemblyConstituencyLivingId(), LIVING);
+        addLocationsTouser(dbUser, userRegisterBean.getAssemblyConstituencyVotingId(), VOTING);
+        addLocationsTouser(dbUser, userRegisterBean.getDistrictLivingId(), LIVING);
+        addLocationsTouser(dbUser, userRegisterBean.getDistrictLivingId(), VOTING);
+        addLocationsTouser(dbUser, userRegisterBean.getNriCountryId(), LIVING);
+        addLocationsTouser(dbUser, userRegisterBean.getNriCountryRegionAreaId(), LIVING);
+        addLocationsTouser(dbUser, userRegisterBean.getNriCountryRegionId(), LIVING);
+        addLocationsTouser(dbUser, userRegisterBean.getParliamentConstituencyLivingId(), LIVING);
+        addLocationsTouser(dbUser, userRegisterBean.getParliamentConstituencyVotingId(), VOTING);
+        addLocationsTouser(dbUser, userRegisterBean.getStateLivingId(), LIVING);
+        addLocationsTouser(dbUser, userRegisterBean.getStateVotingId(), VOTING);
 
         if (userRegisterBean.isVolunteer()) {
             Volunteer volunteer = new Volunteer();
@@ -403,17 +405,17 @@ public class UserServiceImpl implements UserService {
 
     private Map<Long, String> getLocationMap(UserRegisterBean userRegisterBean) {
         Map<Long, String> returnMap = new HashMap<Long, String>();
-        returnMap.put(userRegisterBean.getAssemblyConstituencyLivingId(), "Living");
-        returnMap.put(userRegisterBean.getAssemblyConstituencyVotingId(), "Voting");
-        returnMap.put(userRegisterBean.getDistrictLivingId(), "Living");
-        returnMap.put(userRegisterBean.getDistrictLivingId(), "Voting");
-        returnMap.put(userRegisterBean.getNriCountryId(), "Living");
-        returnMap.put(userRegisterBean.getNriCountryRegionAreaId(), "Living");
-        returnMap.put(userRegisterBean.getNriCountryRegionId(), "Living");
-        returnMap.put(userRegisterBean.getParliamentConstituencyLivingId(), "Living");
-        returnMap.put(userRegisterBean.getParliamentConstituencyVotingId(), "Voting");
-        returnMap.put(userRegisterBean.getStateLivingId(), "Living");
-        returnMap.put(userRegisterBean.getStateVotingId(), "Voting");
+        returnMap.put(userRegisterBean.getAssemblyConstituencyLivingId(), LIVING);
+        returnMap.put(userRegisterBean.getAssemblyConstituencyVotingId(), VOTING);
+        returnMap.put(userRegisterBean.getDistrictLivingId(), LIVING);
+        returnMap.put(userRegisterBean.getDistrictLivingId(), VOTING);
+        returnMap.put(userRegisterBean.getNriCountryId(), LIVING);
+        returnMap.put(userRegisterBean.getNriCountryRegionAreaId(), LIVING);
+        returnMap.put(userRegisterBean.getNriCountryRegionId(), LIVING);
+        returnMap.put(userRegisterBean.getParliamentConstituencyLivingId(), LIVING);
+        returnMap.put(userRegisterBean.getParliamentConstituencyVotingId(), VOTING);
+        returnMap.put(userRegisterBean.getStateLivingId(), LIVING);
+        returnMap.put(userRegisterBean.getStateVotingId(), VOTING);
         return returnMap;
     }
 
@@ -609,17 +611,17 @@ public class UserServiceImpl implements UserService {
     }
 
     private void updateLocations(User user, UserPersonalDetailBean userPersonalDetailBean) {
-        updateUserLocation(user, "Living", "AssemblyConstituency", userPersonalDetailBean.getEditUserAssemblyConstituencyLivingId());
-        updateUserLocation(user, "Voting", "AssemblyConstituency", userPersonalDetailBean.getEditUserAssemblyConstituencyVotingId());
-        updateUserLocation(user, "Living", "ParliamentConstituency", userPersonalDetailBean.getEditUserParliamentConstituencyLivingId());
-        updateUserLocation(user, "Voting", "ParliamentConstituency", userPersonalDetailBean.getEditUserParliamentConstituencyVotingId());
-        updateUserLocation(user, "Living", "District", userPersonalDetailBean.getEditUserDistrictLivingId());
-        updateUserLocation(user, "Voting", "District", userPersonalDetailBean.getEditUserDistrictVotingId());
-        updateUserLocation(user, "Living", "State", userPersonalDetailBean.getEditUserStateLivingId());
-        updateUserLocation(user, "Voting", "State", userPersonalDetailBean.getEditUserStateVotingId());
-        updateUserLocation(user, "Living", "Country", userPersonalDetailBean.getEditUserNriCountryId());
-        updateUserLocation(user, "Living", "CountryRegion", userPersonalDetailBean.getEditUserNriCountryRegionId());
-        updateUserLocation(user, "Living", "CountryRegionArea", userPersonalDetailBean.getEditUserNriCountryRegionAreaId());
+        updateUserLocation(user, LIVING, "AssemblyConstituency", userPersonalDetailBean.getEditUserAssemblyConstituencyLivingId());
+        updateUserLocation(user, VOTING, "AssemblyConstituency", userPersonalDetailBean.getEditUserAssemblyConstituencyVotingId());
+        updateUserLocation(user, LIVING, "ParliamentConstituency", userPersonalDetailBean.getEditUserParliamentConstituencyLivingId());
+        updateUserLocation(user, VOTING, "ParliamentConstituency", userPersonalDetailBean.getEditUserParliamentConstituencyVotingId());
+        updateUserLocation(user, LIVING, "District", userPersonalDetailBean.getEditUserDistrictLivingId());
+        updateUserLocation(user, VOTING, "District", userPersonalDetailBean.getEditUserDistrictVotingId());
+        updateUserLocation(user, LIVING, "State", userPersonalDetailBean.getEditUserStateLivingId());
+        updateUserLocation(user, VOTING, "State", userPersonalDetailBean.getEditUserStateVotingId());
+        updateUserLocation(user, LIVING, "Country", userPersonalDetailBean.getEditUserNriCountryId());
+        updateUserLocation(user, LIVING, "CountryRegion", userPersonalDetailBean.getEditUserNriCountryRegionId());
+        updateUserLocation(user, LIVING, "CountryRegionArea", userPersonalDetailBean.getEditUserNriCountryRegionAreaId());
     }
     
     private void updateUserLocation(User user, String userLocationType, String locationType, Long locationId) {
@@ -1118,8 +1120,8 @@ public class UserServiceImpl implements UserService {
         user.setIvrDistrict(district);
         if(!StringUtils.isBlank(state)){
         	Location stateLocation = locationRepository.getLocationByNameUpAndLocationTypeId(state.toUpperCase(), 4L);
-        	addUserLocation(user, stateLocation, "Living");
-        	addUserLocation(user, stateLocation, "Voting");
+        	addUserLocation(user, stateLocation, LIVING);
+        	addUserLocation(user, stateLocation, VOTING);
         }
         if (StringUtils.isBlank(user.getSmsMessage())) {
             user.setSmsMessage(msg);
@@ -1160,7 +1162,7 @@ public class UserServiceImpl implements UserService {
     		UserLocation votingState = null;
     		for(UserLocation oneUserLocation : userLocations){
     			if(oneUserLocation.getLocation().getLocationType().getName().equals("State") ){
-    				if(oneUserLocation.getUserLocationType().equals("Living")){
+    				if(oneUserLocation.getUserLocationType().equals(LIVING)){
     					livingState = oneUserLocation;
     				}else{
     					votingState = oneUserLocation;
@@ -1431,14 +1433,14 @@ public class UserServiceImpl implements UserService {
         }
         
 
-        addUserLocation(dbUser, state, "Living");
-        addUserLocation(dbUser, state, "Voting");
-        addUserLocation(dbUser, district, "Living");
-        addUserLocation(dbUser, district, "Voting");
-        addUserLocation(dbUser, ac, "Living");
-        addUserLocation(dbUser, ac, "Voting");
-        addUserLocation(dbUser, pc, "Living");
-        addUserLocation(dbUser, pc, "Voting");
+        addUserLocation(dbUser, state, LIVING);
+        addUserLocation(dbUser, state, VOTING);
+        addUserLocation(dbUser, district, LIVING);
+        addUserLocation(dbUser, district, VOTING);
+        addUserLocation(dbUser, ac, LIVING);
+        addUserLocation(dbUser, ac, VOTING);
+        addUserLocation(dbUser, pc, LIVING);
+        addUserLocation(dbUser, pc, VOTING);
         
         if (email != null) {
             email.setUser(dbUser);
@@ -1517,14 +1519,14 @@ public class UserServiceImpl implements UserService {
 		newUser.setCreationType(CreationType.Admin_Created);
 		newUser.setReferenceMobileNumber(member.getReferenceMobile());
 		newUser.setReferenceUser(existingPhone.getUser());
-		addUserLocation(newUser, member.getSelectedState(), "Living");
-        addUserLocation(newUser, member.getSelectedState(), "Voting");
-        addUserLocation(newUser, member.getSelectedDistrict(), "Living");
-        addUserLocation(newUser, member.getSelectedDistrict(), "Voting");
-        addUserLocation(newUser, member.getSelectedAc(), "Living");
-        addUserLocation(newUser, member.getSelectedAc(), "Voting");
-        addUserLocation(newUser, member.getSelectedPc(), "Living");
-        addUserLocation(newUser, member.getSelectedPc(), "Voting");
+		addUserLocation(newUser, member.getSelectedState(), LIVING);
+        addUserLocation(newUser, member.getSelectedState(), VOTING);
+        addUserLocation(newUser, member.getSelectedDistrict(), LIVING);
+        addUserLocation(newUser, member.getSelectedDistrict(), VOTING);
+        addUserLocation(newUser, member.getSelectedAc(), LIVING);
+        addUserLocation(newUser, member.getSelectedAc(), VOTING);
+        addUserLocation(newUser, member.getSelectedPc(), LIVING);
+        addUserLocation(newUser, member.getSelectedPc(), VOTING);
         if(member.getCreatedBy() != null){
         	newUser.setCreatorId(member.getCreatedBy().getId());
         	newUser.setModifierId(member.getCreatedBy().getId());

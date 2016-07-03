@@ -9,6 +9,7 @@
 $v-border: 1px solid (v-shade 0.7);
 //$v-border-radius: 4px;
 $v-textfield-border: 1px solid (v-shade 0.7);
+$v-textfield-border-radius: 3px;
 
 
 // Affects the color of some component elements, e.g Button, Panel title, etc
@@ -33,10 +34,56 @@ $v-textfield-border: 1px solid (v-shade 0.7);
 
 @mixin mytheme {
   @include valo;
-
+  
+  .round-corner{
+	border-radius: 10px;
+	}
+  .spacious{
+    margin: 3px;
+	padding-left: 10px;
+	padding-right: 20px;
+	padding-top: 20px;
+	padding-bottom: 30px;
+	}	
+	.v-contexthelp-bubble.right .popupContent .helpText{
+	-moz-box-shadow: 5px 5px 8px #999;
+    -webkit-box-shadow: 5px 5px 8px #999;
+    box-shadow: 5px 5px 8px #999;
+	}
+	
+	.v-contexthelp-bubble .popupContent .helpText{
+	background: #B9B9B9;
+    border: 1px solid #d0d0d0;
+    border-width: 1px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 5px;
+    padding: 8px;
+    text-shadow: #FFF 0px 0px 0px;
+    font-size: 13pt;
+	}
+	
+	.v-panel-caption {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0 12px;
+    line-height: 36px;
+    border-bottom: 1px solid #d5d5d5;
+    background-color: #227FB5;
+    background-image: -webkit-linear-gradient(top, #5AAAFA 0%, #0D333A 100%);
+    background-image: linear-gradient(to bottom,#5AAAFA 0%, #0D333A 100%);
+    color: #FFFFFF;
+    font-weight: 400;
+    font-size: 16px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+    border-radius: 	4px 4px 0 0;
+	}
+	
 }
 
 .v-label .error{
 	background: #ffffc0; /* Pale yellow */
 	color:#FF0000;
 }
+

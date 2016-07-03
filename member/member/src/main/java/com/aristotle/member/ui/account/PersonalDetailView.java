@@ -20,6 +20,8 @@ import com.aristotle.member.ui.util.NavigatorUtil;
 import com.aristotle.member.ui.util.UiComponentsUtil;
 import com.aristotle.member.ui.util.VaadinSessionUtil;
 import com.aristotle.member.ui.util.ViewHelper;
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
@@ -94,6 +96,14 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView{
 	private ComboBox votingDistrict;
 	private ComboBox votingAc;
 	private ComboBox votingPc;
+	
+	private VerticalLayout nriLocationpanel;
+	
+	private VerticalLayout livingLocationpanel;
+	
+	private VerticalLayout votingLocationpanel;
+	private Label votingSelectorLabel;
+
 
 	@Autowired
 	private MemberService memberService;
@@ -131,7 +141,6 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView{
 	}
 	
 	private void buildUiScreen(){
-		this.addStyleName(ValoTheme.LAYOUT_CARD);
 		personalDetailPanel = new Panel("Personal Details");
 		
 		contextHelp = new ContextHelp();
@@ -144,10 +153,10 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView{
 		
 		gender = uiComponentsUtil.buildComboBox(contextHelp, "Gender", "Select Gender", "Male"," Female", "Others");
 		
-		idCardType = uiComponentsUtil.buildComboBox(contextHelp, "ID card Type", "Select Gender", "Ration Card"," Driving License", "Voter Card", "Passport");
+		idCardType = uiComponentsUtil.buildComboBox(contextHelp, "ID card Type", "Select Your identity card type", "Ration Card"," Driving License", "Voter Card", "Passport");
 		idCardNumber = uiComponentsUtil.buildTextField(contextHelp, FontAwesome.CREDIT_CARD, "ID Card Number", "Please enter ID card number. i.e. if yopu have selected Passport in Card Type field, then enter Passport number");
 				
-		dateOfBirth = uiComponentsUtil.buildPopupDateField("Date of Birth");
+		dateOfBirth = uiComponentsUtil.buildPopupDateField(contextHelp, "Date of Birth", "Enter your Date of Birth");
 		
 		fatherName = uiComponentsUtil.buildTextField(contextHelp, FontAwesome.MALE, "Father Name", "Please enter your father name");
 		motherName = uiComponentsUtil.buildTextField(contextHelp, FontAwesome.FEMALE, "Mother Name", "Please enter your mother name");
@@ -173,18 +182,19 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView{
 		VerticalLayout imageUploadButtonLayout = new VerticalLayout(uploadField, uploadImageButton);
 		HorizontalLayout imageUploadLayout = new HorizontalLayout(userImage, imageUploadButtonLayout);
 
-		personalDetailContentPanel = new VerticalLayout(errorLabel, imageUploadLayout, userName, gender, dateOfBirth, idCardLayout, fatherName, motherName, saveButton);
-		personalDetailContentPanel.addStyleName("login-panel");
-		
-		//personalDetailContentPanel.setSizeFull();
-		//personalDetailPanel.setContent(personalDetailContentPanel);
+		personalDetailContentPanel = new VerticalLayout(imageUploadLayout, userName, gender, dateOfBirth, idCardLayout, fatherName, motherName);
+		//personalDetailContentPanel.addStyleName(ValoTheme.LAYOUT_CARD);
+		//personalDetailContentPanel.addStyleName("round-corner");
+		personalDetailContentPanel.addStyleName("spacious");
+
+		personalDetailContentPanel.setSizeFull();
+		personalDetailPanel.setContent(personalDetailContentPanel);
 		
 		
 		//Create Location Panel
 		nri = new CheckBox("NRI");
 		
-		Label nriCountrySelectorLabel = new Label("Currently Living - NRI location");
-		nriCountrySelectorLabel.setStyleName(ValoTheme.LABEL_H3);
+		
 		
 		try {
 			country = uiComponentsUtil.buildCountryComboBox(contextHelp, null, "Country", "Select Country where you live currently. Other then India");
@@ -192,36 +202,78 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView{
 			countryRegion = uiComponentsUtil.buildComboBox(contextHelp, "Country Region", "Select Country Region where you live currently", "England", "Wales");
 			countryRegionArea = uiComponentsUtil.buildComboBox(contextHelp, "Country Region Area", "Select Country Region Area where you live currently", "London");
 
-			livingState = uiComponentsUtil.buildStateComboBox(contextHelp, null, "Living State", "Select state where you live currently");
-			livingState = uiComponentsUtil.buildComboBox(contextHelp, "Living District", "Select District where you live currently");
-			livingPc = uiComponentsUtil.buildComboBox(contextHelp, "Living Parliament Constituency", "Select Parliament Constituency where you live currently");
-			livingAc = uiComponentsUtil.buildComboBox(contextHelp, "Living Assembly Constituency", "Select Assembly Constituency where you live currently");
+			livingState = uiComponentsUtil.buildStateComboBox(contextHelp, null, "Living State", "Select state");
+			livingDistrict = uiComponentsUtil.buildComboBox(contextHelp, "Living District", "Select District");
+			livingPc = uiComponentsUtil.buildComboBox(contextHelp, "Living Parliament Constituency", "Select Parliament Constituency");
+			livingAc = uiComponentsUtil.buildComboBox(contextHelp, "Living Assembly Constituency", "Select Assembly Constituency");
 
-			votingState = uiComponentsUtil.buildStateComboBox(contextHelp, null, "Voting State", "Select state where you Registered as Voter");
-			votingDistrict = uiComponentsUtil.buildComboBox(contextHelp, "Voting District", "Select District where you Registered as Voter");
-			votingPc = uiComponentsUtil.buildComboBox(contextHelp, "Voting Parliament Constituency", "Select Parliament Constituency where you Registered as Voter");
-			votingAc = uiComponentsUtil.buildComboBox(contextHelp, "Voting Assembly Constituency", "Select Assembly Constituency where you Registered as Voter");
+			votingState = uiComponentsUtil.buildStateComboBox(contextHelp, null, "Voting State", "Select State");
+			votingDistrict = uiComponentsUtil.buildComboBox(contextHelp, "Voting District", "Select District");
+			votingPc = uiComponentsUtil.buildComboBox(contextHelp, "Voting Parliament Constituency", "Select Parliament Constituency");
+			votingAc = uiComponentsUtil.buildComboBox(contextHelp, "Voting Assembly Constituency", "Select Assembly Constituency");
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		locationContentPanel = new VerticalLayout(nri, nriCountrySelectorLabel, country, countryRegion, countryRegionArea, livingState, livingState,livingPc, livingAc, votingState, votingDistrict, votingPc, votingAc );
+		
+		Label nriCountrySelectorLabel = new Label("Currently Living - NRI location");
+		nriCountrySelectorLabel.setStyleName(ValoTheme.LABEL_H3);
+		
+		nriLocationpanel = new VerticalLayout(nriCountrySelectorLabel, country, countryRegion, countryRegionArea);
+		nriLocationpanel.addStyleName(ValoTheme.LAYOUT_CARD);
+		nriLocationpanel.addStyleName("round-corner");
+		nriLocationpanel.addStyleName("spacious");
+		
+		
+		Label livingSelectorLabel = new Label("Currently Living Location(India)");
+		livingSelectorLabel.setStyleName(ValoTheme.LABEL_H3);
+		livingLocationpanel = new VerticalLayout(livingSelectorLabel, livingState, livingDistrict,livingPc, livingAc);
+		livingLocationpanel.addStyleName(ValoTheme.LAYOUT_CARD);
+		livingLocationpanel.addStyleName("round-corner");
+		livingLocationpanel.addStyleName("spacious");
+		
+		votingSelectorLabel = new Label("Location Where You Registerd as Voter(India)");
+		votingSelectorLabel.setStyleName(ValoTheme.LABEL_H3);
+		votingLocationpanel = new VerticalLayout(votingSelectorLabel, votingState, votingDistrict, votingPc, votingAc);
+		votingLocationpanel.addStyleName(ValoTheme.LAYOUT_CARD);
+		votingLocationpanel.addStyleName("round-corner");
+		votingLocationpanel.addStyleName("spacious");
+		
+		locationContentPanel = new VerticalLayout(nri, nriLocationpanel, livingLocationpanel , votingLocationpanel );
+		//locationContentPanel.addStyleName(ValoTheme.LAYOUT_CARD);
+		//locationContentPanel.addStyleName("round-corner");
+		locationContentPanel.addStyleName("spacious");
+		locationContentPanel.setWidth("400px");
 
-		//locationPanel = new Panel("Location");
-		//locationPanel.setContent(locationContentPanel);
-		HorizontalLayout horizontalLayout = new HorizontalLayout(personalDetailContentPanel, locationContentPanel);
-		personalDetailPanel.setContent(horizontalLayout);
+		locationPanel = new Panel("Location");
+		locationPanel.setContent(locationContentPanel);
+		
+		
+		HorizontalLayout horizontalLayout = new HorizontalLayout(personalDetailPanel, locationPanel);
+		
 		this.addComponent(horizontalLayout);
+		this.addComponent(successLabel);
+		this.addComponent(errorLabel);
+		this.addComponent(saveButton);
 	}
-	private void loadCountries() throws AppException{
-		List<Location> countries = locationService.getAllCountries();
-		for(Location oneLocation : countries){
-			oneLocation.setName(oneLocation.getName() +"("+oneLocation.getIsdCode()+")");
-		}
-		country = uiComponentsUtil.buildCountryComboBox(contextHelp, FontAwesome.FLAG, "Country Code", "Select your country where you live");
+	
+	private void toggleLocations(boolean nri){
+		if(nri){
+			nriLocationpanel.setVisible(true);
+			votingSelectorLabel.setValue("Location Where you Lived in India/Registered as Voter/Home Location");
+			
+			livingLocationpanel.setVisible(false);
+		}else{
+			nriLocationpanel.setVisible(false);
+			
+			votingSelectorLabel.setValue("Location Where You Registerd as Voter(India)");
+			
+			livingLocationpanel.setVisible(true);
 
+		}
+		
 	}
 	private void loadUserData() throws AppException{
 		
@@ -229,6 +281,7 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView{
 
 		User dbUser = memberService.getUserById(loggedInUser.getId());
 		loadUserPersonalData(dbUser);
+		toggleLocations(dbUser.isNri());
 	}
 	private void loadUserPersonalData(User dbUser){
 		userName.setValue(dbUser.getName());
@@ -241,6 +294,7 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView{
 		if(dbUser.getProfilePic() != null){
 			userImage.setSource(new ExternalResource(dbUser.getProfilePic()));
 		}
+		nri.setValue(dbUser.isNri());
 	}
 	private void loadUserLocationData(User dbUser){
 		userName.setValue(dbUser.getName());
@@ -277,13 +331,41 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView{
 			public void buttonClick(ClickEvent event) {
 				successLabel.setVisible(false);
 				errorLabel.setVisible(false);
-				User loggedInUser= vaadinSessionUtil.getLoggedInUserFromSession();
-				loggedInUser = memberService.updateUserPersonalDetails(loggedInUser.getId(), userName.getValue(), String.valueOf(gender.getValue()), dateOfBirth.getValue(), String.valueOf(idCardType.getValue()), idCardNumber.getValue(), fatherName.getValue(), motherName.getValue());
-				vaadinSessionUtil.setLoggedInUserinSession(loggedInUser);
-				successLabel.setVisible(true);
-				successLabel.setValue("personal Details updated successfully");
+				try{
+					User loggedInUser= vaadinSessionUtil.getLoggedInUserFromSession();
+					loggedInUser = memberService.updateUserPersonalDetails(loggedInUser.getId(), userName.getValue(), String.valueOf(gender.getValue()), dateOfBirth.getValue(), String.valueOf(idCardType.getValue()), idCardNumber.getValue(), fatherName.getValue(), motherName.getValue());
+					if(nri.getValue()){
+						memberService.updateNriUserLocations(loggedInUser.getId(), getLocationId(country), getLocationId(countryRegion), getLocationId(countryRegionArea), getLocationId(votingState), getLocationId(votingDistrict), getLocationId(votingPc), getLocationId(votingAc));
+					}else{
+						memberService.updateUserLocations(loggedInUser.getId(), getLocationId(livingState), getLocationId(livingDistrict), getLocationId(livingPc), getLocationId(livingAc), getLocationId(votingState), getLocationId(votingDistrict), getLocationId(votingPc), getLocationId(votingAc));
+					}
+					vaadinSessionUtil.setLoggedInUserinSession(loggedInUser);
+					successLabel.setVisible(true);
+					successLabel.setValue("personal Details updated successfully");
+				}catch(AppException ex){
+					ex.printStackTrace();
+					uiComponentsUtil.setLabelError(errorLabel, ex);
+				}catch(Exception ex){
+					ex.printStackTrace();
+					uiComponentsUtil.setLabelError(errorLabel, "Internal Error occured. Please contact IT Team.");
+				}
 			}
 		});
+		nri.addValueChangeListener(new Property.ValueChangeListener() {
+			
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				toggleLocations(nri.getValue());
+			}
+		});
+	}
+	private Long getLocationId(ComboBox locationComboBox){
+		System.out.println(locationComboBox.getValue());
+		Location location = (Location)locationComboBox.getValue();
+		if(location == null){
+			return null;
+		}
+		return location.getId();
 		
 	}
 	private void showUploadedImage() {

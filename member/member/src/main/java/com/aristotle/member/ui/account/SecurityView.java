@@ -21,6 +21,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
@@ -74,9 +75,6 @@ public class SecurityView extends VerticalLayout implements NavigableView{
 	}
 	
 	private void buildUiScreen(){
-		this.addStyleName(ValoTheme.LAYOUT_CARD);
-		MarginInfo marginInfo = new MarginInfo(true);
-		this.setMargin(marginInfo);
 		
 		contextHelp = new ContextHelp();
 		contextHelp.extend(UI.getCurrent());
@@ -93,11 +91,13 @@ public class SecurityView extends VerticalLayout implements NavigableView{
 
 		
 		content = new VerticalLayout(errorLabel, successLabel, currentPassword, newPassword, newConfirmPassword, changePasswordButton);
-		content.addStyleName("login-panel");
-		
 		content.setSizeFull();
+		Panel securityPanel = new Panel("Security Details");
+		securityPanel.setContent(content);
+		
+		
 
-		this.addComponent(content);
+		this.addComponent(securityPanel);
 	}
 	
 	private void addListeners(){

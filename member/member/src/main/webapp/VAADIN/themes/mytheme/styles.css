@@ -3387,7 +3387,7 @@ div.v-layout.v-horizontal.v-widget {
 	position: relative;
 	width: 185px;
 	height: 37px;
-	border-radius: 0;
+	border-radius: 3px;
 	white-space: nowrap;
 }
 
@@ -3410,8 +3410,8 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: 400;
 	line-height: normal;
 	height: 37px;
-	border-radius: 0;
-	padding: 4px 7px;
+	border-radius: 3px;
+	padding: 4px 8px;
 	border: 1px solid #c5c5c5;
 	background: white;
 	color: #474747;
@@ -3459,7 +3459,7 @@ div.v-layout.v-horizontal.v-widget {
 
 .mytheme .v-filterselect img.v-icon {
 	max-height: 37px;
-	margin-left: 7px;
+	margin-left: 8px;
 }
 
 .mytheme .v-filterselect span.v-icon {
@@ -3757,6 +3757,7 @@ div.v-layout.v-horizontal.v-widget {
 .mytheme .v-filterselect-no-input {
 	cursor: pointer;
 	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+	border-radius: 0;
 }
 
 .mytheme .v-filterselect-no-input [class*="input"] {
@@ -5479,8 +5480,8 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: 400;
 	line-height: normal;
 	height: 37px;
-	border-radius: 0;
-	padding: 4px 7px;
+	border-radius: 3px;
+	padding: 4px 8px;
 	border: 1px solid #c5c5c5;
 	background: white;
 	color: #474747;
@@ -5573,8 +5574,8 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: 400;
 	line-height: normal;
 	height: 28px;
-	border-radius: 0;
-	padding: 3px 5px;
+	border-radius: 3px;
+	padding: 3px 6px;
 	
 	
 	-webkit-transition: box-shadow 180ms, border 180ms;
@@ -5605,8 +5606,8 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: 400;
 	line-height: normal;
 	height: 31px;
-	border-radius: 0;
-	padding: 3px 6px;
+	border-radius: 3px;
+	padding: 3px 7px;
 	
 	
 	-webkit-transition: box-shadow 180ms, border 180ms;
@@ -5640,8 +5641,8 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: 400;
 	line-height: normal;
 	height: 44px;
-	border-radius: 0;
-	padding: 5px 8px;
+	border-radius: 3px;
+	padding: 5px 9px;
 	
 	
 	-webkit-transition: box-shadow 180ms, border 180ms;
@@ -5672,8 +5673,8 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: 400;
 	line-height: normal;
 	height: 59px;
-	border-radius: 0;
-	padding: 7px 10px;
+	border-radius: 3px;
+	padding: 7px 11px;
 	
 	
 	-webkit-transition: box-shadow 180ms, border 180ms;
@@ -5940,7 +5941,7 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: 400;
 	line-height: normal;
 	height: 37px;
-	border-radius: 0;
+	border-radius: 3px;
 	padding: 6px;
 	border: 1px solid #c5c5c5;
 	background: white;
@@ -6043,7 +6044,7 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: 400;
 	line-height: normal;
 	height: 28px;
-	border-radius: 0;
+	border-radius: 3px;
 	padding: 6px;
 	
 	
@@ -6085,7 +6086,7 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: 400;
 	line-height: normal;
 	height: 31px;
-	border-radius: 0;
+	border-radius: 3px;
 	padding: 6px;
 	
 	
@@ -6127,7 +6128,7 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: 400;
 	line-height: normal;
 	height: 44px;
-	border-radius: 0;
+	border-radius: 3px;
 	padding: 6px;
 	
 	
@@ -6169,7 +6170,7 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: 400;
 	line-height: normal;
 	height: 59px;
-	border-radius: 0;
+	border-radius: 3px;
 	padding: 6px;
 	
 	
@@ -6207,7 +6208,7 @@ div.v-layout.v-horizontal.v-widget {
 	position: relative;
 	width: 185px;
 	height: 37px;
-	border-radius: 0;
+	border-radius: 3px;
 }
 
 .mytheme .v-datefield [class*="textfield"] {
@@ -6229,8 +6230,8 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: 400;
 	line-height: normal;
 	height: 37px;
-	border-radius: 0;
-	padding: 4px 7px;
+	border-radius: 3px;
+	padding: 4px 8px;
 	border: 1px solid #c5c5c5;
 	background: white;
 	color: #474747;
@@ -6297,6 +6298,7 @@ div.v-layout.v-horizontal.v-widget {
 	border: none;
 	border-right: 1px solid #e4e4e4;
 	color: #a3a3a3;
+	border-radius: 2px 0 0 2px;
 }
 
 .mytheme .v-datefield [class*="button"]:hover {
@@ -6841,7 +6843,7 @@ div.v-layout.v-horizontal.v-widget {
 
 .mytheme .v-datefield-tiny {
 	height: 28px;
-	border-radius: 0;
+	border-radius: 3px;
 	font-size: 12px;
 }
 
@@ -6864,8 +6866,8 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: 400;
 	line-height: normal;
 	height: 28px;
-	border-radius: 0;
-	padding: 3px 5px;
+	border-radius: 3px;
+	padding: 3px 6px;
 	
 	
 	
@@ -6899,6 +6901,7 @@ div.v-layout.v-horizontal.v-widget {
 	font: inherit;
 	outline: none;
 	margin: 0;
+	border-radius: 3px 0 0 3px;
 }
 
 .mytheme .v-datefield-tiny [class*="button"]:before {
@@ -6956,7 +6959,7 @@ div.v-layout.v-horizontal.v-widget {
 
 .mytheme .v-datefield-compact, .mytheme .v-datefield-small {
 	height: 31px;
-	border-radius: 0;
+	border-radius: 3px;
 }
 
 .mytheme .v-datefield-compact [class*="textfield"], .mytheme .v-datefield-small [class*="textfield"] {
@@ -6978,8 +6981,8 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: 400;
 	line-height: normal;
 	height: 31px;
-	border-radius: 0;
-	padding: 3px 6px;
+	border-radius: 3px;
+	padding: 3px 7px;
 	
 	
 	
@@ -7013,6 +7016,7 @@ div.v-layout.v-horizontal.v-widget {
 	font: inherit;
 	outline: none;
 	margin: 0;
+	border-radius: 3px 0 0 3px;
 }
 
 .mytheme .v-datefield-compact [class*="button"]:before, .mytheme .v-datefield-small [class*="button"]:before {
@@ -7074,7 +7078,7 @@ div.v-layout.v-horizontal.v-widget {
 
 .mytheme .v-datefield-large {
 	height: 44px;
-	border-radius: 0;
+	border-radius: 3px;
 	font-size: 20px;
 }
 
@@ -7097,8 +7101,8 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: 400;
 	line-height: normal;
 	height: 44px;
-	border-radius: 0;
-	padding: 5px 8px;
+	border-radius: 3px;
+	padding: 5px 9px;
 	
 	
 	
@@ -7132,6 +7136,7 @@ div.v-layout.v-horizontal.v-widget {
 	font: inherit;
 	outline: none;
 	margin: 0;
+	border-radius: 3px 0 0 3px;
 }
 
 .mytheme .v-datefield-large [class*="button"]:before {
@@ -7189,7 +7194,7 @@ div.v-layout.v-horizontal.v-widget {
 
 .mytheme .v-datefield-huge {
 	height: 59px;
-	border-radius: 0;
+	border-radius: 3px;
 	font-size: 26px;
 }
 
@@ -7212,8 +7217,8 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: 400;
 	line-height: normal;
 	height: 59px;
-	border-radius: 0;
-	padding: 7px 10px;
+	border-radius: 3px;
+	padding: 7px 11px;
 	
 	
 	
@@ -7247,6 +7252,7 @@ div.v-layout.v-horizontal.v-widget {
 	font: inherit;
 	outline: none;
 	margin: 0;
+	border-radius: 3px 0 0 3px;
 }
 
 .mytheme .v-datefield-huge [class*="button"]:before {
@@ -10923,8 +10929,8 @@ div.v-layout.v-horizontal.v-widget {
 	color: #474747;
 	border-radius: 0;
 	border: 1px solid #d5d5d5;
-	padding-left:20px;
-	padding-right:20px;	
+	
+	
 	overflow: visible !important;
 }
 
@@ -10935,7 +10941,7 @@ div.v-layout.v-horizontal.v-widget {
 	padding: 0 12px;
 	line-height: 36px;
 	border-bottom: 1px solid #d5d5d5;
-	background-color: #aaaafa;
+	background-color: #fafafa;
 	background-image: -webkit-linear-gradient(top, #fafafa 0%, #fafafa 100%);
 	background-image: linear-gradient(to bottom,#fafafa 0%, #fafafa 100%);
 	color: #464646;
@@ -12069,7 +12075,7 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: 400;
 	line-height: normal;
 	height: 37px;
-	border-radius: 0;
+	border-radius: 3px;
 	padding: 0;
 	border: 1px solid #c5c5c5;
 	background: white;
@@ -13199,4 +13205,51 @@ div.v-layout.v-horizontal.v-widget {
 	display: inline-block;
 	width: 19px;
 	overflow: hidden;
+}
+
+.mytheme .round-corner {
+	border-radius: 10px;
+}
+
+.mytheme .spacious {
+	margin: 3px;
+	padding-left: 10px;
+	padding-right: 20px;
+	padding-top: 20px;
+	padding-bottom: 30px;
+}
+
+.mytheme .v-contexthelp-bubble.right .popupContent .helpText {
+	-moz-box-shadow: 5px 5px 8px #999;
+	-webkit-box-shadow: 5px 5px 8px #999;
+	box-shadow: 5px 5px 8px #999;
+}
+
+.mytheme .v-contexthelp-bubble .popupContent .helpText {
+	background: #B9B9B9;
+	border: 1px solid #d0d0d0;
+	border-width: 1px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 5px;
+	padding: 8px;
+	text-shadow: #FFF 0px 0px 0px;
+	font-size: 13pt;
+}
+
+.mytheme .v-panel-caption {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 0 12px;
+	line-height: 36px;
+	border-bottom: 1px solid #d5d5d5;
+	background-color: #227FB5;
+	background-image: -webkit-linear-gradient(top, #5AAAFA 0%, #0D333A 100%);
+	background-image: linear, to bottom, #5AAAFA 0%, #0D333A 100%;
+	color: #FFFFFF;
+	font-weight: 400;
+	font-size: 16px;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+	border-radius: 4px 4px 0 0;
 }

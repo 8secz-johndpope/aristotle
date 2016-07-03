@@ -11,7 +11,8 @@ import javax.persistence.Table;
 @Table(name = "user_locations")
 public class UserLocation extends BaseEntity {
 
-	
+	public static final String VOTING = "Voting";
+	public static final String LIVING = "Living";
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="user_id")
     private User user;
