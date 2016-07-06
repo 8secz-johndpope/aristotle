@@ -1,10 +1,12 @@
 package com.aristotle.member.service;
 
 import java.util.Date;
+import java.util.List;
 
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Email;
 import com.aristotle.core.persistance.User;
+import com.aristotle.core.persistance.UserLocation;
 
 public interface MemberService {
 	User login(String userName, String password) throws AppException;
@@ -25,5 +27,7 @@ public interface MemberService {
 	User updateNriUserLocations(Long userId, Long countryId, Long countryRegionId,Long countryRegionAreadId, Long stateId, Long districtId, Long pcId, Long acId) throws AppException;
 
 	User updateUserLocations(Long userId, Long livingStateId, Long livingDistrictId,Long livingPcId, Long livingAcId, Long votingStateId, Long votingDistrictId, Long votingPcId, Long votingAcId) throws AppException;
+
+	List<UserLocation> getUserLocations(Long userId) throws AppException;
 
 }

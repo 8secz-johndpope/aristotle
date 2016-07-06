@@ -3,6 +3,7 @@ package com.aristotle.member.ui.account;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.vaadin.jonatan.contexthelp.ContextHelp;
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.User;
+import com.aristotle.core.persistance.UserLocation;
 import com.aristotle.core.service.LocationService;
 import com.aristotle.member.service.MemberService;
 import com.aristotle.member.ui.NavigableView;
@@ -193,7 +195,7 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView{
 		
 		//Create Location Panel
 		nri = new CheckBox("NRI");
-		
+		nri.setId("nri");
 		
 		
 		try {
@@ -284,29 +286,49 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView{
 		toggleLocations(dbUser.isNri());
 	}
 	private void loadUserPersonalData(User dbUser){
-		userName.setValue(dbUser.getName());
+		uiComponentsUtil.setTextFieldValue(userName, dbUser.getName());
 		gender.setValue(dbUser.getGender());
 		idCardType.setValue(dbUser.getIdentityType());
-		idCardNumber.setValue(dbUser.getIdentityNumber());
+		uiComponentsUtil.setTextFieldValue(idCardNumber, dbUser.getIdentityNumber());
 		dateOfBirth.setValue(dbUser.getDateOfBirth());
-		fatherName.setValue(dbUser.getFatherName());
-		motherName.setValue(dbUser.getMotherName());
+		if(dbUser.getFatherName() == null){
+			
+		}
+		uiComponentsUtil.setTextFieldValue(fatherName, dbUser.getFatherName());
+		uiComponentsUtil.setTextFieldValue(motherName, dbUser.getMotherName());
 		if(dbUser.getProfilePic() != null){
 			userImage.setSource(new ExternalResource(dbUser.getProfilePic()));
 		}
 		nri.setValue(dbUser.isNri());
 	}
+	
 	private void loadUserLocationData(User dbUser){
-		userName.setValue(dbUser.getName());
-		gender.setValue(dbUser.getGender());
-		idCardType.setValue(dbUser.getIdentityType());
-		idCardNumber.setValue(dbUser.getIdentityNumber());
-		dateOfBirth.setValue(dbUser.getDateOfBirth());
-		fatherName.setValue(dbUser.getFatherName());
-		motherName.setValue(dbUser.getMotherName());
-		if(dbUser.getProfilePic() != null){
-			userImage.setSource(new ExternalResource(dbUser.getProfilePic()));
+		try {
+			List<UserLocation> userLocations = memberService.getUserLocations(dbUser.getId());
+			if(dbUser.isNri()){
+				loadUserLocation(country, userLocations, "Living", "Country");
+				loadUserLocation(countryRegion, userLocations, "Living", "CountryRegion");
+				loadUserLocation(countryRegionArea, userLocations, "Living", "CountryRegionArea");
+				loadUserLocation(votingState, userLocations, "Voting", "State");
+				loadUserLocation(votingDistrict, userLocations, "Voting", "District");
+				loadUserLocation(votingPc, userLocations, "Voting", "ParliamentConstituency");
+				loadUserLocation(votingAc, userLocations, "Voting", "AssemblyConstituency");
+			}else{
+				loadUserLocation(livingState, userLocations, "Living", "State");
+				loadUserLocation(livingDistrict, userLocations, "Living", "District");
+				loadUserLocation(livingPc, userLocations, "Living", "ParliamentConstituency");
+				loadUserLocation(livingAc, userLocations, "Living", "AssemblyConstituency");
+				loadUserLocation(votingState, userLocations, "Voting", "State");
+				loadUserLocation(votingDistrict, userLocations, "Voting", "District");
+				loadUserLocation(votingPc, userLocations, "Voting", "ParliamentConstituency");
+				loadUserLocation(votingAc, userLocations, "Voting", "AssemblyConstituency");
+			}
+		} catch (AppException e) {
+			e.printStackTrace();
 		}
+	}
+	private void loadUserLocation(ComboBox comboBox, List<UserLocation> userLocations, String userLocationType, String locationType){
+		//TODO implement it
 	}
 	private void addListeners(){
 		uploadImageButton.addClickListener(new ClickListener() {
@@ -358,7 +380,105 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView{
 				toggleLocations(nri.getValue());
 			}
 		});
+		livingState.addValueChangeListener(new Property.ValueChangeListener() {
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				try{
+					onStateChange(livingState, livingDistrict, livingPc, livingAc);
+				}catch(Exception ex){
+					ex.printStackTrace();
+				}
+			}
+		});
+		livingDistrict.addValueChangeListener(new Property.ValueChangeListener() {
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				try{
+					onDistrictChange(livingDistrict, livingAc);
+				}catch(Exception ex){
+					ex.printStackTrace();
+				}
+			}
+		});
+		votingState.addValueChangeListener(new Property.ValueChangeListener() {
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				try{
+					onStateChange(votingState, votingDistrict, votingPc, votingAc);
+				}catch(Exception ex){
+					ex.printStackTrace();
+				}
+			}
+		});
+		votingDistrict.addValueChangeListener(new Property.ValueChangeListener() {
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				try{
+					onDistrictChange(votingDistrict, votingAc);
+				}catch(Exception ex){
+					ex.printStackTrace();
+				}
+			}
+		});
+		country.addValueChangeListener(new Property.ValueChangeListener() {
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				try{
+					Location selectedCountry = (Location)country.getValue();
+					if(selectedCountry != null){
+						List<Location> countryRegions = locationService.getAllChildLocations(selectedCountry.getId());
+						uiComponentsUtil.loadLocationsToComboBox(countryRegion, countryRegions);
+						uiComponentsUtil.loadLocationsToComboBox(countryRegionArea, Collections.emptyList());
+					}else{
+						uiComponentsUtil.loadLocationsToComboBox(countryRegion, Collections.emptyList());
+						uiComponentsUtil.loadLocationsToComboBox(countryRegionArea, Collections.emptyList());
+					}
+				}catch(Exception ex){
+					ex.printStackTrace();
+				}
+			}
+		});
+		countryRegion.addValueChangeListener(new Property.ValueChangeListener() {
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				try{
+					Location selectedCountryRegion = (Location)countryRegion.getValue();
+					if(selectedCountryRegion != null){
+						List<Location> countryRegionAreas = locationService.getAllChildLocations(selectedCountryRegion.getId());
+						uiComponentsUtil.loadLocationsToComboBox(countryRegionArea, countryRegionAreas);
+					}else{
+						uiComponentsUtil.loadLocationsToComboBox(countryRegionArea, Collections.emptyList());
+					}
+				}catch(Exception ex){
+					ex.printStackTrace();
+				}
+			}
+		});
 	}
+	private void onStateChange(ComboBox stateComboBox, ComboBox districtComboBox, ComboBox pcComboBox, ComboBox acComboBox) throws AppException{
+		Location selectedState = (Location)stateComboBox.getValue();
+		if(selectedState != null){
+			List<Location> districts = locationService.getAllDistrictOfState(selectedState.getId());
+			List<Location> pcs = locationService.getAllParliamentConstituenciesOfState(selectedState.getId());	
+			uiComponentsUtil.loadLocationsToComboBox(districtComboBox, districts);
+			uiComponentsUtil.loadLocationsToComboBox(pcComboBox, pcs);
+			uiComponentsUtil.loadLocationsToComboBox(acComboBox, Collections.emptyList());
+		}else{
+			uiComponentsUtil.loadLocationsToComboBox(districtComboBox, Collections.emptyList());
+			uiComponentsUtil.loadLocationsToComboBox(pcComboBox, Collections.emptyList());
+			uiComponentsUtil.loadLocationsToComboBox(acComboBox, Collections.emptyList());
+		}
+	}
+	private void onDistrictChange(ComboBox districtComboBox, ComboBox acComboBox) throws AppException{
+		Location selectedDistrict = (Location)districtComboBox.getValue();
+		if(selectedDistrict != null){
+			List<Location> acs = locationService.getAllAssemblyConstituenciesOfDistrict(selectedDistrict.getId());
+			uiComponentsUtil.loadLocationsToComboBox(acComboBox, acs);
+		}else{
+			uiComponentsUtil.loadLocationsToComboBox(acComboBox, Collections.emptyList());
+		}
+	}
+	
 	private Long getLocationId(ComboBox locationComboBox){
 		System.out.println(locationComboBox.getValue());
 		Location location = (Location)locationComboBox.getValue();

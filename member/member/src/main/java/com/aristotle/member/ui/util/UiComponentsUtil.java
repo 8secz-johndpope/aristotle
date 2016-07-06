@@ -44,7 +44,7 @@ public class UiComponentsUtil {
 		contextHelp.addHelpForComponent(password, help, Placement.RIGHT);
 		return password;
 	}
-	public ComboBox buildCountryComboBox(ContextHelp contextHelp, FontAwesome icon, String caption, String help) throws AppException{
+	public ComboBox buildCountryComboBoxWithIsdCode(ContextHelp contextHelp, FontAwesome icon, String caption, String help) throws AppException{
 		List<Location> countries = locationService.getAllCountries();
 		for(Location oneLocation : countries){
 			oneLocation.setName(oneLocation.getName() +"("+oneLocation.getIsdCode()+")");
@@ -54,12 +54,27 @@ public class UiComponentsUtil {
 		
 		return buildComboBox(contextHelp, icon, caption, help, countryContainer, "name");
 	}
+	public ComboBox buildCountryComboBox(ContextHelp contextHelp, FontAwesome icon, String caption, String help) throws AppException{
+		List<Location> countries = locationService.getAllCountries();
+		BeanItemContainer<Location> countryContainer = new BeanItemContainer<Location>(Location.class);
+		countryContainer.addAll(countries);
+		
+		return buildComboBox(contextHelp, icon, caption, help, countryContainer, "name");
+	}
+	
 	public ComboBox buildStateComboBox(ContextHelp contextHelp, FontAwesome icon, String caption, String help) throws AppException{
 		List<Location> states = locationService.getAllStates();
 		BeanItemContainer<Location> countryContainer = new BeanItemContainer<Location>(Location.class);
 		countryContainer.addAll(states);
 		
 		return buildComboBox(contextHelp, icon, caption, help, countryContainer, "name");
+	}
+	public void loadLocationsToComboBox(ComboBox comboBox, List<Location> locations) throws AppException{
+		BeanItemContainer<Location> locationContainer = new BeanItemContainer<Location>(Location.class);
+		locationContainer.addAll(locations);
+		comboBox.setContainerDataSource(locationContainer);
+		comboBox.setItemCaptionMode(ItemCaptionMode.PROPERTY);
+		comboBox.setItemCaptionPropertyId("name");
 	}
 	public <T> ComboBox buildComboBox(ContextHelp contextHelp, FontAwesome icon, String caption, String help, BeanItemContainer<T> countryContainer, String itemCaptionPropertyId){
 		ComboBox comboBox = new ComboBox();
@@ -96,6 +111,7 @@ public class UiComponentsUtil {
 		PopupDateField popupDateField = new PopupDateField(caption);
 		popupDateField.setDateFormat("dd-MMM-yyyy");
 		contextHelp.addHelpForComponent(popupDateField, help, Placement.RIGHT);
+		setId(popupDateField, caption);
 		return popupDateField;
 	}
 	public Label buildErrorlabel(){
@@ -137,6 +153,13 @@ public class UiComponentsUtil {
 	public void setLabelError(Label errorLabel, String error){
 		errorLabel.setValue(error);
 		errorLabel.setVisible(true);
+	}
+	public void setTextFieldValue(TextField textField, String value){
+		if(value == null){
+			textField.setValue("");
+		}else{
+			textField.setValue(value);
+		}
 	}
 	private void setId(Component component, String caption){
 		String id  = caption.toLowerCase();

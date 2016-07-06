@@ -112,6 +112,10 @@ public class LocationServiceImpl implements LocationService {
 		LocationType locationType = locationTypeRepository.findOne(location.getLocationType().getId());
 		location.setLocationType(locationType);
 		location.setNameUp(location.getName().toUpperCase());
+		if(location.getParentLocation() != null){
+			Location parentLocation = locationRepository.findOne(location.getParentLocation().getId());
+			location.setParentLocation(parentLocation);
+		}
 		return locationRepository.save(location);
 	}
 

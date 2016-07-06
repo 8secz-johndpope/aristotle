@@ -130,7 +130,7 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 			for(Location oneLocation : countries){
 				oneLocation.setName(oneLocation.getName() +"("+oneLocation.getIsdCode()+")");
 			}
-			countryCombobox = uiComponentsUtil.buildCountryComboBox(contextHelp, FontAwesome.FLAG, "Country Code", "Select your country where you live");
+			countryCombobox = uiComponentsUtil.buildCountryComboBoxWithIsdCode(contextHelp, FontAwesome.FLAG, "Country Code", "Select your country where you live");
 			countryCombobox.setVisible(false);
 			
 			phoneNumber = uiComponentsUtil.buildTextField(contextHelp, FontAwesome.MOBILE, "Mobile Number", "Enter your mobile number <b>WITHOUT</b> country code<br> i.e. 9876543210");

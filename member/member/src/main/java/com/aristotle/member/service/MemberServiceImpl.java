@@ -100,6 +100,8 @@ public class MemberServiceImpl implements MemberService{
         user.setNri(nri);
         user = userRepository.save(user);
         
+        addNriCountry(user, countryCode);
+        
         loginAccount = new LoginAccount();
         loginAccount.setEmail(emailId.toLowerCase());
         loginAccount.setPhone(mobileNumber);
@@ -115,6 +117,18 @@ public class MemberServiceImpl implements MemberService{
         	email.setPhone(phone);
         }
 		return user;
+	}
+	
+	private void addNriCountry(User user, String countryCode){
+		if("91".equals(countryCode) || StringUtils.isEmpty(countryCode)){
+			return;
+		}
+		Location country = locationRepository.getLocationByIsdCode(countryCode);
+		if(country == null){
+			return;
+		}
+		updateUserLocation(user, UserLocation.LIVING, "Country", country.getId());
+
 	}
 	
 	@Override
@@ -319,5 +333,10 @@ public class MemberServiceImpl implements MemberService{
 		updateUserLocation(user, UserLocation.VOTING, "AssemblyConstituency", votingAcId);
 		
 		return user;
+	}
+
+	@Override
+	public List<UserLocation> getUserLocations(Long userId) throws AppException {
+		return userLocationRepository.getUserLocationByUserId(userId);
 	}
 }

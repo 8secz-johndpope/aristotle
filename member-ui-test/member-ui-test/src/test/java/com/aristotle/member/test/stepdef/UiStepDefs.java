@@ -42,6 +42,11 @@ public class UiStepDefs extends BaseStepDef{
     	WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
     	openUrl(webDriver, Urls.SECURITY_URL);
     }
+    @Given("Open Personal Detail page")
+    public void open_personal_detail_page() throws IOException {
+    	WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
+    	openUrl(webDriver, Urls.PERSONA_DETAIL_URL);
+    }
     @Given("Check Field exists \"([^\"]*)\"")
 	public void checkFieldExists(String fieldId) throws FieldDoNotExistsException {
 		WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
@@ -51,7 +56,27 @@ public class UiStepDefs extends BaseStepDef{
 	public void checkFieldExistsWithEmptyValue(String fieldId) throws FieldDoNotExistsException {
 		WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
 		WebElement webElement = getElement(webDriver, By.id(fieldId));
-		Assert.assertEquals("", webElement.getText());
+		Assert.assertEquals("", webElement.getAttribute("value"));
+	}
+    @Given("Check Date Field \"([^\"]*)\" is empty")
+	public void checkDateFieldExistsWithEmptyValue(String fieldId) throws FieldDoNotExistsException {
+		WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
+		WebElement webElement = getElement(webDriver, By.id(fieldId));
+		webElement = webElement.findElement(By.tagName("input"));
+		Assert.assertEquals("", webElement.getAttribute("value"));
+	}
+    @Given("Check Nothing selected in combo box \"([^\"]*)\"")
+	public void checkComboBoxIsEmpty(String fieldId) throws FieldDoNotExistsException {
+		WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
+		WebElement webElement = getElement(webDriver, By.id(fieldId));
+		webElement = webElement.findElement(By.tagName("input"));
+		Assert.assertEquals("", webElement.getAttribute("value"));
+	}
+    @Given("Check Field \"([^\"]*)\" has \"([^\"]*)\"")
+	public void checkFieldExistsWithValue(String fieldId, String text) throws FieldDoNotExistsException {
+		WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
+		WebElement webElement = getElement(webDriver, By.id(fieldId));
+		Assert.assertEquals(text, webElement.getAttribute("value"));
 	}
     @Given("Check Field \"([^\"]*)\" is enabled and visible")
 	public void checkFieldisEnabled(String fieldId) throws FieldDoNotExistsException {

@@ -17,6 +17,6 @@ public class Urls {
 	public static final String LOGIN_URL = BASE_URL+"#!login";
 	public static final String HOME_URL = BASE_URL+"#!home";
 	public static final String SECURITY_URL = BASE_URL+"#!security";
-
+	public static final String PERSONA_DETAIL_URL = BASE_URL+"#!personal";
 
 }

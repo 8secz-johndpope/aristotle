@@ -10,6 +10,9 @@ import com.aristotle.core.persistance.Location;
 public interface LocationRepository extends JpaRepository<Location, Long> {
 
     Location getLocationByNameUpAndLocationTypeId(String name, Long locationTypeId);
+    
+    Location getLocationByIsdCode(String isdCode);
+
 
     @Query("select distinct loc from Location loc, User user join user.locationRoles lr where  user.id=?1 and lr.locationId=loc.id")
     List<Location> getAdminLocationsOfUser(Long userId);

@@ -18,7 +18,7 @@ public class LocationStepDef extends BaseStepDef{
 	@Autowired
 	private LocationService locationService;
 	
-	@Given("Create Location Type as \"([^\"]*)\"")
+	@Given("^Create Location Type as \"([^\"]*)\"$")
     public void createNewLocationType(String locationTypeTestId, List<LocationType> list) throws FieldDoNotExistsException, AppException {
 		TestContext testContext = TestContext.getCurrentContext();
 		for(LocationType oneLocationType : list){
@@ -26,7 +26,7 @@ public class LocationStepDef extends BaseStepDef{
 			testContext.setData(locationTypeTestId, oneLocationType);
 		}
     }
-	@Given("Create Location as \"([^\"]*)\" with locationType \"([^\"]*)\"")
+	@Given("^Create Location as \"([^\"]*)\" with locationType \"([^\"]*)\"$")
     public void createNewLocationAs(String locationTestId, String locationTypeTestId, List<Location> list) throws FieldDoNotExistsException, AppException {
 		TestContext testContext = TestContext.getCurrentContext();
 		LocationType locationType = testContext.getData(locationTypeTestId, LocationType.class);
@@ -38,8 +38,27 @@ public class LocationStepDef extends BaseStepDef{
 			}
 		}
     }
-	@Given("Create Location with locationType \"([^\"]*)\"")
+	@Given("^Create Location with locationType \"([^\"]*)\"$")
     public void createNewLocation(String locationTypeTestId, List<Location> list) throws FieldDoNotExistsException, AppException {
 		createNewLocationAs(null, locationTypeTestId, list);
+    }
+	
+	@Given("^Create Location as \"([^\"]*)\" with locationType \"([^\"]*)\" under location \"([^\"]*)\"$")
+    public void createNewLocationUnderLocationAs(String locationTestId, String locationTypeTestId, String parentLocationName, List<Location> list) throws FieldDoNotExistsException, AppException {
+		TestContext testContext = TestContext.getCurrentContext();
+		LocationType locationType = testContext.getData(locationTypeTestId, LocationType.class);
+		Location parentLocation = testContext.getData(parentLocationName, Location.class);
+		for(Location oneLocation : list){
+			oneLocation.setLocationType(locationType);
+			oneLocation.setParentLocation(parentLocation);
+			oneLocation = locationService.saveLocation(oneLocation);
+			if(locationTestId != null){
+				testContext.setData(locationTestId, oneLocation);
+			}
+		}
+    }
+	@Given("^Create Location with locationType \"([^\"]*)\" under location \"([^\"]*)\"$")
+    public void createNewLocationUnderLocation(String locationTypeTestId, String parentLocationName, List<Location> list) throws FieldDoNotExistsException, AppException {
+		createNewLocationUnderLocationAs(null, locationTypeTestId, parentLocationName, list);
     }
 }

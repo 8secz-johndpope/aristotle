@@ -47,7 +47,6 @@ public class BaseStepDef {
 		if(value == null){
 			return;
 		}
-		log.info("Enetring value: {} into field : {}", value, fieldId);
     	WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
 		enterTextFieldValue(webDriver, fieldId, value);
 	}
