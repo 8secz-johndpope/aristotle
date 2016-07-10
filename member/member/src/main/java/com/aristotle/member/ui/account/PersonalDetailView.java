@@ -155,7 +155,7 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView{
 		
 		gender = uiComponentsUtil.buildComboBox(contextHelp, "Gender", "Select Gender", "Male"," Female", "Others");
 		
-		idCardType = uiComponentsUtil.buildComboBox(contextHelp, "ID card Type", "Select Your identity card type", "Ration Card"," Driving License", "Voter Card", "Passport");
+		idCardType = uiComponentsUtil.buildComboBox(contextHelp, "ID card Type", "Select Your identity card type", "Ration Card","Driving License", "Voter Card", "Passport");
 		idCardNumber = uiComponentsUtil.buildTextField(contextHelp, FontAwesome.CREDIT_CARD, "ID Card Number", "Please enter ID card number. i.e. if yopu have selected Passport in Card Type field, then enter Passport number");
 				
 		dateOfBirth = uiComponentsUtil.buildPopupDateField(contextHelp, "Date of Birth", "Enter your Date of Birth");
@@ -283,6 +283,7 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView{
 
 		User dbUser = memberService.getUserById(loggedInUser.getId());
 		loadUserPersonalData(dbUser);
+		loadUserLocationData(dbUser);
 		toggleLocations(dbUser.isNri());
 	}
 	private void loadUserPersonalData(User dbUser){
@@ -328,7 +329,12 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView{
 		}
 	}
 	private void loadUserLocation(ComboBox comboBox, List<UserLocation> userLocations, String userLocationType, String locationType){
-		//TODO implement it
+		for(UserLocation oneUserLocation : userLocations){
+			if(oneUserLocation.getUserLocationType().equalsIgnoreCase(userLocationType) && oneUserLocation.getLocation().getLocationType().getName().equals(locationType)){
+				comboBox.setValue(oneUserLocation.getLocation());
+				break;
+			}
+		}
 	}
 	private void addListeners(){
 		uploadImageButton.addClickListener(new ClickListener() {

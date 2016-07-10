@@ -43,6 +43,19 @@ public class BaseStepDef {
 		WebElement textFieldWebElement = getElement(webDriver, By.id(fieldId));
 		textFieldWebElement.clear();
 	}
+	protected void enterDateFieldValue(String fieldId, String value) throws FieldDoNotExistsException {
+		if(value == null){
+			return;
+		}
+    	WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
+    	enterDateFieldValue(webDriver, fieldId, value);
+	}
+	protected void enterDateFieldValue(WebDriver webDriver, String fieldId, String value) throws FieldDoNotExistsException {
+		log.info("Enetring value: {} into Date field : {}", value, fieldId);
+		WebElement textFieldWebElement = getElement(webDriver, By.id(fieldId));
+		textFieldWebElement = textFieldWebElement.findElement(By.tagName("input"));
+		textFieldWebElement.sendKeys(value);
+	}
 	protected void enterTextFieldValue(String fieldId, String value) throws FieldDoNotExistsException {
 		if(value == null){
 			return;
@@ -53,6 +66,7 @@ public class BaseStepDef {
 	protected void enterTextFieldValue(WebDriver webDriver, String fieldId, String value) throws FieldDoNotExistsException {
 		log.info("Enetring value: {} into field : {}", value, fieldId);
 		WebElement textFieldWebElement = getElement(webDriver, By.id(fieldId));
+		textFieldWebElement.clear();
 		textFieldWebElement.sendKeys(value);
 	}
 	protected void selectCheckBoxTextFieldValue(String fieldId) throws FieldDoNotExistsException {
@@ -105,6 +119,9 @@ public class BaseStepDef {
 	}
 	
 	protected void selectComboBoxValue(String fieldId, String value) throws FieldDoNotExistsException {
+		if(value == null){
+			return;
+		}
     	WebDriver webDriver = TestContext.getCurrentContext().getWebDriver();
     	selectComboBoxValue(webDriver, fieldId, value);
 	}
@@ -119,6 +136,7 @@ public class BaseStepDef {
 		comboBoxFieldWebElement = comboBoxFieldWebElement.findElement(By.tagName("input"));
 		//final Select selectBox = new Select(comboBoxFieldWebElement);
 	    //selectBox.selectByValue(value);
+		comboBoxFieldWebElement.clear();
 		comboBoxFieldWebElement.sendKeys(value);
 		sleep(100);
 		comboBoxFieldWebElement.sendKeys(Keys.ENTER);

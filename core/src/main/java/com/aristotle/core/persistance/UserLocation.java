@@ -3,6 +3,7 @@ package com.aristotle.core.persistance;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -19,7 +20,7 @@ public class UserLocation extends BaseEntity {
 	@Column(name="user_id", insertable=false,updatable=false)
 	private Long userId;
 	
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.EAGER )
     @JoinColumn(name = "location_id")
     private Location location;
     @Column(name = "location_id", insertable = false, updatable = false)
