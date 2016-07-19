@@ -339,4 +339,11 @@ public class MemberServiceImpl implements MemberService{
 	public List<UserLocation> getUserLocations(Long userId) throws AppException {
 		return userLocationRepository.getUserLocationByUserId(userId);
 	}
+
+	@Override
+	public User updateUserProfilePic(Long userId, String newImageUrl) throws AppException {
+		User user = userRepository.findOne(userId);
+		user.setProfilePic(newImageUrl);
+		return user;
+	}
 }

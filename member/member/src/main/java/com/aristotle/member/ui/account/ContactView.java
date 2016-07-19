@@ -23,6 +23,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
@@ -153,11 +154,10 @@ public class ContactView extends VerticalLayout implements NavigableView{
 
 		
 		content = new VerticalLayout(errorLabel, successLabel, emailLayout, email, confirmEmail, updateEmailButtonLayout);
-		content.addStyleName("login-panel");
-		
-		content.setSizeFull();
+		Panel contactPanel = new Panel("Contact Details");
+		contactPanel.setContent(content);
 
-		this.addComponent(content);
+		this.addComponent(contactPanel);
 	}
 	
 	private void addListeners(){

@@ -14,19 +14,19 @@ public class VaadinSessionUtil {
     protected final String LOGGED_IN_USER_SESSION_PARAM = "LIUSP";
     
 	public void setLoggedInUserinSession(User user) {
-        logger.info("Setting User in Session : " + user);
+        logger.debug("Setting User in Session : {}" , user);
         WrappedHttpSession wrappedSession = (WrappedHttpSession)VaadinService.getCurrentRequest().getWrappedSession(true);
         wrappedSession.setAttribute(LOGGED_IN_USER_SESSION_PARAM, user);
     }
     
     public User getLoggedInUserFromSession() {
-        logger.info("Getting User from Session");
+        logger.debug("Getting User from Session");
         WrappedHttpSession wrappedSession = (WrappedHttpSession)VaadinService.getCurrentRequest().getWrappedSession(true);
         return (User) wrappedSession.getAttribute(LOGGED_IN_USER_SESSION_PARAM);
     }
     
     public void logout() {
-        logger.info("Logging out User from Session");
+        logger.debug("Logging out User from Session");
         WrappedHttpSession wrappedSession = (WrappedHttpSession)VaadinService.getCurrentRequest().getWrappedSession(true);
         wrappedSession.removeAttribute(LOGGED_IN_USER_SESSION_PARAM);
     }

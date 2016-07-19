@@ -13211,6 +13211,12 @@ div.v-layout.v-horizontal.v-widget {
 	border-radius: 10px;
 }
 
+.mytheme .panel-with-3d {
+	-moz-box-shadow: 5px 5px 8px #99b3ff;
+	-webkit-box-shadow: 5px 5px 8px #99b3ff;
+	box-shadow: 5px 5px 8px #99b3ff;
+}
+
 .mytheme .spacious {
 	margin: 3px;
 	padding-left: 10px;

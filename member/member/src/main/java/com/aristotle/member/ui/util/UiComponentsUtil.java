@@ -148,10 +148,10 @@ public class UiComponentsUtil {
 		return button;
 	}
 	public void setLabelError(Label errorLabel, Exception ex){
-		setLabelError(errorLabel, ex.getMessage());
+		setLabelMessage(errorLabel, ex.getMessage());
 	}
-	public void setLabelError(Label errorLabel, String error){
-		errorLabel.setValue(error);
+	public void setLabelMessage(Label errorLabel, String message){
+		errorLabel.setValue(message);
 		errorLabel.setVisible(true);
 	}
 	public void setTextFieldValue(TextField textField, String value){
@@ -165,6 +165,7 @@ public class UiComponentsUtil {
 		String id  = caption.toLowerCase();
 		id = id.replaceAll(" ", "_");
 		id = id.replaceAll("/", "_");
+		id = id.replaceAll("\\?", "_");
 		component.setId(id);
 	}
 }

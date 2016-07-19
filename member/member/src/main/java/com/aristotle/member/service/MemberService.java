@@ -22,6 +22,8 @@ public interface MemberService {
 	
 	Email updateEmail(Long emailId, String email, String confirmEmail) throws AppException;
 	
+	User updateUserProfilePic(Long userId, String newImageUrl) throws AppException;
+
 	User updateUserPersonalDetails(Long userId, String name, String gender, Date dob, String idCardType, String idCardNumber, String fatherName, String motherName) throws AppException;
 
 	User updateNriUserLocations(Long userId, Long countryId, Long countryRegionId,Long countryRegionAreadId, Long stateId, Long districtId, Long pcId, Long acId) throws AppException;

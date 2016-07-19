@@ -1,11 +1,14 @@
 package com.aristotle.member.ui;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.aristotle.core.persistance.User;
 import com.aristotle.member.ui.account.ContactView;
 import com.aristotle.member.ui.account.PersonalDetailView;
 import com.aristotle.member.ui.account.SecurityView;
+import com.aristotle.member.ui.login.ForgotPasswordView;
 import com.aristotle.member.ui.login.LoginView;
 import com.aristotle.member.ui.login.RegisterView;
 import com.aristotle.member.ui.util.NavigatorUtil;
@@ -34,7 +37,12 @@ public class MainLayout extends MainLayoutDesign implements ViewDisplay {
     private Navigator navigator;
     private VaadinSessionUtil vaadinSessionUtil;
     
+    private Set<String> nonSecuredViews;
+    
     public MainLayout(SpringViewProvider viewProvider, VaadinSessionUtil vaadinSessionUtil) {
+    	nonSecuredViews = new HashSet<>();
+    	nonSecuredViews.add(RegisterView.NAVIAGATION_NAME);
+    	nonSecuredViews.add(ForgotPasswordView.NAVIAGATION_NAME);
     	this.vaadinSessionUtil = vaadinSessionUtil;
         this.navigator = new Navigator(UI.getCurrent(), (ViewDisplay) this);
         navigator.addProvider(viewProvider);
@@ -69,10 +77,9 @@ public class MainLayout extends MainLayoutDesign implements ViewDisplay {
         
         User loggedinUser = vaadinSessionUtil.getLoggedInUserFromSession();
        
-        if(loggedinUser == null && !navigator.getState().equals(RegisterView.NAVIAGATION_NAME)){
+        if(loggedinUser == null && !nonSecuredViews.contains(navigator.getState())){
         	navigator.navigateTo(LoginView.NAVIAGATION_NAME);
-        }else
-        if (navigator.getState().isEmpty()) {
+        }else if (navigator.getState().isEmpty()) {
             navigator.navigateTo(HomeView.NAVIAGATION_NAME);
         } else {
             navigator.navigateTo(navigator.getState());
@@ -104,7 +111,7 @@ public class MainLayout extends MainLayoutDesign implements ViewDisplay {
     @Override
     public void showView(View view) {
         if (view instanceof Component) {
-        	if(view instanceof LoginView || view instanceof RegisterView){
+        	if(view instanceof LoginView || view instanceof RegisterView || view instanceof ForgotPasswordView){
         		root_layout_main.removeAllComponents();
         		root_layout_main.addComponent((Component)view);
         		root_layout_main.setComponentAlignment((Component)view, Alignment.MIDDLE_CENTER);

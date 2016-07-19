@@ -16,6 +16,7 @@ import com.aristotle.member.ui.util.ViewHelper;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
@@ -24,6 +25,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.PasswordField;
@@ -59,6 +61,7 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 	private String selectedCountryIsdCode;
 	private Label errorLabel;
 	private Label successLabel;
+	private Image image;
 
 	private ContextHelp contextHelp;
 
@@ -110,6 +113,7 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 		try{
 			
 			this.addStyleName(ValoTheme.LAYOUT_CARD);
+			this.addStyleName("panel-with-3d");
 			MarginInfo marginInfo = new MarginInfo(true);
 			this.setMargin(marginInfo);
 			
@@ -162,8 +166,11 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 			
 			successLabel = uiComponentsUtil.buildSuccessLabel();
 
-
-			page1 = new VerticalLayout(errorLabel, successLabel, nameEmailLayout, passwordLayout, nri, phoneLayout, captcha, registerButton, loginButton);
+			image = new Image();
+			image.setWidth("300px");
+			image.setSource(new ExternalResource("https://pbs.twimg.com/profile_images/599546377253814272/S1-kHFM8.png"));
+			
+			page1 = new VerticalLayout(image, errorLabel, successLabel, nameEmailLayout, passwordLayout, nri, phoneLayout, captcha, registerButton, loginButton);
 			
 			page1.setSizeFull();
 		}catch(Exception ex){

@@ -38,6 +38,12 @@ $v-textfield-border-radius: 3px;
   .round-corner{
 	border-radius: 10px;
 	}
+	.panel-with-3d{
+	-moz-box-shadow: 5px 5px 8px #99b3ff;
+    -webkit-box-shadow: 5px 5px 8px #99b3ff;
+    box-shadow: 5px 5px 8px #99b3ff;
+	}
+	
   .spacious{
     margin: 3px;
 	padding-left: 10px;

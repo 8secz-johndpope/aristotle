@@ -18,9 +18,9 @@ import com.vaadin.server.UserError;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
@@ -30,21 +30,17 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-//@SpringComponent
-//@UIScope
-@SpringView(name = LoginView.NAVIAGATION_NAME)
-public class LoginView extends VerticalLayout implements NavigableView{
+@SpringView(name = ForgotPasswordView.NAVIAGATION_NAME)
+public class ForgotPasswordView extends VerticalLayout implements NavigableView{
 
 	private static final long serialVersionUID = 1L;
-	public static final String NAVIAGATION_NAME = "login";
+	public static final String NAVIAGATION_NAME = "forgot";
 
-	private PasswordField password;
-	private TextField userName;
+	private TextField email;
 	private VerticalLayout content;
-	private Button loginButton;
+	private Button passwordRecoveryButton;
 	private Button registerButton;
-	private Button forgotPasswordButton;
-
+	private Button loginButton;
 	private Label errorLabel;
 	private Image image;
 	
@@ -59,7 +55,7 @@ public class LoginView extends VerticalLayout implements NavigableView{
 	private volatile boolean initialized = false;
 
 
-	public LoginView() {
+	public ForgotPasswordView() {
 	}
 
 	public void init() {
@@ -86,28 +82,23 @@ public class LoginView extends VerticalLayout implements NavigableView{
 		contextHelp.extend(UI.getCurrent());
 		contextHelp.setFollowFocus(true);
 		
-		userName = uiComponentsUtil.buildTextField(contextHelp, FontAwesome.USER, "Email/Mobile Number", "Enter your email or phone number with which you registered");
-		userName.setWidth("350px");
-		password = uiComponentsUtil.buildPasswordField(contextHelp, FontAwesome.LOCK, "Password" , "Enter your password, its case senstive. Means 'Password' and 'PASSWORD' will not match");
-		password.setWidth("350px");
+		email = uiComponentsUtil.buildTextField(contextHelp, FontAwesome.USER, "Email/Mobile Number", "Enter your email or phone number with which you registered");
+		email.setWidth("350px");
 		
-		loginButton = new Button("Login", FontAwesome.SIGN_IN);
-		loginButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
-		loginButton.setId("login_button");
+		passwordRecoveryButton = uiComponentsUtil.buildButton(ValoTheme.BUTTON_FRIENDLY, FontAwesome.SEND, "Send Password Receovery Details");
 
-		registerButton = new Button("Not Registered Yet? Register Now", FontAwesome.REGISTERED);
-		registerButton.setStyleName(ValoTheme.BUTTON_LINK);
-		registerButton.setId("register_button");
+		registerButton = uiComponentsUtil.buildButton(ValoTheme.BUTTON_LINK, FontAwesome.REGISTERED, "Not Registered Yet? Register Now");
 		
-		forgotPasswordButton = uiComponentsUtil.buildButton(ValoTheme.BUTTON_LINK, FontAwesome.REGISTERED, "Forgot Password");
+		loginButton = uiComponentsUtil.buildButton(ValoTheme.BUTTON_LINK, FontAwesome.SIGN_IN, "Already Registered? Login Now");
 
 		errorLabel = uiComponentsUtil.buildErrorlabel();
 		
 		image = new Image();
 		image.setWidth("300px");
 		image.setSource(new ExternalResource("https://pbs.twimg.com/profile_images/599546377253814272/S1-kHFM8.png"));
+
 		
-		content = new VerticalLayout(image, errorLabel, userName, password, loginButton, registerButton, forgotPasswordButton);
+		content = new VerticalLayout(image, errorLabel, email, passwordRecoveryButton, registerButton, loginButton);
 		content.addStyleName("login-panel");
 		
 		content.setSizeFull();
@@ -117,23 +108,22 @@ public class LoginView extends VerticalLayout implements NavigableView{
 	
 	private void addListeners(){
 		ViewHelper.addNaviagationClickListener(this, registerButton, RegisterView.NAVIAGATION_NAME);
-		ViewHelper.addNaviagationClickListener(this, forgotPasswordButton, ForgotPasswordView.NAVIAGATION_NAME);
-		
-		loginButton.addClickListener(new ClickListener() {
+		ViewHelper.addNaviagationClickListener(this, loginButton, LoginView.NAVIAGATION_NAME);
+		passwordRecoveryButton.addClickListener(new ClickListener() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
 					errorLabel.setVisible(false);
-					User user = memberService.login(userName.getValue(), password.getValue());
-	            	vaadinSessionUtil.setLoggedInUserinSession(user);
-					Notification.show("Welcome "+userName.getValue()+", login succesfull", Type.HUMANIZED_MESSAGE);
-					NavigatorUtil.goToHomePage(LoginView.this);
-				} catch (AppException e) {
+					//User user = memberService.login(email.getValue(), password.getValue());
+	            	//vaadinSessionUtil.setLoggedInUserinSession(user);
+					Notification.show("Welcome "+email.getValue()+", login succesfull", Type.HUMANIZED_MESSAGE);
+					NavigatorUtil.goToHomePage(ForgotPasswordView.this);
+				} catch (Exception e) {
 					errorLabel.setValue(e.getMessage());
 					errorLabel.setVisible(true);
-					LoginView.this.userName.setComponentError(new UserError(e.getMessage()));
+					ForgotPasswordView.this.email.setComponentError(new UserError(e.getMessage()));
 				}
 			}
 		});
@@ -141,7 +131,7 @@ public class LoginView extends VerticalLayout implements NavigableView{
 
 	@Override
 	public String getNaviagationName() {
-		return LoginView.NAVIAGATION_NAME;
+		return ForgotPasswordView.NAVIAGATION_NAME;
 	}
 
 }
