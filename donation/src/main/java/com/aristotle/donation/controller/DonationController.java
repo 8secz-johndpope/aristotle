@@ -119,7 +119,7 @@ public class DonationController {
                 String amount = paymentJsonObject.get("amount").getAsString();
                 String fees = paymentJsonObject.get("fees").getAsString();
                 // created_at": "2016-01-31T00:13:41.211Z"
-                Date donationTime = dateFormat.parse(paymentJsonObject.get("created_at").getAsString());
+                Date donationTime = dateFormat.parse(removeThreeDigitsFromIsoDate(paymentJsonObject.get("created_at").getAsString()));
 
                 return donationService.saveOnlineDonationFromInstamojo(success, paymentId, status, buyerName, buyerPhone, buyerEmail, amount, fees, donationTime);
             } else {
@@ -130,6 +130,18 @@ public class DonationController {
         }
         return null;
     }
+    private static String removeThreeDigitsFromIsoDate(String isoDate){
+         int dotIndex = isoDate.indexOf(".");
+         int zIndex = isoDate.indexOf("Z");
+         if(zIndex - dotIndex <= 3){
+             System.out.println("Date : "+isoDate);
+             return isoDate;
+         }
+         String returnDate = isoDate.substring(0, dotIndex) + isoDate.substring(dotIndex, dotIndex + 4) + "Z";
+         System.out.println("Date : "+isoDate);
+
+         return returnDate;
+     }
 
     @RequestMapping(value = { "/private/complete" }, method = RequestMethod.POST, consumes = "application/*")
     @ResponseBody
