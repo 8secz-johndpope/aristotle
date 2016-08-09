@@ -1083,8 +1083,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User registerOnlineMember(Long loggedInUserId, String mobileNumber, String name, String amount, String paymentMode, String transactionId, String fees) throws AppException {
-    	User user = userRepository.findOne(loggedInUserId);
+    public User registerOnlineMember(Long loggedInUserId, String email, String mobileNumber, String name, String amount, String paymentMode, String transactionId, String fees) throws AppException {
+    	User user = null;
+    	if(loggedInUserId != null){
+    		user = userRepository.findOne(loggedInUserId);
+    	}else{
+    		Email userEmail = emailRepository.getEmailByEmailUp(email.toUpperCase());
+    		user = userEmail.getUser();
+    	}
     	createOnlineUserMembership(user, "Online", transactionId, amount);
     	return user;
     }

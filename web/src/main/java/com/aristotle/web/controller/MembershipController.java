@@ -122,7 +122,7 @@ public class MembershipController {
                 String amount = paymentJsonObject.get("amount").getAsString();
                 String fees = paymentJsonObject.get("fees").getAsString();
                 // created_at": "2016-01-31T00:13:41.211Z"
-                Date donationTime = dateFormat.parse(paymentJsonObject.get("created_at").getAsString());
+                Date donationTime = dateFormat.parse(removeThreeDigitsFromIsoDate(paymentJsonObject.get("created_at").getAsString()));
                 
                 if(success){
                 	User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
@@ -131,7 +131,7 @@ public class MembershipController {
                     	loggedInUserId = user.getId();
                     }
                     
-                    userService.registerOnlineMember(loggedInUserId, buyerPhone, buyerName, amount, "Online",paymentId, fees);
+                    userService.registerOnlineMember(loggedInUserId, buyerEmail, buyerPhone, buyerName, amount, "Online",paymentId, fees);
                 }
                 
 
@@ -142,6 +142,19 @@ public class MembershipController {
             logger.error("Unable to process Membership Record for PaymentId : "+paymentId+", donationId : " + donationId, ex);
         }
         return null;
+    }
+    
+    private static String removeThreeDigitsFromIsoDate(String isoDate){
+        int dotIndex = isoDate.indexOf(".");
+        int zIndex = isoDate.indexOf("Z");
+        if(zIndex - dotIndex <= 3){
+            System.out.println("Date : "+isoDate);
+            return isoDate;
+        }
+        String returnDate = isoDate.substring(0, dotIndex) + isoDate.substring(dotIndex, dotIndex + 4) + "Z";
+        System.out.println("Date : "+isoDate);
+
+        return returnDate;
     }
 
 }

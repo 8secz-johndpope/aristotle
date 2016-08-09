@@ -71,7 +71,7 @@ public interface UserService {
 
     User registerIvrMember(String mobileNumber, String name, String gender, String amount, String paymentMode, String state, String district, String msg) throws AppException;
 
-    User registerOnlineMember(Long loggedInUserId, String mobileNumber, String name, String amount, String paymentMode, String transactionId,String fees) throws AppException;
+    User registerOnlineMember(Long loggedInUserId, String email, String mobileNumber, String name, String amount, String paymentMode, String transactionId,String fees) throws AppException;
 
     User uploadUserProfilePic(InputStream fileInputStream, User user, String fileName) throws AppException;
 
