@@ -102,13 +102,16 @@
 							<p:inputText value="#{teamAdminBean.email}"></p:inputText>
 							<p:outputLabel value="Post"></p:outputLabel>
 							<p:selectOneMenu id="post" value="#{teamAdminBean.post}" style="width:125px">
-								<f:selectItem itemLabel="Member" itemValue="Member" />
 								<f:selectItem itemLabel="Convenor" itemValue="Convenor" />
 								<f:selectItem itemLabel="Co-Convenor" itemValue="Co-Convenor" />
-								<f:selectItem itemLabel="Secretary" itemValue="Secretary" />
+								<f:selectItem itemLabel="General Secretary" itemValue="General Secretary" />
 								<f:selectItem itemLabel="Joint Secretary" itemValue="Joint Secretary" />
-								<f:selectItem itemLabel="Treasurer" itemValue="Treasurer" />
+								<f:selectItem itemLabel="Member" itemValue="Member" />
 								<f:selectItem itemLabel="POC" itemValue="POC" />
+								<f:selectItem itemLabel="President" itemValue="President" />
+								<f:selectItem itemLabel="Secretary" itemValue="Secretary" />
+								<f:selectItem itemLabel="Treasurer" itemValue="Treasurer" />
+								<f:selectItem itemLabel="Vice-President" itemValue="Vice-President" />
 							</p:selectOneMenu>
 							<p:commandButton id="addTeamMember" value="Add Team Member" update=":adminTeamForm:mainPanel" actionListener="#{teamAdminBean.saveTeamMember}"
 								styleClass="ui-priority-primary">
