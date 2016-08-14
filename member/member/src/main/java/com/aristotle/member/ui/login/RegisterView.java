@@ -8,9 +8,12 @@ import org.vaadin.jonatan.contexthelp.ContextHelp;
 
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Location;
+import com.aristotle.core.persistance.User;
 import com.aristotle.core.service.LocationService;
 import com.aristotle.member.service.MemberService;
 import com.aristotle.member.ui.NavigableView;
+import com.aristotle.member.ui.account.PersonalDetailView;
+import com.aristotle.member.ui.util.LoginHelper;
 import com.aristotle.member.ui.util.UiComponentsUtil;
 import com.aristotle.member.ui.util.ViewHelper;
 import com.vaadin.data.Property;
@@ -22,6 +25,7 @@ import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
@@ -72,6 +76,8 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 	private MemberService memberService;
 	@Autowired
 	private UiComponentsUtil uiComponentsUtil;
+	@Autowired
+	private LoginHelper loginHelper;
 	@Value("${captcha_site_key}")
 	private String captchaSiteKey;
 	@Value("${captcha_site_secret}")
@@ -231,11 +237,15 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 					memberService.register(userName.getValue(), password.getValue(), passwordConfirm.getValue(), email.getValue(), selectedCountryIsdCode, phoneNumber.getValue(), nri.getValue());
 					successLabel.setVisible(true);
 					successLabel.setValue("Member Registered Succesfully");
+					
+					loginHelper.login(email.getValue(), password.getValue());
+					Notification.show("Welcome "+userName.getValue()+", Please Complete Your profile", Type.HUMANIZED_MESSAGE);
+
+					getUI().getNavigator().navigateTo(PersonalDetailView.NAVIAGATION_NAME);
 				} catch (Exception e) {
 					//Notification.show(e.getMessage(), Notification.Type.ERROR_MESSAGE);
 				    captcha.reload();
-					errorLabel.setValue(e.getMessage());
-					errorLabel.setVisible(true);
+				    uiComponentsUtil.setLabelError(errorLabel, e);
 					e.printStackTrace();
 				}finally {
 					registerButton.setEnabled(true);

@@ -190,7 +190,7 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView 
 		VerticalLayout imageUploadButtonLayout = new VerticalLayout(uploadField, uploadImageButton);
 		HorizontalLayout imageUploadLayout = new HorizontalLayout(userImage, imageUploadButtonLayout);
 
-		personalDetailContentPanel = new VerticalLayout(imageUploadLayout, userName, gender, dateOfBirth, idCardLayout, fatherName, motherName);
+		personalDetailContentPanel = new VerticalLayout(imageUploadLayout, new HorizontalLayout(userName, gender), dateOfBirth, idCardLayout, new HorizontalLayout(fatherName, motherName));
 		// personalDetailContentPanel.addStyleName(ValoTheme.LAYOUT_CARD);
 		// personalDetailContentPanel.addStyleName("round-corner");
 		personalDetailContentPanel.addStyleName("spacious");
@@ -226,21 +226,21 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView 
 		Label nriCountrySelectorLabel = new Label("Currently Living - NRI location");
 		nriCountrySelectorLabel.setStyleName(ValoTheme.LABEL_H3);
 
-		nriLocationpanel = new VerticalLayout(nriCountrySelectorLabel, country, countryRegion, countryRegionArea);
+		nriLocationpanel = new VerticalLayout(nriCountrySelectorLabel, new HorizontalLayout(country, countryRegion), countryRegionArea);
 		nriLocationpanel.addStyleName(ValoTheme.LAYOUT_CARD);
 		nriLocationpanel.addStyleName("round-corner");
 		nriLocationpanel.addStyleName("spacious");
 
 		Label livingSelectorLabel = new Label("Currently Living Location(India)");
 		livingSelectorLabel.setStyleName(ValoTheme.LABEL_H3);
-		livingLocationpanel = new VerticalLayout(livingSelectorLabel, livingState, livingDistrict, livingPc, livingAc);
+		livingLocationpanel = new VerticalLayout(livingSelectorLabel,  new HorizontalLayout(livingState, livingDistrict),  new HorizontalLayout(livingPc, livingAc));
 		livingLocationpanel.addStyleName(ValoTheme.LAYOUT_CARD);
 		livingLocationpanel.addStyleName("round-corner");
 		livingLocationpanel.addStyleName("spacious");
 
 		votingSelectorLabel = new Label("Location Where You Registerd as Voter or native location(India)");
 		votingSelectorLabel.setStyleName(ValoTheme.LABEL_H3);
-		votingLocationpanel = new VerticalLayout(votingSelectorLabel, votingState, votingDistrict, votingPc, votingAc);
+		votingLocationpanel = new VerticalLayout(votingSelectorLabel,  new HorizontalLayout(votingState, votingDistrict),  new HorizontalLayout(votingPc, votingAc));
 		votingLocationpanel.addStyleName(ValoTheme.LAYOUT_CARD);
 		votingLocationpanel.addStyleName("round-corner");
 		votingLocationpanel.addStyleName("spacious");
@@ -249,7 +249,7 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView 
 		// locationContentPanel.addStyleName(ValoTheme.LAYOUT_CARD);
 		// locationContentPanel.addStyleName("round-corner");
 		locationContentPanel.addStyleName("spacious");
-		locationContentPanel.setWidth("400px");
+		locationContentPanel.setWidth("500px");
 
 		locationPanel = new Panel("Location");
 		locationPanel.setContent(locationContentPanel);
@@ -301,7 +301,7 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView 
 		uiComponentsUtil.setTextFieldValue(fatherName, dbUser.getFatherName());
 		uiComponentsUtil.setTextFieldValue(motherName, dbUser.getMotherName());
 		if (dbUser.getProfilePic() != null) {
-			userImage.setSource(new ExternalResource("https://static.swarajabhiyan.org/"+dbUser.getProfilePic()));
+			userImage.setSource(new ExternalResource("https://static.swarajabhiyan.org/" + dbUser.getProfilePic()));
 		}
 		nri.setValue(dbUser.isNri());
 	}
@@ -355,7 +355,8 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView 
 					awsProfileImageUtil.uploadImage((File) uploadField.getValue(), loggedInUser);
 					vaadinSessionUtil.setLoggedInUserinSession(loggedInUser);
 					uiComponentsUtil.setLabelMessage(successLabel, "Profile Pic uploaded Succesfully");
-					//userImage.setSource(new ExternalResource("https://static.swarajabhiyan.org/"+loggedInUser.getProfilePic()));
+					// userImage.setSource(new
+					// ExternalResource("https://static.swarajabhiyan.org/"+loggedInUser.getProfilePic()));
 
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -518,24 +519,24 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView 
 	}
 
 	private void showUploadedImage() {
-		try{
+		try {
 			File file = (File) uploadField.getValue();
-			//FileResource resource = new FileResource(file);
+			// FileResource resource = new FileResource(file);
 			StreamSource streamSource = new StreamSource() {
 				private static final long serialVersionUID = 1L;
 				FileInputStream fileInputStream = new FileInputStream(file);
-				
+
 				@Override
 				public InputStream getStream() {
 					return fileInputStream;
 				}
 			};
-			StreamResource streamResource = new StreamResource(streamSource, UUID.randomUUID().toString()+".jpg");
+			StreamResource streamResource = new StreamResource(streamSource, UUID.randomUUID().toString() + ".jpg");
 			userImage.setSource(streamResource);
-			System.out.println("File Name : "+ streamResource.getFilename());
+			System.out.println("File Name : " + streamResource.getFilename());
 
 			userImage.markAsDirty();
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}

@@ -7,6 +7,7 @@ import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.User;
 import com.aristotle.member.service.MemberService;
 import com.aristotle.member.ui.NavigableView;
+import com.aristotle.member.ui.util.LoginHelper;
 import com.aristotle.member.ui.util.NavigatorUtil;
 import com.aristotle.member.ui.util.UiComponentsUtil;
 import com.aristotle.member.ui.util.VaadinSessionUtil;
@@ -52,6 +53,8 @@ public class LoginView extends VerticalLayout implements NavigableView{
 	private MemberService memberService;
 	@Autowired
 	private VaadinSessionUtil vaadinSessionUtil;
+	@Autowired
+	private LoginHelper loginHelper;
 	@Autowired
 	private UiComponentsUtil uiComponentsUtil;
 
@@ -126,8 +129,7 @@ public class LoginView extends VerticalLayout implements NavigableView{
 			public void buttonClick(ClickEvent event) {
 				try {
 					errorLabel.setVisible(false);
-					User user = memberService.login(userName.getValue(), password.getValue());
-	            	vaadinSessionUtil.setLoggedInUserinSession(user);
+					loginHelper.login(userName.getValue(), password.getValue());
 					Notification.show("Welcome "+userName.getValue()+", login succesfull", Type.HUMANIZED_MESSAGE);
 					NavigatorUtil.goToHomePage(LoginView.this);
 				} catch (AppException e) {
