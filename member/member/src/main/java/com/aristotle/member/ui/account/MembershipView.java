@@ -170,7 +170,7 @@ public class MembershipView extends VerticalLayout implements NavigableView{
             Item item = mTransactionIndexedContainer.addItem(oneMembershipTransaction.getId());
             item.getItemProperty("ID").setValue(oneMembershipTransaction.getId());
             item.getItemProperty("Transaction Date").setValue(oneMembershipTransaction.getTransactionDate());
-            item.getItemProperty("Amount(INR)").setValue(oneMembershipTransaction.getAmount());
+            item.getItemProperty("Amount").setValue(oneMembershipTransaction.getAmount()+" Rs.");
             item.getItemProperty("Transaction Id").setValue(oneMembershipTransaction.getSourceTransactionId());
             item.getItemProperty("Source").setValue(oneMembershipTransaction.getSource());
 
