@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Email;
+import com.aristotle.core.persistance.Membership;
+import com.aristotle.core.persistance.MembershipTransaction;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.UserLocation;
 
@@ -32,4 +34,7 @@ public interface MemberService {
 
 	List<UserLocation> getUserLocations(Long userId) throws AppException;
 
+	List<MembershipTransaction> getUserMembershipTransactions(Long userId) throws AppException;
+    
+    Membership getUserMembership(Long userId) throws AppException;
 }

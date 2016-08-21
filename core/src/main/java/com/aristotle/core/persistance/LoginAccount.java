@@ -67,6 +67,10 @@ public class LoginAccount extends BaseEntity {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+	@Override
+	public String toString() {
+		return "LoginAccount [userName=" + userName + ", email=" + email + ", userId=" + userId + ", toString()=" + super.toString() + "]";
+	}
 	
 	
 	

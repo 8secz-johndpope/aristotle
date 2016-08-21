@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.aristotle.core.persistance.User;
 import com.aristotle.member.ui.account.ContactView;
+import com.aristotle.member.ui.account.MembershipView;
 import com.aristotle.member.ui.account.PersonalDetailView;
 import com.aristotle.member.ui.account.SecurityView;
 import com.aristotle.member.ui.login.ForgotPasswordView;
@@ -46,16 +47,20 @@ public class MainLayout extends MainLayoutDesign implements ViewDisplay {
     	this.vaadinSessionUtil = vaadinSessionUtil;
         this.navigator = new Navigator(UI.getCurrent(), (ViewDisplay) this);
         navigator.addProvider(viewProvider);
+        /*
         NativeButton nativeButton = new NativeButton();
         nativeButton.setIcon(new GenericFontIcon(FontAwesome.GOOGLE_PLUS.getFontFamily(), FontAwesome.GOOGLE_PLUS.getCodepoint()));
         nativeButton.setStyleName("menu-button");
         nativeButton.setCaption("Manual");
         nativeButton.setWidth("100%");
         side_bar.addComponent(nativeButton);
+        */
         addNavigatorView(PersonalDetailView.NAVIAGATION_NAME, personDetailNativeButton);
         addNavigatorView(ContactView.NAVIAGATION_NAME, contactDetailNativeButton);
         addNavigatorView(HomeView.NAVIAGATION_NAME, volunteerDetailNativeButton);
         addNavigatorView(SecurityView.NAVIAGATION_NAME, securirtyNativeButton);
+        addNavigatorView(MembershipView.NAVIAGATION_NAME, membershipNativeButton);
+        
         volunteerDetailNativeButton.setVisible(false);
         
 

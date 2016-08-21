@@ -68,6 +68,11 @@ public class MembershipTransaction extends BaseEntity {
 	public void setAmount(String amount) {
 		this.amount = amount;
 	}
+	@Override
+	public String toString() {
+		return "MembershipTransaction [transactionDate=" + transactionDate + ", source=" + source + ", sourceTransactionId=" + sourceTransactionId + ", amount=" + amount + ", membershipId=" + membershipId
+				+ ", toString()=" + super.toString() + "]";
+	}
 	
 	
 }

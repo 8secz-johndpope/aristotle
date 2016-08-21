@@ -21,7 +21,7 @@ import com.vaadin.ui.UI;
 
 @SpringUI(path = "/")
 @Theme("mytheme")
-@JavaScript("http://www.google.com/recaptcha/api/js/recaptcha_ajax.js")
+@JavaScript(value={"http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"})
 @Widgetset("Member")
 public class MemberUI extends UI {
 

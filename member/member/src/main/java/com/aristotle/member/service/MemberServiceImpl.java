@@ -1,5 +1,6 @@
 package com.aristotle.member.service;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -18,6 +19,8 @@ import com.aristotle.core.exception.AppException;
 import com.aristotle.core.exception.FieldsAppException;
 import com.aristotle.core.persistance.Email;
 import com.aristotle.core.persistance.LoginAccount;
+import com.aristotle.core.persistance.Membership;
+import com.aristotle.core.persistance.MembershipTransaction;
 import com.aristotle.core.persistance.Phone;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.UserLocation;
@@ -27,6 +30,8 @@ import com.aristotle.core.persistance.Phone.PhoneType;
 import com.aristotle.core.persistance.repo.EmailRepository;
 import com.aristotle.core.persistance.repo.LocationRepository;
 import com.aristotle.core.persistance.repo.LoginAccountRepository;
+import com.aristotle.core.persistance.repo.MembershipRepository;
+import com.aristotle.core.persistance.repo.MembershipTransactionRepository;
 import com.aristotle.core.persistance.repo.PhoneRepository;
 import com.aristotle.core.persistance.repo.UserLocationRepository;
 import com.aristotle.core.persistance.repo.UserRepository;
@@ -50,6 +55,10 @@ public class MemberServiceImpl implements MemberService{
 	@Autowired
 	private LocationRepository locationRepository;
 	@Autowired
+	private MembershipRepository membershipRepository;
+	@Autowired
+	private MembershipTransactionRepository membershipTransactionRepository;
+	@Autowired
 	private PasswordUtil passwordUtil;
 	private final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
@@ -65,6 +74,7 @@ public class MemberServiceImpl implements MemberService{
         if (loginAccount == null) {
         	loginAccount = loginAccountRepository.getLoginAccountByPhone(userName.toLowerCase());
         }
+        logger.info("Login Account : "+loginAccount);
         if (loginAccount == null) {
             throw new AppException("Invalid user name/password");
         }
@@ -345,5 +355,19 @@ public class MemberServiceImpl implements MemberService{
 		User user = userRepository.findOne(userId);
 		user.setProfilePic(newImageUrl);
 		return user;
+	}
+	
+	public List<MembershipTransaction> getUserMembershipTransactions(Long userId) throws AppException {
+		Membership membership = membershipRepository.getMembershipByUserId(userId);
+		logger.info("Membership found is : {}", membership);
+		if(membership == null){
+			return Collections.emptyList();
+		}
+		return membershipTransactionRepository.getMembershipTransactionByMembershipId(membership.getId());
+	}
+
+	@Override
+	public Membership getUserMembership(Long userId) throws AppException {
+		return membershipRepository.getMembershipByUserId(userId);
 	}
 }

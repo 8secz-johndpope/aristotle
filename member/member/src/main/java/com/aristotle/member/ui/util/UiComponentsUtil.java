@@ -125,12 +125,17 @@ public class UiComponentsUtil {
 		return errorLabel;
 	}
 	public Label buildSuccessLabel(){
-		return buildSuccessLabel("success_label", false);
+		return buildLabel("success_label", false);
 	}
-	public Label buildSuccessLabel(String labelId, boolean visible){
+	public Label buildLabel(String labelId, boolean visible){
+		return buildLabel(labelId, visible, ValoTheme.NOTIFICATION_SUCCESS);
+	}
+	public Label buildLabel(String labelId, boolean visible, String theme){
 		Label successLabel = new Label();
 		successLabel.setVisible(visible);
-		successLabel.addStyleName(ValoTheme.NOTIFICATION_SUCCESS);
+		if(theme != null){
+			successLabel.addStyleName(theme);
+		}
 		successLabel.setId(labelId);
 		return successLabel;
 	}
