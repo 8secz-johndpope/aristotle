@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- For assistance related to logback-translator or configuration  -->
+<!-- files in general, please contact the logback user mailing list -->
+<!-- at http://www.qos.ch/mailman/listinfo/logback-user             -->
+<!--                                                                -->
+<!-- For professional support please see                            -->
+<!--    http://www.qos.ch/shop/products/professionalSupport         -->
+<!--                                                                -->
+<configuration>
+  <appender name="rollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!--See also http://logback.qos.ch/manual/appenders.html#RollingFileAppender-->
+    <File>${catalina.home}/logs/aristotle.log</File>
+    <Encoding>UTF-8</Encoding>
+    <encoder>
+      <pattern>%d %t %p [%c] - %m%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <maxIndex>20</maxIndex>
+      <FileNamePattern>${catalina.home}/logs/aristotle.%i</FileNamePattern>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <MaxFileSize>50MB</MaxFileSize>
+    </triggeringPolicy>
+  </appender>
+  
+  <logger name="org.springframework" level="WARN"/>
+  <logger name="org.springframework.web.servlet.mvc.method.annotation" level="INFO"/>
+  <logger name="org.springframework.web.servlet" level="INFO"/>
+  <logger name="com.vaadin.spring.server.SpringUIProvider" level="WARN"/>
+  
+  <logger name="com.aristotle" level="INFO"/>
+  <logger name="org.springframework.web.client.RestTemplate" level="DEBUG"/>
+  <logger name="org.springframework.data.neo4j.support.query" level="DEBUG"/>
+  <logger name="com.eswaraj" level="INFO"/>
+  <logger name="com.eswaraj.queue.service.aws.impl" level="DEBUG"/>
+  
+  <root level="ERROR">
+    <appender-ref ref="rollingFile"/>
+  </root>
+</configuration>
