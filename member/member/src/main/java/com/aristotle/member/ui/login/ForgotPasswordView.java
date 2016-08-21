@@ -118,8 +118,8 @@ public class ForgotPasswordView extends VerticalLayout implements NavigableView{
 					errorLabel.setVisible(false);
 					//User user = memberService.login(email.getValue(), password.getValue());
 	            	//vaadinSessionUtil.setLoggedInUserinSession(user);
-					Notification.show("Welcome "+email.getValue()+", login succesfull", Type.HUMANIZED_MESSAGE);
-					NavigatorUtil.goToHomePage(ForgotPasswordView.this);
+					Notification.show("Not Implemented Yet", Type.HUMANIZED_MESSAGE);
+					//NavigatorUtil.goToHomePage(ForgotPasswordView.this);
 				} catch (Exception e) {
 					errorLabel.setValue(e.getMessage());
 					errorLabel.setVisible(true);
