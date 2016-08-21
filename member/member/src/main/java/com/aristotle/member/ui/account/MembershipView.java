@@ -155,7 +155,7 @@ public class MembershipView extends VerticalLayout implements NavigableView{
 		
 		Calendar oneMonthAfterToday = Calendar.getInstance();
 		oneMonthAfterToday.add(Calendar.MONTH, 1);
-		feePaymentButton.setVisible(membership.getEndDate().before(oneMonthAfterToday.getTime()));
+		feePaymentButton.setVisible(membership == null || membership.getEndDate().before(oneMonthAfterToday.getTime()));
 		
 		membershipTransactionTable = new Table();
 		IndexedContainer mTransactionIndexedContainer = new IndexedContainer();
