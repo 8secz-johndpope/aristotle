@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.aristotle.core.enums.AppPermission;
+import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.DomainPageTemplate;
 import com.aristotle.core.persistance.DomainTemplate;
 import com.aristotle.core.persistance.UrlMapping;
@@ -97,20 +98,25 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
         }
         selectedTemplateUrl = null;
         if (selectedTemplate.getDomainPageTemplates() != null) {
-            for (DomainPageTemplate oneTemplateUrlDto : selectedTemplate.getDomainPageTemplates()) {
-                logger.info("selectedUrl={}", selectedUrl);
-                if (oneTemplateUrlDto.getUrlMapping().getUrlPattern().equals(selectedUrl)) {
-                    selectedTemplateUrl = oneTemplateUrlDto;
-                    break;
-                }
-            }
+//            for (DomainPageTemplate oneTemplateUrlDto : selectedTemplate.getDomainPageTemplates()) {
+//                logger.info("selectedUrl={}", selectedUrl);
+//                if (oneTemplateUrlDto.getUrlMapping().getUrlPattern().equals(selectedUrl)) {
+//                    selectedTemplateUrl = oneTemplateUrlDto;
+//                    break;
+//                }
+//            }
+            try {
+				selectedTemplateUrl = dataPluginService.getDomainPageTemplateByUrlAndDomainTemplate(selectedUrl, selectedTemplate.getId());
+			} catch (Exception e) {
+				sendErrorMessageToJsfScreen(e);
+			}
         }
         if (selectedTemplateUrl == null) {
             logger.info("No Existing Page Template Found ={}", selectedUrl);
             selectedTemplateUrl = new DomainPageTemplate();
             selectedTemplateUrl.setUrlMapping(urlToUrlMapping.get(selectedUrl));
         }
-        draftUrl = "http://www.swarajabhiyan.org/index.html?draft=1";
+        draftUrl = "//www.swarajabhiyan.org/index.html?draft=1";
     }
 
     private String getSubDirectory(String fileName) {

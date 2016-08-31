@@ -203,4 +203,10 @@ public class DataPluginServiceImpl implements DataPluginService {
     public List<DataPlugin> getAllNonGlobalDataPlugins() throws AppException {
         return dataPluginRepository.getAllNonGlobalDataPlugins();
     }
+
+	@Override
+	public DomainPageTemplate getDomainPageTemplateByUrlAndDomainTemplate(String url, Long domainTemplateId) throws AppException {
+		domainPageTemplateRepository.getDomainPageTemplateByUrlAndDomainTemplate(url, domainTemplateId);
+		return null;
+	}
 }

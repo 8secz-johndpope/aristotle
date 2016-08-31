@@ -11,4 +11,8 @@ public interface DomainPageTemplateRepository extends JpaRepository<DomainPageTe
 
     @Query("select dpt from DomainPageTemplate dpt where dpt.domainTemplate.active = true and dpt.domainTemplate.domainId = ?1")
     List<DomainPageTemplate> getDomainPageTemplateOfActiveTemplate(Long domainId);
+    
+    
+    @Query("select dpt from DomainPageTemplate dpt where dpt.domainTemplateId=?2 and dpt.urlMapping.urlPattern = ?1")
+    DomainPageTemplate getDomainPageTemplateByUrlAndDomainTemplate(String url, Long domainTemplateId);
 }

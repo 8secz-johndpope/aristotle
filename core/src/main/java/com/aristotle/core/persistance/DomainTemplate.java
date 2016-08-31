@@ -34,7 +34,7 @@ public class DomainTemplate extends BaseEntity {
     @OneToMany(mappedBy = "domainTemplate", fetch = FetchType.LAZY)
     private List<DomainPageTemplate> domainPageTemplates;
 
-    @OneToMany(mappedBy = "domainTemplate", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "domainTemplate", fetch = FetchType.EAGER)
     private List<DomainTemplateFile> domainTemplateFiles;
 
     public String getName() {
