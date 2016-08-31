@@ -31,7 +31,7 @@ import com.aristotle.core.persistance.repo.UrlMappingPluginRepository;
 import com.aristotle.core.persistance.repo.UrlMappingRepository;
 
 @Service
-@Transactional
+@Transactional(rollbackFor={Throwable.class})
 public class DataPluginServiceImpl implements DataPluginService {
 
     @Autowired
@@ -94,15 +94,23 @@ public class DataPluginServiceImpl implements DataPluginService {
 
     @Override
     public DomainTemplateFile saveDomainTemplateFile(Long domainTemplateId, String filePathAndName, long fileSize) throws AppException {
+    	System.out.println("Getting Domain Template for id : "+ domainTemplateId);
         DomainTemplate domainTemplate = domainTemplateRepository.findOne(domainTemplateId);
+    	System.out.println("Domain Template : "+ domainTemplate);
+
         filePathAndName = filePathAndName.toLowerCase();
+    	System.out.println("Getting Domain Template file for filePathAndName : "+ filePathAndName);
         DomainTemplateFile domainTemplateFile = domainTemplateFileRepository.getDomainTemplateFileByFileName(filePathAndName);
+    	System.out.println("Domain Template File : "+ domainTemplateFile);
+
         if (domainTemplateFile == null) {
             domainTemplateFile = new DomainTemplateFile();
             domainTemplateFile.setFileName(filePathAndName);
         }
         domainTemplateFile.setSize(fileSize);
         domainTemplateFile.setDomainTemplate(domainTemplate);
+    	System.out.println("Saving Domain Template file for filePathAndName : "+ domainTemplateFile);
+
         domainTemplateFile = domainTemplateFileRepository.save(domainTemplateFile);
         return domainTemplateFile;
     }

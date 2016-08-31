@@ -7,13 +7,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aristotle.core.enums.ContentStatus;
 import com.aristotle.core.exception.AppException;
@@ -26,7 +25,7 @@ import com.aristotle.core.persistance.repo.NewsRepository;
 import com.aristotle.core.persistance.repo.UploadedFileRepository;
 
 @Service
-@Transactional
+@Transactional(rollbackFor={Throwable.class})
 public class NewsServiceImpl implements NewsService {
 
     @Autowired

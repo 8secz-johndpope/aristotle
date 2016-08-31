@@ -3,13 +3,12 @@ package com.aristotle.core.service;
 import java.util.HashSet;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aristotle.core.persistance.Event;
 import com.aristotle.core.persistance.Location;
@@ -17,7 +16,7 @@ import com.aristotle.core.persistance.repo.EventRepository;
 import com.aristotle.core.persistance.repo.LocationRepository;
 
 @Service
-@Transactional
+@Transactional(rollbackFor={Throwable.class})
 public class EventServiceImpl implements EventService {
 
     @Autowired

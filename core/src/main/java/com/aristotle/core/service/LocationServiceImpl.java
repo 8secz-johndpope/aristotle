@@ -3,10 +3,9 @@ package com.aristotle.core.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Location;
@@ -15,7 +14,7 @@ import com.aristotle.core.persistance.repo.LocationRepository;
 import com.aristotle.core.persistance.repo.LocationTypeRepository;
 
 @Service
-@Transactional
+@Transactional(rollbackFor={Throwable.class})
 public class LocationServiceImpl implements LocationService {
 
     @Autowired

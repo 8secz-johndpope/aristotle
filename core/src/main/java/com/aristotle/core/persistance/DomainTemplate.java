@@ -31,10 +31,10 @@ public class DomainTemplate extends BaseEntity {
     @Column(name = "active")
     private boolean active;
 
-    @OneToMany(mappedBy = "domainTemplate", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "domainTemplate", fetch = FetchType.LAZY)
     private List<DomainPageTemplate> domainPageTemplates;
 
-    @OneToMany(mappedBy = "domainTemplate", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "domainTemplate", fetch = FetchType.LAZY)
     private List<DomainTemplateFile> domainTemplateFiles;
 
     public String getName() {

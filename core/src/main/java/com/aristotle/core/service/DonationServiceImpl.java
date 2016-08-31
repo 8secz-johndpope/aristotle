@@ -21,7 +21,7 @@ import com.aristotle.core.persistance.repo.IvrDonationRepository;
 import com.aristotle.core.persistance.repo.PaymentGatewayDonationRepository;
 
 @Service
-@Transactional
+@Transactional(rollbackFor={Throwable.class})
 public class DonationServiceImpl implements DonationService {
 
     @Autowired

@@ -5,8 +5,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aristotle.core.enums.PlannedPostStatus;
 import com.aristotle.core.exception.AppException;
@@ -48,7 +47,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 @Service
-@Transactional
+@Transactional(rollbackFor={Throwable.class})
 public class SmsServiceImpl implements SmsService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
