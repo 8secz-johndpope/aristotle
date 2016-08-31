@@ -206,7 +206,6 @@ public class DataPluginServiceImpl implements DataPluginService {
 
 	@Override
 	public DomainPageTemplate getDomainPageTemplateByUrlAndDomainTemplate(String url, Long domainTemplateId) throws AppException {
-		domainPageTemplateRepository.getDomainPageTemplateByUrlAndDomainTemplate(url, domainTemplateId);
-		return null;
+		return domainPageTemplateRepository.getDomainPageTemplateByUrlAndDomainTemplate(url, domainTemplateId);
 	}
 }
