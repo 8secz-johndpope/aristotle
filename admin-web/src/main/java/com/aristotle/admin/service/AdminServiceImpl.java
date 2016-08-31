@@ -34,7 +34,7 @@ import com.aristotle.core.persistance.repo.UserRepository;
 import com.aristotle.core.service.PasswordUtil;
 
 @Service
-@Transactional
+@Transactional(rollbackFor={Throwable.class})
 public class AdminServiceImpl implements AdminService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
