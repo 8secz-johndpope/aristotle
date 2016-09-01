@@ -37,4 +37,7 @@ public interface MemberService {
 	List<MembershipTransaction> getUserMembershipTransactions(Long userId) throws AppException;
     
     Membership getUserMembership(Long userId) throws AppException;
+    
+    public void sendPasswordResetEmail(String emailId) throws AppException;
+
 }

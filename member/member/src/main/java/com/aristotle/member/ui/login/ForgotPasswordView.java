@@ -1,6 +1,7 @@
 package com.aristotle.member.ui.login;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.vaadin.jonatan.contexthelp.ContextHelp;
 
 import com.aristotle.core.exception.AppException;
@@ -42,6 +43,7 @@ public class ForgotPasswordView extends VerticalLayout implements NavigableView{
 	private Button registerButton;
 	private Button loginButton;
 	private Label errorLabel;
+	private Label successLabel;
 	private Image image;
 	
 	@Autowired
@@ -82,7 +84,7 @@ public class ForgotPasswordView extends VerticalLayout implements NavigableView{
 		contextHelp.extend(UI.getCurrent());
 		contextHelp.setFollowFocus(true);
 		
-		email = uiComponentsUtil.buildTextField(contextHelp, FontAwesome.USER, "Email/Mobile Number", "Enter your email or phone number with which you registered");
+		email = uiComponentsUtil.buildTextField(contextHelp, FontAwesome.USER, "Email/Mobile Number", "Enter your email with which you registered");
 		email.setWidth("350px");
 		
 		passwordRecoveryButton = uiComponentsUtil.buildButton(ValoTheme.BUTTON_FRIENDLY, FontAwesome.SEND, "Send Password Receovery Details");
@@ -92,13 +94,14 @@ public class ForgotPasswordView extends VerticalLayout implements NavigableView{
 		loginButton = uiComponentsUtil.buildButton(ValoTheme.BUTTON_LINK, FontAwesome.SIGN_IN, "Already Registered? Login Now");
 
 		errorLabel = uiComponentsUtil.buildErrorlabel();
+		successLabel = uiComponentsUtil.buildSuccessLabel();
 		
 		image = new Image();
 		image.setWidth("300px");
 		image.setSource(new ExternalResource("https://pbs.twimg.com/profile_images/599546377253814272/S1-kHFM8.png"));
 
 		
-		content = new VerticalLayout(image, errorLabel, email, passwordRecoveryButton, registerButton, loginButton);
+		content = new VerticalLayout(image, errorLabel, successLabel, email, passwordRecoveryButton, registerButton, loginButton);
 		content.addStyleName("login-panel");
 		
 		content.setSizeFull();
@@ -116,14 +119,17 @@ public class ForgotPasswordView extends VerticalLayout implements NavigableView{
 			public void buttonClick(ClickEvent event) {
 				try {
 					errorLabel.setVisible(false);
-					//User user = memberService.login(email.getValue(), password.getValue());
-	            	//vaadinSessionUtil.setLoggedInUserinSession(user);
+					String emailId = email.getValue();
+					if(StringUtils.isEmpty(emailId)){
+						throw new AppException("Please enter email address");
+					}
+					memberService.sendPasswordResetEmail(emailId);
 					Notification.show("Not Implemented Yet", Type.HUMANIZED_MESSAGE);
-					//NavigatorUtil.goToHomePage(ForgotPasswordView.this);
+					successLabel.setVisible(true);
+					successLabel.setValue("An Email sent to "+ emailId +" with instruction to reset password, please check you email box including spam folder");
 				} catch (Exception e) {
 					errorLabel.setValue(e.getMessage());
 					errorLabel.setVisible(true);
-					ForgotPasswordView.this.email.setComponentError(new UserError(e.getMessage()));
 				}
 			}
 		});

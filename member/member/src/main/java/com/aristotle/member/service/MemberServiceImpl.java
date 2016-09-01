@@ -1,8 +1,10 @@
 package com.aristotle.member.service;
 
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,6 +13,7 @@ import org.mortbay.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +24,7 @@ import com.aristotle.core.persistance.Email;
 import com.aristotle.core.persistance.LoginAccount;
 import com.aristotle.core.persistance.Membership;
 import com.aristotle.core.persistance.MembershipTransaction;
+import com.aristotle.core.persistance.PasswordResetRequest;
 import com.aristotle.core.persistance.Phone;
 import com.aristotle.core.persistance.User;
 import com.aristotle.core.persistance.UserLocation;
@@ -32,9 +36,11 @@ import com.aristotle.core.persistance.repo.LocationRepository;
 import com.aristotle.core.persistance.repo.LoginAccountRepository;
 import com.aristotle.core.persistance.repo.MembershipRepository;
 import com.aristotle.core.persistance.repo.MembershipTransactionRepository;
+import com.aristotle.core.persistance.repo.PasswordResetRequestRepository;
 import com.aristotle.core.persistance.repo.PhoneRepository;
 import com.aristotle.core.persistance.repo.UserLocationRepository;
 import com.aristotle.core.persistance.repo.UserRepository;
+import com.aristotle.core.service.EmailManager;
 import com.aristotle.core.service.PasswordUtil;
 import com.google.gdata.util.common.base.StringUtil;
 
@@ -60,6 +66,12 @@ public class MemberServiceImpl implements MemberService{
 	private MembershipTransactionRepository membershipTransactionRepository;
 	@Autowired
 	private PasswordUtil passwordUtil;
+	@Autowired
+	private PasswordResetRequestRepository passwordResetRequestRepository;
+	@Autowired
+    private EmailManager emailManager;
+	@Value("${registration_mail_id}")
+    private String regsitrationEmailId;
 	private final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
     
@@ -370,4 +382,67 @@ public class MemberServiceImpl implements MemberService{
 	public Membership getUserMembership(Long userId) throws AppException {
 		return membershipRepository.getMembershipByUserId(userId);
 	}
+	
+	@Override
+    public void sendPasswordResetEmail(String emailId) throws AppException {
+        Email email = emailRepository.getEmailByEmailUp(emailId.toUpperCase());
+        if (email == null) {
+            throw new AppException("No accounts exists for email " + emailId);
+        }
+        User user = email.getUser();
+        if (user == null) {
+            throw new AppException("No accounts exists for email " + emailId);
+        }
+        LoginAccount loginAccount = loginAccountRepository.getLoginAccountByUserId(user.getId());
+        if (loginAccount == null) {
+            throw new AppException("No accounts exists for email " + emailId);
+        }
+
+        PasswordResetRequest passwordResetRequest = passwordResetRequestRepository.getPasswordResetRequestByLoginAccountId(loginAccount.getId());
+        if (passwordResetRequest == null) {
+            passwordResetRequest = new PasswordResetRequest();
+        }
+        passwordResetRequest.setUserName(emailId.toLowerCase());
+        passwordResetRequest.setToken(UUID.randomUUID().toString());
+        passwordResetRequest.setLoginAccountId(loginAccount.getId());
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR_OF_DAY, 24);
+        passwordResetRequest.setValidTill(calendar.getTime());
+        passwordResetRequest = passwordResetRequestRepository.save(passwordResetRequest);
+        sendPasswordEmail(loginAccount, passwordResetRequest);
+    }
+
+    private void sendPasswordEmail(LoginAccount loginAccount, PasswordResetRequest passwordResetRequest) throws AppException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Dear " + loginAccount.getUser().getName());
+        sb.append("<br>");
+        sb.append("<p>A password reset request has been submitted on your behalf at <a href=\"http://www.swarajabhiyan.org\">www.swarajabhiyan.org</a>");
+        sb.append("<br><br>");
+        sb.append("<p>If you feel that this has been done in error, delete and disregard this email. Your account is still secure and no one has been given access to it. It is not locked and your password has not been reset. Someone could have mistakenly entered your email address.</p>");
+        sb.append("<br><br>");
+        sb.append("<p>Follow the link below to change your password.</p>");
+        sb.append("<br>http://www.swarajabhiyan.org/password/update?token=" + passwordResetRequest.getToken());
+        sb.append("<br>");
+        sb.append("<br>");
+        sb.append("<br>");
+        sb.append("<br>Thanks");
+        sb.append("<br>Swaraj Abhiyan Team");
+        sb.append("<br><br>++++++++++++++++++++++++++++");
+        sb.append("<br>Website : www.swarajabhiyan.org");
+        sb.append("<br>Email Id: contact@swarajabhiyan.org");
+        sb.append("<br>Helpline no : +91-7210222333");
+        sb.append("<br>Twitter Handle : https://twitter.com/swaraj_abhiyan");
+        sb.append("<br>Facebook Pages : https://www.facebook.com/swarajabhiyan");
+        sb.append("<br>Facebook group : https://www.facebook.com/groups/swarajabhiyan/");
+        sb.append("<br>Volunteer Registration : http://www.swarajabhiyan.org/register");
+        sb.append("<br>Swaraj Abhiyan Channel https://www.youtube.com/SwarajAbhiyanTV");
+        sb.append("<br>Head Office : A-189, Sec-43, Noida UP");
+
+        // now send Email
+        String contentWithOutHtml = sb.toString();
+        contentWithOutHtml = contentWithOutHtml.replaceAll("<br>", "\n");
+        contentWithOutHtml = contentWithOutHtml.replaceAll("\\<[^>]*>", "");
+        emailManager.sendEmail(loginAccount.getEmail(), "Password Reset", regsitrationEmailId, "Swaraj Abhiyan Password Reset Request", contentWithOutHtml, sb.toString());
+
+    }
 }
