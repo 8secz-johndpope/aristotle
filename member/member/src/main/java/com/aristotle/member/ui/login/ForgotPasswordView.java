@@ -84,7 +84,7 @@ public class ForgotPasswordView extends VerticalLayout implements NavigableView{
 		contextHelp.extend(UI.getCurrent());
 		contextHelp.setFollowFocus(true);
 		
-		email = uiComponentsUtil.buildTextField(contextHelp, FontAwesome.USER, "Email/Mobile Number", "Enter your email with which you registered");
+		email = uiComponentsUtil.buildTextField(contextHelp, FontAwesome.USER, "Registered Email", "Enter your email with which you registered");
 		email.setWidth("350px");
 		
 		passwordRecoveryButton = uiComponentsUtil.buildButton(ValoTheme.BUTTON_FRIENDLY, FontAwesome.SEND, "Send Password Receovery Details");
@@ -124,7 +124,6 @@ public class ForgotPasswordView extends VerticalLayout implements NavigableView{
 						throw new AppException("Please enter email address");
 					}
 					memberService.sendPasswordResetEmail(emailId);
-					Notification.show("Not Implemented Yet", Type.HUMANIZED_MESSAGE);
 					successLabel.setVisible(true);
 					successLabel.setValue("An Email sent to "+ emailId +" with instruction to reset password, please check you email box including spam folder");
 				} catch (Exception e) {
