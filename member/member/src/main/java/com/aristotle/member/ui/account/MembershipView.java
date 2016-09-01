@@ -145,7 +145,7 @@ public class MembershipView extends VerticalLayout implements NavigableView{
 		
 		membershipEndDateValueLabel  = new Label();
 		membershipEndDateValueLabel.setId("membershipEndDateValue");
-		membershipEndDateValueLabel.setValue(simpleDateFormat.format(membership.getStartDate()));
+		membershipEndDateValueLabel.setValue(simpleDateFormat.format(membership.getEndDate()));
 		
 		GridLayout gridLayout = new GridLayout(2, 3);
 		gridLayout.addStyleName("outlined");
@@ -185,6 +185,7 @@ public class MembershipView extends VerticalLayout implements NavigableView{
 		Panel paymentPanel = new Panel("Membership Payment Details");
 		paymentPanel.setContent(membershipTransactionTable);
 		paymentPanel.setWidth("600px");
+		membershipTransactionTable.setHeight("200px");
 		
 		content = new VerticalLayout(errorLabel, successLabel, gridLayout, paymentPanel, feePaymentButton);
 		Panel contactPanel = new Panel("Membership Details");
