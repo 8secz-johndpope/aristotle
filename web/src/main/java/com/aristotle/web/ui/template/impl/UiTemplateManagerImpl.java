@@ -159,7 +159,7 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
             cookie.setPath("/");
             httpServletResponse.addCookie(cookie);
         }
-        System.out.println("draftParamValue = " + draftParamValue);
+        //System.out.println("draftParamValue = " + draftParamValue);
         if (draftParamValue == null || !draftParamValue.equals("1")) {
             return false;
         }

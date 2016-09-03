@@ -145,7 +145,7 @@ public class PluginManagerImpl implements PluginManager {
     public void applyAllPluginsForUrl(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView, boolean addData, boolean applyGenericPlugins) throws NotLoggedInException {
         init();
         String requestedUrl = httpServletRequest.getRequestURI();
-        System.out.println("Handling Url = " + requestedUrl);
+        //System.out.println("Handling Url = " + requestedUrl);
         PatternUrlMapping patternUrlMapping = findDataPlugins(httpServletRequest, requestedUrl);
         if(patternUrlMapping == null){
             return;
