@@ -9,6 +9,9 @@ public class HelperSource {
             if (trimLength == null) {
                 trimLength = 150;
             }
+            if(content == null){
+            	return "";
+            }
             if (content.length() > trimLength) {
                 return content.substring(0, trimLength);
             }
