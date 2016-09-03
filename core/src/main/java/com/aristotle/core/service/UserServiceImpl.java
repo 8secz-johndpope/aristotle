@@ -18,6 +18,8 @@ import java.util.regex.Pattern;
 import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,7 +78,8 @@ import com.aristotle.core.service.dto.UserVolunteerBean;
 @Lazy
 public class UserServiceImpl implements UserService {
 
-    
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
     private UserLocationRepository userLocationRepository;
     @Autowired
@@ -837,6 +840,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Deprecated
+    //THis function have been moved to Member Service
     public void sendPasswordResetEmail(String emailId) throws AppException {
         Email email = emailRepository.getEmailByEmailUp(emailId.toUpperCase());
         if (email == null) {
@@ -849,6 +854,9 @@ public class UserServiceImpl implements UserService {
         LoginAccount loginAccount = loginAccountRepository.getLoginAccountByUserId(user.getId());
         if (loginAccount == null) {
             throw new AppException("No accounts exists for email " + emailId);
+        }
+        if(StringUtils.isEmpty(loginAccount.getEmail())){
+        	loginAccount.setEmail(email.getEmail());
         }
 
         PasswordResetRequest passwordResetRequest = passwordResetRequestRepository.getPasswordResetRequestByLoginAccountId(loginAccount.getId());
@@ -1089,7 +1097,13 @@ public class UserServiceImpl implements UserService {
     		user = userRepository.findOne(loggedInUserId);
     	}else{
     		Email userEmail = emailRepository.getEmailByEmailUp(email.toUpperCase());
-    		user = userEmail.getUser();
+    		if(userEmail != null){
+    			user = userEmail.getUser();	
+    		}
+    	}
+    	if(user == null){
+    		logger.error("No user logegd in or found for email : {}, transactionId :{}", email, transactionId);
+    		return null;
     	}
     	createOnlineUserMembership(user, "Online", transactionId, amount);
     	return user;
@@ -1200,6 +1214,7 @@ public class UserServiceImpl implements UserService {
     	MembershipTransaction membershipTransaction = membershipTransactionRepository.getMembershipTransactionBySourceTransactionId(sourceTransactionId);
     	if(membershipTransaction != null){
     		//means we have already processed it, no need to reprocess it
+    		logger.info("{} is already exists in DB, so returning existing membership {}",sourceTransactionId, membershipTransaction.getMembership());
     		return membershipTransaction.getMembership();
     	}
     	// If user existed before just make him
@@ -1493,6 +1508,8 @@ public class UserServiceImpl implements UserService {
     }
 
 	@Override
+	@Deprecated
+	//"TODO delete this as its moved to Member project"
 	public List<MembershipTransaction> getUserMembershipTransactions(Long userId) throws AppException {
 		Membership membership = membershipRepository.getMembershipByUserId(userId);
 		if(membership == null){
@@ -1502,6 +1519,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Deprecated
+	//"TODO delete this as its moved to Member project"
 	public Membership getUserMembership(Long userId) throws AppException {
 		return membershipRepository.getMembershipByUserId(userId);
 	}
