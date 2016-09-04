@@ -54,6 +54,7 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -80,6 +81,7 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView 
 	private UploadField uploadField;
 	private Button uploadImageButton;
 	private Image userImage;
+	private TextArea aboutMe;
 
 	private VerticalLayout personalDetailContentPanel;
 	private Button saveButton;
@@ -171,6 +173,15 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView 
 		fatherName = uiComponentsUtil.buildTextField(contextHelp, FontAwesome.MALE, "Father Name", "Please enter your father name");
 		motherName = uiComponentsUtil.buildTextField(contextHelp, FontAwesome.FEMALE, "Mother Name", "Please enter your mother name");
 
+		aboutMe = new TextArea();
+		aboutMe.setValue("The quick brown fox jumps over the lazy dog.");
+		aboutMe.setRows(10);
+		aboutMe.setImmediate(true);
+		aboutMe.setSizeFull();
+		aboutMe.setMaxLength(250);
+		aboutMe.setWidth("370px");
+		aboutMe.setCaption("About me");
+        
 		errorLabel = uiComponentsUtil.buildErrorlabel();
 		successLabel = uiComponentsUtil.buildSuccessLabel();
 
@@ -190,7 +201,7 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView 
 		VerticalLayout imageUploadButtonLayout = new VerticalLayout(uploadField, uploadImageButton);
 		HorizontalLayout imageUploadLayout = new HorizontalLayout(userImage, imageUploadButtonLayout);
 
-		personalDetailContentPanel = new VerticalLayout(imageUploadLayout, new HorizontalLayout(userName, gender), dateOfBirth, idCardLayout, new HorizontalLayout(fatherName, motherName));
+		personalDetailContentPanel = new VerticalLayout(imageUploadLayout, new HorizontalLayout(userName, gender), dateOfBirth, idCardLayout, new HorizontalLayout(fatherName, motherName), aboutMe);
 		// personalDetailContentPanel.addStyleName(ValoTheme.LAYOUT_CARD);
 		// personalDetailContentPanel.addStyleName("round-corner");
 		personalDetailContentPanel.addStyleName("spacious");
@@ -300,6 +311,7 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView 
 		}
 		uiComponentsUtil.setTextFieldValue(fatherName, dbUser.getFatherName());
 		uiComponentsUtil.setTextFieldValue(motherName, dbUser.getMotherName());
+		uiComponentsUtil.setTextAreaValue(aboutMe, dbUser.getProfile());
 		if (dbUser.getProfilePic() != null) {
 			userImage.setSource(new ExternalResource("https://static.swarajabhiyan.org/" + dbUser.getProfilePic()));
 		}
@@ -380,7 +392,7 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView 
 				try {
 					User loggedInUser = vaadinSessionUtil.getLoggedInUserFromSession();
 					loggedInUser = memberService.updateUserPersonalDetails(loggedInUser.getId(), userName.getValue(), String.valueOf(gender.getValue()), dateOfBirth.getValue(), String.valueOf(idCardType.getValue()),
-							idCardNumber.getValue(), fatherName.getValue(), motherName.getValue());
+							idCardNumber.getValue(), fatherName.getValue(), motherName.getValue(), aboutMe.getValue());
 					if (nri.getValue()) {
 						memberService.updateNriUserLocations(loggedInUser.getId(), getLocationId(country), getLocationId(countryRegion), getLocationId(countryRegionArea), getLocationId(votingState),
 								getLocationId(votingDistrict), getLocationId(votingPc), getLocationId(votingAc));

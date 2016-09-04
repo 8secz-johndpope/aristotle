@@ -269,7 +269,7 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
-	public User updateUserPersonalDetails(Long userId, String name, String gender, Date dob, String idCardType, String idCardNumber, String fatherName, String motherName) throws AppException{
+	public User updateUserPersonalDetails(Long userId, String name, String gender, Date dob, String idCardType, String idCardNumber, String fatherName, String motherName, String aboutMe) throws AppException{
 		User user = userRepository.findOne(userId);
 		user.setName(name);
 		user.setGender(gender);
@@ -278,6 +278,7 @@ public class MemberServiceImpl implements MemberService{
 		user.setIdentityNumber(idCardNumber);
 		user.setFatherName(fatherName);
 		user.setMotherName(motherName);
+		user.setProfile(aboutMe);
 		user = userRepository.save(user);
 		return user;
 	}

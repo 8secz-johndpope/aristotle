@@ -18,6 +18,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -164,6 +165,13 @@ public class UiComponentsUtil {
 			textField.setValue("");
 		}else{
 			textField.setValue(value);
+		}
+	}
+	public void setTextAreaValue(TextArea textArea, String value){
+		if(value == null){
+			textArea.setValue("");
+		}else{
+			textArea.setValue(value);
 		}
 	}
 	private void setId(Component component, String caption){
