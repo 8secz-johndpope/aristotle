@@ -19,6 +19,7 @@ public class MainLayoutDesign extends VerticalLayout {
 	protected VerticalLayout layoutWithMenu;
     protected CssLayout header_bar;
     protected NativeButton logoutButton;
+    protected NativeButton homeButton;
     protected Label userNameLabel;
     protected HorizontalLayout main_area;
     protected CssLayout side_bar;

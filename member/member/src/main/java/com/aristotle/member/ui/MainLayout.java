@@ -19,6 +19,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.GenericFontIcon;
+import com.vaadin.server.Page;
 import com.vaadin.spring.navigator.SpringViewProvider;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -47,6 +48,8 @@ public class MainLayout extends MainLayoutDesign implements ViewDisplay {
     	this.vaadinSessionUtil = vaadinSessionUtil;
         this.navigator = new Navigator(UI.getCurrent(), (ViewDisplay) this);
         navigator.addProvider(viewProvider);
+        homeButton.addStyleName("home-button");
+        homeButton.setHeight("60px");
         /*
         NativeButton nativeButton = new NativeButton();
         nativeButton.setIcon(new GenericFontIcon(FontAwesome.GOOGLE_PLUS.getFontFamily(), FontAwesome.GOOGLE_PLUS.getCodepoint()));
@@ -73,7 +76,16 @@ public class MainLayout extends MainLayoutDesign implements ViewDisplay {
 				vaadinSessionUtil.logout();
 				navigator.navigateTo(LoginView.NAVIAGATION_NAME);
 			}
-		});        
+		});    
+        homeButton.addClickListener(new Button.ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				Page.getCurrent().open("https://www.swarajabhiyan.org", "_self", true);
+			}
+		});   
+        
+        
         //addNavigatorView(domainPage.getNaviagationName(), menuButton1);
         
         //addNavigatorView(OrderView.VIEW_NAME, OrderView.class, menuButton2);

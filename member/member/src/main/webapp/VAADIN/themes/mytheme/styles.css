@@ -48,6 +48,16 @@
 	font-style: italic;
 }
 
+.root-layout.navigation-template-vaadin .header-bar  > .home-button {
+	height: 60px;
+	float: left;
+}
+
+.root-layout.navigation-template-vaadin .header-bar  > .home-button  > * {
+	float: left;
+	height: 60px;
+}
+
 .root-layout.navigation-template-vaadin .side-bar {
 	background-color: #000;
 	width: 100px;

@@ -33,13 +33,25 @@ $v-gradient: false;
         padding-left: 50px;
         padding-top: 50px;
 	}
-				
+			
 	.header-bar{
+	//add styles in styles.scss
 		background-color: $menu-color;
 		padding: 0px 15px 0 15px;
 		vertical-align: middle;
 		height: 65px;
 		
+		> .home-button{
+	        height:60px;
+	        float: left;
+	        > * {
+			float: left;
+			
+		    }
+	     }	
+	     
+	     
+		/*
 		> * {
 			color: #FFFFFF;
 			float: right;
@@ -54,17 +66,10 @@ $v-gradient: false;
 			-ms-transform: translateY(-50%);
 			transform: translateY(-50%);
 		}
+		*/
 		
-		> .search-field{
-            background: none;
-			border-bottom: solid 2px #fff;
-			padding-left: 5px;
-			
-			&.v-textfield-prompt{
-				color: #ff0000;
-				font-style: italic;
-			}
-		}
+		
+		
 		
 	}
 
@@ -193,6 +198,8 @@ $v-gradient: false;
   <v-vertical-layout style-name="root-layout navigation-template-vaadin" responsive="true" id="layoutWithMenu" size-full="true" _id="layoutWithMenu"> 
    <v-css-layout style-name="header-bar" width-full="true" _id="header_bar"> 
     <v-native-button icon="fonticon://FontAwesome/F08B" height="20px" plain-text="Logout" _id="logoutButton"></v-native-button> 
+    <v-native-button icon="https://static.swarajabhiyan.org/templates/prod/1/images/logo.png" height="20px" plain-text="" _id="homeBUtton"></v-native-button> 
+    
     <v-label style-name="user-name-label" width="200px" plain-text="" _id="userNameLabel">
       
     </v-label> 
