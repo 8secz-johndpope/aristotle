@@ -65,7 +65,7 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
     @Autowired
     private LocationConvertor pcLocationConvertor;
 	public AdminMemberUploadBean() {
-        super("/admin/member-upload", AppPermission.ADMIN_EVENT);
+        super("/admin/member-upload", AppPermission.USER_DATA_UPLOAD);
 	}
 
 	// @URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
