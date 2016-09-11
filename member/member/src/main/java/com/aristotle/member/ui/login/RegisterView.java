@@ -1,5 +1,6 @@
 package com.aristotle.member.ui.login;
 
+import java.awt.Checkbox;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,9 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Page;
 import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -56,6 +59,8 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 	private ComboBox countryCombobox;
 	private TextField phoneNumber;
 	private CheckBox nri;
+	private CheckBox becomeMember;
+
 
 	private Button loginButton;
 	private Button registerButton;
@@ -65,6 +70,7 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 	private String selectedCountryIsdCode;
 	private Label errorLabel;
 	private Label successLabel;
+	private Label memberLabel;
 	private Image image;
 
 	private ContextHelp contextHelp;
@@ -166,18 +172,23 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 			
 			nri = new CheckBox("I am NRI");
 			nri.setId("nri");
+			becomeMember = new CheckBox("Register as member");
+			becomeMember.setId("becomeMember");
 			
 			errorLabel = uiComponentsUtil.buildErrorlabel();
 			
 			
 			successLabel = uiComponentsUtil.buildSuccessLabel();
+			memberLabel = new Label();
+			memberLabel.setContentMode(ContentMode.HTML);
+			memberLabel.setValue("You are registering as <b>supporter only</b>, to become member please select option above");
 
 			image = new Image();
 			image.setWidth("300px");
 			image.setSource(new ExternalResource("https://pbs.twimg.com/profile_images/599546377253814272/S1-kHFM8.png"));
 			
-			page1 = new VerticalLayout(image, errorLabel, successLabel, nameEmailLayout, passwordLayout, nri, phoneLayout, captcha, registerButton, loginButton);
 			
+			page1 = new VerticalLayout(image, errorLabel, successLabel, becomeMember, memberLabel, nameEmailLayout, passwordLayout, nri, phoneLayout, captcha, registerButton, loginButton);
 			page1.setSizeFull();
 		}catch(Exception ex){
 			ex.printStackTrace();
@@ -197,6 +208,18 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 				}
 			}
 		});
+		becomeMember.addValueChangeListener(new Property.ValueChangeListener() {
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				Boolean selection = (Boolean)event.getProperty().getValue();
+				if(selection){
+					memberLabel.setValue("You are registering as <b>member, you will be redirected to pay membership fee of Rs. 50</b>");
+				}else{
+					memberLabel.setValue("You are registering as <b>supporter only</b>, to become member please select option above");
+				}
+			}
+		});
+		
 		
 		countryCombobox.addValueChangeListener(new Property.ValueChangeListener() {
 
@@ -217,6 +240,7 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 			public void buttonClick(ClickEvent event) {
 				errorLabel.setVisible(false);
 				successLabel.setVisible(false);
+				registerButton.setEnabled(false);
 				
 				boolean isNri = nri.getValue();
 				String selectedCountryIsdCode = "91";
@@ -239,9 +263,17 @@ public class RegisterView extends VerticalLayout implements NavigableView{
 					successLabel.setValue("Member Registered Succesfully");
 					
 					loginHelper.login(email.getValue(), password.getValue());
-					Notification.show("Welcome "+userName.getValue()+", Please Complete Your profile", Type.HUMANIZED_MESSAGE);
-
-					getUI().getNavigator().navigateTo(PersonalDetailView.NAVIAGATION_NAME);
+					Boolean selection = becomeMember.getValue();
+					if(selection){
+						Notification.show("Welcome "+userName.getValue()+", Please complete the payment, you will be redirected to payment page now", Type.HUMANIZED_MESSAGE);
+						Page.getCurrent().open("https://www.instamojo.com/SwarajAbhiyan/membership-fee-for-swaraj-abhiyannew/", Page.getCurrent().getWindowName());
+						registerButton.setEnabled(true);
+					}else{
+						Notification.show("Welcome "+userName.getValue()+", Please Complete Your profile", Type.HUMANIZED_MESSAGE);
+						getUI().getNavigator().navigateTo(PersonalDetailView.NAVIAGATION_NAME);
+						registerButton.setEnabled(true);
+					}
+					
 				} catch (Exception e) {
 					//Notification.show(e.getMessage(), Notification.Type.ERROR_MESSAGE);
 				    captcha.reload();
