@@ -14,6 +14,7 @@ import org.springframework.cache.guava.GuavaCacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 
 import com.aristotle.web.config.DatabaseConfig;
 import com.google.common.cache.CacheBuilder;
@@ -23,6 +24,7 @@ import com.google.common.cache.CacheBuilder;
         "com.aristotle.web.service", "com.aristotle.web.ui" })
 @EnableAutoConfiguration
 @EnableCaching
+@import({DatabaseConfig.class})
 public class App extends SpringBootServletInitializer {
 
     @Override
