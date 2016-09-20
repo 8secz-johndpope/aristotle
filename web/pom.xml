@@ -148,6 +148,22 @@
 					</arguments>
 				</configuration>
 			</plugin>
+			<plugin>
+            <groupId>com.spotify</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <version>0.4.11</version>
+            <configuration>
+                <imageName>ping2ravi/swarajabhiyan-web</imageName>
+                <dockerDirectory>src/main/resources/docker</dockerDirectory>
+                <resources>
+                    <resource>
+                        <targetPath>/</targetPath>
+                        <directory>${project.build.directory}</directory>
+                        <include>ROOT.war</include>
+                    </resource>
+                </resources>
+            </configuration>
+        </plugin>
 		</plugins>
 	</build>
 </project>
