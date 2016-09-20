@@ -24,7 +24,7 @@ import com.google.common.cache.CacheBuilder;
         "com.aristotle.web.service", "com.aristotle.web.ui" })
 @EnableAutoConfiguration
 @EnableCaching
-@import({DatabaseConfig.class})
+@Import({DatabaseConfig.class})
 public class App extends SpringBootServletInitializer {
 
     @Override
