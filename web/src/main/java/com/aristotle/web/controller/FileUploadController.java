@@ -47,9 +47,7 @@ public class FileUploadController {
                         ex.printStackTrace();
                     }
                 }
-                System.out.println("Uploading File");
                 String subdDirectory = "";
-                System.out.println("subdDirectory = " + subdDirectory);
                 String remoteFileName = "profile/" + staticDataEnv + "/" + user.getId() + "/" + System.currentTimeMillis() + ".jpg";
                 awsFileManager.uploadFileToS3(awsKey, awsSecret, bucketName, remoteFileName, file.getInputStream(), "image/jpeg");
                 userService.updateUserProfilePic(user.getId(), remoteFileName);

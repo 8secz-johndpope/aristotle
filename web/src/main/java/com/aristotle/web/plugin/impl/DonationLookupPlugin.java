@@ -35,7 +35,7 @@ public class DonationLookupPlugin extends AbstractDataPlugin {
         try {
             JsonObject context = (JsonObject) mv.getModel().get("context");
             String paymentGatewayDonationId = getStringParameterFromPathOrParams(httpServletRequest, HttpParameters.PAYMENT_GATEWAY_TRANSACTION_ID_PARAM);
-            System.out.println("paymentGatewayDonationId = " + paymentGatewayDonationId);
+            logger.info("paymentGatewayDonationId = {}" , paymentGatewayDonationId);
             Donation donation = donationService.getDonationByPgTransactionId(paymentGatewayDonationId);
             JsonObject jsonObject = convertDonation(donation);
             context.add(name, jsonObject);

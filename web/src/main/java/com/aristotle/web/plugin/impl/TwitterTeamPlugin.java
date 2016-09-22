@@ -44,9 +44,9 @@ public class TwitterTeamPlugin extends AbstractDataPlugin {
         try {
             JsonObject context = (JsonObject) mv.getModel().get("context");
             User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
-            System.out.println("user = " + user);
+            logger.info("user = {}" , user);
             String teamUrl = getStringParameterFromPathOrParams(httpServletRequest, TEAM_URL_PARAMETER);
-            System.out.println("teamUrl = " + teamUrl);
+            logger.info("teamUrl = {}" , teamUrl);
             if (teamUrl == null) {
                 context.addProperty(name, "{\"error\":\"No TeamUrl Specified\"}");
                 return;
@@ -54,12 +54,12 @@ public class TwitterTeamPlugin extends AbstractDataPlugin {
             JsonObject jsonObject = new JsonObject();
             TwitterTeam twitterTeam = twitterService.getTwitterTeamByUrl(teamUrl);
             if (twitterTeam == null) {
-                System.out.println("Invalid Team" + teamUrl);
+            	logger.info("Invalid Team : {}" , teamUrl);
                 jsonObject.addProperty("message", "Invalid Team");
             } else if (user == null) {
                 jsonObject.addProperty("message", "Not logged In");
             } else {
-                System.out.println("Checking if user already part of the team" + user.getId() + " , " + twitterTeam.getId());
+            	logger.info("Checking if user already part of the team : {}, {}" , user.getId() , twitterTeam.getId());
                 boolean userPartOfTheTeam = twitterService.isUserPartOfTwitterTeam(user.getId(), twitterTeam.getId());
                 jsonObject.addProperty("userPartOfTheTeam", userPartOfTheTeam);
                 jsonObject.addProperty("teamLoginUrl", "/twitter/team/" + teamUrl);

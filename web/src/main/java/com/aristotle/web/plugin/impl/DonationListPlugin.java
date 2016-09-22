@@ -40,7 +40,7 @@ public class DonationListPlugin extends AbstractDataPlugin {
             JsonObject context = (JsonObject) mv.getModel().get("context");
             int pageNumber = getIntPramater(httpServletRequest, HttpParameters.PAGE_NUMBER_PARAM, HttpParameters.PAGE_NUMBER_DEFAULT_VALUE);
             int pageSize = getIntSettingPramater("donation.size", 50);
-            System.out.println("Getting Donations page number = " + pageNumber + ", pageSize=" + pageSize);
+            logger.info("Getting Donations page number = {}, pageSize={} " ,pageNumber , pageSize);
             List<Donation> donationList = donationService.getDonations(pageNumber - 1, pageSize);
             JsonArray jsonArray = convertDonationList(donationList);
 

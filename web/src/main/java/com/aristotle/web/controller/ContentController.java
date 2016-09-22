@@ -187,7 +187,6 @@ public class ContentController {
     	try{
         	JsonArray images = (JsonArray)webPageObject.get("images");
         	if(images == null || images.isJsonNull()){
-        		//System.out.println("Creating Images array");
         		images = new JsonArray();
         		webPageObject.add("images", images);
         	}

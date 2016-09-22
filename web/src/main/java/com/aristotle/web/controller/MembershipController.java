@@ -67,7 +67,7 @@ public class MembershipController {
         restTemplate.setInterceptors(Collections.singletonList(new XUserAgentInterceptor()));
 
     }
-    
+    //www.swarajabhiyan.org/user/memberpaymentsuccess?payment_id=MOJO6803000U11006817
     @RequestMapping(value = { "/user/memberpaymentsuccess" })
     public ModelAndView serverSideHandler(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws IOException {
         // payment_id=MOJO6131000C45454677&status=success
@@ -104,7 +104,7 @@ public class MembershipController {
             HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
             String url = "https://www.instamojo.com/api/1.1/payments/" + donationId + "/";
-            System.out.println("Hitting Url : "+ url);
+            logger.info("Hitting Url : {}", url);
             ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
 
             logger.info("responseEntity={}", responseEntity.getBody());
@@ -148,12 +148,9 @@ public class MembershipController {
         int dotIndex = isoDate.indexOf(".");
         int zIndex = isoDate.indexOf("Z");
         if(zIndex - dotIndex <= 3){
-            System.out.println("Date : "+isoDate);
             return isoDate;
         }
         String returnDate = isoDate.substring(0, dotIndex) + isoDate.substring(dotIndex, dotIndex + 4) + "Z";
-        System.out.println("Date : "+isoDate);
-
         return returnDate;
     }
 

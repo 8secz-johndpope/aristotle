@@ -97,7 +97,6 @@ public class TwitterLoginController {
             OAuthToken requestToken = new OAuthToken(requestTokenValue, consumerSecret);
             OAuthToken accessToken = oauthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauthVerifier), null);
             Connection<Twitter> twitterConnection = twitterConnectionFactory.createConnection(accessToken);
-            System.out.println("twitterConnection.getDisplayName()=" + twitterConnection.getDisplayName());
             User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
 
             twitterService.saveTwitterAccount(twitterConnection, twitterApp.getId(), twitterTeam.getId(), user);

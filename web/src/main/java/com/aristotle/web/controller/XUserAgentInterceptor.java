@@ -15,8 +15,6 @@ public class XUserAgentInterceptor implements ClientHttpRequestInterceptor {
 
         HttpHeaders headers = request.getHeaders();
 
-        System.out.println("***Headers = " + headers);
-
         return execution.execute(request, body);
     }
 }

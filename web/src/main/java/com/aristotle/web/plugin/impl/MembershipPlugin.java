@@ -67,7 +67,7 @@ public class MembershipPlugin extends AbstractDataPlugin {
                 Calendar calendar = Calendar.getInstance();
                 calendar.add(Calendar.MONTH, 1);
                 boolean feeAllow = false;
-                System.out.println("membership = "+membership);
+                logger.info("membership = {}", membership);
                 
                 if(membership == null || calendar.getTime().after(membership.getEndDate())){
                 	feeAllow = true;

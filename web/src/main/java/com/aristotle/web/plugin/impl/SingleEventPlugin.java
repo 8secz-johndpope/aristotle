@@ -44,7 +44,7 @@ public class SingleEventPlugin extends AbstractDataPlugin {
 
             Event event = eventService.getEventById(newsId);
             JsonObject eventJsonObject = convertEvent(event);
-            System.out.println("event = " + event);
+            logger.info("event = {}" , event);
 
             context.add(name, eventJsonObject);
         } catch (Exception ex) {

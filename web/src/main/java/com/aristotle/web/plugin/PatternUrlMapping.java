@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import com.aristotle.core.persistance.UrlMapping;
@@ -15,6 +17,7 @@ public class PatternUrlMapping {
     private final List<String> parameters;
     private final List<String> aliases;
     private final List<WebDataPlugin> dataPlugins;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
     public PatternUrlMapping(UrlMapping urlMapping, List<WebDataPlugin> dataPlugins) {
@@ -52,7 +55,7 @@ public class PatternUrlMapping {
             sb.append(oneChar);
         }
         if (!parameters.isEmpty()) {
-            System.out.println("sb = " + sb.toString());
+        	logger.info("pattern = {}" , sb.toString());
             pattern = Pattern.compile(sb.toString());
         }
     }

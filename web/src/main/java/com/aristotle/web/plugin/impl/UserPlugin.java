@@ -96,7 +96,7 @@ public class UserPlugin extends LocationAwareDataPlugin {
         }
         @Override
         public boolean shouldSkipField(FieldAttributes f) {
-            System.out.println("Field : " + f.getName());
+        	logger.info("Field : {}" , f.getName());
             if (fieldsToIgnore.contains(f.getName())) {
                 return true;
             }
@@ -233,7 +233,6 @@ public class UserPlugin extends LocationAwareDataPlugin {
     }
 
     private void addLocations(JsonObject jsonObject, User user) throws AppException {
-        System.out.println("Adding Locations");
         List<UserLocation> userLocations = userService.getUserLocations(user.getId());
 
         Long selectedCountry = getSelectedLocation(userLocations, "Country", "Living");
@@ -247,18 +246,6 @@ public class UserPlugin extends LocationAwareDataPlugin {
         Long selectedVotingPc = getSelectedLocation(userLocations, "ParliamentConstituency", "Voting");
         Long selectedVotingAc = getSelectedLocation(userLocations, "AssemblyConstituency", "Voting");
         Long selectedVotingDistrict = getSelectedLocation(userLocations, "District", "Voting");
-
-        System.out.println("selectedCountry=" + selectedCountry);
-        System.out.println("selectedCountryRegion=" + selectedCountryRegion);
-        System.out.println("selectedCountryRegionArea=" + selectedCountryRegionArea);
-        System.out.println("selectedLivingState=" + selectedLivingState);
-        System.out.println("selectedLivingPc=" + selectedLivingPc);
-        System.out.println("selectedLivingAc=" + selectedLivingAc);
-        System.out.println("selectedLivingDistrict=" + selectedLivingDistrict);
-        System.out.println("selectedVotingState=" + selectedVotingState);
-        System.out.println("selectedVotingPc=" + selectedVotingPc);
-        System.out.println("selectedVotingAc=" + selectedVotingAc);
-        System.out.println("selectedVotingDistrict=" + selectedVotingDistrict);
 
         addCountries(jsonObject, selectedCountry);
         addCountryRegions(jsonObject, "CountryRegions", selectedCountry, selectedCountryRegion);

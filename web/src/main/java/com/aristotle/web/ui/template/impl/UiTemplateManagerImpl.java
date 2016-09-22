@@ -8,6 +8,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,8 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
     private Map<String, Map<Long, DomainPageTemplate>> domainUiTemplateMap;
 
     private Map<String, Long> domainLocationMap;
+    
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private UiTemplateService uiTemplateService;
@@ -128,12 +132,12 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
         String domainName = httpServletRequest.getServerName();
         UrlMapping urlMapping = (UrlMapping) httpServletRequest.getAttribute(HttpParameters.URL_MAPPING);
         if (urlMapping == null) {
-            System.out.println("No URL Mapping Found");
+        	logger.info("No URL Mapping Found");
             return "No Template Defined";
         }
         DomainPageTemplate domainPageTemplate = getDomainPageTemplate(domainName, urlMapping.getId());
         if(domainPageTemplate == null){
-            System.out.println("No Domain page Template Found");
+        	logger.info("No Domain page Template Found");
             return "No Template Defined";
         }
         if (requestForDraft) {
@@ -159,7 +163,6 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
             cookie.setPath("/");
             httpServletResponse.addCookie(cookie);
         }
-        //System.out.println("draftParamValue = " + draftParamValue);
         if (draftParamValue == null || !draftParamValue.equals("1")) {
             return false;
         }
@@ -172,7 +175,7 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
             domainPageTemplateMap = domainUiTemplateMap.get("default");
         }
         if (domainPageTemplateMap == null) {
-            System.out.println("Not found");
+        	logger.info("Not found");
             return null;
         }
         return domainPageTemplateMap.get(urlMappingId);
@@ -182,7 +185,6 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
     public Long getDomainLocation(HttpServletRequest httpServletRequest) {
         init();
         String domain = httpServletRequest.getServerName().toLowerCase();
-        // System.out.println("Getting Domain location for " + domain);
         return domainLocationMap.get(domain);
     }
 

@@ -10,6 +10,8 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,11 +47,12 @@ public class RegisterController {
     private HttpSessionUtil httpSessionUtil;
     @Autowired
     private DonationService donationService;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @RequestMapping(value = {"/js/registerquick", "/registerquick"}, method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<String> registeruserQuickly(HttpServletRequest httpServletRequest, @RequestBody UserContactBean userContactBean) {
-        System.out.println("userContactBean=" + userContactBean);
+    	logger.info("userContactBean= {}" , userContactBean);
         JsonObject jsonObject = new JsonObject();
         ResponseEntity<String> returnDt;
         HttpStatus httpStatus;
@@ -86,7 +89,7 @@ public class RegisterController {
     public ResponseEntity<String> saveUserProfile(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @RequestBody UserRegisterBean user) {
         JsonObject jsonObject = new JsonObject();
         HttpStatus httpStatus;
-        System.out.println("UserRegisterBean = " + user);
+        logger.info("UserRegisterBean = {}" , user);
         if (ignore) {
             httpStatus = HttpStatus.OK;
             jsonObject.addProperty("message", "User Not saved, Server running in test mode");
@@ -138,7 +141,7 @@ public class RegisterController {
             }
             if (errors.isEmpty()) {
                 try {
-                    System.out.println("saving User " + user);
+                	logger.info("saving User: {}" , user);
                     userService.registerUser(user);
                     UserLoginBean userLoginBean = new UserLoginBean();
                     userLoginBean.setUserName(user.getEmailId());
@@ -184,10 +187,10 @@ public class RegisterController {
         JsonObject jsonObject = new JsonObject();
         ResponseEntity<String> returnDt;
         HttpStatus httpStatus;
-        System.out.println("Login for "+userLoginBean.getUserName());
+        logger.info("Login for : {}" , userLoginBean.getUserName());
         try {
             User user = userService.login(userLoginBean.getUserName(), userLoginBean.getPassword());
-            System.out.println("user "+user);
+            logger.info("user: ",user);
             if (user != null) {
                 jsonObject.addProperty("message", "user logged in Succesfully");
                 httpStatus = HttpStatus.OK;
@@ -253,7 +256,7 @@ public class RegisterController {
     @RequestMapping(value = "/js/personaldetail", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<String> updatePersonalDetail(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @RequestBody UserPersonalDetailBean userPersonalDetailBean) {
-        System.out.println("Saving : " + userPersonalDetailBean);
+    	logger.info("Saving : {}" , userPersonalDetailBean);
         HttpStatus httpStatus;
         JsonObject body = new JsonObject();
         try {
@@ -278,7 +281,7 @@ public class RegisterController {
     @RequestMapping(value = "/js/volunteerdetail", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<String> updateVolunteerDetail(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @RequestBody UserVolunteerBean userVolunteerBean) {
-        System.out.println("Saving : " + userVolunteerBean);
+    	logger.info("Saving : {}" , userVolunteerBean);
         HttpStatus httpStatus = HttpStatus.OK;
         JsonObject body = new JsonObject();
         try {
@@ -302,7 +305,7 @@ public class RegisterController {
     @RequestMapping(value = "/js/passwordreset", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<String> resetPassword(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @RequestBody ResetPasswordBean resetPasswordBean) {
-        System.out.println("resetPasswordBean : " + resetPasswordBean);
+    	logger.info("resetPasswordBean : {}" , resetPasswordBean);
         HttpStatus httpStatus = HttpStatus.OK;
         JsonObject body = new JsonObject();
         try {
@@ -325,7 +328,7 @@ public class RegisterController {
     @RequestMapping(value = "/js/passwordupdate", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<String> updatePassword(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @RequestBody ResetPasswordBean resetPasswordBean) {
-        System.out.println("resetPasswordBean : " + resetPasswordBean);
+    	logger.info("resetPasswordBean : {}" , resetPasswordBean);
         HttpStatus httpStatus = HttpStatus.OK;
         JsonObject body = new JsonObject();
         try {

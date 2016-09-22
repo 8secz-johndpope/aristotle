@@ -50,7 +50,7 @@ public class TeamPlugin extends AbstractDataPlugin {
             JsonObject jsonObject = new JsonObject();
             Team team = teamService.getTeamByUrl(teamUrl);
             if (team == null) {
-                System.out.println("Invalid Team" + teamUrl);
+            	logger.info("Invalid Team : {}" , teamUrl);
                 jsonObject.addProperty("message", "Invalid Team");
             } else {
                 List<TeamMember> teamMembers = teamService.getTeamMembersByTeamId(team.getId());

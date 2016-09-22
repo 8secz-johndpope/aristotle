@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -45,7 +47,9 @@ public class PluginManagerImpl implements PluginManager {
 
     @Autowired
     private ApplicationContext applicationContext;
-
+    
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    
     private List<PatternUrlMapping> urlPatterns;
     private List<WebDataPlugin> globalWebDataPlugins;
     private volatile boolean isInitialized = false;
@@ -110,7 +114,7 @@ public class PluginManagerImpl implements PluginManager {
             globalWebDataPlugins.add(oneWebDataPlugin);
 
         }
-        System.out.println("Loading Global Data Plugins Done");
+        logger.info("Loading Global Data Plugins Done");
     }
 
     private WebDataPlugin createDataPlugin(CustomDataPlugin customDataPlugin, JsonParser jsonParser) {
@@ -145,7 +149,6 @@ public class PluginManagerImpl implements PluginManager {
     public void applyAllPluginsForUrl(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView, boolean addData, boolean applyGenericPlugins) throws NotLoggedInException {
         init();
         String requestedUrl = httpServletRequest.getRequestURI();
-        //System.out.println("Handling Url = " + requestedUrl);
         PatternUrlMapping patternUrlMapping = findDataPlugins(httpServletRequest, requestedUrl);
         if(patternUrlMapping == null){
             return;
@@ -224,7 +227,7 @@ public class PluginManagerImpl implements PluginManager {
                 continue;
             }
             allPluginImplementations.add(oneEntry.getValue().getClass().getName());
-            System.out.println(oneEntry.getValue().getClass().getName());
+            logger.info(oneEntry.getValue().getClass().getName());
         }
         dataPluginService.createAllCustomDataPlugins(allPluginImplementations);
     }
