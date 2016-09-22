@@ -37,7 +37,7 @@ public abstract class LocationAwareDataPlugin extends AbstractDataPlugin {
 
     @Override
     public final void applyPlugin(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView mv) {
-        logger.info("Applying {} plugin", name);
+        logger.debug("Applying {} plugin", name);
         // First get location from Domain
         Set<Long> loggedInUserLocations = new HashSet<Long>();
         Long domainLocation = uiTemplateManager.getDomainLocation(httpServletRequest);
