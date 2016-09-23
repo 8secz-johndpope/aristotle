@@ -49,7 +49,7 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
     @Autowired
     private LocationConvertor livingStateLocationConvertor;
     @Autowired
-    private LocationConvertor livingDstrictLocationConvertor;
+    private LocationConvertor livingDistrictLocationConvertor;
     @Autowired
     private LocationConvertor livingAcLocationConvertor;
     @Autowired
@@ -289,10 +289,10 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 				livingDistrictList = Collections.emptyList();
 				livingParliamentConstituencyList = Collections.emptyList();
 			} else {
-                livingParliamentConstituencyList = locationService.getAllParliamentConstituenciesOfState(searchedUser.getStateLivingId());
-                livingDistrictList = locationService.getAllDistrictOfState(searchedUser.getStateLivingId());
+                livingParliamentConstituencyList = locationService.getAllParliamentConstituenciesOfState(selectedUserForEditing.getLivingState().getId());
+                livingDistrictList = locationService.getAllDistrictOfState(selectedUserForEditing.getLivingState().getId());
                 livingPcLocationConvertor.setLocations(livingAssemblyConstituencyList);
-                livingDstrictLocationConvertor.setLocations(livingDistrictList);
+                livingDistrictLocationConvertor.setLocations(livingDistrictList);
 				enableLivingParliamentConstituencyCombo = true;
 				enableLivingDistrictCombo = true;
 				enableLivingAssemblyConstituencyCombo = false;
@@ -344,7 +344,7 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 				livingAssemblyConstituencyList = new ArrayList<>();
 			} else {
 				enableLivingAssemblyConstituencyCombo = true;
-                livingAssemblyConstituencyList = locationService.getAllAssemblyConstituenciesOfDistrict(searchedUser.getDistrictLivingId());
+                livingAssemblyConstituencyList = locationService.getAllAssemblyConstituenciesOfDistrict(selectedUserForEditing.getLivingDistrict().getId());
                 livingAcLocationConvertor.setLocations(livingAssemblyConstituencyList);
 			}
 
@@ -584,12 +584,12 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 		this.livingStateLocationConvertor = livingStateLocationConvertor;
 	}
 
-	public LocationConvertor getLivingDstrictLocationConvertor() {
-		return livingDstrictLocationConvertor;
+	public LocationConvertor getLivingDistrictLocationConvertor() {
+		return livingDistrictLocationConvertor;
 	}
 
-	public void setLivingDstrictLocationConvertor(LocationConvertor livingDstrictLocationConvertor) {
-		this.livingDstrictLocationConvertor = livingDstrictLocationConvertor;
+	public void setLivingDistrictLocationConvertor(LocationConvertor livingDistrictLocationConvertor) {
+		this.livingDistrictLocationConvertor = livingDistrictLocationConvertor;
 	}
 
 	public LocationConvertor getLivingAcLocationConvertor() {
