@@ -210,7 +210,7 @@
 										
 										<h:outputLabel for="livingDistrict" value="District*" />
 										<p:selectOneMenu id="livingDistrict" disabled="#{!adminEditUserBean.enableLivingDistrictCombo}"
-											value="#{adminEditUserBean.selectedUserForEditing.livingDistrict}" converter="#{adminEditUserBean.livingDistrictLocationConvertor}" effect="fold" editable="false">
+											value="#{adminEditUserBean.selectedUserForEditing.livingDistrict}" converter="#{adminEditUserBean.livingDstrictLocationConvertor}" effect="fold" editable="false">
 											<f:selectItem itemLabel="Select District" itemValue="0" />
 											<f:selectItems value="#{adminEditUserBean.livingDistrictList}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict}" />
 			
