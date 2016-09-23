@@ -2,6 +2,7 @@ package com.aristotle.core.service;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import com.aristotle.core.exception.AppException;
 import com.aristotle.core.persistance.Location;
@@ -36,6 +37,8 @@ public interface UserService {
     User getUserById(Long userId) throws AppException;
 
     List<UserLocation> getUserLocations(Long userId) throws AppException;
+    
+    Map<String, Location> findUserLocations(Long userId) throws AppException;
 
     List<UserSearchResult> searchUserByEmail(String emailId) throws AppException;
 

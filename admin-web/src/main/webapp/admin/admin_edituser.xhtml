@@ -199,6 +199,39 @@
 
 										<h:outputText value="Email" />
 										<h:outputText value="#{adminEditUserBean.selectedUserForEditing.email.email}" />
+										
+										<h:outputLabel for="livingState" value="State*" />
+										<p:selectOneMenu id="livingState" value="#{adminEditUserBean.selectedUserForEditing.livingState.id}" effect="fold" editable="false">
+											<f:selectItem itemLabel="Select State" itemValue="0" />
+											<f:selectItems value="#{adminEditUserBean.livingStateList}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
+											<p:ajax event="change" update=":userProfileForm:livingDistrict,:userProfileForm:livingPc"
+												listener="#{adminEditUserBean.handleLivingStateChange}" />
+										</p:selectOneMenu>
+										
+										<h:outputLabel for="livingDistrict" value="District*" />
+										<p:selectOneMenu id="livingDistrict" disabled="#{!adminEditUserBean.enableLivingDistrictCombo}"
+											value="#{adminEditUserBean.selectedUserForEditing.livingDistrict.id}" effect="fold" editable="false">
+											<f:selectItem itemLabel="Select District" itemValue="0" />
+											<f:selectItems value="#{adminEditUserBean.livingDistrictList}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict.id}" />
+			
+											<p:ajax event="change" update=":userProfileForm:livingAc" listener="#{adminEditUserBean.handleLivingDistrictChange}" />
+										</p:selectOneMenu>
+										
+										<h:outputLabel for="livingPc" value="Parliament Constituency" />
+										<p:selectOneMenu id="livingPc" disabled="#{!adminEditUserBean.enableLivingParliamentConstituencyCombo}"
+											value="#{adminEditUserBean.selectedUserForEditing.livingPc.id}" effect="fold" editable="false">
+											<f:selectItem itemLabel="Select PC" itemValue="0" />
+											<f:selectItems value="#{adminEditUserBean.livingParliamentConstituencyList}" var="onePc" itemLabel="#{onePc.name}" itemValue="#{onePc.id}" />
+			
+											<p:ajax event="change" listener="#{adminEditUserRoleBean.handleDistrictChange}" />
+										</p:selectOneMenu>
+										
+										<h:outputLabel for="livingAc" value="Assembly Constituency" />
+										<p:selectOneMenu id="livingAc" disabled="#{!adminEditUserBean.enableLivingAssemblyConstituencyCombo}"
+											value="#{adminEditUserBean.selectedUserForEditing.livingAc.id}" effect="fold" editable="false">
+											<f:selectItem itemLabel="Select AC" itemValue="0" />
+											<f:selectItems value="#{adminEditUserBean.livingAssemblyConstituencyList}" var="oneAc" itemLabel="#{oneAc.name}" itemValue="#{oneAc.id}" />
+										</p:selectOneMenu>
 
 									</p:panelGrid>
 									<h:outputText value="Profile" />

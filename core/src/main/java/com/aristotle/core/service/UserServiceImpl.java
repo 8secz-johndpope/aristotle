@@ -517,6 +517,17 @@ public class UserServiceImpl implements UserService {
     public List<UserLocation> getUserLocations(Long userId) throws AppException {
         return userLocationRepository.getUserLocationByUserId(userId);
     }
+    
+    @Override
+    public Map<String, Location> findUserLocations(Long userId) throws AppException{
+    	List<UserLocation> userLocations = userLocationRepository.getUserLocationByUserId(userId);
+    	Map<String, Location> locations = new HashMap<>();
+    	for(UserLocation oneUserLocation: userLocations){
+    		locations.put(oneUserLocation.getUserLocationType()+oneUserLocation.getLocation().getLocationType().getName(), oneUserLocation.getLocation());
+    	}
+    	return locations;
+    }
+
 
     @Override
     public List<UserSearchResult> searchUserByEmail(String emailId) throws AppException {
@@ -626,7 +637,14 @@ public class UserServiceImpl implements UserService {
         updateUserLocation(user, LIVING, "CountryRegion", userPersonalDetailBean.getEditUserNriCountryRegionId());
         updateUserLocation(user, LIVING, "CountryRegionArea", userPersonalDetailBean.getEditUserNriCountryRegionAreaId());
     }
-    
+    private void updateUserLocation(User user, String userLocationType, String locationType, Location location) {
+    	if(location == null){
+    		updateUserLocation(user, userLocationType, locationType, 0L);//for deletion
+    	}else{
+    		updateUserLocation(user, userLocationType, locationType, location.getId());
+    	}
+    	
+    }
     private void updateUserLocation(User user, String userLocationType, String locationType, Long locationId) {
         UserLocation userLocation = userLocationRepository.getUserLocationByUserIdAndLocationTypesAndUserLocationType(user.getId(), userLocationType, locationType);
         if(locationId == null || locationId <= 0 ){
@@ -1317,6 +1335,18 @@ public class UserServiceImpl implements UserService {
             phone.setUser(user);
             phone = phoneRepository.save(phone);
         }
+        //Update Locations
+        updateUserLocation(user, LIVING, "AssemblyConstituency", userSearchResultForEdting.getLivingAc());
+        updateUserLocation(user, VOTING, "AssemblyConstituency", userSearchResultForEdting.getVotingAc());
+        updateUserLocation(user, LIVING, "ParliamentConstituency", userSearchResultForEdting.getLivingPc());
+        updateUserLocation(user, VOTING, "ParliamentConstituency", userSearchResultForEdting.getVotingPc());
+        updateUserLocation(user, LIVING, "District", userSearchResultForEdting.getLivingDistrict());
+        updateUserLocation(user, VOTING, "District", userSearchResultForEdting.getVotingDistrict());
+        updateUserLocation(user, LIVING, "State", userSearchResultForEdting.getLivingState());
+        updateUserLocation(user, VOTING, "State", userSearchResultForEdting.getVotingState());
+        //updateUserLocation(user, LIVING, "Country", userSearchResultForEdting.getCountry());
+        //updateUserLocation(user, LIVING, "CountryRegion", userSearchResultForEdting.getCountryRegion());
+        //updateUserLocation(user, LIVING, "CountryRegionArea", userSearchResultForEdting.getCountryRegionArea());
         sendMemberForIndexing(user);
         return userSearchResultForEdting;
     }

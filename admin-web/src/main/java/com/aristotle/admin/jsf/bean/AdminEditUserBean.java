@@ -3,7 +3,9 @@ package com.aristotle.admin.jsf.bean;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -23,6 +25,7 @@ import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.Phone;
 import com.aristotle.core.persistance.Phone.PhoneType;
 import com.aristotle.core.persistance.User;
+import com.aristotle.core.persistance.UserLocation;
 import com.aristotle.core.service.LocationService;
 import com.aristotle.core.service.UserService;
 import com.aristotle.core.service.dto.SearchUser;
@@ -207,6 +210,12 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
     public void saveUser(ActionEvent event) {
 		if (isValidInput()) {
             try {
+            	//Temporary, also update save Service once NRI options are visible in UI
+            	selectedUserForEditing.setVotingAc(selectedUserForEditing.getLivingAc());
+            	selectedUserForEditing.setVotingDistrict(selectedUserForEditing.getLivingDistrict());
+            	selectedUserForEditing.setVotingPc(selectedUserForEditing.getLivingPc());
+            	selectedUserForEditing.setVotingState(selectedUserForEditing.getLivingState());
+            	
                 selectedUserForEditing = userService.saveUserFromAdminPanel(selectedUserForEditing);
                 showSearchPanel = true;
                 sendInfoMessageToJsfScreen("User updated succesfully");
@@ -267,10 +276,12 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 
 	public void handleLivingStateChange(AjaxBehaviorEvent event) {
 		try {
-			if (searchedUser.getStateLivingId() == 0 || searchedUser.getStateLivingId() == null) {
+			if (selectedUserForEditing.getLivingState().getId() == null || selectedUserForEditing.getLivingState().getId() == 0) {
 				enableLivingDistrictCombo = false;
 				enableLivingParliamentConstituencyCombo = false;
-				livingDistrictList = new ArrayList<>();
+				enableLivingAssemblyConstituencyCombo = false;
+				livingDistrictList = Collections.emptyList();
+				livingParliamentConstituencyList = Collections.emptyList();
 			} else {
                 livingParliamentConstituencyList = locationService.getAllParliamentConstituenciesOfState(searchedUser.getStateLivingId());
                 livingDistrictList = locationService.getAllDistrictOfState(searchedUser.getStateLivingId());
@@ -320,7 +331,7 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 
 	public void handleLivingDistrictChange(AjaxBehaviorEvent event) {
 		try {
-			if (searchedUser.getDistrictLivingId() == 0 || searchedUser.getDistrictLivingId() == null) {
+			if (selectedUserForEditing.getLivingDistrict().getId() == null || selectedUserForEditing.getLivingDistrict().getId() == 0) {
 				enableLivingAssemblyConstituencyCombo = false;
 				livingAssemblyConstituencyList = new ArrayList<>();
 			} else {
@@ -541,6 +552,13 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
             phone.setUser(selectedUserForEditing.getUser());
             phone.setCountryCode("91");
             selectedUserForEditing.setPhone(phone);
+            
+            try {
+				Map<String, Location> locations = userService.findUserLocations(selectedUserForEditing.getUser().getId());
+				this.selectedUserForEditing.setLocations(locations);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
         }
         showSearchPanel = false;
     }
