@@ -47,7 +47,13 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
     @Autowired
     private UserService userService;
     @Autowired
-    private LocationConvertor locationConvertor;
+    private LocationConvertor livingStateLocationConvertor;
+    @Autowired
+    private LocationConvertor livingDstrictLocationConvertor;
+    @Autowired
+    private LocationConvertor livingAcLocationConvertor;
+    @Autowired
+    private LocationConvertor livingPcLocationConvertor;
 
     private UserSearchResultForEdting selectedUserForEditing;
     private SearchUser searchedUser;
@@ -96,6 +102,7 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
         User loggedInAdminUser = getLoggedInUser(true, buildLoginUrl("/admin/edituser"));
 		if (stateList == null || stateList.isEmpty()) {
             livingStateList = stateList = locationService.getAllStates();
+            livingStateLocationConvertor.setLocations(livingStateList);
 		}
 		if (loggedInAdminUser == null) {
 			return;
@@ -171,7 +178,6 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 
         } else {
         }
-        locationConvertor.setLocations(allLocations);
 	}
 
     private SelectItem[] convertToSelectItems(Collection<Location> locations) {
@@ -285,6 +291,8 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 			} else {
                 livingParliamentConstituencyList = locationService.getAllParliamentConstituenciesOfState(searchedUser.getStateLivingId());
                 livingDistrictList = locationService.getAllDistrictOfState(searchedUser.getStateLivingId());
+                livingPcLocationConvertor.setLocations(livingAssemblyConstituencyList);
+                livingDstrictLocationConvertor.setLocations(livingDistrictList);
 				enableLivingParliamentConstituencyCombo = true;
 				enableLivingDistrictCombo = true;
 				enableLivingAssemblyConstituencyCombo = false;
@@ -337,6 +345,7 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 			} else {
 				enableLivingAssemblyConstituencyCombo = true;
                 livingAssemblyConstituencyList = locationService.getAllAssemblyConstituenciesOfDistrict(searchedUser.getDistrictLivingId());
+                livingAcLocationConvertor.setLocations(livingAssemblyConstituencyList);
 			}
 
 		} catch (Exception e) {
@@ -567,12 +576,36 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
         return selectedUserForEditing;
     }
 
-    public LocationConvertor getLocationConvertor() {
-        return locationConvertor;
-    }
+	public LocationConvertor getLivingStateLocationConvertor() {
+		return livingStateLocationConvertor;
+	}
 
-    public void setLocationConvertor(LocationConvertor locationConvertor) {
-        this.locationConvertor = locationConvertor;
-    }
+	public void setLivingStateLocationConvertor(LocationConvertor livingStateLocationConvertor) {
+		this.livingStateLocationConvertor = livingStateLocationConvertor;
+	}
+
+	public LocationConvertor getLivingDstrictLocationConvertor() {
+		return livingDstrictLocationConvertor;
+	}
+
+	public void setLivingDstrictLocationConvertor(LocationConvertor livingDstrictLocationConvertor) {
+		this.livingDstrictLocationConvertor = livingDstrictLocationConvertor;
+	}
+
+	public LocationConvertor getLivingAcLocationConvertor() {
+		return livingAcLocationConvertor;
+	}
+
+	public void setLivingAcLocationConvertor(LocationConvertor livingAcLocationConvertor) {
+		this.livingAcLocationConvertor = livingAcLocationConvertor;
+	}
+
+	public LocationConvertor getLivingPcLocationConvertor() {
+		return livingPcLocationConvertor;
+	}
+
+	public void setLivingPcLocationConvertor(LocationConvertor livingPcLocationConvertor) {
+		this.livingPcLocationConvertor = livingPcLocationConvertor;
+	}
 
 }

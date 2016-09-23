@@ -201,7 +201,7 @@
 										<h:outputText value="#{adminEditUserBean.selectedUserForEditing.email.email}" />
 										
 										<h:outputLabel for="livingState" value="State*" />
-										<p:selectOneMenu id="livingState" value="#{adminEditUserBean.selectedUserForEditing.livingState}" effect="fold" editable="false">
+										<p:selectOneMenu id="livingState" value="#{adminEditUserBean.selectedUserForEditing.livingState}" converter="#{adminEditUserBean.livinStateLocationConvertor}" effect="fold" editable="false">
 											<f:selectItem itemLabel="Select State" itemValue="0" />
 											<f:selectItems value="#{adminEditUserBean.livingStateList}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState}" />
 											<p:ajax event="change" update=":userProfileForm:livingDistrict,:userProfileForm:livingPc"
@@ -210,7 +210,7 @@
 										
 										<h:outputLabel for="livingDistrict" value="District*" />
 										<p:selectOneMenu id="livingDistrict" disabled="#{!adminEditUserBean.enableLivingDistrictCombo}"
-											value="#{adminEditUserBean.selectedUserForEditing.livingDistrict}" effect="fold" editable="false">
+											value="#{adminEditUserBean.selectedUserForEditing.livingDistrict}" converter="#{adminEditUserBean.livingDistrictLocationConvertor}" effect="fold" editable="false">
 											<f:selectItem itemLabel="Select District" itemValue="0" />
 											<f:selectItems value="#{adminEditUserBean.livingDistrictList}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict}" />
 			
@@ -219,7 +219,7 @@
 										
 										<h:outputLabel for="livingPc" value="Parliament Constituency" />
 										<p:selectOneMenu id="livingPc" disabled="#{!adminEditUserBean.enableLivingParliamentConstituencyCombo}"
-											value="#{adminEditUserBean.selectedUserForEditing.livingPc}" effect="fold" editable="false">
+											value="#{adminEditUserBean.selectedUserForEditing.livingPc}" converter="#{adminEditUserBean.livingPcLocationConvertor}"  effect="fold" editable="false">
 											<f:selectItem itemLabel="Select PC" itemValue="0" />
 											<f:selectItems value="#{adminEditUserBean.livingParliamentConstituencyList}" var="onePc" itemLabel="#{onePc.name}" itemValue="#{onePc}" />
 			
@@ -228,7 +228,7 @@
 										
 										<h:outputLabel for="livingAc" value="Assembly Constituency" />
 										<p:selectOneMenu id="livingAc" disabled="#{!adminEditUserBean.enableLivingAssemblyConstituencyCombo}"
-											value="#{adminEditUserBean.selectedUserForEditing.livingAc}" effect="fold" editable="false">
+											value="#{adminEditUserBean.selectedUserForEditing.livingAc}" converter="#{adminEditUserBean.livingAcLocationConvertor}"  effect="fold" editable="false">
 											<f:selectItem itemLabel="Select AC" itemValue="0" />
 											<f:selectItems value="#{adminEditUserBean.livingAssemblyConstituencyList}" var="oneAc" itemLabel="#{oneAc.name}" itemValue="#{oneAc}" />
 										</p:selectOneMenu>
