@@ -289,6 +289,7 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
 				livingDistrictList = Collections.emptyList();
 				livingParliamentConstituencyList = Collections.emptyList();
 			} else {
+				System.out.println("getting PC for State : "+selectedUserForEditing.getLivingState());
                 livingParliamentConstituencyList = locationService.getAllParliamentConstituenciesOfState(selectedUserForEditing.getLivingState().getId());
                 livingDistrictList = locationService.getAllDistrictOfState(selectedUserForEditing.getLivingState().getId());
                 livingPcLocationConvertor.setLocations(livingAssemblyConstituencyList);

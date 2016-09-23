@@ -54,6 +54,7 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public List<Location> getAllParliamentConstituenciesOfState(Long stateId) throws AppException {
         LocationType locationType = locationTypeRepository.getLocationTypeByName("ParliamentConstituency");
+        System.out.println("locationType = "+locationType);
         return locationRepository.getLocationsByLocationTypeIdAndParentLocationIdOrderByNameAsc(locationType.getId(), stateId);
     }
 
