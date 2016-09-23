@@ -63,7 +63,7 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
     private List<Location> districtList;
     private List<Location> assemblyConstituencyList;
     private List<Location> parliamentConstituencyList;
-    private boolean enableDistrictCombosetSel = false;
+    private boolean enableLivingDistrictCombo = false;
     private boolean enableAssemblyConstituencyCombo = false;
     private boolean enableParliamentConstituencyCombo = false;
 
@@ -127,7 +127,7 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
         // searchedUser.setDateOfBirth(cal.getTime());
 
 		if (searchedUser.getStateVotingId() != null) {
-			enableDistrictCombo = true;
+			enableLivingDistrictCombo = true;
 			enableParliamentConstituencyCombo = true;
             parliamentConstituencyList = locationService.getAllParliamentConstituenciesOfState(searchedUser.getStateVotingId());
             districtList = locationService.getAllDistrictOfState(searchedUser.getStateVotingId());
