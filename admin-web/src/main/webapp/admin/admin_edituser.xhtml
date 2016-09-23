@@ -201,7 +201,7 @@
 										<h:outputText value="#{adminEditUserBean.selectedUserForEditing.email.email}" />
 										
 										<h:outputLabel for="livingState" value="State*" />
-										<p:selectOneMenu id="livingState" value="#{adminEditUserBean.selectedUserForEditing.livingState}" converter="#{adminEditUserBean.livinStateLocationConvertor}" effect="fold" editable="false">
+										<p:selectOneMenu id="livingState" value="#{adminEditUserBean.selectedUserForEditing.livingState}" converter="#{adminEditUserBean.livingStateLocationConvertor}" effect="fold" editable="false">
 											<f:selectItem itemLabel="Select State" itemValue="0" />
 											<f:selectItems value="#{adminEditUserBean.livingStateList}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState}" />
 											<p:ajax event="change" update=":userProfileForm:livingDistrict,:userProfileForm:livingPc"
