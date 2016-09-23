@@ -63,7 +63,7 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
     private List<Location> districtList;
     private List<Location> assemblyConstituencyList;
     private List<Location> parliamentConstituencyList;
-    private boolean enableLivingDistrictCombo = false;
+    private boolean enableDistrictCombo = false;
     private boolean enableAssemblyConstituencyCombo = false;
     private boolean enableParliamentConstituencyCombo = false;
 
