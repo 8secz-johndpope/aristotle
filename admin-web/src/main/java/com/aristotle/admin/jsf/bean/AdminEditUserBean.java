@@ -25,7 +25,6 @@ import com.aristotle.core.persistance.Location;
 import com.aristotle.core.persistance.Phone;
 import com.aristotle.core.persistance.Phone.PhoneType;
 import com.aristotle.core.persistance.User;
-import com.aristotle.core.persistance.UserLocation;
 import com.aristotle.core.service.LocationService;
 import com.aristotle.core.service.UserService;
 import com.aristotle.core.service.dto.SearchUser;
@@ -64,7 +63,7 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
     private List<Location> districtList;
     private List<Location> assemblyConstituencyList;
     private List<Location> parliamentConstituencyList;
-    private boolean enableDistrictCombo = false;
+    private boolean enableDistrictCombosetSel = false;
     private boolean enableAssemblyConstituencyCombo = false;
     private boolean enableParliamentConstituencyCombo = false;
 
@@ -566,12 +565,15 @@ public class AdminEditUserBean extends BaseMultiPermissionAdminJsfBean {
             try {
 				Map<String, Location> locations = userService.findUserLocations(selectedUserForEditing.getUser().getId());
 				this.selectedUserForEditing.setLocations(locations);
+				handleLivingStateChange(null);
+				handleLivingDistrictChange(null);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
         }
         showSearchPanel = false;
     }
+
 
     public UserSearchResultForEdting getSelectedUserForEditing() {
         return selectedUserForEditing;
