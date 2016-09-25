@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -44,7 +45,7 @@ public class News extends BaseEntity {
 	@Column(name = "rejection_reason")
 	private String rejectionReason;// 
 
-	@ManyToMany(cascade=CascadeType.ALL)
+	@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
 	@JoinTable(name = "news_tweets",
 	joinColumns = {
 	@JoinColumn(name="news_id") 
@@ -54,7 +55,7 @@ public class News extends BaseEntity {
 	})
 	private List<ContentTweet> tweets;//all one liners attached to this news which can be tweeted
 	
-	@ManyToMany(cascade=CascadeType.ALL)
+	@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY )
     @JoinTable(name = "news_location",
     joinColumns = {
     @JoinColumn(name="news_id") 
@@ -64,7 +65,7 @@ public class News extends BaseEntity {
     })
     private Set<Location> locations;
 	
-	@ManyToMany(cascade=CascadeType.ALL)
+	@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY )
     @JoinTable(name = "news_uploaded_files",
     joinColumns = {
     @JoinColumn(name="news_id") 
@@ -74,77 +75,6 @@ public class News extends BaseEntity {
     })
     private Set<UploadedFile> files;
 	
-	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "news_ac",
-	joinColumns = {
-	@JoinColumn(name="news_id") 
-	},
-	inverseJoinColumns = {
-	@JoinColumn(name="location_id")
-	})
-	private List<AssemblyConstituency> assemblyConstituencies;
-	
-	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "news_pc",
-	joinColumns = {
-	@JoinColumn(name="news_id") 
-	},
-	inverseJoinColumns = {
-	@JoinColumn(name="pc_id")
-	})
-	private List<ParliamentConstituency> parliamentConstituencies;
-	
-	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "news_district",
-	joinColumns = {
-	@JoinColumn(name="news_id") 
-	},
-	inverseJoinColumns = {
-	@JoinColumn(name="district_id")
-	})
-	private List<District> districts;
-	
-	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "news_state",
-	joinColumns = {
-	@JoinColumn(name="news_id") 
-	},
-	inverseJoinColumns = {
-	@JoinColumn(name="state_id")
-	})
-	private List<State> states;
-	
-	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "news_country",
-	joinColumns = {
-	@JoinColumn(name="news_id") 
-	},
-	inverseJoinColumns = {
-	@JoinColumn(name="country_id")
-	})
-	private List<Country> countries;
-	
-	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "news_country_region",
-	joinColumns = {
-	@JoinColumn(name="news_id") 
-	},
-	inverseJoinColumns = {
-	@JoinColumn(name="country_region_id")
-	})
-	private List<CountryRegion> countryRegions;
-	
-	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "news_country_region_area",
-	joinColumns = {
-	@JoinColumn(name="news_id") 
-	},
-	inverseJoinColumns = {
-	@JoinColumn(name="country_region_area_id")
-	})
-	private List<CountryRegionArea> countryRegionsAreas;
-	
-
 	public String getTitle() {
 		return title;
 	}
@@ -193,32 +123,6 @@ public class News extends BaseEntity {
 	public void setOriginalUrl(String originalUrl) {
 		this.originalUrl = originalUrl;
 	}
-	public List<AssemblyConstituency> getAssemblyConstituencies() {
-		return assemblyConstituencies;
-	}
-	public void setAssemblyConstituencies(
-			List<AssemblyConstituency> assemblyConstituencies) {
-		this.assemblyConstituencies = assemblyConstituencies;
-	}
-	public List<ParliamentConstituency> getParliamentConstituencies() {
-		return parliamentConstituencies;
-	}
-	public void setParliamentConstituencies(
-			List<ParliamentConstituency> parliamentConstituencies) {
-		this.parliamentConstituencies = parliamentConstituencies;
-	}
-	public List<District> getDistricts() {
-		return districts;
-	}
-	public void setDistricts(List<District> districts) {
-		this.districts = districts;
-	}
-	public List<State> getStates() {
-		return states;
-	}
-	public void setStates(List<State> states) {
-		this.states = states;
-	}
 	public boolean isGlobal() {
 		return global;
 	}
@@ -230,24 +134,6 @@ public class News extends BaseEntity {
 	}
 	public void setContentStatus(ContentStatus contentStatus) {
 		this.contentStatus = contentStatus;
-	}
-	public List<Country> getCountries() {
-		return countries;
-	}
-	public void setCountries(List<Country> countries) {
-		this.countries = countries;
-	}
-	public List<CountryRegion> getCountryRegions() {
-		return countryRegions;
-	}
-	public void setCountryRegions(List<CountryRegion> countryRegions) {
-		this.countryRegions = countryRegions;
-	}
-	public List<CountryRegionArea> getCountryRegionsAreas() {
-		return countryRegionsAreas;
-	}
-	public void setCountryRegionsAreas(List<CountryRegionArea> countryRegionsAreas) {
-		this.countryRegionsAreas = countryRegionsAreas;
 	}
 	public Date getPublishDate() {
 		return publishDate;

@@ -63,7 +63,7 @@ public class User extends BaseEntity {
 	@Column(name = "nri")
 	private boolean nri;
 	
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name="reference_user_id")
     private User referenceUser;
 	@Column(name="reference_user_id", insertable=false,updatable=false)
@@ -98,16 +98,6 @@ public class User extends BaseEntity {
 	Set<Role> allRoles;
 	
 	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
-	@JoinTable(name = "user_state_roles",
-	joinColumns = {
-	@JoinColumn(name="user_id") 
-	},
-	inverseJoinColumns = {
-	@JoinColumn(name="state_role_id")
-	})
-	Set<StateRole> stateRoles;
-	
-	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
     @JoinTable(name = "user_location_roles",
     joinColumns = {
     @JoinColumn(name="user_id") 
@@ -116,66 +106,6 @@ public class User extends BaseEntity {
     @JoinColumn(name="location_role_id")
     })
     Set<LocationRole> locationRoles;
-	
-	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
-	@JoinTable(name = "user_district_roles",
-	joinColumns = {
-	@JoinColumn(name="user_id") 
-	},
-	inverseJoinColumns = {
-	@JoinColumn(name="district_role_id")
-	})
-	Set<DistrictRole> districtRoles;
-	
-	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
-	@JoinTable(name = "user_ac_roles",
-	joinColumns = {
-	@JoinColumn(name="user_id") 
-	},
-	inverseJoinColumns = {
-	@JoinColumn(name="ac_role_id")
-	})
-	Set<AcRole> acRoles;
-	
-	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
-	@JoinTable(name = "user_pc_roles",
-	joinColumns = {
-	@JoinColumn(name="user_id") 
-	},
-	inverseJoinColumns = {
-	@JoinColumn(name="pc_role_id")
-	})
-	Set<PcRole> pcRoles;
-	
-	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
-	@JoinTable(name = "user_country_roles",
-	joinColumns = {
-	@JoinColumn(name="user_id") 
-	},
-	inverseJoinColumns = {
-	@JoinColumn(name="country_role_id")
-	})
-	Set<CountryRole> countryRoles;
-	
-	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
-	@JoinTable(name = "user_country_region_roles",
-	joinColumns = {
-	@JoinColumn(name="user_id") 
-	},
-	inverseJoinColumns = {
-	@JoinColumn(name="country_region_role_id")
-	})
-	Set<CountryRegionRole> countryRegionRoles;
-	
-	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
-	@JoinTable(name = "user_country_region_area_roles",
-	joinColumns = {
-	@JoinColumn(name="user_id") 
-	},
-	inverseJoinColumns = {
-	@JoinColumn(name="country_region_area_role_id")
-	})
-	Set<CountryRegionAreaRole> countryRegionAreaRoles;
 	
 	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
 	@JoinTable(name = "user_interests",
@@ -223,7 +153,7 @@ public class User extends BaseEntity {
 	@Column(name = "voter_id")
 	private String voterId;
 	
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} , fetch=FetchType.LAZY )
     @JoinColumn(name="membership_confirmed_by")
     private User membershipConfirmedBy;
 	@Column(name="membership_confirmed_by", insertable=false,updatable=false)
@@ -317,38 +247,6 @@ public class User extends BaseEntity {
 		this.allRoles = allRoles;
 	}
 
-	public Set<StateRole> getStateRoles() {
-		return stateRoles;
-	}
-
-	public void setStateRoles(Set<StateRole> stateRoles) {
-		this.stateRoles = stateRoles;
-	}
-
-	public Set<DistrictRole> getDistrictRoles() {
-		return districtRoles;
-	}
-
-	public void setDistrictRoles(Set<DistrictRole> districtRoles) {
-		this.districtRoles = districtRoles;
-	}
-
-	public Set<AcRole> getAcRoles() {
-		return acRoles;
-	}
-
-	public void setAcRoles(Set<AcRole> acRoles) {
-		this.acRoles = acRoles;
-	}
-
-	public Set<PcRole> getPcRoles() {
-		return pcRoles;
-	}
-
-	public void setPcRoles(Set<PcRole> pcRoles) {
-		this.pcRoles = pcRoles;
-	}
-
 	public boolean isAllowTweets() {
 		return allowTweets;
 	}
@@ -427,30 +325,6 @@ public class User extends BaseEntity {
 
 	public void setInterests(Set<Interest> interests) {
 		this.interests = interests;
-	}
-
-	public Set<CountryRole> getCountryRoles() {
-		return countryRoles;
-	}
-
-	public void setCountryRoles(Set<CountryRole> countryRoles) {
-		this.countryRoles = countryRoles;
-	}
-
-	public Set<CountryRegionRole> getCountryRegionRoles() {
-		return countryRegionRoles;
-	}
-
-	public void setCountryRegionRoles(Set<CountryRegionRole> countryRegionRoles) {
-		this.countryRegionRoles = countryRegionRoles;
-	}
-
-	public Set<CountryRegionAreaRole> getCountryRegionAreaRoles() {
-		return countryRegionAreaRoles;
-	}
-
-	public void setCountryRegionAreaRoles(Set<CountryRegionAreaRole> countryRegionAreaRoles) {
-		this.countryRegionAreaRoles = countryRegionAreaRoles;
 	}
 
 	public boolean isVolunteer() {

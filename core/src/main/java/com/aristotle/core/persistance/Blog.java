@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -41,7 +42,7 @@ public class Blog extends BaseEntity {
 	private boolean global;//Whether this News is available global or not
 	@Column(name = "rejection_reason")
 	private String rejectionReason;
-	@ManyToMany(cascade=CascadeType.ALL)
+	@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
 	@JoinTable(name = "blog_tweets",
 	joinColumns = {
 	@JoinColumn(name="blog_id") 
@@ -51,7 +52,7 @@ public class Blog extends BaseEntity {
 	})
 	private List<ContentTweet> tweets;//all one liners attached to this news which can be tweeted
 	
-	@ManyToMany(cascade=CascadeType.ALL)
+	@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     @JoinTable(name = "blog_location",
     joinColumns = {
     @JoinColumn(name="blog_id") 
