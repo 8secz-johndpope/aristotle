@@ -638,6 +638,7 @@ public class UserServiceImpl implements UserService {
         updateUserLocation(user, LIVING, "CountryRegionArea", userPersonalDetailBean.getEditUserNriCountryRegionAreaId());
     }
     private void updateUserLocation(User user, String userLocationType, String locationType, Location location) {
+        logger.info("user: {}, userLocationType: {}, locationType:{}, location:{}", user.getId(), userLocationType, locationType, location);
     	if(location == null){
     		updateUserLocation(user, userLocationType, locationType, 0L);//for deletion
     	}else{
@@ -646,6 +647,7 @@ public class UserServiceImpl implements UserService {
     	
     }
     private void updateUserLocation(User user, String userLocationType, String locationType, Long locationId) {
+        logger.info("user: {}, userLocationType: {}, locationType:{}, locationId:{}", user.getId(), userLocationType, locationType, locationId);
         UserLocation userLocation = userLocationRepository.getUserLocationByUserIdAndLocationTypesAndUserLocationType(user.getId(), userLocationType, locationType);
         if(locationId == null || locationId <= 0 ){
             // delete User Location

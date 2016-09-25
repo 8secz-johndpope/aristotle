@@ -129,7 +129,10 @@ public class MembershipView extends VerticalLayout implements NavigableView{
 		membershipIdValueLabel = new Label();
 		membershipIdValueLabel.setId("membershipValueId");
 		membershipIdValueLabel.setContentMode(ContentMode.HTML);
-		membershipIdValueLabel.setValue("<b>"+membership.getMembershipId()+"</b>");
+		if(membership != null){
+			membershipIdValueLabel.setValue("<b>"+membership.getMembershipId()+"</b>");
+		}
+
 
 		membershipStartDateLabel = new Label();
 		membershipStartDateLabel.setId("membershipStartDate");
@@ -137,7 +140,9 @@ public class MembershipView extends VerticalLayout implements NavigableView{
 		
 		membershipStartDateValueLabel = new Label();
 		membershipStartDateValueLabel.setId("membershipStartDateValue");
-		membershipStartDateValueLabel.setValue(simpleDateFormat.format(membership.getStartDate()));
+		if(membership != null){
+			membershipStartDateValueLabel.setValue(simpleDateFormat.format(membership.getStartDate()));
+		}
 
 		membershipEndDateLabel  = new Label();
 		membershipEndDateLabel.setId("membershipEndDate");
@@ -145,8 +150,10 @@ public class MembershipView extends VerticalLayout implements NavigableView{
 		
 		membershipEndDateValueLabel  = new Label();
 		membershipEndDateValueLabel.setId("membershipEndDateValue");
-		membershipEndDateValueLabel.setValue(simpleDateFormat.format(membership.getEndDate()));
-		
+		if(membership != null){
+			membershipEndDateValueLabel.setValue(simpleDateFormat.format(membership.getEndDate()));
+		}
+
 		GridLayout gridLayout = new GridLayout(2, 3);
 		gridLayout.addStyleName("outlined");
 		gridLayout.addComponents(membershipIdLabel, membershipIdValueLabel, membershipStartDateLabel, membershipStartDateValueLabel, membershipEndDateLabel, membershipEndDateValueLabel);
