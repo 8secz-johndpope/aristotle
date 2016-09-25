@@ -30,7 +30,7 @@ public class Location extends BaseEntity {
     @Column(name = "location_type_id", insertable = false, updatable = false)
     private Long locationTypeId;
     
-    @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name="parent_id")
     private Location parentLocation;
     @Column(name = "parent_id", insertable = false, updatable = false)

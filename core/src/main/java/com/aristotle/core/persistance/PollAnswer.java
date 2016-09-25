@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,7 +37,7 @@ public class PollAnswer {
 	@Column(name = "content",  columnDefinition="LONGTEXT")
 	private String content;//content of news which can be html or plain text
 
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name="poll_question_id")
     private PollQuestion pollQuestion;
 	@Column(name="poll_question_id", insertable=false,updatable=false)

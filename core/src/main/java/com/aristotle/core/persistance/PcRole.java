@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -32,13 +33,13 @@ public class PcRole {
 	@Column(name = "modifier_id")
 	private Long modifierId;
 
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name="pc_id")
     private ParliamentConstituency parliamentConstituency;
 	@Column(name="pc_id", insertable=false,updatable=false)
 	private Long parliamentConstituencyId;
 
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name="role_id")
     private Role role;
 	@Column(name="role_id", insertable=false,updatable=false)

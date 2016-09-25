@@ -3,6 +3,7 @@ package com.aristotle.core.persistance;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -18,13 +19,13 @@ public class TwitterPermission extends BaseEntity{
 	@Column(name = "token_secret", nullable = false, length=256)
 	private String tokenSecret;
 
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name="twitter_account_id")
     private TwitterAccount twitterAccount;
 	@Column(name="twitter_account_id", insertable=false,updatable=false)
 	private Long twitterAccountId;
 
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
 	@JoinColumn(name="twitter_app_id")
 	private TwitterApp twitterApp;
 	@Column(name="twitter_app_id", insertable=false,updatable=false)

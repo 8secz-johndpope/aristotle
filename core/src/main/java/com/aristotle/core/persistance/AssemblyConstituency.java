@@ -37,7 +37,7 @@ public class AssemblyConstituency extends BaseEntity {
 	})
 	private Set<LocationCampaign> campaigns;
 	
-    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch=FetchType.LAZY)
     @JoinColumn(name = "location_id")
     private Location location;
     @Column(name = "location_id", insertable = false, updatable = false)

@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -91,7 +92,7 @@ public class Candidate {
 	@Column(name = "map_default_depth")
 	private int depth;
 
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name="state_id")
     private State state;
 	@Column(name="state_id", insertable=false,updatable=false)
@@ -104,7 +105,7 @@ public class Candidate {
 	@Column(name = "url_text_part2")
 	private String urlTextPart2;
 
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY)
     @JoinColumn(name="pc_id")
     private ParliamentConstituency parliamentConstituency;
 	@Column(name="pc_id", insertable=false,updatable=false)
@@ -112,7 +113,7 @@ public class Candidate {
 	@Column(name = "pc_name")
 	private String pcName;
 	
-    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch=FetchType.LAZY)
     @JoinColumn(name = "ac_id")
     private AssemblyConstituency assemblyConstituency;
     @Column(name = "ac_id", insertable = false, updatable = false)
@@ -120,7 +121,7 @@ public class Candidate {
     @Column(name = "ac_name")
     private String acName;
 
-    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch=FetchType.LAZY)
     @JoinColumn(name = "election_id")
     private Election election;
     @Column(name = "election_id", insertable = false, updatable = false)

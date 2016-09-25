@@ -18,7 +18,7 @@ public class DomainTemplate extends BaseEntity {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch=FetchType.LAZY)
     @JoinColumn(name = "domain_id")
     private Domain domain;
     @Column(name = "domain_id", insertable = false, updatable = false)

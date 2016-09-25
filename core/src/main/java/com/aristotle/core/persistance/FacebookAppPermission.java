@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -46,13 +47,13 @@ public class FacebookAppPermission{
 	@Column(name = "expire_time", nullable = false)
 	private Date expireTime;
 
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name="facebook_account_id")
     private FacebookAccount facebookAccount;
 	@Column(name="facebook_account_id", insertable=false,updatable=false)
 	private Long facebookAccountId;
 	
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name="facebook_app_id")
     private FacebookApp facebookApp;
 	@Column(name="facebook_app_id", insertable=false,updatable=false)

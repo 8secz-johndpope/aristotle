@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -62,7 +63,7 @@ public class PlannedTweet extends BaseEntity{
 	@Column(name = "total_failed_tweets")
 	private int totalFailedTweets;
 
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
 	@JoinColumn(name="twitter_account_id")
 	private TwitterAccount twitterAccount;
 	@Column(name="twitter_account_id", insertable=false,updatable=false)

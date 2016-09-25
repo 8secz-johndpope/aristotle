@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -37,7 +38,7 @@ public class Video extends BaseEntity {
 	@Column(name = "global_allowed")
 	private boolean global;//Whether this News is available global or not
 
-	@ManyToMany(cascade=CascadeType.ALL)
+	@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
 	@JoinTable(name = "video_tweets",
 	joinColumns = {
 	@JoinColumn(name="video_id") 
@@ -46,46 +47,6 @@ public class Video extends BaseEntity {
 	@JoinColumn(name="content_tweet_id")
 	})
 	private List<ContentTweet> tweets;//all one liners attached to this news which can be tweeted
-	
-	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "video_ac",
-	joinColumns = {
-	@JoinColumn(name="video_id") 
-	},
-	inverseJoinColumns = {
-	@JoinColumn(name="ac_id")
-	})
-	private List<AssemblyConstituency> assemblyConstituencies;
-	
-	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "video_pc",
-	joinColumns = {
-	@JoinColumn(name="video_id") 
-	},
-	inverseJoinColumns = {
-	@JoinColumn(name="pc_id")
-	})
-	private List<ParliamentConstituency> parliamentConstituencies;
-	
-	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "video_district",
-	joinColumns = {
-	@JoinColumn(name="video_id") 
-	},
-	inverseJoinColumns = {
-	@JoinColumn(name="district_id")
-	})
-	private List<District> districts;
-	
-	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "video_state",
-	joinColumns = {
-	@JoinColumn(name="video_id") 
-	},
-	inverseJoinColumns = {
-	@JoinColumn(name="state_id")
-	})
-    private List<State> states;
 	
 	
 	@ManyToMany(cascade=CascadeType.ALL)
@@ -97,26 +58,6 @@ public class Video extends BaseEntity {
     @JoinColumn(name="location_id")
     })
     private List<Location> locations;
-	
-	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "video_country",
-	joinColumns = {
-	@JoinColumn(name="video_id") 
-	},
-	inverseJoinColumns = {
-	@JoinColumn(name="country_id")
-	})
-	private List<Country> countries;
-	
-	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "video_country_region",
-	joinColumns = {
-	@JoinColumn(name="video_id") 
-	},
-	inverseJoinColumns = {
-	@JoinColumn(name="country_region_id")
-	})
-	private List<CountryRegion> countryRegions;
 	
 	@Column(name = "content_status", nullable = false)
 	@Enumerated(EnumType.STRING)
@@ -170,47 +111,11 @@ public class Video extends BaseEntity {
 	public void setGlobal(boolean global) {
 		this.global = global;
 	}
-	public List<AssemblyConstituency> getAssemblyConstituencies() {
-		return assemblyConstituencies;
-	}
-	public void setAssemblyConstituencies(List<AssemblyConstituency> assemblyConstituencies) {
-		this.assemblyConstituencies = assemblyConstituencies;
-	}
-	public List<ParliamentConstituency> getParliamentConstituencies() {
-		return parliamentConstituencies;
-	}
-	public void setParliamentConstituencies(List<ParliamentConstituency> parliamentConstituencies) {
-		this.parliamentConstituencies = parliamentConstituencies;
-	}
-	public List<District> getDistricts() {
-		return districts;
-	}
-	public void setDistricts(List<District> districts) {
-		this.districts = districts;
-	}
-	public List<State> getStates() {
-		return states;
-	}
-	public void setStates(List<State> states) {
-		this.states = states;
-	}
 	public ContentStatus getContentStatus() {
 		return contentStatus;
 	}
 	public void setContentStatus(ContentStatus contentStatus) {
 		this.contentStatus = contentStatus;
-	}
-	public List<Country> getCountries() {
-		return countries;
-	}
-	public void setCountries(List<Country> countries) {
-		this.countries = countries;
-	}
-	public List<CountryRegion> getCountryRegions() {
-		return countryRegions;
-	}
-	public void setCountryRegions(List<CountryRegion> countryRegions) {
-		this.countryRegions = countryRegions;
 	}
 	public String getChannelId() {
 		return channelId;

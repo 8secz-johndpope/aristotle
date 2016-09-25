@@ -22,7 +22,7 @@ public class LocationType extends BaseEntity {
     @Column(name="name", nullable = false, unique=true)
     private String name;
     
-    @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name="parent_type_id")
     private LocationType parentLocationType;
     @Column(name = "parent_type_id", insertable = false, updatable = false)

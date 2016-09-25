@@ -3,6 +3,7 @@ package com.aristotle.core.persistance;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -22,13 +23,13 @@ public class Tweet extends BaseEntity {
     @Column(name = "auto_retweeted")
     private boolean autoRetweeted = true;
 	
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name="twitter_account_id")
     private TwitterAccount twitterAccount;
 	@Column(name="twitter_account_id", insertable=false,updatable=false)
 	private Long twitterAccountId;
 
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name="planned_tweet_id")
     private PlannedTweet plannedTweet;
 	@Column(name="planned_tweet_id", insertable=false,updatable=false)

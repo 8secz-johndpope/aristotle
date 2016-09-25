@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Table(name = "mobile_group_mobile")
 public class MobileGroupMobile extends BaseEntity {
 
-    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch=FetchType.LAZY)
     @JoinColumn(name = "mobile_group_id")
     private MobileGroup mobileGroup;
     @Column(name = "mobile_group_id", insertable = false, updatable = false)

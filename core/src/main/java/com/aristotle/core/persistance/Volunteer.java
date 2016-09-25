@@ -56,7 +56,7 @@ public class Volunteer extends BaseEntity {
     @Column(name = "existing_member_country_iso2", length = 8)
     private String existingMemberCountryIso2;
 
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name="user_id")
     private User user;
 	@Column(name="user_id", insertable=false,updatable=false)

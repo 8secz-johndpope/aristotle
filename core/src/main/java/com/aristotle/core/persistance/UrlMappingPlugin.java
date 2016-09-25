@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Table(name = "url_mapping_plugin")
 public class UrlMappingPlugin extends BaseEntity {
 
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name = "url_mapping_id")
     private UrlMapping urlMapping;
     @Column(name = "url_mapping_id", insertable = false, updatable = false)

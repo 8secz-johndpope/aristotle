@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -75,49 +76,49 @@ public class Office {
 	@Column(name = "other_info",  columnDefinition="LONGTEXT")
 	private String otherInformation;//content of news which can be html or plain text
 
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name = "location_id")
     private Location location;
     @Column(name = "location_id", insertable = false, updatable = false)
     private Long locationId;
 
-    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch=FetchType.LAZY)
     @JoinColumn(name="state_id")
     private State state;
 	@Column(name="state_id", insertable=false,updatable=false)
 	private Long stateId;
 
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name="district_id")
     private District district;
 	@Column(name="district_id", insertable=false,updatable=false)
 	private Long districtId;
 
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name="ac_id")
     private AssemblyConstituency assemblyConstituency;
 	@Column(name="ac_id", insertable=false,updatable=false)
 	private Long assemblyConstituencyId;
 	
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name="pc_id")
     private ParliamentConstituency parliamentConstituency;
 	@Column(name="pc_id", insertable=false,updatable=false)
 	private Long parliamentConstituencyId;
 	
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name="country_id")
     private Country country;
 	@Column(name="country_id", insertable=false,updatable=false)
 	private Long countryId;
 	
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name="country_region_id")
     private CountryRegion countryRegion;
 	@Column(name="country_region_id", insertable=false,updatable=false)
 	private Long countryRegionId;
 	
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name="country_region_area_id")
     private CountryRegionArea countryRegionArea;
 	@Column(name="country_region_area_id", insertable=false,updatable=false)

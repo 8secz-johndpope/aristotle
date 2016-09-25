@@ -14,7 +14,7 @@ public class UserLocation extends BaseEntity {
 
 	public static final String VOTING = "Voting";
 	public static final String LIVING = "Living";
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY )
     @JoinColumn(name="user_id")
     private User user;
 	@Column(name="user_id", insertable=false,updatable=false)
