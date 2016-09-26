@@ -4,7 +4,6 @@
     <artifactId>spring-boot-starter-parent</artifactId>
     <groupId>org.springframework.boot</groupId>
     <version>1.2.4.RELEASE</version>
-    <relativePath>../pom.xml/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.aristotle.task</groupId>
@@ -36,8 +35,6 @@
             <configuration>
               <artifactSet>
                 <excludes>
-                  <exclude>org.apache.storm:storm</exclude>
-                  <exclude>org.apache.storm:storm-core</exclude>
                   <exclude>org.slf4j:slf4j-log4j12</exclude>
                 </excludes>
               </artifactSet>
@@ -59,7 +56,7 @@
       <artifactId>storm</artifactId>
       <version>0.9.5</version>
       <type>pom</type>
-      <scope>provided</scope>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.storm</groupId>
@@ -70,150 +67,6 @@
         <exclusion>
           <artifactId>log4j-over-slf4j</artifactId>
           <groupId>org.slf4j</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>clojure</artifactId>
-          <groupId>org.clojure</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>clj-time</artifactId>
-          <groupId>clj-time</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>joda-time</artifactId>
-          <groupId>joda-time</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>compojure</artifactId>
-          <groupId>compojure</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>core.incubator</artifactId>
-          <groupId>org.clojure</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>tools.macro</artifactId>
-          <groupId>org.clojure</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>clout</artifactId>
-          <groupId>clout</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>ring-core</artifactId>
-          <groupId>ring</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>commons-fileupload</artifactId>
-          <groupId>commons-fileupload</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>servlet-api</artifactId>
-          <groupId>javax.servlet</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>hiccup</artifactId>
-          <groupId>hiccup</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>ring-devel</artifactId>
-          <groupId>ring</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>clj-stacktrace</artifactId>
-          <groupId>clj-stacktrace</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>ring-jetty-adapter</artifactId>
-          <groupId>ring</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>ring-servlet</artifactId>
-          <groupId>ring</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jetty</artifactId>
-          <groupId>org.mortbay.jetty</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jetty-util</artifactId>
-          <groupId>org.mortbay.jetty</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>tools.logging</artifactId>
-          <groupId>org.clojure</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>math.numeric-tower</artifactId>
-          <groupId>org.clojure</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>tools.cli</artifactId>
-          <groupId>org.clojure</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>commons-io</artifactId>
-          <groupId>commons-io</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>commons-exec</artifactId>
-          <groupId>org.apache.commons</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>commons-lang</artifactId>
-          <groupId>commons-lang</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>json-simple</artifactId>
-          <groupId>com.googlecode.json-simple</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>carbonite</artifactId>
-          <groupId>com.twitter</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>kryo</artifactId>
-          <groupId>com.esotericsoftware.kryo</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>reflectasm</artifactId>
-          <groupId>com.esotericsoftware.reflectasm</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>asm</artifactId>
-          <groupId>org.ow2.asm</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>minlog</artifactId>
-          <groupId>com.esotericsoftware.minlog</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>objenesis</artifactId>
-          <groupId>org.objenesis</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>chill-java</artifactId>
-          <groupId>com.twitter</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>commons-logging</artifactId>
-          <groupId>commons-logging</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>commons-codec</artifactId>
-          <groupId>commons-codec</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>disruptor</artifactId>
-          <groupId>com.googlecode.disruptor</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jgrapht-core</artifactId>
-          <groupId>org.jgrapht</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jline</artifactId>
-          <groupId>jline</groupId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -228,6 +81,30 @@
           <groupId>commons-logging</groupId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.social</groupId>
+      <artifactId>spring-social-twitter</artifactId>
+      <version>1.1.0.RELEASE</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <version>1.2.4.RELEASE</version>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.aristotle.core</groupId>
+      <artifactId>core</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
   <properties>
