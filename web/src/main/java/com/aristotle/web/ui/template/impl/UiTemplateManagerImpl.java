@@ -95,8 +95,8 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
                         BeanUtils.copyProperties(oneDomainPageTemplate, detachedDomainPageTemplate);
                         applySubTemplates(detachedDomainPageTemplate, subTemplates);
                         pageTemplates.put(detachedDomainPageTemplate.getUrlMappingId(), detachedDomainPageTemplate);
-                        compiledTemplate = handleBarManager.getHandlebars().compileInline(detachedDomainPageTemplate.getHtmlContent());
                         try{
+                            compiledTemplate = handleBarManager.getHandlebars().compileInline(detachedDomainPageTemplate.getHtmlContent());
                         	pageCompiledTemplates.put(detachedDomainPageTemplate.getUrlMappingId(), compiledTemplate);	
                         }catch(Exception ex){
                         	logger.error("unabel to compile template for {}", detachedDomainPageTemplate.getUrlMapping().getUrlPattern());
