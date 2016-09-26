@@ -163,7 +163,17 @@ public class PluginManagerImpl implements PluginManager {
             // First apply all Global Data Plugins
             if(applyGenericPlugins){
                 for (WebDataPlugin oneWebDataPlugin : globalWebDataPlugins) {
+                    if(oneWebDataPlugin instanceof AbstractDataPlugin){
+                        logger.info("Applying Plugin : {}"+((AbstractDataPlugin)oneWebDataPlugin).getName());
+                    }else{
+                        logger.info("Applying Plugin : {}"+oneWebDataPlugin);
+                    }
                     oneWebDataPlugin.applyPlugin(httpServletRequest, httpServletResponse, modelAndView);
+                    if(oneWebDataPlugin instanceof AbstractDataPlugin){
+                        logger.info("Applied Plugin : {}"+((AbstractDataPlugin)oneWebDataPlugin).getName());
+                    }else{
+                        logger.info("Applied Plugin : {}"+oneWebDataPlugin);
+                    }
                 }
             }
             List<WebDataPlugin> plugins = patternUrlMapping.getDataPlugins();
