@@ -16,7 +16,8 @@ public class WebStaticDataPlugin implements WebDataPlugin {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     protected JsonObject settingJsonObject;
     protected final JsonObject jsonData;
-    protected final String name;
+
+        protected final String name;
 
     public WebStaticDataPlugin(JsonObject data, String name) {
         this.jsonData = data;
@@ -40,5 +41,10 @@ public class WebStaticDataPlugin implements WebDataPlugin {
         JsonObject context = (JsonObject) mv.getModel().get("context");
         context.add(name, jsonData);
     }
+
+    public String getName() {
+        return name;
+    }
+
 
 }

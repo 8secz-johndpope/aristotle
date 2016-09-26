@@ -165,12 +165,16 @@ public class PluginManagerImpl implements PluginManager {
                 for (WebDataPlugin oneWebDataPlugin : globalWebDataPlugins) {
                     if(oneWebDataPlugin instanceof AbstractDataPlugin){
                         logger.info("Applying Plugin : {}"+((AbstractDataPlugin)oneWebDataPlugin).getName());
+                    }else if(oneWebDataPlugin instanceof  WebStaticDataPlugin){
+                        logger.info("Applying Plugin : {}"+((WebStaticDataPlugin)oneWebDataPlugin).getName());
                     }else{
                         logger.info("Applying Plugin : {}"+oneWebDataPlugin);
                     }
                     oneWebDataPlugin.applyPlugin(httpServletRequest, httpServletResponse, modelAndView);
                     if(oneWebDataPlugin instanceof AbstractDataPlugin){
                         logger.info("Applied Plugin : {}"+((AbstractDataPlugin)oneWebDataPlugin).getName());
+                    }else if(oneWebDataPlugin instanceof  WebStaticDataPlugin){
+                        logger.info("Applied Plugin : {}"+((WebStaticDataPlugin)oneWebDataPlugin).getName());
                     }else{
                         logger.info("Applied Plugin : {}"+oneWebDataPlugin);
                     }
