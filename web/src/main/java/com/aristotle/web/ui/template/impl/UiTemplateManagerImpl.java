@@ -1,5 +1,6 @@
 package com.aristotle.web.ui.template.impl;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.aristotle.web.controller.HandleBarManager;
+import com.github.jknack.handlebars.Template;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -27,10 +30,16 @@ import com.aristotle.web.ui.template.UiTemplateManager;
 public class UiTemplateManagerImpl implements UiTemplateManager {
 
     private Map<String, Map<Long, DomainPageTemplate>> domainUiTemplateMap;
+    private Map<String, Map<Long, Template>> domainUiCompileTemplateMap;
 
     private Map<String, Long> domainLocationMap;
+    private Template errorTemplate;
+    private Template exceptionTemplate;
     
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private HandleBarManager handleBarManager;
 
     @Autowired
     private UiTemplateService uiTemplateService;
@@ -51,10 +60,12 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
             if (isInitialised) {
                 return;
             }
-
             try {
+                errorTemplate = handleBarManager.getHandlebars().compileInline("No Template Defined");
+                exceptionTemplate = handleBarManager.getHandlebars().compileInline("InternalServer Error");
 
                 domainUiTemplateMap = new HashMap<String, Map<Long, DomainPageTemplate>>();
+                domainUiCompileTemplateMap = new HashMap<>();
                 domainLocationMap = new HashMap<String, Long>();
                 List<Domain> domains = uiTemplateService.getAllDomains();
                 DomainPageTemplate detachedDomainPageTemplate;
@@ -74,20 +85,26 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
                     Long domainTemplateId = domainPageTemplates.get(0).getDomainTemplateId();
                     List<DomainTemplatePart> subTemplates = uiTemplateService.getDomainTemplatePartsByDomainTemplateId(domainTemplateId);
                     Map<Long, DomainPageTemplate> pageTemplates = new HashMap<Long, DomainPageTemplate>();
+                    Map<Long, Template> pageCompiledTemplates = new HashMap<Long, Template>();
+                    Template compiledTemplate;
                     for (DomainPageTemplate oneDomainPageTemplate : domainPageTemplates) {
                         detachedDomainPageTemplate = new DomainPageTemplate();
                         BeanUtils.copyProperties(oneDomainPageTemplate, detachedDomainPageTemplate);
                         applySubTemplates(detachedDomainPageTemplate, subTemplates);
                         pageTemplates.put(detachedDomainPageTemplate.getUrlMappingId(), detachedDomainPageTemplate);
+                        compiledTemplate = handleBarManager.getHandlebars().compileInline(detachedDomainPageTemplate.getHtmlContent());
+                        pageCompiledTemplates.put(detachedDomainPageTemplate.getUrlMappingId(), compiledTemplate);
                     }
-
+                    domainUiCompileTemplateMap.put(oneDomain.getName().toLowerCase(), pageCompiledTemplates);
                     domainUiTemplateMap.put(oneDomain.getName().toLowerCase(), pageTemplates);
                     if (oneDomain.getLocationId() == null) {
                         domainUiTemplateMap.put("default", pageTemplates);
+                        domainUiCompileTemplateMap.put("default", pageCompiledTemplates);
                     }
                     if (otherDomainNames != null) {
                         for (String oneOtherDomainName : otherDomainNames) {
                             domainUiTemplateMap.put(oneOtherDomainName.toLowerCase(), pageTemplates);
+                            domainUiCompileTemplateMap.put(oneOtherDomainName.toLowerCase(), pageCompiledTemplates);
                         }
                     }
                 }
@@ -146,10 +163,37 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
         return domainPageTemplate.getHtmlContent();
 
     }
+
     @Override
-    public String getCompiledTemplate(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        String template = getTemplate(httpServletRequest, httpServletResponse);
-        return template;
+    public Template getCompiledTemplate(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        boolean requestForDraft = isRequestForDraft(httpServletRequest, httpServletResponse);
+        if (requestForDraft) {
+            refresh();// refresh if draft is requested
+        }
+        init();
+        String domainName = httpServletRequest.getServerName();
+        UrlMapping urlMapping = (UrlMapping) httpServletRequest.getAttribute(HttpParameters.URL_MAPPING);
+        if (urlMapping == null) {
+            logger.info("No URL Mapping Found");
+            return errorTemplate;
+        }
+        DomainPageTemplate domainPageTemplate = getDomainPageTemplate(domainName, urlMapping.getId());
+        if(domainPageTemplate == null){
+            logger.info("No Domain page Template Found");
+            return errorTemplate;
+        }
+        if (requestForDraft) {
+            try {
+                return handleBarManager.getHandlebars().compile(domainPageTemplate.getHtmlContentDraft());
+            } catch (IOException e) {
+                logger.error("Exception occured : ",e);
+                return exceptionTemplate;
+            }
+        }
+
+        Template domainPageCompiledTemplate = getDomainPageCompiledTemplate(domainName, urlMapping.getId());
+
+        return domainPageCompiledTemplate;
 
     }
 
@@ -182,6 +226,17 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
         }
         if (domainPageTemplateMap == null) {
         	logger.info("Not found");
+            return null;
+        }
+        return domainPageTemplateMap.get(urlMappingId);
+    }
+    private Template getDomainPageCompiledTemplate(String domain, Long urlMappingId) {
+        Map<Long, Template> domainPageTemplateMap = domainUiCompileTemplateMap.get(domain.toLowerCase());
+        if (domainPageTemplateMap == null) {
+            domainPageTemplateMap = domainUiCompileTemplateMap.get("default");
+        }
+        if (domainPageTemplateMap == null) {
+            logger.info("Not found");
             return null;
         }
         return domainPageTemplateMap.get(urlMappingId);
