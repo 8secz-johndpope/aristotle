@@ -96,7 +96,13 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
                         applySubTemplates(detachedDomainPageTemplate, subTemplates);
                         pageTemplates.put(detachedDomainPageTemplate.getUrlMappingId(), detachedDomainPageTemplate);
                         compiledTemplate = handleBarManager.getHandlebars().compileInline(detachedDomainPageTemplate.getHtmlContent());
-                        pageCompiledTemplates.put(detachedDomainPageTemplate.getUrlMappingId(), compiledTemplate);
+                        try{
+                        	pageCompiledTemplates.put(detachedDomainPageTemplate.getUrlMappingId(), compiledTemplate);	
+                        }catch(Exception ex){
+                        	logger.error("unabel to compile template for {}", detachedDomainPageTemplate.getUrlMapping().getUrlPattern());
+                        	pageCompiledTemplates.put(detachedDomainPageTemplate.getUrlMappingId(), exceptionTemplate);
+                        }
+                        
                     }
                     domainUiCompileTemplateMap.put(oneDomain.getName().toLowerCase(), pageCompiledTemplates);
                     domainUiTemplateMap.put(oneDomain.getName().toLowerCase(), pageTemplates);
