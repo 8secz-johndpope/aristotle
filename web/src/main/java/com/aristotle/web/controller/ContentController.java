@@ -68,14 +68,14 @@ public class ContentController {
             return "User not logged In";
         }
         stopWatch.start("Get Template");
-        Template template = uiTemplateManager.getCompiledTemplate(httpServletRequest, httpServletResponse);
-        //modelAndView.getModel().put("template", stringTemplate);
+        String stringTemplate = uiTemplateManager.getTemplate(httpServletRequest, httpServletResponse);
+        modelAndView.getModel().put("template", stringTemplate);
         stopWatch.stop();
 
-        //Handlebars handlebars = handleBarManager.getHandlebars();
+        Handlebars handlebars = handleBarManager.getHandlebars();
         
         stopWatch.start("Compile Template");
-        //Template template = handlebars.compileInline(stringTemplate);
+        Template template = handlebars.compileInline(stringTemplate);
         stopWatch.stop();
 
         stopWatch.start("Convert Data To Jackson");
