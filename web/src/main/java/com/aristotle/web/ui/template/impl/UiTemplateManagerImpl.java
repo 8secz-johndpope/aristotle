@@ -48,11 +48,13 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
 
     @Override
     public void refresh() {
+    	logger.info("init resetting isInitialised to false : {}", isInitialised);
         isInitialised = false;
         init();
     }
 
     private void init() {
+    	logger.info("init isInitialised = {}", isInitialised);
         if (isInitialised) {
             return;
         }
@@ -112,7 +114,7 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
                 isInitialised = true;
 
             } catch (Exception ex) {
-                ex.printStackTrace();
+            	logger.error("Unable to load Plugins", ex);
             }
             logger.info("Refreshed UI cache");
         }

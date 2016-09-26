@@ -68,6 +68,7 @@ public class ContentController {
             return "User not logged In";
         }
         stopWatch.start("Get Template");
+        logger.info("Get URL Template : {}", httpServletRequest.getRequestURI());
         Template template = uiTemplateManager.getCompiledTemplate(httpServletRequest, httpServletResponse);
         //modelAndView.getModel().put("template", stringTemplate);
         stopWatch.stop();
