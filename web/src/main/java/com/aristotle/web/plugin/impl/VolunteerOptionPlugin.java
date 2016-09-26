@@ -39,8 +39,9 @@ public class VolunteerOptionPlugin extends AbstractDataPlugin {
         int rowSize = getIntSettingPramater("interest.rowsize", 3);
         try {
             JsonObject context = (JsonObject) mv.getModel().get("context");
+            logger.info("Finding All Interests");
             List<InterestGroup> interestGroups = appService.getAllInterests();
-
+            logger.info("Intrests Loaded");
             JsonArray interestGroupJsonArray = new JsonArray();
             for (InterestGroup oneInterestGroup : interestGroups) {
                 JsonObject oneInterestGroupJsonObject = new JsonObject();
@@ -64,6 +65,7 @@ public class VolunteerOptionPlugin extends AbstractDataPlugin {
                 interestGroupJsonArray.add(oneInterestGroupJsonObject);
             }
             context.add(name, interestGroupJsonArray);
+            logger.info("Plugin {} applied", name);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
