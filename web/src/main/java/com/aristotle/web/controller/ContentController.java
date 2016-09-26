@@ -5,7 +5,8 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.mortbay.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -40,6 +41,8 @@ public class ContentController {
 
     @Autowired
     private HandleBarManager handleBarManager;
+    
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ExceptionHandler({ Exception.class })
     public String handleException(Exception ex) {
@@ -90,7 +93,7 @@ public class ContentController {
         if (cacheTimeInSeconds != null) {
             httpServletResponse.setHeader("Cache-Control", "max-age=" + cacheTimeInSeconds);
         }
-        Log.info(stopWatch.prettyPrint());
+        logger.info(stopWatch.prettyPrint());
 
         return result;
     }
