@@ -169,6 +169,7 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
     @Override
     public Template getCompiledTemplate(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         boolean requestForDraft = isRequestForDraft(httpServletRequest, httpServletResponse);
+        logger.info("requestForDraft : {}", requestForDraft);
         if (requestForDraft) {
             refresh();// refresh if draft is requested
         }
@@ -201,6 +202,7 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
 
     private boolean isRequestForDraft(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         String draftParamValue = httpServletRequest.getParameter("draft");
+        logger.info("draftParamValue : {}", draftParamValue);
         if (draftParamValue == null) {
             Cookie[] cookies = httpServletRequest.getCookies();
             if (cookies != null && cookies.length > 0) {
