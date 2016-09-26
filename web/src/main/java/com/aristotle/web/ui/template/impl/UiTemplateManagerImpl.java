@@ -57,6 +57,7 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
             return;
         }
         synchronized (this) {
+            logger.info("Refreshing UI cache");
             if (isInitialised) {
                 return;
             }
@@ -113,6 +114,7 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+            logger.info("Refreshed UI cache");
         }
 
 
