@@ -7,6 +7,8 @@ public interface UiTemplateManager {
 
     String getTemplate(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse);
 
+    String getCompiledTemplate(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse);
+
     void refresh();
 
     Long getDomainLocation(HttpServletRequest httpServletRequest);

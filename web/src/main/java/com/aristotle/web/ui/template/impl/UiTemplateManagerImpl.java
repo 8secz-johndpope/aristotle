@@ -146,6 +146,12 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
         return domainPageTemplate.getHtmlContent();
 
     }
+    @Override
+    public String getCompiledTemplate(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        String template = getTemplate(httpServletRequest, httpServletResponse);
+        return template;
+
+    }
 
     private boolean isRequestForDraft(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         String draftParamValue = httpServletRequest.getParameter("draft");
