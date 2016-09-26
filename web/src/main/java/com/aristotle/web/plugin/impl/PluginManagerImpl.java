@@ -180,12 +180,29 @@ public class PluginManagerImpl implements PluginManager {
                     }
                 }
             }
+
+            logger.info("*****Global Data plugins Done and now willapply data plugin****");
             List<WebDataPlugin> plugins = patternUrlMapping.getDataPlugins();
             if (plugins == null) {
                 return;
             }
             for (WebDataPlugin oneWebDataPlugin : plugins) {
+                if(oneWebDataPlugin instanceof AbstractDataPlugin){
+                    logger.info("Date Plugin Applying Plugin : {}"+((AbstractDataPlugin)oneWebDataPlugin).getName());
+                }else if(oneWebDataPlugin instanceof  WebStaticDataPlugin){
+                    logger.info("Date Plugin Applying Plugin : {}"+((WebStaticDataPlugin)oneWebDataPlugin).getName());
+                }else{
+                    logger.info("Date Plugin Applying Plugin : {}"+oneWebDataPlugin);
+                }
                 oneWebDataPlugin.applyPlugin(httpServletRequest, httpServletResponse, modelAndView);
+
+                if(oneWebDataPlugin instanceof AbstractDataPlugin){
+                    logger.info("Date Plugin Applied Plugin : {}"+((AbstractDataPlugin)oneWebDataPlugin).getName());
+                }else if(oneWebDataPlugin instanceof  WebStaticDataPlugin){
+                    logger.info("Date Plugin Applied Plugin : {}"+((WebStaticDataPlugin)oneWebDataPlugin).getName());
+                }else{
+                    logger.info("Date Plugin Applied Plugin : {}"+oneWebDataPlugin);
+                }
             }
 
         }
