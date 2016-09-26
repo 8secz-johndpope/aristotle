@@ -5,9 +5,11 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.mortbay.log.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -52,24 +54,35 @@ public class ContentController {
         
         JsonObject jsonContext = new JsonObject();
         modelAndView.getModel().put("context", jsonContext);
+        StopWatch stopWatch = new StopWatch();
+        
         try {
+        	stopWatch.start("DBTask");
             pluginManager.applyAllPluginsForUrl(httpServletRequest, httpServletResponse, modelAndView, true, true);
             addPageAttributes(httpServletRequest, httpServletResponse, modelAndView);
+            stopWatch.stop();
         } catch (NotLoggedInException e) {
             return "User not logged In";
         }
-
+        stopWatch.start("Get Template");
         String stringTemplate = uiTemplateManager.getTemplate(httpServletRequest, httpServletResponse);
         modelAndView.getModel().put("template", stringTemplate);
+        stopWatch.stop();
 
         Handlebars handlebars = handleBarManager.getHandlebars();
-
+        
+        stopWatch.start("Compile Template");
         Template template = handlebars.compileInline(stringTemplate);
+        stopWatch.stop();
 
+        stopWatch.start("Convert Data To Jackson");
         JsonNode rootNode = convertDataToJackSon(jsonContext);
         Context context = Context.newBuilder(rootNode).resolver(JsonNodeValueResolver.INSTANCE).build();
-
+        stopWatch.stop();
+        
+        stopWatch.start("Apply Data");
         String result = template.apply(context);
+        stopWatch.stop();
         Integer cacheTimeInSeconds = uiTemplateManager.getCacheTime(httpServletRequest);
         if (cacheTimeInSeconds == null && httpServletRequest.getRequestURI().contains("content")) {
             cacheTimeInSeconds = 300;
@@ -77,6 +90,7 @@ public class ContentController {
         if (cacheTimeInSeconds != null) {
             httpServletResponse.setHeader("Cache-Control", "max-age=" + cacheTimeInSeconds);
         }
+        Log.info(stopWatch.prettyPrint());
 
         return result;
     }
