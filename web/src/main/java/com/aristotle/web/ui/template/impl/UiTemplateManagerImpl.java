@@ -48,11 +48,13 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
 
     @Override
     public void refresh() {
+    	logger.info("init resetting isInitialised to false : {}", isInitialised);
         isInitialised = false;
         init();
     }
 
     private void init() {
+    	logger.info("init isInitialised = {}", isInitialised);
         if (isInitialised) {
             return;
         }
@@ -93,8 +95,14 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
                         BeanUtils.copyProperties(oneDomainPageTemplate, detachedDomainPageTemplate);
                         applySubTemplates(detachedDomainPageTemplate, subTemplates);
                         pageTemplates.put(detachedDomainPageTemplate.getUrlMappingId(), detachedDomainPageTemplate);
-                        compiledTemplate = handleBarManager.getHandlebars().compileInline(detachedDomainPageTemplate.getHtmlContent());
-                        pageCompiledTemplates.put(detachedDomainPageTemplate.getUrlMappingId(), compiledTemplate);
+                        try{
+                            compiledTemplate = handleBarManager.getHandlebars().compileInline(detachedDomainPageTemplate.getHtmlContent());
+                        	pageCompiledTemplates.put(detachedDomainPageTemplate.getUrlMappingId(), compiledTemplate);	
+                        }catch(Exception ex){
+                        	logger.error("unabel to compile template for {}", detachedDomainPageTemplate.getUrlMapping().getUrlPattern());
+                        	pageCompiledTemplates.put(detachedDomainPageTemplate.getUrlMappingId(), exceptionTemplate);
+                        }
+                        
                     }
                     domainUiCompileTemplateMap.put(oneDomain.getName().toLowerCase(), pageCompiledTemplates);
                     domainUiTemplateMap.put(oneDomain.getName().toLowerCase(), pageTemplates);
@@ -112,7 +120,7 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
                 isInitialised = true;
 
             } catch (Exception ex) {
-                ex.printStackTrace();
+            	logger.error("Unable to load Plugins", ex);
             }
             logger.info("Refreshed UI cache");
         }
