@@ -257,35 +257,6 @@ public class SetupController {
         return message;
     }
     
-    @RequestMapping("/sc/admin/delete/member")
-    @ResponseBody
-    public List<String> deleteMemberMembers(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView modelAndView) throws Exception {
-    	
-        try{
-        	User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
-        	if(user == null){
-        		throw new AppException("User not logged In");
-        	}
-        	Set<Long> allowedUsers = new HashSet<>();
-        	allowedUsers.add(2L);//Ravi
-        	allowedUsers.add(38L);//Neeraj
-        	if(!allowedUsers.contains(user.getId())){
-        		throw new AppException(user.getName() +" you are not allowed to do this operation");
-        	}
-            
-        	String memberId = httpServletRequest.getParameter("mid");
-            if(StringUtils.isEmpty(memberId)){
-            	return Lists.newArrayList("mid must be provided");
-            }
-            List<String> status = userService.deleteUserByMemberId(memberId);
-            return status;
-        }catch(Throwable ex){
-        	ex.printStackTrace();
-        	return Lists.newArrayList(ex.getMessage());
-        }
-    	
-    }
-    
-    
+
 
 }
