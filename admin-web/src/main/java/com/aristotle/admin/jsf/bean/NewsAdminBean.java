@@ -125,13 +125,13 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
     public void handleFileUpload(FileUploadEvent event) {
-        System.out.println("Uploading File");
+        logger.info("Uploading File");
         String remoteFileName = "content/news/" + staticDataEnv + "/" + selectedNews.getId() + "/" + event.getFile().getFileName();
         String bucketName = "static.swarajabhiyan.org";
-        System.out.println("remoteFileName = " + remoteFileName);
+        logger.info("remoteFileName = " + remoteFileName);
         try {
             awsFileManager.uploadFileToS3(awsKey, awsSecret, bucketName, remoteFileName, event.getFile().getInputstream());
-            System.out.println("File uploaded = " + remoteFileName);
+            logger.info("File uploaded = " + remoteFileName);
             newsService.saveNewsUploadedFile(selectedNews.getId(), remoteFileName, event.getFile().getSize(), getFileType(event.getFile().getFileName()));
             FacesMessage message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
             FacesContext.getCurrentInstance().addMessage(null, message);
