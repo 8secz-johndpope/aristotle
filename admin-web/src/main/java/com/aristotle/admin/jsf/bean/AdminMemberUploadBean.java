@@ -156,7 +156,7 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
                 } else {
                 	
                     String email = record.get("Email");
-                    logger.info("Reading Record for : {}", email);
+                    logger.info("Reading Record for email : {}", email);
                     String mobile = record.get("Mobile");
                     String referenceMobile = record.get("Reference");
                     String name = record.get("Name");
