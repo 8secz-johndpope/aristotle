@@ -143,7 +143,7 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
 
 
     public void handleFileUpload(FileUploadEvent event) {
-        System.out.println("Uploading File " + event.getFile().getFileName());
+        logger.info("Uploading File " + event.getFile().getFileName());
 
         try {
             Reader in = new InputStreamReader(event.getFile().getInputstream());
@@ -154,7 +154,9 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
                 if (header) {
                     header = false;
                 } else {
+                	
                     String email = record.get("Email");
+                    logger.info("Reading Record for : {}", email);
                     String mobile = record.get("Mobile");
                     String referenceMobile = record.get("Reference");
                     String name = record.get("Name");
@@ -168,6 +170,7 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
                     userUploadDto.setTxnId(txnId);
                     userUploadDto.setName(name);
                     userBeingUploaded.add(userUploadDto);
+                    
                 }
 
             }
