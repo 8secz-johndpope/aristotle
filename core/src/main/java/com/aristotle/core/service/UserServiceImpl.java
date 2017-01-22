@@ -1,6 +1,7 @@
 package com.aristotle.core.service;
 
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -948,21 +949,31 @@ public class UserServiceImpl implements UserService {
     }
 
     private void confirmAllEmail() {
-        List<Email> emails = emailRepository.findAll();
+        
         int totalFailed = 0;
         int totalSuccess = 0;
-        for (Email oneEmail : emails) {
-            if (oneEmail.isConfirmed()) {
-                continue;
+        Pageable pageRequest = new PageRequest(0, 100);
+        Page<Email> emails;
+        while(true){
+        	emails = emailRepository.findAll(pageRequest);
+        	if(!emails.hasContent()){
+        		break;
+        	}
+        	for (Email oneEmail : emails.getContent()) {
+                if (oneEmail.isConfirmed()) {
+                    continue;
+                }
+                try {
+                    sendEmailConfirmtionEmail(oneEmail.getEmail());
+                    totalSuccess++;
+                } catch (Exception ex) {
+                    totalFailed++;
+                    ex.printStackTrace();
+                }
             }
-            try {
-                sendEmailConfirmtionEmail(oneEmail.getEmail());
-                totalSuccess++;
-            } catch (Exception ex) {
-                totalFailed++;
-                ex.printStackTrace();
-            }
+        	pageRequest = pageRequest.next();
         }
+        
         System.out.println("Total Success : " + totalSuccess);
         System.out.println("Total Failed : " + totalFailed);
     }
@@ -1189,7 +1200,63 @@ public class UserServiceImpl implements UserService {
         membership.setMembershipId(getMembershipId(user, membership));
         user.setMember(true);
         sendMemberForIndexing(user);
+        try{
+        	generateUserLoginAccountForIvrMember(phone);	
+    	}catch(Exception ex){
+    		logger.error("Unable to generate User Login detail and send SMS", ex);
+    	}
         return user;
+    }
+    
+    private void generateUserLoginAccountForIvrMember(Phone phone) throws AppException {
+    	
+        if (phone == null) {
+            throw new AppException("Mobile Is not registered");
+        }
+        User user = phone.getUser();
+        if (user == null) {
+            throw new AppException("Phone(user) Is not registered");
+        }
+        LoginAccount loginAccount = loginAccountRepository.getLoginAccountByUserId(user.getId());
+        if (loginAccount == null) {
+            loginAccount = new LoginAccount();
+            String password = generateRandompassword();
+            loginAccount.setPassword(passwordUtil.encryptPassword(password));
+            loginAccount.setUser(user);
+            loginAccount.setUserName(phone.getPhoneNumber());
+            loginAccount = loginAccountRepository.save(loginAccount);
+            sendLoginAccountDetails(loginAccount, password);
+        } else {
+            throw new AppException("Login Account already Exists");
+        }
+        
+        try {
+			sendRegistrationSms(user.getName(), user.getMembershipNumber(), loginAccount.getUserName(), loginAccount.getPassword(), "sas");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    private static final String smsTemplate= "Dear ##Name##, Thanks for becoming member of Swaraj Abhiyan. Your membership no is ##Membership_no##. Your user id is ##UserID## and your password is ##password##. Kindly login at https://member.swarajabhiyan.org/#!login to add your details. Jai Hind Swaraj Abhiyan";
+    
+    @Value("${IVR_MEMBER_REGISTER_SMS_URL:NONE}")
+    private String ivrMemberSmsUrl;
+    
+    private void sendRegistrationSms(String name, String membershipNumber, String userId, String password, String mobileNumber) throws Exception{
+        String sms = smsTemplate.replace("##Name##", name);
+        sms = sms.replace("##Membership_no##", membershipNumber);
+        sms = sms.replace("##password##", password);
+        sms = sms.replace("##UserID##", userId);
+        sms = URLEncoder.encode(sms, "UTF-8");
+        
+        String url = ivrMemberSmsUrl.replace("{mobileNumber}", mobileNumber);
+        url = url.replace("{sms}", sms);
+        System.out.println("url = " + url);
+
+        HttpUtil httpUtil = new HttpUtil();
+        String response = httpUtil.getResponse(url);
+        System.out.println(response);
+
     }
     
     private String getMembershipId(User user, Membership membership){
