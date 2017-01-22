@@ -92,7 +92,7 @@ public class Location extends BaseEntity {
 	}
 	@Override
     public String toString() {
-        return "Location [name=" + name + ", nameUp=" + nameUp + ", isdCode=" + isdCode + ", locationTypeId=" + locationTypeId + ", parentLocation=" + parentLocation + ", parentLocationId="
+        return "Location [name=" + name + ", nameUp=" + nameUp + ", isdCode=" + isdCode + ", locationTypeId=" + locationTypeId + ", parentLocationId="
                 + parentLocationId
                 + ", id=" + id + ", ver=" + ver + ", dateCreated=" + dateCreated + ", dateModified=" + dateModified + ", creatorId=" + creatorId + ", modifierId=" + modifierId + "]";
     }
