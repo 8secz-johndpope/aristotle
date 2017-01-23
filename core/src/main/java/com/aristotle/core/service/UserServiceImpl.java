@@ -1231,7 +1231,7 @@ public class UserServiceImpl implements UserService {
         }
         
         try {
-			sendRegistrationSms(user.getName(), user.getMembershipNumber(), loginAccount.getUserName(), loginAccount.getPassword(), "sas");
+			sendRegistrationSms(user.getName(), user.getMembershipNumber(), loginAccount.getUserName(), loginAccount.getPassword(), phone.getPhoneNumber());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
