@@ -371,6 +371,7 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView 
 					// ExternalResource("https://static.swarajabhiyan.org/"+loggedInUser.getProfilePic()));
 
 				} catch (Exception ex) {
+					System.out.println("Unable to upload image for " + vaadinSessionUtil.getLoggedInUserFromSession());
 					ex.printStackTrace();
 					uiComponentsUtil.setLabelError(errorLabel, ex);
 				}
@@ -407,6 +408,7 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView 
 					ex.printStackTrace();
 					uiComponentsUtil.setLabelError(errorLabel, ex);
 				} catch (Exception ex) {
+					System.out.println("Error occured for " + vaadinSessionUtil.getLoggedInUserFromSession());
 					ex.printStackTrace();
 					uiComponentsUtil.setLabelMessage(errorLabel, "Internal Error occured. Please contact IT Team.");
 				}
