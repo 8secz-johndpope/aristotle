@@ -523,7 +523,6 @@ public class PersonalDetailView extends VerticalLayout implements NavigableView 
 	}
 
 	private Long getLocationId(ComboBox locationComboBox) {
-		System.out.println(locationComboBox.getValue());
 		Location location = (Location) locationComboBox.getValue();
 		if (location == null) {
 			return null;
