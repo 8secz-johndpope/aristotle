@@ -100,6 +100,7 @@ public class UiTemplateManagerImpl implements UiTemplateManager {
                         	pageCompiledTemplates.put(detachedDomainPageTemplate.getUrlMappingId(), compiledTemplate);	
                         }catch(Exception ex){
                         	logger.error("unabel to compile template for {}", detachedDomainPageTemplate.getUrlMapping().getUrlPattern());
+                        	logger.error("Got exception while compiling template", ex);
                         	pageCompiledTemplates.put(detachedDomainPageTemplate.getUrlMappingId(), exceptionTemplate);
                         }
                         
