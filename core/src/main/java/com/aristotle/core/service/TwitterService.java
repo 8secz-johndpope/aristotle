@@ -49,6 +49,8 @@ public interface TwitterService {
 
     boolean isUserPartOfTwitterTeam(long userId, Long twitterTeamId) throws AppException;
 
+    boolean isTwitterAccountPartOfTwitterTeam(Long twitterAccountId, Long twitterTeamId) throws AppException;
+
     List<TwitterTeam> getAllTwitterTeams() throws AppException;
 
     void updateFollowerCounts() throws AppException;

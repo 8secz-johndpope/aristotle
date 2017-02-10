@@ -1,5 +1,6 @@
 package com.aristotle.web.controller;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.aristotle.core.persistance.TwitterAccount;
 import com.aristotle.core.persistance.TwitterApp;
 import com.aristotle.core.persistance.TwitterTeam;
 import com.aristotle.core.persistance.User;
@@ -99,7 +101,8 @@ public class TwitterLoginController {
             Connection<Twitter> twitterConnection = twitterConnectionFactory.createConnection(accessToken);
             User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
 
-            twitterService.saveTwitterAccount(twitterConnection, twitterApp.getId(), twitterTeam.getId(), user);
+            TwitterAccount twitterAccount = twitterService.saveTwitterAccount(twitterConnection, twitterApp.getId(), twitterTeam.getId(), user);
+            setCookie(httpServletResponse, "ti", twitterAccount.getId());
             String redirectUrl = getAndRemoveRedirectUrlFromSession(httpServletRequest);
             if (StringUtil.isEmpty(redirectUrl)) {
                 redirectUrl = httpServletRequest.getContextPath() + "/register";
@@ -114,6 +117,13 @@ public class TwitterLoginController {
             ex.printStackTrace();
         }
         return mv;
+    }
+    
+    private void setCookie(HttpServletResponse httpServletResponse, String cookieName, Long twitterAccountId){
+    	Cookie cookie = new Cookie(cookieName, String.valueOf(twitterAccountId));
+    	cookie.setMaxAge(604800);
+    	cookie.setPath("/");
+    	httpServletResponse.addCookie(cookie);
     }
 
     private String getFinalRedirecturl(HttpServletRequest httpServletRequest) {

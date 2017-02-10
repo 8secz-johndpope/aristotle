@@ -329,7 +329,20 @@ public class TwitterServiceImpl implements TwitterService {
     @Override
     public boolean isUserPartOfTwitterTeam(long userId, Long twitterTeamId) throws AppException {
         TwitterAccount twitterAccount = twitterAccountRepository.getTwitterAccountByUserId(userId);
-        if (twitterAccount == null) {
+        return isTwitterAccountPartOfTwitterTeam(twitterAccount, twitterTeamId);
+    }
+    
+    @Override
+    public boolean isTwitterAccountPartOfTwitterTeam(Long twitterAccountId, Long twitterTeamId) throws AppException{
+    	if(twitterAccountId == null){
+    		return false;
+    	}
+    	TwitterAccount twitterAccount = twitterAccountRepository.findOne(twitterAccountId);
+        return isTwitterAccountPartOfTwitterTeam(twitterAccount, twitterTeamId);
+    }
+
+	private boolean isTwitterAccountPartOfTwitterTeam(TwitterAccount twitterAccount, Long twitterTeamId) {
+		if (twitterAccount == null) {
             return false;
         }
         TwitterTeam twitterTeam = twitterTeamRepository.findOne(twitterTeamId);
@@ -338,7 +351,7 @@ public class TwitterServiceImpl implements TwitterService {
             return false;
         }
         return true;
-    }
+	}
 
     @Override
     public List<TwitterTeam> getAllTwitterTeams() throws AppException {
