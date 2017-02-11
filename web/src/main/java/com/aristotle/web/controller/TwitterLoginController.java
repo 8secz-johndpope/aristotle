@@ -99,7 +99,9 @@ public class TwitterLoginController {
             String requestTokenValue = httpServletRequest.getParameter("oauth_token");
             String oauthVerifier = httpServletRequest.getParameter("oauth_verifier");
             OAuthToken requestToken = new OAuthToken(requestTokenValue, consumerSecret);
-            OAuthToken accessToken = oauthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauthVerifier), null);
+            System.out.println("requestToken = " + requestToken);
+            System.out.println("oauthVerifier = " + oauthVerifier);
+            OAuthToken accessToken = oauthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauthVerifier), new OAuth1Parameters());
             Connection<Twitter> twitterConnection = twitterConnectionFactory.createConnection(accessToken);
 
             User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
