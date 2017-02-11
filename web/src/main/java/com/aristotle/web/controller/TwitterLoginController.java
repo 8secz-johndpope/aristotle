@@ -1,5 +1,7 @@
 package com.aristotle.web.controller;
 
+import java.util.Enumeration;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -101,6 +103,12 @@ public class TwitterLoginController {
             OAuthToken requestToken = new OAuthToken(requestTokenValue, consumerSecret);
             System.out.println("requestToken = " + requestToken);
             System.out.println("oauthVerifier = " + oauthVerifier);
+            Enumeration<String> names = httpServletRequest.getParameterNames();
+            while(names.hasMoreElements()){
+            	String param = (String) names.nextElement();
+                System.out.println(param + " = " + httpServletRequest.getParameter(param));
+
+        	}
             OAuthToken accessToken = oauthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauthVerifier), new OAuth1Parameters());
             Connection<Twitter> twitterConnection = twitterConnectionFactory.createConnection(accessToken);
 
