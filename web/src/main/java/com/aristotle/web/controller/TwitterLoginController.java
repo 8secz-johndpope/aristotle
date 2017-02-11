@@ -139,6 +139,7 @@ public class TwitterLoginController {
     private void setCookie(HttpServletResponse httpServletResponse, String cookieName, Long twitterAccountId){
     	Cookie cookie = new Cookie(cookieName, String.valueOf(twitterAccountId));
     	cookie.setMaxAge(604800);
+    	cookie.setPath("/");
     	httpServletResponse.addCookie(cookie);
     }
 
