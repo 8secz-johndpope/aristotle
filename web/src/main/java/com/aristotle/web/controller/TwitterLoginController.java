@@ -4,6 +4,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.catalina.util.ParameterMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.social.oauth1.OAuthToken;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -94,10 +96,12 @@ public class TwitterLoginController {
             // upon receiving the callback from the provider:
             TwitterConnectionFactory twitterConnectionFactory = new TwitterConnectionFactory(consumerKey, consumerSecret);
             OAuth1Operations oauthOperations = twitterConnectionFactory.getOAuthOperations();
-            //String requestTokenValue = httpServletRequest.getParameter("oauth_token");
-            //String oauthVerifier = httpServletRequest.getParameter("oauth_verifier");
+            String requestTokenValue = httpServletRequest.getParameter("oauth_token");
+            String oauthVerifier = httpServletRequest.getParameter("oauth_verifier");
             //OAuthToken requestToken = new OAuthToken(requestTokenValue, consumerSecret);
-            OAuthToken accessToken = oauthOperations.fetchRequestToken("http://www.swarajabhiyan.org/twitter/team/success", null);
+            String url = httpServletRequest.getRequestURL().toString()+"?oauth_token="+ requestTokenValue+"&oauth_verifier="+oauthVerifier;
+            OAuthToken accessToken = oauthOperations.fetchRequestToken(url, null);
+            System.out.println("accessToken" + accessToken.getValue());
             //OAuthToken accessToken = oauthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauthVerifier), null);
             Connection<Twitter> twitterConnection = twitterConnectionFactory.createConnection(accessToken);
             User user = (User) httpServletRequest.getSession().getAttribute("loggedInUser");
