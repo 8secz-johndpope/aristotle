@@ -84,8 +84,8 @@ public class TwitterLoginController {
         return "Please login to Twitter and give permission";
     }
 
-    @RequestMapping(value = { "/twitter/team/success" }, method = RequestMethod.GET)
-    public ModelAndView loginSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView mv) {
+    @RequestMapping(value = "/twitter/team/success", method = RequestMethod.GET)
+    public ModelAndView loginSuccess(ModelAndView mv, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         try {
         	String requestTokenValue = httpServletRequest.getParameter("oauth_token");
             String oauthVerifier = httpServletRequest.getParameter("oauth_verifier");
@@ -139,7 +139,6 @@ public class TwitterLoginController {
     private void setCookie(HttpServletResponse httpServletResponse, String cookieName, Long twitterAccountId){
     	Cookie cookie = new Cookie(cookieName, String.valueOf(twitterAccountId));
     	cookie.setMaxAge(604800);
-    	cookie.setPath("/");
     	httpServletResponse.addCookie(cookie);
     }
 
