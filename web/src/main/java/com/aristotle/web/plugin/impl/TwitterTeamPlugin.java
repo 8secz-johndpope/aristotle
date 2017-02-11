@@ -210,3 +210,150 @@ public class TwitterTeamPlugin extends AbstractDataPlugin {
         jsonObject.add("teamMembers", jsonArray);
     }
 }
+/*
+ * <html>
+<head>
+[[META_TAGS]] [[RESOURCES]]
+
+
+<script>
+    $(function() {
+        $( "#tabs" ).tabs();
+    });
+    </script>
+
+<style type="text/css">
+.ui-tabs .ui-tabs-hide {
+	position: absolute !important;
+	left: -10000px !important;
+	display: block !important;
+}
+</style>
+ <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+</head>
+<body>
+
+
+	[[TOPMENU]]
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<!--<script src="../js/jquery-1.9.1.min.js"></script>-->
+	<!--<script src="bootstrap.min.js"></script>-->
+	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+	<!--<script src="ie10-viewport-bug-workaround.js"></script>-->
+
+	<!-- jssor slider scripts-->
+	<!-- use jssor.js + jssor.slider.js instead for development -->
+	<!-- jssor.slider.mini.js = (jssor.js + jssor.slider.js) -->
+
+	<div class="maincontainer">
+		<div class="lftContnr col-xs-12 col-sm-12 col-md-8">
+			<div>
+				<div class="hanger relPostn">
+					<h3 class="fltlft hangerHdng mrgnpdng absPostn">Join Twitter Team</h3>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="contentDiv newsPad">
+				<div id="tabs">
+					<ul>
+					   <li><a href="#tabs-1">Team</a></li>
+						<li><a href="#tabs-2">Team Members</a></li>
+						<li><a href="#tabs-3">Other Teams</a></li>
+					</ul>
+					<div id="tabs-1">
+						<div class="newsCont">
+							{{#if TwitterTeamPlugin.userPartOfTheTeam}}
+							<h3 class="">You are already part of the team, relax and enjoy auto retweets</h3>
+							<h5>You can Join other teams by going into "other Teams" tab</h5>
+
+
+                                <br><br>
+                                {{#if TwitterTeamPlugin.global}}
+                                       <h4>By joining this Team you agree to retweet few handpicked tweets from Swaraj Abhiyan</h4>
+                                {{else}}
+                                       <h4>By joining this Team you agree to retweet all tweets from following account</h4>
+                                       <table>
+                                         {{#each TwitterTeamPlugin.sourceMembers}}
+                                        <tr>
+                                                <td><a href="https://twitter.com/{{screenName}}"><img src="{{imageUrl}}" /></a></td>
+                                                <td><a href="https://twitter.com/{{screenName}}" class="twitter-follow-button" data-show-count="false" data-size="large">Follow {{screenName}}</a></td>
+                                        </tr>
+                                       {{/each}}
+                                       </table>
+                                      <br>
+                                {{/if}}
+							<br> <br>
+							{{else}}
+                                                  {{#if LoggedInUserPlugin.loggedIn}}
+							<h3 class="">Please Login Below to become part of the team</h3>
+							<a href="{{TwitterTeamPlugin.teamLoginUrl}}?redirect=/socialmedia/twitter/team/{{TwitterTeamPlugin.teamUrl}}"><img
+								src="http://static.swarajabhiyan.org/templates/prod/1/images/twitter01.png" /></a>
+								<br>
+								{{#if TwitterTeamPlugin.global}}
+                                                                   <h4>By joining this Team you agree to retweet few handpicked tweets from Swaraj Abhiyan</h4>
+                                                                 {{else}}
+                                                                    <h4>By joining this Team you agree to retweet all tweets from following account</h4>
+                                                                 <table>
+                                                                    {{#each TwitterTeamPlugin.sourceMembers}}
+                                                                    <tr>
+                                                                      <td><a href="https://twitter.com/{{screenName}}"><img src="{{imageUrl}}" /></a></td>
+                                                                      <td><a href="https://twitter.com/{{screenName}}" class="twitter-follow-button" data-show-count="false" data-size="large">Follow {{screenName}}</a></td>
+                                                                   </tr>
+                                                                   {{/each}}
+                                                                 </table>
+                                <br>
+                                                                 {{/if}} 
+							 {{else}}
+							      <h3 class="">Please Login using your Swaraj Abhiyan Account</h3>
+							{{/if}} 
+							
+							{{/if}}
+
+						</div>
+					</div>
+					<div id="tabs-2">
+					{{#if TwitterTeamPlugin.userPartOfTheTeam}}
+                            <br> 
+                            <h4>Meet your team member, please follow each other</h4>
+                            <table>
+                                {{#each TwitterTeamPlugin.teamMembers}}
+                                <tr>
+                                    <td><a href="https://twitter.com/{{screenName}}"><img src="{{imageUrl}}" /></a></td>
+                                    <td><a href="https://twitter.com/{{screenName}}" class="twitter-follow-button" data-show-count="false" data-size="large">Follow {{screenName}}</a></td>
+                                </tr>
+                                {{/each}}
+                            </table>
+                     {{else}}
+                     <h4>Only team members can view each others</h4>
+                            
+                     {{/if}}
+					</div>
+					<div id="tabs-3">
+					   <table>
+
+                                {{#each TwitterTeamPlugin.twitterTeams}}
+                                <tr>
+                                    <td><a href="http://www.swarajabhiyan.org/socialmedia/twitter/team/{{url}}">{{name}}</a></td>
+                                </tr>
+                                {{/each}}
+                            </table>
+					</div>
+				</div>
+				<!--------changed by soumya------->
+
+
+			</div>
+			<!--------changed by soumya end------->
+		</div>
+
+		[[RIGHT_SIDE]]
+		<div class="clear"></div>
+	</div>
+	[[FOOTER]]
+
+</body>
+</html>
+*/
