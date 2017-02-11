@@ -84,14 +84,20 @@ public class TwitterLoginController {
         return "Please login to Twitter and give permission";
     }
 
-    @RequestMapping(value = { "/twitter/team/success" })
+    @RequestMapping(value = { "/twitter/team/success" }, method = RequestMethod.GET)
     public ModelAndView loginSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView mv) {
         try {
         	String requestTokenValue = httpServletRequest.getParameter("oauth_token");
             String oauthVerifier = httpServletRequest.getParameter("oauth_verifier");
             System.out.println("requestTokenValue = " + requestTokenValue);
             System.out.println("oauthVerifier = " + oauthVerifier);
+            System.out.println("getQueryString = " + httpServletRequest.getQueryString());
+            Enumeration<String> names = httpServletRequest.getParameterNames();
+            while(names.hasMoreElements()){
+            	String param = (String) names.nextElement();
+                System.out.println(param + " = " + httpServletRequest.getParameter(param));
 
+        	}
             String consumerKey = (String) httpServletRequest.getSession().getAttribute("consumerKey");
             httpServletRequest.getSession().removeAttribute("consumerKey");
             String consumerSecret = (String) httpServletRequest.getSession().getAttribute("consumerSecret");
@@ -106,12 +112,7 @@ public class TwitterLoginController {
             
             OAuthToken requestToken = new OAuthToken(requestTokenValue, consumerSecret);
             System.out.println("requestToken = " + requestToken);
-            Enumeration<String> names = httpServletRequest.getParameterNames();
-            while(names.hasMoreElements()){
-            	String param = (String) names.nextElement();
-                System.out.println(param + " = " + httpServletRequest.getParameter(param));
-
-        	}
+            
             OAuthToken accessToken = oauthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauthVerifier), new OAuth1Parameters());
             Connection<Twitter> twitterConnection = twitterConnectionFactory.createConnection(accessToken);
 
