@@ -87,6 +87,11 @@ public class TwitterLoginController {
     @RequestMapping(value = { "/twitter/team/success" })
     public ModelAndView loginSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView mv) {
         try {
+        	String requestTokenValue = httpServletRequest.getParameter("oauth_token");
+            String oauthVerifier = httpServletRequest.getParameter("oauth_verifier");
+            System.out.println("requestTokenValue = " + requestTokenValue);
+            System.out.println("oauthVerifier = " + oauthVerifier);
+
             String consumerKey = (String) httpServletRequest.getSession().getAttribute("consumerKey");
             httpServletRequest.getSession().removeAttribute("consumerKey");
             String consumerSecret = (String) httpServletRequest.getSession().getAttribute("consumerSecret");
@@ -98,12 +103,9 @@ public class TwitterLoginController {
             // upon receiving the callback from the provider:
             TwitterConnectionFactory twitterConnectionFactory = new TwitterConnectionFactory(consumerKey, consumerSecret);
             OAuth1Operations oauthOperations = twitterConnectionFactory.getOAuthOperations();
-            String requestTokenValue = httpServletRequest.getParameter("oauth_token");
-            String oauthVerifier = httpServletRequest.getParameter("oauth_verifier");
+            
             OAuthToken requestToken = new OAuthToken(requestTokenValue, consumerSecret);
-            System.out.println("requestTokenValue = " + requestTokenValue);
             System.out.println("requestToken = " + requestToken);
-            System.out.println("oauthVerifier = " + oauthVerifier);
             Enumeration<String> names = httpServletRequest.getParameterNames();
             while(names.hasMoreElements()){
             	String param = (String) names.nextElement();
