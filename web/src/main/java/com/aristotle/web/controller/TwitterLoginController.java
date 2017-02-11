@@ -101,6 +101,7 @@ public class TwitterLoginController {
             String requestTokenValue = httpServletRequest.getParameter("oauth_token");
             String oauthVerifier = httpServletRequest.getParameter("oauth_verifier");
             OAuthToken requestToken = new OAuthToken(requestTokenValue, consumerSecret);
+            System.out.println("requestTokenValue = " + requestTokenValue);
             System.out.println("requestToken = " + requestToken);
             System.out.println("oauthVerifier = " + oauthVerifier);
             Enumeration<String> names = httpServletRequest.getParameterNames();
