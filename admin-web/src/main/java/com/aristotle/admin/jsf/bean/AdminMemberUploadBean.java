@@ -144,6 +144,7 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
 
     public void handleFileUpload(FileUploadEvent event) {
         logger.info("Uploading File " + event.getFile().getFileName());
+        System.out.println("Uploading File " + event.getFile().getFileName());
 
         try {
             Reader in = new InputStreamReader(event.getFile().getInputstream());
@@ -155,12 +156,13 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
                     header = false;
                 } else {
                 	
-                    String email = record.get("Email");
+                    String email = getRecordValue(record, "Email");
                     logger.info("Reading Record for email : {}", email);
-                    String mobile = record.get("Mobile");
-                    String referenceMobile = record.get("Reference");
-                    String name = record.get("Name");
-                    String txnId = record.get("TxnId");
+                    String mobile = getRecordValue(record, "Mobile");
+                    System.out.println("email = "+email+", mobile="+mobile);
+                    String referenceMobile = getRecordValue(record, "Reference");
+                    String name = getRecordValue(record, "Name");
+                    String txnId = getRecordValue(record, "TxnId");
                    
 
                     UserUploadDto userUploadDto = new UserUploadDto();
@@ -187,6 +189,22 @@ public class AdminMemberUploadBean extends BaseMultiPermissionAdminJsfBean {
             logger.error("Unable to upload File", ex);
             sendErrorMessageToJsfScreen("Failed", event.getFile().getFileName() + " is failed to uploaded.");
         }
+    }
+    private String getRecordValue(CSVRecord record, String headerName){
+    	return getRecordValue(record, headerName, null);
+    }
+    private String getRecordValue(CSVRecord record, String headerName, String defaultValue){
+    	String value;
+    	try{
+        	value = record.get(headerName);
+        	if(value == null){
+        		value = defaultValue;
+        	}
+    	}catch(Exception ex){
+    		ex.printStackTrace();
+    		value = defaultValue;
+    	}
+    	return value;
     }
 
     public void handleStateChange() {
