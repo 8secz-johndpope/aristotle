@@ -17,6 +17,9 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     @Query("select news from News news join news.locations locations where locations.id in ?1 and news.contentStatus='Published' order by news.dateCreated desc")
     public List<News> getLocationPublishedNews(Set<Long> locationIds, Pageable pageable);
 
+    @Query("select news from News news join news.locations locations where locations.id in ?1 order by news.dateCreated desc")
+    public List<News> getLocationNews(Set<Long> locationIds, Pageable pageable);
+
     @Query("select count(news) from News news join news.locations locations where locations.id in ?1 and news.contentStatus='Published'")
     public long getLocationPublishedNewsCount(Set<Long> locationIds);
 

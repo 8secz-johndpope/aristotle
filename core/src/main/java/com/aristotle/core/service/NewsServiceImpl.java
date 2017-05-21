@@ -119,6 +119,17 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+    @Cacheable("news")
+    public List<News> getAllLocationNews(Set<Long> locationIds, int pageNumber, int pageSize) throws AppException {
+        System.out.println("Getting news for " + locationIds + ", page number = " + pageNumber + ", pageSize=" + pageSize + " from DB");
+        Pageable pageable = new PageRequest(pageNumber, pageSize);
+        if (locationIds == null || locationIds.isEmpty()) {
+            return newsRepository.getGlobalNews(pageable);
+        }
+        return newsRepository.getLocationNews(locationIds, pageable);
+    }
+
+    @Override
     public UploadedFile saveNewsUploadedFile(Long newsId, String filePathAndName, long fileSize, String type) throws AppException {
         News news = newsRepository.findOne(newsId);
         filePathAndName = filePathAndName.toLowerCase();
