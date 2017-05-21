@@ -81,7 +81,7 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
             } else {
                 Set<Long> locationIds = new HashSet<Long>();
                 locationIds.add(menuBean.getSelectedLocation().getId());
-                newsList = newsService.getAllLocationPublishedNews(locationIds, 0, 100);
+                newsList = newsService.getAllLocationNews(locationIds, 0, 100);
             }
 
         } catch (Exception ex) {

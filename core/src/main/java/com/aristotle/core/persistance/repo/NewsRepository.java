@@ -17,6 +17,9 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     @Query("select news from News news join news.locations locations where locations.id in ?1 and news.contentStatus='Published' order by news.dateCreated desc")
     public List<News> getLocationPublishedNews(Set<Long> locationIds, Pageable pageable);
 
+    @Query("select news from News news join news.locations locations where locations.id in ?1 order by news.dateCreated desc")
+    public List<News> getLocationNews(Set<Long> locationIds, Pageable pageable);
+
     @Query("select count(news) from News news join news.locations locations where locations.id in ?1 and news.contentStatus='Published'")
     public long getLocationPublishedNewsCount(Set<Long> locationIds);
 
@@ -25,27 +28,6 @@ public interface NewsRepository extends JpaRepository<News, Long> {
 
     @Query("select count(news) from News news where news.global=true  and news.contentStatus='Published'")
     public long getGlobalPublishdNewsCount();
-
-    @Query("select news from News news join news.states states where states.id = ?1")
-    public List<News> getStateNews(Long stateId);
-
-    @Query("select news from News news join news.districts districts where districts.id = ?1")
-    public List<News> getDistrictNews(Long districtId);
-
-    @Query("select news from News news join news.parliamentConstituencies parliamentConstituencies where parliamentConstituencies.id = ?1")
-    public List<News> getParliamentConstituencyNews(Long parliamentConstituencyId);
-
-    @Query("select news from News news join news.assemblyConstituencies assemblyConstituencies where assemblyConstituencies.id = ?1")
-    public List<News> getAssemblyConstituencyNews(Long assemblyConstituencyId);
-
-    @Query("select news from News news join news.countries countries where countries.id = ?1")
-    public List<News> getCountryNews(Long countryId);
-
-    @Query("select news from News news join news.countryRegions countryRegions where countryRegions.id = ?1")
-    public List<News> getCountryRegionNews(Long countryRegionId);
-
-    @Query("select news from News news join news.countryRegionsAreas countryRegionsAreas where countryRegionsAreas.id = ?1")
-    public List<News> getCountryRegionAreaNews(Long countryRegionsAreaId);
 
     /*
     public List<News> getAllNewss(int totalItems, int pageNumber);
